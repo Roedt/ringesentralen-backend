@@ -21,27 +21,12 @@
 # docker run -i --rm -p 8080:8080 -p 5005:5005 -e JAVA_ENABLE_DEBUG="true" quarkus/code-with-quarkus-jvm
 #
 ###
-
-# Copy local code to the container image.
-FROM maven:3.6.3-openjdk-11 as builder
-WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-
-# Build a release artifact.
-RUN mvn package -DskipTests -B
-
-
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1
-
-COPY --from=builder /app/target/*-runner.jar target/
-
 
 ARG JAVA_PACKAGE=java-11-openjdk-headless
 ARG RUN_JAVA_VERSION=1.3.8
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
-
 
 # Install java and the run-java script
 # Also set up permissions for user `1001`
