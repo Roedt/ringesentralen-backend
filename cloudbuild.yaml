@@ -2,7 +2,7 @@ steps:
   # Run the Maven build
   - name: maven:3.6.0-jdk-11-slim
     entrypoint: 'mvn'
-    args: ['clean', 'install', '-DskipTests', '-B']
+    args: ['package', '-DskipTests', '-B', '-Pnative', '-Dquarkus.native.container-build=true']
   # Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
