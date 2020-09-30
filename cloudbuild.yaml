@@ -20,5 +20,14 @@ steps:
   # Deploy container image to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
-    args: [ 'run', 'deploy', 'ringesentralen-backend', '--image', 'gcr.io/$PROJECT_ID/ringesentralen-backend', '--region', '	europe-north1', '--platform', 'managed' ]
+    args:
+      - 'run'
+      - 'deploy'
+      - 'ringesentralen-backend'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/ringesentralen-backend:$COMMIT_SHA'
+      - '--region'
+      - 'europe-north1'
+      - '--platform'
+      - 'managed'
 images: ['gcr.io/$PROJECT_ID/ringesentralen-backend:latest']
