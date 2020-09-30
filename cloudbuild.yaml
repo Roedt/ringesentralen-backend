@@ -5,5 +5,13 @@ steps:
     args: ['clean', 'install', '-DskipTests -B']
   # Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/ringesentralen-backend', '.']
-images: ['gcr.io/$PROJECT_ID/ringesentralen-backend']
+    entrypoint: 'bash'
+    args: [ '-c', 'docker pull gcr.io/$PROJECT_ID/ringesentralen-backend:latest || exit 0' ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+        'build',
+        '-t', 'gcr.io/$PROJECT_ID/ringesentralen-backend:latest',
+        '--cache-from', 'gcr.io/$PROJECT_ID/ringesentralen-backend:latest',
+        '.'
+    ]
+images: ['gcr.io/$PROJECT_ID/ringesentralen-backend:latest']
