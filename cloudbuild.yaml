@@ -2,7 +2,7 @@ steps:
   # Run the Maven build
   - name: maven:3.6.0-jdk-11-slim
     entrypoint: 'mvn'
-    args: ['clean', 'install', '-DskipTests -B']
+    args: ['clean', 'install', '-DskipTests', '-B']
   # Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
@@ -14,4 +14,11 @@ steps:
         '--cache-from', 'gcr.io/$PROJECT_ID/ringesentralen-backend:latest',
         '.'
     ]
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'push', 'gcr.io/$PROJECT_ID/ringesentralen-backend' ]
+  # Deploy container image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: [ 'run', 'deploy', 'ringesentralen-backend', '--image', 'gcr.io/$PROJECT_ID/ringesentralen-backend', '--region', '	europe-north1', '--platform', 'managed' ]
 images: ['gcr.io/$PROJECT_ID/ringesentralen-backend:latest']
