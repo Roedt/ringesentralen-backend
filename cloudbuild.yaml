@@ -1,7 +1,24 @@
 steps:
+  # Copy Maven dependencies to volume mavenrepo
+  - name: gcr.io/cloud-builders/gsutil
+    volumes:
+      - name: 'mavenrepo'
+        path: '/root/.m2'
+    args: ['cp', '-r', 'gs://ringesentralen-mavenrepo', '/root/.m2']
+  # Run the Maven build
   - name: maven:3.6.0-jdk-11-slim
+    volumes:
+      - name: 'mavenrepo'
+        path: '/root/.m2'
     entrypoint: 'mvn'
-    args: ['clean', 'install', '-DskipTests']
+    args: ['clean', 'install', '-DskipTests -B']
+  # Preserve the Maven dependencies into the bucket
+  - name: gcr.io/cloud-builders/gsutil
+    volumes:
+      - name: 'mavenrepo'
+        path: '/root/.m2'
+    args: ['cp', '-r', '/root/.m2', 'gs://ringesentralen-mavenrepo']
+  # Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/$PROJECT_ID/ringesentralen-backend', '.']
 images: ['gcr.io/$PROJECT_ID/ringesentralen-backend']
