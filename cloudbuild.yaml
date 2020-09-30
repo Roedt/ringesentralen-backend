@@ -1,0 +1,7 @@
+steps:
+  - name: maven:3.6.0-jdk-11-slim
+    entrypoint: 'mvn'
+    args: ['clean', 'install', '-DskipTests']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/ringesentralen-backend', '.']
+    images: ['gcr.io/$PROJECT_ID/ringesentralen-backend']
