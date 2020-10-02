@@ -11,7 +11,7 @@ steps:
     entrypoint: 'mvn'
     args: [ '-Dmaven.repo.local=/workspace/.m2/repository', 'package', '-DskipTests', '-B' ]
   # Update M2 repo cache
-  - name: gcr.io/PROJECT_ID/tar
+  - name: gcr.io/$PROJECT_ID/tar
     id: Compress M2 Cache
     args: [ 'cpzf', 'm2.tar.gz', '.m2' ]
   - name: gcr.io/cloud-builders/gsutil
