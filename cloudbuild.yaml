@@ -1,8 +1,23 @@
 steps:
+  # Grab cached M2 repo
+  - name: gcr.io/cloud-builders/gsutil
+    id: Get M2 Cache
+    args: ['cp', 'gs://ringesentralen-mavenrepo/m2.tar.gz', 'm2.tar.gz']
+  - name: gcr.io/PROJECT_ID/tar
+    id: Expand M2 Cache
+    args: [ 'xpzf', 'm2.tar.gz' ]
   # Run the Maven build
   - name: maven:3.6.0-jdk-11-slim
     entrypoint: 'mvn'
-    args: ['package', '-DskipTests', '-B']
+    args: [ '-Dmaven.repo.local=/workspace/.m2/repository', 'package', '-DskipTests', '-B' ]
+  # Update M2 repo cache
+  - name: gcr.io/PROJECT_ID/tar
+    id: Compress M2 Cache
+    args: [ 'cpzf', 'm2.tar.gz', '.m2' ]
+  - name: gcr.io/cloud-builders/gsutil
+    id: Save M2 Cache
+    args: [ 'cp', 'm2.tar.gz', 'gs://ringesentralen-mavenrepo/m2.tar.gz' ]
+
   # Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
