@@ -3,7 +3,7 @@ steps:
   - name: gcr.io/cloud-builders/gsutil
     id: Get M2 Cache
     args: ['cp', 'gs://ringesentralen-mavenrepo/m2.tar.gz', 'm2.tar.gz']
-  - name: gcr.io/PROJECT_ID/tar
+  - name: gcr.io/$PROJECT_ID/tar
     id: Expand M2 Cache
     args: [ 'xpzf', 'm2.tar.gz' ]
   # Run the Maven build
