@@ -1,4 +1,4 @@
 steps:
   # running docker-compose
   - name: 'docker/compose:1.26.2'
-    args: ['-f mysql.yaml', 'up', '-d']
+    args: ['-f', 'mysql.yaml', 'up', '-d']
