@@ -8,8 +8,8 @@ import javax.persistence.TypedQuery
 
 internal class RingTest {
 
-    val entityManager: EntityManager = mock()
-    val personRepository: PersonRepository = mock()
+    private val entityManager: EntityManager = mock()
+    private val personRepository: PersonRepository = mock()
 
     lateinit var ringService: RingService
     lateinit var ringController: RingController
@@ -23,11 +23,11 @@ internal class RingTest {
     @Test
     fun `hentar neste person aa ringe`() {
         val typedQuery: TypedQuery<Long> = mock()
-        doReturn(listOf(1234L)).whenever(typedQuery).resultList
-        doReturn(typedQuery).whenever(entityManager).createNamedQuery(any(), eq(Long::class.javaObjectType))
+        doReturn(listOf(1234)).whenever(typedQuery).resultList
+        doReturn(typedQuery).whenever(entityManager).createNativeQuery(any())
 
         ringController.hentNestePersonAaRinge()
-        verify(entityManager).createNamedQuery(any(), eq(Long::class.javaObjectType))
+        verify(entityManager).createNativeQuery(any())
         verify(personRepository).findById(1234)
     }
 
@@ -36,10 +36,10 @@ internal class RingTest {
         val typedQuery: TypedQuery<Long> = mock()
         val emptyList: List<Long> = listOf()
         doReturn(emptyList).whenever(typedQuery).resultList
-        doReturn(typedQuery).whenever(entityManager).createNamedQuery(any(), eq(Long::class.javaObjectType))
+        doReturn(typedQuery).whenever(entityManager).createNativeQuery(any())
 
         ringController.hentNestePersonAaRinge()
-        verify(entityManager).createNamedQuery(any(), eq(Long::class.javaObjectType))
+        verify(entityManager).createNativeQuery(any())
         verifyZeroInteractions(personRepository)
     }
 

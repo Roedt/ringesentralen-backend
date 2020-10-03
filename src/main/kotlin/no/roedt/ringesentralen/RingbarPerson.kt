@@ -9,7 +9,6 @@ import javax.persistence.Table
 @Entity
 @Table(name = "person")
 @Cacheable
-@NamedQuery(name = "RingbarPerson.finnNestePersonAaRinge", query = "SELECT v.id FROM v_personerSomKanRinges v")
 data class RingbarPerson(
         var givenName: String,
         var familyName: String,

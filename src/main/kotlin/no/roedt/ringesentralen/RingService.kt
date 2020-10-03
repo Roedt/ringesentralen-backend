@@ -14,8 +14,9 @@ class RingServiceBean(
 ): RingService {
 
     override fun hentNestePersonAaRinge(): RingbarPerson? =
-            entityManager.createNamedQuery("RingbarPerson.finnNestePersonAaRinge", Long::class.javaObjectType)
+            entityManager.createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v")
                     .resultList
                     .firstOrNull()
-                    ?.let { personRepository.findById(it) }
+                    ?.let { it as Int}
+                    ?.let { personRepository.findById(it.toLong()) }
 }
