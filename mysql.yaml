@@ -1,0 +1,27 @@
+# Use root/example as user/password credentials
+# this is copy-paste from https://hub.docker.com/_/mysql/
+# run this with docker-compose -f mysql.yaml
+version: '3.1'
+
+services:
+
+  db:
+    image: mariadb
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: ringesentralen_test
+      TZ: Europe/Oslo
+    ports:
+      - 3306:3306
+    volumes:
+      - ./sql/init:/docker-entrypoint-initdb.d
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
+    environment:
+      TZ: Europe/Oslo
