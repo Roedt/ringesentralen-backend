@@ -1,10 +1,12 @@
 package no.roedt.ringesentralen
 
 import org.eclipse.microprofile.openapi.annotations.Operation
+import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 
 @Path("/ring")
+@Tag(name = "Ring")
 class RingController(val ringService: RingService) {
 
     @GET
