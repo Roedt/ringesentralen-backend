@@ -4,7 +4,7 @@ import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
 
 interface RingService {
-    fun hentNestePersonAaRinge(): RingbarPerson?
+    fun hentNestePersonAaRinge(nestePersonAaRingeRequest: Int): RingbarPerson?
 }
 
 @ApplicationScoped
@@ -13,8 +13,9 @@ class RingServiceBean(
         val entityManager: EntityManager
 ): RingService {
 
-    override fun hentNestePersonAaRinge(): RingbarPerson? =
-            entityManager.createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v")
+    override fun hentNestePersonAaRinge(nestePersonAaRingeRequest: Int): RingbarPerson? =
+            entityManager
+                    .createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '" + nestePersonAaRingeRequest + "'")
                     .resultList
                     .firstOrNull()
                     ?.let { it as Int}

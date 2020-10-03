@@ -26,7 +26,7 @@ internal class RingTest {
         doReturn(listOf(1234)).whenever(typedQuery).resultList
         doReturn(typedQuery).whenever(entityManager).createNativeQuery(any())
 
-        ringController.hentNestePersonAaRinge()
+        ringController.hentNestePersonAaRinge(1)
         verify(entityManager).createNativeQuery(any())
         verify(personRepository).findById(1234)
     }
@@ -38,7 +38,7 @@ internal class RingTest {
         doReturn(emptyList).whenever(typedQuery).resultList
         doReturn(typedQuery).whenever(entityManager).createNativeQuery(any())
 
-        ringController.hentNestePersonAaRinge()
+        ringController.hentNestePersonAaRinge(1)
         verify(entityManager).createNativeQuery(any())
         verifyZeroInteractions(personRepository)
     }
