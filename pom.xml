@@ -86,6 +86,10 @@
       <artifactId>quarkus-jdbc-mariadb</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-fault-tolerance</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.nhaarman.mockitokotlin2</groupId>
       <artifactId>mockito-kotlin</artifactId>
       <version>2.2.0</version>

@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen
 
+import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.ws.rs.*
@@ -14,6 +15,7 @@ class RingController(val ringService: RingService) {
     @Consumes(MediaType.TEXT_PLAIN)
     @Path("/neste")
     @Operation(summary = "Finn neste person å ringe")
+    @Retry
     fun hentNestePersonAaRinge(@QueryParam("lokallagID") nestePersonAaRingeRequest: Int): RingbarPerson? = ringService.hentNestePersonAaRinge(nestePersonAaRingeRequest)
 
 }

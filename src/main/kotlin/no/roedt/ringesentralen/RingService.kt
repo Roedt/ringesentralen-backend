@@ -15,7 +15,7 @@ class RingServiceBean(
 
     override fun hentNestePersonAaRinge(nestePersonAaRingeRequest: Int): RingbarPerson? =
             entityManager
-                    .createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '" + nestePersonAaRingeRequest + "'")
+                    .createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '$nestePersonAaRingeRequest'")
                     .resultList
                     .firstOrNull()
                     ?.let { it as Int}
