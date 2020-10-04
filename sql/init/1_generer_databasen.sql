@@ -310,10 +310,10 @@ WHERE groupID = 0;
 -- --------------------------------------------------------
 
 create or replace view v_personerSomKanRinges as
-SELECT p.nameEnlister, p.lastCall, p.phone, concat(p.givenName,' ',p.familyName) as name, p.postnumber, p.countyID, p.lokallag, l.name as lokallagNavn
+SELECT p.nameEnlister, p.lastCall, p.phone, concat(p.givenName,' ',p.familyName) as name, p.postnumber, p.countyID, p.lokallag, l.name as lokallagNavn, p.id as id
   FROM person p
   LEFT OUTER JOIN lokallag l on p.lokallag = l.id
-  WHERE groupID = '1' 
+  WHERE groupID = '1'
   AND UNIX_TIMESTAMP(now()) - lastCall > 86400; -- 86400 sekund = 1 døgn
 
 -- --------------------------------------------------------
@@ -321,9 +321,9 @@ SELECT p.nameEnlister, p.lastCall, p.phone, concat(p.givenName,' ',p.familyName)
 create or replace view v_fysiskIkkeSamtykketIkkeAdresse as
 SELECT id, phone, givenName, familyName
         FROM person p
-        WHERE groupID = 0 
-          AND isDigital = 0 
-          AND hasReceived IS NULL 
+        WHERE groupID = 0
+          AND isDigital = 0
+          AND hasReceived IS NULL
           AND hasConsented IS NULL;
 
 -- --------------------------------------------------------
@@ -336,17 +336,17 @@ SELECT hasReceived, isDigital, phone FROM person;
 create or replace view v_numbersForSendDigital as
 SELECT email, id, phone, p.givenName, p.familyName
 FROM person p
-WHERE CHAR_LENGTH(phone) = 8 
-  AND groupID <= 1 
-  AND isDigital = 1 
-  AND hasReceived IS NULL 
+WHERE CHAR_LENGTH(phone) = 8
+  AND groupID <= 1
+  AND isDigital = 1
+  AND hasReceived IS NULL
   AND email != '';
 
 -- --------------------------------------------------------
 
 create or replace view v_callsResult AS
 SELECT distinct concat(caller.givenName,' ',caller.familyName) as callerName, caller.phone as callerPhone, c.datetime as `datetime`, c.comment, r.displaytext as result, c.calledPhone, r.svarte, r.id as resultId
-FROM `call` c 
+FROM `call` c
 INNER JOIN `result`r on r.id = c.result
 INNER JOIN `person` caller on caller.phone = c.callerPhone
 WHERE typeCall = 1
@@ -397,13 +397,11 @@ FROM `person` p left outer join lokallag l on p.lokallag = l.id;
 -- --------------------------------------------------------
 
 create or replace view v_ringtFlest AS
-(
 select count(c.callerPhone) as max, p.lokallag from
 `call` c
-inner join person p on c.callerPhone = p.phone
+inner join person p on c.callerPhone = p.phone and c.result != 9 and c.typeCall = 1
 group by(c.callerPhone)
-order by count(c.callerPhone) desc
-);
+order by count(c.callerPhone) desc;
 
 -- --------------------------------------------------------
 
