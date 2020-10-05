@@ -1,5 +1,8 @@
 package no.roedt.ringesentralen.samtale
 
-data class StartSamtaleRequest(var ringerID: Long, var skalRingesID: Long) {
-    constructor() : this(-1, -1)
-}
+import com.fasterxml.jackson.annotation.JsonProperty
+
+data class StartSamtaleRequest(
+        @JsonProperty("ringerID") val ringerID: Long,
+        @JsonProperty("skalRingesID") val skalRingesID: Long
+)

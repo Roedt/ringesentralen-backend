@@ -1,5 +1,8 @@
 package no.roedt.ringesentralen.brukere
 
-data class TilgangsendringsRequest(var utfoerende: Long, var personMedEndraTilgang: Long) {
-    constructor() : this(-1, -1)
-}
+import com.fasterxml.jackson.annotation.JsonProperty
+
+data class TilgangsendringsRequest(
+        @JsonProperty("utfoerende") val utfoerende: Long,
+        @JsonProperty("personMedEndraTilgang") val personMedEndraTilgang: Long
+)
