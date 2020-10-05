@@ -1,11 +1,13 @@
-package no.roedt.ringesentralen
+package no.roedt.ringesentralen.samtale
 
+import no.roedt.ringesentralen.PersonRepository
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
 
 interface RingService {
     fun hentNestePersonAaRinge(nestePersonAaRingeRequest: Int): RingbarPerson?
 }
+
 
 @ApplicationScoped
 class RingServiceBean(

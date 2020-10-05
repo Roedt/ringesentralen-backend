@@ -1,6 +1,7 @@
-package no.roedt.ringesentralen
+package no.roedt.ringesentralen.samtale
 
 import com.nhaarman.mockitokotlin2.*
+import no.roedt.ringesentralen.PersonRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import javax.persistence.EntityManager

@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen
+package no.roedt.ringesentralen.samtale
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import javax.persistence.Cacheable

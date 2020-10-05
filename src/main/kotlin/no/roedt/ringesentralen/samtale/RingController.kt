@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen
+package no.roedt.ringesentralen.samtale
 
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.openapi.annotations.Operation
