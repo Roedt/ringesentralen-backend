@@ -6,7 +6,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 
-@Path("/ring")
+@Path("/samtale")
 @Tag(name = "Ring")
 class RingController(val ringService: RingService) {
 
@@ -17,5 +17,13 @@ class RingController(val ringService: RingService) {
     @Operation(summary = "Finn neste person å ringe")
     @Retry
     fun hentNestePersonAaRinge(@QueryParam("lokallagID") nestePersonAaRingeRequest: Int): RingbarPerson? = ringService.hentNestePersonAaRinge(nestePersonAaRingeRequest)
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/startSamtale")
+    @Operation(summary = "Start samtale")
+    @Retry
+    fun startSamtale(startSamtaleRequest: StartSamtaleRequest): StartSamtaleResponse = ringService.startSamtale(startSamtaleRequest)
 
 }
