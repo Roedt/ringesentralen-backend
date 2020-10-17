@@ -384,8 +384,9 @@ WHERE p.groupID = 2;
 -- --------------------------------------------------------
 
 create or replace view v_noenRingerTilbake AS
-SELECT p.nameEnlister, concat(p.givenName,' ',p.familyName) as name, p.postnumber, p.phone, l.name as lokallagNavn, l.id as lokallag
+SELECT p.nameEnlister, concat(p.givenName,' ',p.familyName) as name, p.postnumber, p.phone, l.name as lokallagNavn, l.id as lokallag, c.callerPhone as callerPhone
 FROM person p
+inner join `call` c on p.phone = c.calledPhone
 left outer join lokallag l on p.lokallag = l.id;
 
 -- --------------------------------------------------------
@@ -414,9 +415,10 @@ inner join `ringer` r on p.ringerID = r.id;
 -- --------------------------------------------------------
 
 create or replace view v_personerGodkjenning AS
-SELECT userCreated, concat(givenName, ' ', familyName) as name, phone, l.id as lokallagId, l.name as lokallag, email, postnumber, p.groupID
-FROM `person` p 
-left outer join `lokallag` l on p.lokallag = l.id;
+SELECT r.userCreated, concat(givenName, ' ', familyName) as name, phone, l.id as lokallagId, l.name as lokallag, email, postnumber, p.groupID
+FROM `person` p
+inner join `ringer` r on p.ringerID = r.id
+left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.userCreated asc;
 
 -- --------------------------------------------------------
 
