@@ -26,4 +26,12 @@ class RingController(val ringService: RingService) {
     @Retry
     fun startSamtale(startSamtaleRequest: StartSamtaleRequest): StartSamtaleResponse = ringService.startSamtale(startSamtaleRequest)
 
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/registrerResultatFraSamtale")
+    @Operation(summary = "Registrer resultat fra samtale")
+    @Retry
+    fun registrerResultatFraSamtale(resultatFraSatmtaleRequest: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse = ringService.registrerResultatFraSamtale(resultatFraSatmtaleRequest)
+
 }
