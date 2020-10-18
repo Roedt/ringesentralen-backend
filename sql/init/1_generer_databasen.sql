@@ -39,12 +39,11 @@ INSERT INTO `fylker` (`id`, `name`) VALUES
 
 
 CREATE TABLE IF NOT EXISTS `postnumber` (
-  `postnumber` varchar(4) NOT NULL,
+  `postnumber` varchar(4) PRIMARY KEY NOT NULL,
   `postplace` varchar(250) NOT NULL,
   `countyID` int(2) NOT NULL,
   `municipalityID` int(2) NOT NULL,
   `municipality` varchar(30) NOT NULL,
-  PRIMARY KEY (`postnumber`),
   INDEX(`countyID`),
   FOREIGN KEY (`countyID`) REFERENCES `fylker`(`id`)
 );
@@ -82,18 +81,16 @@ INSERT INTO callGroup VALUES (9, 'admin');
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `ringer` (
-  `id` int(6) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(6) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `password` varchar(128) NOT NULL,
-  `userCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY(`id`)
+  `userCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `lokallag` (
-  `id` int(3) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL UNIQUE,
-  PRIMARY KEY(`id`)
+  `id` int(3) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL UNIQUE
 );
 
 insert into `lokallag` (name) values 
@@ -112,7 +109,7 @@ insert into `lokallag` (name) values
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `person` (
-  `id` int(6) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(6) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `givenName` varchar(60) DEFAULT NULL,
   `familyName` varchar(60) DEFAULT NULL,
   `phone` varchar(15) NOT NULL UNIQUE,
@@ -128,9 +125,8 @@ CREATE TABLE IF NOT EXISTS `person` (
   `isDigital` tinyint(1) NOT NULL DEFAULT 0,
   `userCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lastCall` int(11) NOT NULL DEFAULT '0',
-  `ringerID`int(6) unsigned DEFAULT NULL,
+  `ringerID` int(6) unsigned DEFAULT NULL,
   `lokallag` int(3) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
   FOREIGN KEY (`groupID`) REFERENCES `callGroup` (`id`),
   FOREIGN KEY(`countyID`) REFERENCES `fylker` (`id`),
   FOREIGN KEY(`ringerID`) REFERENCES `ringer` (`id`),
@@ -146,12 +142,11 @@ CREATE TABLE IF NOT EXISTS `person` (
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `oppfoelgingKorona` (
-  `personId` int(6) unsigned NOT NULL,
+  `personId` int(6) unsigned PRIMARY KEY NOT NULL,
   `koronaprogram` tinyint(1) DEFAULT NULL,
   `merAktiv` tinyint(1) DEFAULT NULL,
   `valgkampsbrev` tinyint(1) DEFAULT NULL,
   `vilIkkeBliRingt` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`personId`),
   FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
   INDEX (`personId`)
 );
@@ -159,11 +154,10 @@ CREATE TABLE IF NOT EXISTS `oppfoelgingKorona` (
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `oppfoelgingEkstern` (
-  `personId` int(6) unsigned NOT NULL,
+  `personId` int(6) unsigned PRIMARY KEY NOT NULL,
   `hasActuallyReceived` tinyint(1) DEFAULT NULL,
   `stopSubscription` tinyint(1) DEFAULT NULL,
   `smsReminder` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`personId`),
   FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
   INDEX (`personId`)
 );
@@ -258,14 +252,13 @@ CREATE TABLE IF NOT EXISTS `godkjenning` (
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `call` (
-  `callID` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `callID` int(11) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `calledPhone` varchar(15) NOT NULL,
   `callerPhone` varchar(8) NOT NULL,
   `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `typeCall` int(1) DEFAULT NULL,
   `result` int(1) NOT NULL DEFAULT '0',
   `comment` longtext,
-  PRIMARY KEY (`callID`),
   UNIQUE KEY `callID` (`callID`),
   KEY `callID_2` (`callID`),
   INDEX (`result`),
