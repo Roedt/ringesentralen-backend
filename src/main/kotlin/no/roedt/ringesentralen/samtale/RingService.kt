@@ -34,27 +34,16 @@ class RingServiceBean(
     }
 
     override fun registrerResultatFraSamtale(request: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse {
-        /*
-	function ringtToGangerTidligereUtenSvarOgIngenAndreResponser($mysqli, $calledPhone) {
-		$sql =
-		$resultsQuery = mysqli_query($mysqli, "select 1 from `call` where calledPhone = $calledPhone and result = 0");
-		$antallIkkeSvar = mysqli_num_rows($resultsQuery);
-		$antallSvarQuery = mysqli_query($mysqli, "select 1 from `call` where calledPhone = $calledPhone and result != 0 and result != 9");
-		$antallSvar = mysqli_num_rows($antallSvarQuery);
-
-		return $antallIkkeSvar > 2 && $antallSvar == 0;
-	}
-	function updatePersonsGroupIDAndMaybeNeedsFollowup($mysqli, $result, $calledPhone) {
-		elseif ($result == 0 && ringtToGangerTidligereUtenSvarOgIngenAndreResponser($mysqli, $calledPhone)) {
-			mysqli_query($mysqli, "CALL sp_updateGroupID($calledPhone, 2)");
-		}
-	}
-         */
         val callerPhone = personRepository.findById(request.ringerID).phone
         val calledPhone = personRepository.findById(request.ringtID).phone
         assert(request.result in request.modus.gyldigeResultattyper)
         entityManager.executeQuery("CALL sp_registrerSamtale($calledPhone, $callerPhone, ${request.result.nr}, '${request.kommentar}')")
-        request.result.nesteGroupID?.nr?.let { entityManager.executeQuery("CALL sp_updateGroupID($calledPhone, $it)") }
+        val nesteGroupID: GroupID? = when  {
+            request.result.nesteGroupID != null -> request.result.nesteGroupID
+            erFleireEnnToIkkeSvar(calledPhone, request) -> GroupID.Ferdigringt
+            else -> null
+        }
+        nesteGroupID?.nr?.let { entityManager.executeQuery("CALL sp_updateGroupID($calledPhone, $it)") }
         if (request.modus == Modus.Korona && request.result == Resultat.Svarte) {
             registrerKoronaspesifikkeResultat(request, calledPhone)
         }
@@ -62,9 +51,16 @@ class RingServiceBean(
         return ResultatFraSamtaleResponse(oppdatert = LocalDateTime.now())
     }
 
+    private fun erFleireEnnToIkkeSvar(calledPhone: String, request: ResultatFraSamtaleRequest): Boolean {
+        val resultat: List<Int>? = entityManager.executeQuery("select result from `call` where calledPhone = $calledPhone and result = 0")?.map { it as Int }
+        val fleireEnnToIkkeSvar: Boolean = (resultat?.filter { it == 0 }?.count() ?: 0) > 2
+        val ingenSvar: Boolean = (resultat?.filter { it != 0 && it != 9 }?.count() ?: 0) == 0
+        return ingenSvar && fleireEnnToIkkeSvar && request.result == Resultat.Ikke_svar
+    }
+
     private fun registrerKoronaspesifikkeResultat(request: ResultatFraSamtaleRequest, calledPhone: String) {
         val resultat: KoronaspesifikkeResultat = request.modusspesifikkeResultat as KoronaspesifikkeResultat
-        entityManager.executeQuery("CALL sp_registrerOppfoelgingKorona($calledPhone, ${resultat.vilHaKoronaprogram}, ${resultat.vilBliMerAktiv}, ${resultat.vilHaValgkampsbrev}, ${request.vilIkkeBliRingt})");
+        entityManager.executeQuery("CALL sp_registrerOppfoelgingKorona($calledPhone, ${resultat.vilHaKoronaprogram}, ${resultat.vilBliMerAktiv}, ${resultat.vilHaValgkampsbrev}, ${request.vilIkkeBliRingt})")
     }
 
     fun EntityManager.executeQuery(query: String) = entityManager.createNativeQuery(query).resultList
