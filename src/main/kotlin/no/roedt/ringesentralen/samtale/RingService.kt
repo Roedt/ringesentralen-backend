@@ -9,7 +9,7 @@ import javax.persistence.EntityManager
 interface RingService {
     fun hentNestePersonAaRinge(nestePersonAaRingeRequest: Int): RingbarPerson?
     fun startSamtale(request: StartSamtaleRequest): StartSamtaleResponse
-    fun registrerResultatFraSamtale(resultatFraSamtaleRequest: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse
+    fun registrerResultatFraSamtale(request: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse
 }
 
 @ApplicationScoped
