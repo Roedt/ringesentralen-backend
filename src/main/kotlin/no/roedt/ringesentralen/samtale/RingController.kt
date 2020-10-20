@@ -34,4 +34,13 @@ class RingController(val ringService: RingService) {
     @Retry
     fun registrerResultatFraSamtale(resultatFraSatmtaleRequest: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse = ringService.registrerResultatFraSamtale(resultatFraSatmtaleRequest)
 
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/noenRingerTilbake")
+    @Operation(summary = "Noen ringer tilbake")
+    @Retry
+    fun noenRingerTilbake(request: RingerTilbakeRequest): RingbarPerson = ringService.noenRingerTilbake(request)
+
 }

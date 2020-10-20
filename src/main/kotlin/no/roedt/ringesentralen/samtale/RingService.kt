@@ -10,6 +10,7 @@ interface RingService {
     fun hentNestePersonAaRinge(nestePersonAaRingeRequest: Int): RingbarPerson?
     fun startSamtale(request: StartSamtaleRequest): StartSamtaleResponse
     fun registrerResultatFraSamtale(request: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse
+    fun noenRingerTilbake(request: RingerTilbakeRequest): RingbarPerson
 }
 
 @ApplicationScoped
@@ -49,6 +50,20 @@ class RingServiceBean(
         }
 
         return ResultatFraSamtaleResponse(oppdatert = LocalDateTime.now())
+    }
+
+    override fun noenRingerTilbake(request: RingerTilbakeRequest): RingbarPerson {
+        val callerPhone = personRepository.findById(request.ringerID).phone
+        val calledPhone = request.ringtNummer
+        val personSomRingerTilbake: RingbarPerson = personRepository.find("phone", calledPhone).firstResult()
+        if (entityManager.executeQuery("SELECT 1 FROM v_noenRingerTilbake WHERE phone = '$calledPhone' AND callerPhone = '$callerPhone' LIMIT 1").isEmpty()) {
+            throw Exception("Du kan berre registrere å bli ringt opp frå folk du har ringt tidlegare.")
+        }
+        startSamtale(StartSamtaleRequest(
+                ringerID = request.ringerID,
+                skalRingesID = personSomRingerTilbake.id
+        ))
+        return personSomRingerTilbake
     }
 
     private fun erFleireEnnToIkkeSvar(calledPhone: String, request: ResultatFraSamtaleRequest): Boolean {
