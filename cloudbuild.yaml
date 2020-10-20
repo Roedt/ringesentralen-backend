@@ -9,7 +9,7 @@ steps:
   # Run the Maven build
   - name: maven:3.6.0-jdk-11-slim
     entrypoint: 'mvn'
-    args: [ '-Dmaven.repo.local=/workspace/.m2/repository', 'package', '-DskipTests', '-B' ]
+    args: [ '-Dmaven.repo.local=/workspace/.m2/repository', 'package', '-B' ]
   # Update M2 repo cache
   - name: gcr.io/$PROJECT_ID/tar
     id: Compress M2 Cache
