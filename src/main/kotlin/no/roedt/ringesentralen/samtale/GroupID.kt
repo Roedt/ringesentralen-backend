@@ -10,5 +10,9 @@ enum class GroupID(val nr: Int, val skildring: String) {
     GodkjentRinger(6, "godkjent ringer og relay-bruker"),
     TrengerOppfoelging(7, "trenger oppfølging"),
     LokalGodkjenner(8, "ringer som kan godkjenne ringere i sitt lokallag"),
-    Admin(9, "admin")
+    Admin(9, "admin");
+
+    companion object {
+        fun from(value: Int): GroupID = values().first { it.nr == value }
+    }
 }
