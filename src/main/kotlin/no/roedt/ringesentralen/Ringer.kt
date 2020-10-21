@@ -5,7 +5,7 @@ import no.roedt.ringesentralen.samtale.GroupID
 data class Ringer(
         val id: Long,
         val groupID: GroupID,
-        val lokallag: Int
+        val lokallag: Lokallag
 ) {
     fun isAdmin(): Boolean {
         return groupID == GroupID.Admin

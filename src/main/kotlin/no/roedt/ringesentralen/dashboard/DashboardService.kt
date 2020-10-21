@@ -19,11 +19,7 @@ class DashboardServiceBean(
 ) : DashboardService {
 
     override fun getDashboard(ringerID: Long): DashboardResponse {
-        val ringerinfo = entityManager.createNativeQuery("SELECT id, groupID, lokallag from person where id = $ringerID").resultList.first() as Array<*>
-        val ringer = Ringer(id = (ringerinfo[0] as Int).toLong(), GroupID.from(ringerinfo[1] as Int), ringerinfo[2] as Int)
-        val mineLokallag =
-                if(ringer.isAdmin()) { lokallagRepository.findAll(Sort.ascending("name")).list() }
-                else { lokallagRepository.find("id", ringer.lokallag).list<Lokallag>() }
+        val mineLokallag = getMineLokallag(ringerID)
 
         val statusliste: List<Lokallagsstatus> = mineLokallag
                 .map { lokallag ->
@@ -40,4 +36,24 @@ class DashboardServiceBean(
                 .toList()
         return DashboardResponse(statusliste = statusliste)
     }
+
+    private fun getMineLokallag(ringerID: Long): List<Lokallag> {
+        val ringer = toRinger(ringerID)
+        return if (ringer.isAdmin()) {
+            lokallagRepository.findAll(Sort.ascending("name")).list()
+        } else {
+            lokallagRepository.find("id", ringer.lokallag).list()
+        }
+    }
+
+    private fun toRinger(ringerID: Long): Ringer {
+        val ringerinfo = entityManager.createNativeQuery("SELECT id, groupID, lokallag from person where id = $ringerID").resultList.first() as Array<*>
+        return Ringer(
+                id = ringerinfo[0].toLong(),
+                groupID = GroupID.from(ringerinfo[1] as Int),
+                lokallag = lokallagRepository.findById(ringerinfo[2].toLong())
+        )
+    }
+
+    fun Any?.toLong() : Long = (this as Int).toLong()
 }
