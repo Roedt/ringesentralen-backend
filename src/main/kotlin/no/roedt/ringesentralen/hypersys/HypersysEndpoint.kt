@@ -54,28 +54,40 @@ class HypersysEndpoint {
         httpPost.entity = StringEntity("grant_type=client_credentials")
         val response = httpCall(httpPost)
         assert(response?.statusLine?.statusCode == 200)
-        return readResponse(response)?.let<String, Token> { kMapper.readValue(it) }!!
+        return readResponse(response)
     }
-
-    private fun readResponse(response: CloseableHttpResponse?) =
-            response?.entity?.content
-                    ?.bufferedReader()
-                    .use { it?.readText() }
 
     @GET
     @Path("/lokallag")
     @Produces(MediaType.APPLICATION_JSON)
-    fun getAlleLokallag() : List<Organisasjonsledd> =
-            readResponse(gjennomfoerGetkall("/org/api/", 200))?.let<String, List<Organisasjonsledd>> { kMapper.readValue(it) }!!
+    fun getAlleLokallag() : List<Organisasjonsledd> = readResponse(gjennomfoerGetkall("/org/api/"))
 
-    private fun gjennomfoerGetkall(url: String, forventaStatuskode: Int): CloseableHttpResponse? {
+    @GET
+    @Path("/alleOrgan")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun getAlleOrganPaaLaagasteNivaa(): List<SingleOrgan> = getAlleLokallag().map { toSingleOrgans(it) }.flatten()
+
+    private fun toSingleOrgans(lokallag: Organisasjonsledd): List<SingleOrgan> {
+        val organs: Organs = readResponse(gjennomfoerGetkall("org/api/${lokallag.id}/organ"))
+        return organs.organs.map {
+            readResponse<SingleOrgan>(gjennomfoerGetkall("org/api/${lokallag.id}/organ/${it.id}"))
+        }
+    }
+
+    private fun gjennomfoerGetkall(url: String): CloseableHttpResponse? {
         ensureTokenIsValid()
         val httpGet = HttpGet("$baseURL/$url")
         httpGet.addHeader("Authorization", "Bearer ${token.access_token}")
         val response = httpCall(httpGet)
-        assert(response?.statusLine?.statusCode == forventaStatuskode)
+        assert(response?.statusLine?.statusCode == 200)
         return response
     }
+
+    private inline fun <reified T> readResponse(response: CloseableHttpResponse?) =
+            response?.entity?.content
+                    ?.bufferedReader()
+                    .use { it?.readText() }
+                    ?.let<String, T> { kMapper.readValue(it)}!!
 
     private fun ensureTokenIsValid() {
         if (token.expires_in <= 0) {
