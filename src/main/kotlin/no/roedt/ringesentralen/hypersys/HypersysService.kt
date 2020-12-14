@@ -16,9 +16,10 @@ import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
 
 interface HypersysService {
-    fun getTokenFromHypersys(): Token
+    fun getTokenFromHypersys(): GyldigToken
     fun getAlleLokallag(): List<Organisasjonsledd>
     fun getAlleOrganPaaLaagasteNivaa(): List<SingleOrgan>
+    fun login(loginRequest: LoginRequest): GyldigToken
 }
 
 @ApplicationScoped
@@ -32,7 +33,7 @@ class HypersysServiceBean : HypersysService {
     @ConfigProperty(name = "clientSecret")
     lateinit var clientSecret: String
 
-    lateinit var token: Token
+    lateinit var token: GyldigToken
 
     val kMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -42,7 +43,7 @@ class HypersysServiceBean : HypersysService {
         token = getTokenFromHypersys()
     }
 
-    override fun getTokenFromHypersys(): Token  {
+    override fun getTokenFromHypersys(): GyldigToken  {
         val base64Credentials: String = Base64.getEncoder().encodeToString(("$clientId:$clientSecret").toByteArray())
         val httpPost = HttpPost("$baseURL/api/o/token/")
         httpPost.addHeader("Authorization", "Basic $base64Credentials")
@@ -57,10 +58,21 @@ class HypersysServiceBean : HypersysService {
 
     override fun getAlleOrganPaaLaagasteNivaa(): List<SingleOrgan> = getAlleLokallag().map { toSingleOrgans(it) }.flatten()
 
+    override fun login(loginRequest: LoginRequest): GyldigToken {
+        val base64Credentials: String = Base64.getEncoder().encodeToString(("${loginRequest.brukarnamn}:${loginRequest.passord}").toByteArray())
+        val httpPost = HttpPost("$baseURL/api/o/token/")
+        httpPost.addHeader("Authorization", "Basic $base64Credentials")
+        httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded")
+        httpPost.entity = StringEntity("grant_type=password")
+        val response = httpCall(httpPost)
+        assert(response?.statusLine?.statusCode == 200)
+        return readResponse(response)
+    }
+
     private fun toSingleOrgans(lokallag: Organisasjonsledd): List<SingleOrgan> {
         val organs: Organs = readResponse(gjennomfoerGetkall("org/api/${lokallag.id}/organ"))
         return organs.organs.map {
-            readResponse(gjennomfoerGetkall("org/api/${lokallag.id}/organ/${it.id}"))
+            readResponse<SingleOrgan>(gjennomfoerGetkall("org/api/${lokallag.id}/organ/${it.id}"))
         }
     }
 
