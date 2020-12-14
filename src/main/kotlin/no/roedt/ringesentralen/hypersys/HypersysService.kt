@@ -60,7 +60,7 @@ class HypersysServiceBean : HypersysService {
     private fun toSingleOrgans(lokallag: Organisasjonsledd): List<SingleOrgan> {
         val organs: Organs = readResponse(gjennomfoerGetkall("org/api/${lokallag.id}/organ"))
         return organs.organs.map {
-            readResponse<SingleOrgan>(gjennomfoerGetkall("org/api/${lokallag.id}/organ/${it.id}"))
+            readResponse(gjennomfoerGetkall("org/api/${lokallag.id}/organ/${it.id}"))
         }
     }
 
