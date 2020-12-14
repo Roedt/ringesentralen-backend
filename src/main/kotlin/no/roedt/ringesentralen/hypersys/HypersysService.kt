@@ -67,8 +67,10 @@ class HypersysServiceBean : HypersysService {
         httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded")
         httpPost.entity = StringEntity("grant_type=password")
         val response = httpCall(httpPost)
-        assert(response?.statusLine?.statusCode == 200)
-        return readResponse(response)
+        if (response?.statusLine?.statusCode != 200) {
+            return readResponse(response) as UgyldigToken
+        }
+        return readResponse(response) as GyldigToken
     }
 
     private fun toSingleOrgans(lokallag: Organisasjonsledd): List<SingleOrgan> {
