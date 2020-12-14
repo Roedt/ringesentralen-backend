@@ -16,12 +16,12 @@ class HypersysEndpoint(val service: HypersysService) {
     @POST
     @Path("/login")
     @Produces(MediaType.APPLICATION_JSON)
-    fun login(loginRequest: LoginRequest): GyldigToken = service.login(loginRequest)
+    fun login(loginRequest: LoginRequest): Token = service.login(loginRequest)
 
     @GET
     @Path("/token")
     @Produces(MediaType.APPLICATION_JSON)
-    fun getTokenFromHypersys(): GyldigToken = service.getTokenFromHypersys()
+    fun getTokenFromHypersys(): Token = service.getTokenFromHypersys()
 
     @GET
     @Path("/lokallag")
