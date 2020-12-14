@@ -38,6 +38,8 @@ class DashboardServiceBean(
     }
 
     private fun getMineLokallag(ringerID: Long): List<Lokallag> {
+        if (ringerID == 0L)
+            return listOf()
         val ringer = toRinger(ringerID)
         return if (ringer.isAdmin()) {
             lokallagRepository.findAll(Sort.ascending("name")).list()
@@ -47,7 +49,10 @@ class DashboardServiceBean(
     }
 
     private fun toRinger(ringerID: Long): Ringer {
-        val ringerinfo = entityManager.createNativeQuery("SELECT id, groupID, lokallag from person where id = $ringerID").resultList.first() as Array<*>
+        val r = entityManager.createNativeQuery("SELECT id, groupID, lokallag from person where id = $ringerID").resultList
+        if (r.isEmpty())
+            throw RuntimeException("Ikkje logga inn")
+        val ringerinfo = r.first() as Array<*>
         return Ringer(
                 id = ringerinfo[0].toLong(),
                 groupID = GroupID.from(ringerinfo[1] as Int),
