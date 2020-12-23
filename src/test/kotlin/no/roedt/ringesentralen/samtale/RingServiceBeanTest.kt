@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.PersonRepository
+import no.roedt.ringesentralen.hypersys.GyldigToken
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -33,6 +34,7 @@ internal class RingServiceBeanTest {
         doReturn(mockQuery).whenever(entityManager).createNativeQuery(any())
 
         val request = ResultatFraSamtaleRequest(
+                token = GyldigToken("a", 1, "a", "a"),
                 modus = Modus.Korona,
                 ringerID = 1,
                 ringtID = 2,
@@ -53,6 +55,7 @@ internal class RingServiceBeanTest {
     @Test
     fun `resultattype som ikkje passar med modusen kastar feilmelding`() {
         val request = ResultatFraSamtaleRequest(
+                token = GyldigToken("a", 1, "a", "a"),
                 modus = Modus.Korona,
                 ringerID = 1,
                 ringtID = 2,
