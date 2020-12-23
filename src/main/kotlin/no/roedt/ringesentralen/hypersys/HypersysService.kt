@@ -14,6 +14,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.util.*
 import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
+import kotlin.collections.HashMap
 
 interface HypersysService {
     fun getTokenFromHypersys(): Token
@@ -33,7 +34,15 @@ class HypersysServiceBean : HypersysService {
     @ConfigProperty(name = "clientSecret")
     lateinit var clientSecret: String
 
+    @ConfigProperty(name = "brukarId")
+    lateinit var brukarId: String
+
+    @ConfigProperty(name = "brukarSecret")
+    lateinit var brukarSecret: String
+
     lateinit var token: Token
+
+    val logins = HashMap<String, GyldigToken>()
 
     val kMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -53,7 +62,8 @@ class HypersysServiceBean : HypersysService {
         if (response?.statusLine?.statusCode != 200) {
             return readResponse(response) as UgyldigToken
         }
-        return readResponse(response) as GyldigToken
+        val gyldigToken = readResponse(response) as GyldigToken
+        return gyldigToken
     }
 
     override fun getAlleLokallag(): List<Organisasjonsledd> = readResponse(gjennomfoerGetkall("/org/api/"))
@@ -61,16 +71,18 @@ class HypersysServiceBean : HypersysService {
     override fun getAlleOrganPaaLaagasteNivaa(): List<SingleOrgan> = getAlleLokallag().map { toSingleOrgans(it) }.flatten()
 
     override fun login(loginRequest: LoginRequest): Token {
-        val base64Credentials: String = Base64.getEncoder().encodeToString(("${loginRequest.brukarnamn}:${loginRequest.passord}").toByteArray())
+        val base64Credentials: String = Base64.getEncoder().encodeToString(("${brukarId}:${brukarSecret}").toByteArray())
         val httpPost = HttpPost("$baseURL/api/o/token/")
         httpPost.addHeader("Authorization", "Basic $base64Credentials")
         httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded")
-        httpPost.entity = StringEntity("grant_type=password")
+        httpPost.entity = StringEntity("grant_type=password&username=${loginRequest.brukarnamn}&password=${loginRequest.passord}")
         val response = httpCall(httpPost)
         if (response?.statusLine?.statusCode != 200) {
             return readResponse(response) as UgyldigToken
         }
-        return readResponse(response) as GyldigToken
+        val gyldigToken = readResponse(response) as GyldigToken
+        logins[loginRequest.brukarnamn] = gyldigToken
+        return gyldigToken
     }
 
     private fun toSingleOrgans(lokallag: Organisasjonsledd): List<SingleOrgan> {
