@@ -52,18 +52,14 @@ class HypersysServiceBean : HypersysService {
         token = getTokenFromHypersys()
     }
 
-    override fun getTokenFromHypersys(): Token  {
-        val base64Credentials: String = Base64.getEncoder().encodeToString(("$clientId:$clientSecret").toByteArray())
-        val httpPost = HttpPost("$baseURL/api/o/token/")
-        httpPost.addHeader("Authorization", "Basic $base64Credentials")
-        httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded")
+    override fun getTokenFromHypersys(): Token {
+        val httpPost = createHttpPostWithHeader(clientId, clientSecret)
         httpPost.entity = StringEntity("grant_type=client_credentials")
         val response = httpCall(httpPost)
         if (response?.statusLine?.statusCode != 200) {
             return readResponse(response) as UgyldigToken
         }
-        val gyldigToken = readResponse(response) as GyldigToken
-        return gyldigToken
+        return readResponse(response) as GyldigToken
     }
 
     override fun getAlleLokallag(): List<Organisasjonsledd> = readResponse(gjennomfoerGetkall("/org/api/"))
@@ -71,10 +67,7 @@ class HypersysServiceBean : HypersysService {
     override fun getAlleOrganPaaLaagasteNivaa(): List<SingleOrgan> = getAlleLokallag().map { toSingleOrgans(it) }.flatten()
 
     override fun login(loginRequest: LoginRequest): Token {
-        val base64Credentials: String = Base64.getEncoder().encodeToString(("${brukarId}:${brukarSecret}").toByteArray())
-        val httpPost = HttpPost("$baseURL/api/o/token/")
-        httpPost.addHeader("Authorization", "Basic $base64Credentials")
-        httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded")
+        val httpPost = createHttpPostWithHeader(brukarId, brukarSecret)
         httpPost.entity = StringEntity("grant_type=password&username=${loginRequest.brukarnamn}&password=${loginRequest.passord}")
         val response = httpCall(httpPost)
         if (response?.statusLine?.statusCode != 200) {
@@ -83,6 +76,14 @@ class HypersysServiceBean : HypersysService {
         val gyldigToken = readResponse(response) as GyldigToken
         logins[loginRequest.brukarnamn] = gyldigToken
         return gyldigToken
+    }
+
+    private fun createHttpPostWithHeader(id: String, secret: String): HttpPost {
+        val base64Credentials: String = Base64.getEncoder().encodeToString(("${id}:${secret}").toByteArray())
+        val httpPost = HttpPost("$baseURL/api/o/token/")
+        httpPost.addHeader("Authorization", "Basic $base64Credentials")
+        httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded")
+        return httpPost
     }
 
     private fun toSingleOrgans(lokallag: Organisasjonsledd): List<SingleOrgan> {
