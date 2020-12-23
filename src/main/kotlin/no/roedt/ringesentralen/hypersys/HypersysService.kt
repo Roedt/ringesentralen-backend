@@ -14,7 +14,6 @@ import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.util.*
 import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
-import kotlin.collections.HashMap
 
 interface HypersysService {
     fun getTokenFromHypersys(): Token
@@ -41,8 +40,6 @@ class HypersysServiceBean : HypersysService {
     lateinit var brukarSecret: String
 
     lateinit var token: Token
-
-    val logins = HashMap<String, GyldigToken>()
 
     val kMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -73,9 +70,7 @@ class HypersysServiceBean : HypersysService {
         if (response?.statusLine?.statusCode != 200) {
             return readResponse(response) as UgyldigToken
         }
-        val gyldigToken = readResponse(response) as GyldigToken
-        logins[loginRequest.brukarnamn] = gyldigToken
-        return gyldigToken
+        return readResponse(response) as GyldigToken
     }
 
     private fun createHttpPostWithHeader(id: String, secret: String): HttpPost {
