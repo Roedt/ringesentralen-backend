@@ -29,30 +29,9 @@
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>kotlin-bom</artifactId>
-        <version>${kotlin.version}</version>
-        <type>pom</type>
-      </dependency>
-      <dependency>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>kotlin-stdlib-common</artifactId>
-        <version>${kotlin.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>kotlin-stdlib-jdk8</artifactId>
-        <version>${kotlin.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>kotlin-stdlib-jdk7</artifactId>
-        <version>${kotlin.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>kotlin-reflect</artifactId>
-        <version>${kotlin.version}</version>
+        <groupId>net.bytebuddy</groupId>
+        <artifactId>byte-buddy</artifactId>
+        <version>1.10.17</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -64,7 +43,6 @@
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib</artifactId>
-      <version>${kotlin.version}</version>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -214,6 +192,7 @@
             </goals>
             <configuration>
               <rules>
+                <dependencyConvergence/>
                 <requireMavenVersion>
                   <version>3.6.3</version>
                 </requireMavenVersion>

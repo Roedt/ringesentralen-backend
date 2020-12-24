@@ -7,7 +7,7 @@ import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
 
 interface RingService {
-    fun hentNestePersonAaRinge(nestePersonAaRingeRequest: Int): RingbarPerson?
+    fun hentNestePersonAaRinge(nestePersonPersonAaRingeRequest: NestePersonAaRingeRequest): RingbarPerson?
     fun startSamtale(request: StartSamtaleRequest): StartSamtaleResponse
     fun registrerResultatFraSamtale(request: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse
     fun noenRingerTilbake(request: RingerTilbakeRequest): RingbarPerson
@@ -19,9 +19,9 @@ class RingServiceBean(
         val entityManager: EntityManager
 ): RingService {
 
-    override fun hentNestePersonAaRinge(nestePersonAaRingeRequest: Int): RingbarPerson? =
+    override fun hentNestePersonAaRinge(nestePersonAaRingeRequest: NestePersonAaRingeRequest): RingbarPerson? =
             entityManager
-                    .createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '$nestePersonAaRingeRequest'")
+                    .createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${nestePersonAaRingeRequest.lokallag.id}'")
                     .resultList
                     .firstOrNull()
                     ?.let { it as Int}
@@ -60,6 +60,7 @@ class RingServiceBean(
             throw Exception("Du kan berre registrere å bli ringt opp frå folk du har ringt tidlegare.")
         }
         startSamtale(StartSamtaleRequest(
+                token = request.token,
                 ringerID = request.ringerID,
                 skalRingesID = personSomRingerTilbake.id
         ))

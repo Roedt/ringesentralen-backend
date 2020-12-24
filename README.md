@@ -10,6 +10,9 @@ Backend for Ringesentralen.
 
 Punkt 1 startar databasen på port 3306, og admin-panelet for databasen på port 9080.
 
+NB: Systemet baserer seg på innlogging via Hypersys. URL hit, pluss klient-idar og -løyndommar, må definerast på eit eller anna vis som miljøvariablar. 
+Da med namn som definert i HypersysEndpoint.
+
 ## Deploy til prod
 Push til main-greina startar automatisk eit bygg på Google Cloud Build, som gjer mvn package, lager Docker-image og deployar det til Google Cloud Run
 

@@ -1,7 +1,9 @@
 package no.roedt.ringesentralen.samtale
 
 import com.nhaarman.mockitokotlin2.*
+import no.roedt.ringesentralen.Lokallag
 import no.roedt.ringesentralen.PersonRepository
+import no.roedt.ringesentralen.hypersys.GyldigToken
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import javax.persistence.EntityManager
@@ -27,7 +29,10 @@ internal class RingTest {
         doReturn(listOf(1234)).whenever(typedQuery).resultList
         doReturn(typedQuery).whenever(entityManager).createNativeQuery(any())
 
-        ringController.hentNestePersonAaRinge(1)
+        ringController.hentNestePersonAaRinge(NestePersonAaRingeRequest(
+                token = GyldigToken("a", 1, "a", "a"),
+                lokallag = Lokallag("lag1")
+        ))
         verify(entityManager).createNativeQuery(any())
         verify(personRepository).findById(1234)
     }
@@ -39,7 +44,11 @@ internal class RingTest {
         doReturn(emptyList).whenever(typedQuery).resultList
         doReturn(typedQuery).whenever(entityManager).createNativeQuery(any())
 
-        ringController.hentNestePersonAaRinge(1)
+
+        ringController.hentNestePersonAaRinge(NestePersonAaRingeRequest(
+                token = GyldigToken("a", 1, "a", "a"),
+                lokallag = Lokallag("lag1")
+        ))
         verify(entityManager).createNativeQuery(any())
         verifyZeroInteractions(personRepository)
     }
