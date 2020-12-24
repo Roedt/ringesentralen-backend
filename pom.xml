@@ -33,6 +33,11 @@
         <artifactId>byte-buddy</artifactId>
         <version>1.10.17</version>
       </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-classworlds</artifactId>
+        <version>2.6.0</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
