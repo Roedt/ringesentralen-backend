@@ -16,12 +16,6 @@ interface HypersysService {
 @ApplicationScoped
 class HypersysServiceBean : HypersysService {
 
-    @ConfigProperty(name = "brukarId")
-    lateinit var brukarId: String
-
-    @ConfigProperty(name = "brukarSecret")
-    lateinit var brukarSecret: String
-
     lateinit var token: Token
 
     @Inject
@@ -30,21 +24,16 @@ class HypersysServiceBean : HypersysService {
     @Inject
     lateinit var hypersysTokenVerifier: HypersysTokenVerifier
 
+    @Inject
+    lateinit var hypersysLoginBean: HypersysLoginBean
+
     override fun getTokenFromHypersys() = hypersysTokenVerifier.getTokenFromHypersys()
 
     override fun getAlleLokallag(): List<Organisasjonsledd> = hypersysProxy.readResponse(gjennomfoerGetkall("/org/api/"))
 
     override fun getAlleOrganPaaLaagasteNivaa(): List<SingleOrgan> = getAlleLokallag().map { toSingleOrgans(it) }.flatten()
 
-    override fun login(loginRequest: LoginRequest): Token {
-        val httpPost = hypersysProxy.createHttpPostWithHeader(brukarId, brukarSecret)
-        httpPost.entity = StringEntity("grant_type=password&username=${loginRequest.brukarnamn}&password=${loginRequest.passord}")
-        val response = hypersysProxy.httpCall(httpPost)
-        if (response?.statusLine?.statusCode != 200) {
-            return hypersysProxy.readResponse(response) as UgyldigToken
-        }
-        return hypersysProxy.readResponse(response) as GyldigToken
-    }
+    override fun login(loginRequest: LoginRequest): Token = hypersysLoginBean.login(loginRequest)
 
     private fun toSingleOrgans(lokallag: Organisasjonsledd): List<SingleOrgan> {
         val organs: Organs = hypersysProxy.readResponse(gjennomfoerGetkall("org/api/${lokallag.id}/organ"))
