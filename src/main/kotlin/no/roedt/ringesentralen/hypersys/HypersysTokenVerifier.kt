@@ -4,19 +4,17 @@ import org.apache.http.entity.StringEntity
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 
 @ApplicationScoped
-class HypersysTokenVerifier {
+class HypersysTokenVerifier(
+        val hypersysProxy: HypersysProxy
+) {
 
     @ConfigProperty(name = "clientId")
     lateinit var clientId: String
 
     @ConfigProperty(name = "clientSecret")
     lateinit var clientSecret: String
-
-    @Inject
-    lateinit var hypersysProxy: HypersysProxy
 
     lateinit var token: Token
 

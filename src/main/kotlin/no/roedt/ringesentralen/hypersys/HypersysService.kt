@@ -2,7 +2,6 @@ package no.roedt.ringesentralen.hypersys
 
 import org.apache.http.client.methods.CloseableHttpResponse
 import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 
 interface HypersysService {
     fun getTokenFromHypersys(): Token
@@ -12,18 +11,11 @@ interface HypersysService {
 }
 
 @ApplicationScoped
-class HypersysServiceBean : HypersysService {
-
-    lateinit var token: Token
-
-    @Inject
-    lateinit var hypersysProxy: HypersysProxy
-
-    @Inject
-    lateinit var hypersysTokenVerifier: HypersysTokenVerifier
-
-    @Inject
-    lateinit var hypersysLoginBean: HypersysLoginBean
+class HypersysServiceBean(
+        val hypersysProxy: HypersysProxy,
+        val hypersysTokenVerifier: HypersysTokenVerifier,
+        val hypersysLoginBean: HypersysLoginBean
+) : HypersysService {
 
     override fun getTokenFromHypersys() = hypersysTokenVerifier.getTokenFromHypersys()
 
