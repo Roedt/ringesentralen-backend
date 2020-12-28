@@ -1,13 +1,9 @@
 package no.roedt.ringesentralen.hypersys
 
 import no.roedt.ringesentralen.PersonRepository
-import no.roedt.ringesentralen.brukere.Brukerendring
-import no.roedt.ringesentralen.brukere.TilgangsendringsRequest
-import no.roedt.ringesentralen.samtale.GroupID
 import org.apache.http.entity.StringEntity
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.enterprise.context.Dependent
-import javax.inject.Inject
 import javax.persistence.EntityManager
 
 @Dependent
@@ -45,6 +41,10 @@ class HypersysLoginBean(
         val brukarinformasjon: Brukarinformasjon =
                 hypersysProxy.readResponse(hypersysProxy.gjennomfoerGetkall(
                         "url til info om personen + ${loginRequest.brukarnamn}", token))
+        // TODO: Vurder kor mykje av dette som no bør lagrast i systemet, og kva som bør hentast ved behov
+        // Eventuelt om vi skal hente dette frå hypersys ved kvar innlogging, og så mellomlagre?
+        // Sånn at ved første gongs innlogging blir infoen registrert, og ved andre gongs innlogging og utover oppdatert
+        // Bør kunne funke
         entityManager.createNativeQuery(
                 "CALL sp_registrerNyBruker(" +
                         "${brukarinformasjon.fornamn}," +

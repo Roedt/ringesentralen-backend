@@ -1,8 +1,6 @@
 package no.roedt.ringesentralen.hypersys
 
 import org.apache.http.client.methods.CloseableHttpResponse
-import org.apache.http.entity.StringEntity
-import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
