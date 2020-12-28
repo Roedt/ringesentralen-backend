@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.hypersys
+package no.roedt.ringesentralen.hypersys.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
