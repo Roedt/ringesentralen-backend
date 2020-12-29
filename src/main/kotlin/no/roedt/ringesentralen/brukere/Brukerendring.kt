@@ -1,3 +1,5 @@
 package no.roedt.ringesentralen.brukere
 
-data class Brukerendring(val personID: Long, val nyGroupId: Int)
+import no.roedt.ringesentralen.samtale.GroupID
+
+data class Brukerendring(val personID: Long, val nyGroupId: GroupID)

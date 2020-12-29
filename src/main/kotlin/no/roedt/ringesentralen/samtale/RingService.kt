@@ -7,7 +7,7 @@ import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
 
 interface RingService {
-    fun hentNestePersonAaRinge(nestePersonPersonAaRingeRequest: NestePersonAaRingeRequest): RingbarPerson?
+    fun hentNestePersonAaRinge(nestePersonAaRingeRequest: NestePersonAaRingeRequest): RingbarPerson?
     fun startSamtale(request: StartSamtaleRequest): StartSamtaleResponse
     fun registrerResultatFraSamtale(request: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse
     fun noenRingerTilbake(request: RingerTilbakeRequest): RingbarPerson
@@ -19,6 +19,7 @@ class RingServiceBean(
         val entityManager: EntityManager
 ): RingService {
 
+    //TODO: Vurder om dette skal loggast
     override fun hentNestePersonAaRinge(nestePersonAaRingeRequest: NestePersonAaRingeRequest): RingbarPerson? =
             entityManager
                     .createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${nestePersonAaRingeRequest.lokallag.id}'")
