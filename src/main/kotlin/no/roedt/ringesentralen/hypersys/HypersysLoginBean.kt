@@ -24,12 +24,11 @@ class HypersysLoginBean(
         val httpPost = hypersysProxy.createHttpPostWithHeader(brukarId, brukarSecret)
         httpPost.entity = StringEntity("grant_type=password&username=${loginRequest.brukarnamn}&password=${loginRequest.passord}")
         val response = hypersysProxy.httpCall(httpPost)
-        val token = hypersysProxy.readResponse<GyldigToken>(response) // TODO: Typen her bør vera berre Token
         if (response?.statusLine?.statusCode != 200) {
-            return token as UgyldigToken
+            return hypersysProxy.readResponse<UgyldigToken>(response)
         }
 
-        val gyldigToken = token as GyldigToken
+        val gyldigToken = hypersysProxy.readResponse<GyldigToken>(response)
         oppdaterRingerFraaHypersys(gyldigToken)
         return gyldigToken
     }
