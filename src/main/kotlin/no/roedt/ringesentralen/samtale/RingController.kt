@@ -3,7 +3,10 @@ package no.roedt.ringesentralen.samtale
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
-import javax.ws.rs.*
+import javax.ws.rs.Consumes
+import javax.ws.rs.POST
+import javax.ws.rs.Path
+import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
 @Path("/samtale")
@@ -12,7 +15,7 @@ class RingController(val ringService: RingService) {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/neste")
     @Operation(summary = "Finn neste person å ringe")
     @Retry

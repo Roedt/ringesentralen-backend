@@ -6,5 +6,5 @@ import no.roedt.ringesentralen.hypersys.GyldigToken
 
 data class NestePersonAaRingeRequest(
         @JsonProperty("token") val token: GyldigToken,
-        @JsonProperty("lokallagID") val lokallag: Lokallag
+        @JsonProperty("lokallag") val lokallag: Lokallag
 )
