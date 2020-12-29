@@ -10,5 +10,5 @@ data class User(
         @JsonProperty("phone2") val phone2: String,
         @JsonProperty("roles") val roles: List<Any>,
         @JsonProperty("memberships") val memberships: List<Membership>,
-        @JsonProperty("addresses") val addresses: List<Any>
+        @JsonProperty("addresses") val addresses: List<Address>
 )
