@@ -82,7 +82,6 @@ INSERT INTO callGroup VALUES (9, 'admin');
 
 CREATE TABLE IF NOT EXISTS `ringer` (
   `id` int(6) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `password` varchar(128) NOT NULL,
   `userCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -401,7 +400,7 @@ order by count(c.callerPhone) desc;
 
 
 create or replace view v_ringerForInnlogging AS
-select distinct r.id, p.phone, r.password, p.email
+select distinct r.id, p.phone, p.email
 from `person` p
 inner join `ringer` r on p.ringerID = r.id;
 
@@ -537,8 +536,7 @@ DELIMITER //
     phoneIn varchar(15),
     emailIn varchar(100),
     postnumberIn int(4),
-    countyIDIn tinyint(2),
-    passwordIn varchar(128)
+    countyIDIn tinyint(2)
 )
 BEGIN
 
@@ -548,7 +546,7 @@ BEGIN
     END;
   ELSE
     BEGIN
-        INSERT INTO `ringer` (password) VALUES(passwordIn);
+        INSERT INTO `ringer` () VALUES();
         SET @ringerID:=(SELECT last_insert_id());
     END;
   END IF;
