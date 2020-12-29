@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.hypersys
 
+import no.roedt.ringesentralen.Brukarinformasjon
 import no.roedt.ringesentralen.PersonRepository
 import no.roedt.ringesentralen.hypersys.externalModel.Profile
 import org.apache.http.entity.StringEntity
@@ -11,7 +12,8 @@ import javax.persistence.EntityManager
 class HypersysLoginBean(
         private val personRepository: PersonRepository,
         private val hypersysProxy: HypersysProxy,
-        private val entityManager: EntityManager
+        private val entityManager: EntityManager,
+        private val modelConverter: ModelConverter
 ) {
 
     @ConfigProperty(name = "brukarId")
@@ -39,19 +41,22 @@ class HypersysLoginBean(
     private fun isRegistered(loginRequest: LoginRequest): Boolean = personRepository.find("email", loginRequest.brukarnamn).count() > 0L
 
     private fun register(loginRequest: LoginRequest, token: GyldigToken) {
-        val brukarinformasjon: Profile = hypersysProxy.readResponse(hypersysProxy.gjennomfoerGetkall("actor/api/profile/", token))
+        val profile: Profile = hypersysProxy.readResponse(hypersysProxy.gjennomfoerGetkall("actor/api/profile/", token))
+        val brukarinformasjon: Brukarinformasjon = modelConverter.convert(profile)
+
         // TODO: Vurder kor mykje av dette som no bør lagrast i systemet, og kva som bør hentast ved behov
         // Eventuelt om vi skal hente dette frå hypersys ved kvar innlogging, og så mellomlagre?
         // Sånn at ved første gongs innlogging blir infoen registrert, og ved andre gongs innlogging og utover oppdatert
         // Bør kunne funke
-        entityManager.createNativeQuery(
-                "CALL sp_registrerNyBruker(" +
-                       /* "${brukarinformasjon.fornamn}," +
-                        "${brukarinformasjon.etternamn}," +
-                        "${brukarinformasjon.telefonnummer}," +
-                        "${brukarinformasjon.epost}," +
-                        "${brukarinformasjon.postnummer}," +
-                        "${brukarinformasjon.fylke})" +
-*/                        "").resultList
+        val sql = "CALL sp_registrerNyBruker(" +
+                    "'${brukarinformasjon.fornamn}'," +
+                    "'${brukarinformasjon.etternamn}', " +
+                    "'${brukarinformasjon.telefonnummer.nummer}'," +
+                    "'${brukarinformasjon.epost}'," +
+                    "${brukarinformasjon.postnummer.postnummer}," +
+                    "${brukarinformasjon.fylke.ordinal}," +
+                    "'tullepassord'" +
+                ")"
+        val resultList = entityManager.createNativeQuery(sql).resultList
     }
 }

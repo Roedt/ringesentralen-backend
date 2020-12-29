@@ -541,7 +541,17 @@ DELIMITER //
     passwordIn varchar(128)
 )
 BEGIN
-INSERT INTO `ringer` (password) VALUES(passwordIn);
+
+  IF (SELECT count(1) FROM `person` where phone = phoneIn and ringerID is not null)>0 THEN
+    BEGIN
+      SET @ringerID =(select `ringerID` FROM `person` where phone = phoneIn);
+    END;
+  ELSE
+    BEGIN
+        INSERT INTO `ringer` (password) VALUES(passwordIn);
+        SET @ringerID:=(SELECT last_insert_id());
+    END;
+  END IF;
 
   IF (SELECT count(1) FROM `person` where phone = phoneIn)>0 THEN
     BEGIN
@@ -550,10 +560,10 @@ INSERT INTO `ringer` (password) VALUES(passwordIn);
           familyName = familyNameIn,
           email = emailIn, 
           postnumber = postnumberIn, 
-          groupID = '4',
+          groupID = greatest(4, groupID),
           countyID = countyIDIn,
-          ringerID = (SELECT last_insert_id())
-        WHERE phone = phoneIn and groupID < 4;
+          ringerID = @ringerID
+        WHERE phone = phoneIn;
     END;
   ELSE
     BEGIN
