@@ -1,8 +1,8 @@
 package no.roedt.ringesentralen.hypersys
 
-import no.roedt.ringesentralen.hypersys.model.Organisasjonsledd
-import no.roedt.ringesentralen.hypersys.model.Organs
-import no.roedt.ringesentralen.hypersys.model.SingleOrgan
+import no.roedt.ringesentralen.hypersys.externalModel.Organisasjonsledd
+import no.roedt.ringesentralen.hypersys.externalModel.Organs
+import no.roedt.ringesentralen.hypersys.externalModel.SingleOrgan
 import org.apache.http.client.methods.CloseableHttpResponse
 import javax.enterprise.context.ApplicationScoped
 

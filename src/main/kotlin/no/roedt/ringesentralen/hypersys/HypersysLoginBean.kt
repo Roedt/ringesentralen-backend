@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.hypersys
 
 import no.roedt.ringesentralen.PersonRepository
+import no.roedt.ringesentralen.hypersys.externalModel.Profile
 import org.apache.http.entity.StringEntity
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.enterprise.context.Dependent
@@ -23,7 +24,7 @@ class HypersysLoginBean(
         val httpPost = hypersysProxy.createHttpPostWithHeader(brukarId, brukarSecret)
         httpPost.entity = StringEntity("grant_type=password&username=${loginRequest.brukarnamn}&password=${loginRequest.passord}")
         val response = hypersysProxy.httpCall(httpPost)
-        val token = hypersysProxy.readResponse<Token>(response)
+        val token = hypersysProxy.readResponse<GyldigToken>(response) // TODO: Typen her bør vera berre Token
         if (response?.statusLine?.statusCode != 200) {
             return token as UgyldigToken
         }
@@ -38,20 +39,19 @@ class HypersysLoginBean(
     private fun isRegistered(loginRequest: LoginRequest): Boolean = personRepository.find("email", loginRequest.brukarnamn).count() > 0L
 
     private fun register(loginRequest: LoginRequest, token: GyldigToken) {
-        val brukarinformasjon: Brukarinformasjon =
-                hypersysProxy.readResponse(hypersysProxy.gjennomfoerGetkall(
-                        "url til info om personen + ${loginRequest.brukarnamn}", token))
+        val brukarinformasjon: Profile = hypersysProxy.readResponse(hypersysProxy.gjennomfoerGetkall("actor/api/profile/", token))
         // TODO: Vurder kor mykje av dette som no bør lagrast i systemet, og kva som bør hentast ved behov
         // Eventuelt om vi skal hente dette frå hypersys ved kvar innlogging, og så mellomlagre?
         // Sånn at ved første gongs innlogging blir infoen registrert, og ved andre gongs innlogging og utover oppdatert
         // Bør kunne funke
         entityManager.createNativeQuery(
                 "CALL sp_registrerNyBruker(" +
-                        "${brukarinformasjon.fornamn}," +
+                       /* "${brukarinformasjon.fornamn}," +
                         "${brukarinformasjon.etternamn}," +
                         "${brukarinformasjon.telefonnummer}," +
                         "${brukarinformasjon.epost}," +
                         "${brukarinformasjon.postnummer}," +
-                        "${brukarinformasjon.fylke})").resultList
+                        "${brukarinformasjon.fylke})" +
+*/                        "").resultList
     }
 }

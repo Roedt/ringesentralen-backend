@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.hypersys
 
-import no.roedt.ringesentralen.hypersys.model.Organisasjonsledd
-import no.roedt.ringesentralen.hypersys.model.SingleOrgan
+import no.roedt.ringesentralen.hypersys.externalModel.Organisasjonsledd
+import no.roedt.ringesentralen.hypersys.externalModel.SingleOrgan
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.GET
