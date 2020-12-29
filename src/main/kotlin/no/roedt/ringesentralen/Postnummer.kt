@@ -1,5 +1,7 @@
 package no.roedt.ringesentralen
 
-class Postnummer {
-
+data class Postnummer(val postnummer: String) {
+    init {
+        require(postnummer.length == 4)
+    }
 }

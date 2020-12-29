@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen
 
-class Telefonnummer {
-
-}
+data class Telefonnummer(
+        val landkode: String = "+47",
+        val nummer: Int
+)
