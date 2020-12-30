@@ -2,6 +2,7 @@ package no.roedt.ringesentralen.hypersys
 
 import no.roedt.ringesentralen.hypersys.externalModel.Organisasjonsledd
 import no.roedt.ringesentralen.hypersys.externalModel.SingleOrgan
+import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.GET
@@ -32,6 +33,7 @@ class HypersysEndpoint(val service: HypersysService) {
 
     @GET
     @Path("/alleOrgan")
+    @Operation(summary = "Hent alle organ på lågaste nivå")
     @Produces(MediaType.APPLICATION_JSON)
     fun getAlleOrganPaaLaagasteNivaa(): List<SingleOrgan> = service.getAlleOrganPaaLaagasteNivaa()
 

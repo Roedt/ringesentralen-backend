@@ -2,7 +2,6 @@ package no.roedt.ringesentralen.hypersys
 
 import no.roedt.ringesentralen.Brukarinformasjon
 import no.roedt.ringesentralen.hypersys.externalModel.Profile
-import org.apache.http.entity.StringEntity
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.enterprise.context.Dependent
 import javax.persistence.EntityManager
@@ -21,20 +20,19 @@ class HypersysLoginBean(
     lateinit var brukarSecret: String
 
     fun login(loginRequest: LoginRequest): Token {
-        val httpPost = hypersysProxy.createHttpPostWithHeader(brukarId, brukarSecret)
-        httpPost.entity = StringEntity("grant_type=password&username=${loginRequest.brukarnamn}&password=${loginRequest.passord}")
-        val response = hypersysProxy.httpCall(httpPost)
-        if (response?.statusLine?.statusCode != 200) {
-            return hypersysProxy.readResponse<UgyldigToken>(response)
+        val request = hypersysProxy.createHttpPostWithHeader(brukarId, brukarSecret, "grant_type=password&username=${loginRequest.brukarnamn}&password=${loginRequest.passord}")
+        val response = hypersysProxy.httpCall(request)
+        if (response.statusCode() != 200) {
+            return hypersysProxy.readResponse(response, UgyldigToken::class.java)
         }
 
-        val gyldigToken = hypersysProxy.readResponse<GyldigToken>(response)
+        val gyldigToken = hypersysProxy.readResponse(response, GyldigToken::class.java)
         oppdaterRingerFraaHypersys(gyldigToken)
         return gyldigToken
     }
 
     private fun oppdaterRingerFraaHypersys(token: GyldigToken) {
-        val profile: Profile = hypersysProxy.readResponse(hypersysProxy.gjennomfoerGetkall("actor/api/profile/", token))
+        val profile: Profile = hypersysProxy.readResponse(hypersysProxy.gjennomfoerGetkall("actor/api/profile/", token), Profile::class.java)
         val brukarinformasjon: Brukarinformasjon = modelConverter.convert(profile)
 
         entityManager.createNativeQuery(brukarinformasjon.toSQL()).resultList

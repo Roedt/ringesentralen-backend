@@ -9,6 +9,8 @@ data class Organisasjonsledd(
         @JsonProperty("type_name") val type_name: String?,
         @JsonProperty("parent") val parent: Int?,
         @JsonProperty("parent_name") val parent_name: String?,
+        @JsonProperty("short_name") val short_name: String?,
+        @JsonProperty("description") val description: String?,
         @JsonProperty("children") val children: Array<Int>?,
         @JsonProperty("status") val status: Int
 )

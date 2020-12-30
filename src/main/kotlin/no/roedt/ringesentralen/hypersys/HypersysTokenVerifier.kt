@@ -1,6 +1,5 @@
 package no.roedt.ringesentralen.hypersys
 
-import org.apache.http.entity.StringEntity
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
@@ -24,13 +23,12 @@ class HypersysTokenVerifier(
     }
 
     fun getTokenFromHypersys(): Token {
-        val httpPost = hypersysProxy.createHttpPostWithHeader(clientId, clientSecret)
-        httpPost.entity = StringEntity("grant_type=client_credentials")
-        val response = hypersysProxy.httpCall(httpPost)
-        if (response?.statusLine?.statusCode != 200) {
-            return hypersysProxy.readResponse(response) as UgyldigToken
+        val request = hypersysProxy.createHttpPostWithHeader(clientId, clientSecret, "grant_type=client_credentials")
+        val response = hypersysProxy.httpCall(request)
+        if (response.statusCode() != 200) {
+            return hypersysProxy.readResponse(response, UgyldigToken::class.java)
         }
-        return hypersysProxy.readResponse(response) as GyldigToken
+        return hypersysProxy.readResponse(response, GyldigToken::class.java)
     }
 
     fun assertGyldigToken(): GyldigToken {
