@@ -109,6 +109,7 @@ insert into `lokallag` (name) values
 
 CREATE TABLE IF NOT EXISTS `person` (
   `id` int(6) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `hypersysID` int(6) unsigned DEFAULT NULL,
   `givenName` varchar(60) DEFAULT NULL,
   `familyName` varchar(60) DEFAULT NULL,
   `phone` varchar(15) NOT NULL UNIQUE,
@@ -531,6 +532,7 @@ END //
 
 DELIMITER //
   CREATE OR REPLACE PROCEDURE sp_registrerNyBruker(
+    hypersysIDIn int(4),
     givenNameIn varchar(60),
     familyNameIn varchar(60),
     phoneIn varchar(15),
@@ -553,7 +555,8 @@ BEGIN
 
   IF (SELECT count(1) FROM `person` where phone = phoneIn)>0 THEN
     BEGIN
-      UPDATE `person` SET 
+      UPDATE `person` SET
+          hypersysID = hypersysIDIn,
           givenName = givenNameIn, 
           familyName = familyNameIn,
           email = emailIn, 
@@ -565,8 +568,8 @@ BEGIN
     END;
   ELSE
     BEGIN
-        INSERT INTO `person` (givenName, familyName, phone, email, postnumber, countyID, groupID, ringerID)
-            VALUES (givenNameIn, familyNameIn, phoneIn, emailIn, postnumberIn, countyIDIn, '4', (SELECT last_insert_id()));
+        INSERT INTO `person` (hypersysID, givenName, familyName, phone, email, postnumber, countyID, groupID, ringerID)
+            VALUES (hypersysIDIn, givenNameIn, familyNameIn, phoneIn, emailIn, postnumberIn, countyIDIn, '4', (SELECT last_insert_id()));
     END;
   END IF;
 END //

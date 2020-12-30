@@ -38,11 +38,12 @@ class HypersysLoginBean(
     }
 
     private fun Brukarinformasjon.toSQL(): String = "CALL sp_registrerNyBruker(" +
-            "'${fornamn}'," +
+            "'${hypersysID}', " +
+            "'${fornamn}', " +
             "'${etternamn}', " +
-            "'${telefonnummer.nummer}'," +
-            "'${epost}'," +
-            "${postnummer.postnummer}," +
+            "'${telefonnummer.nummer}', " +
+            "'${epost}', " +
+            "${postnummer.postnummer}, " +
             "${fylke.nr}" +
             ")"
 }

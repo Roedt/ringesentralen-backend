@@ -19,6 +19,7 @@ class ModelConverter(val entityManager: EntityManager) {
         val etternamn = user.name.substring(sisteMellomrom+1)
         val postnummer = toPostnummer(user)
         return Brukarinformasjon(
+                hypersysID = user.id,
                 fornamn = fornamn,
                 etternamn = etternamn,
                 epost = user.email,
