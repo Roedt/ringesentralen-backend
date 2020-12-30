@@ -23,8 +23,7 @@ class HypersysTokenVerifier(
     }
 
     fun getTokenFromHypersys(): Token {
-        val request = hypersysProxy.createHttpPostWithHeader(clientId, clientSecret, "grant_type=client_credentials")
-        val response = hypersysProxy.httpCall(request)
+        val response = hypersysProxy.post(clientId, clientSecret, "grant_type=client_credentials")
         if (response.statusCode() != 200) {
             return hypersysProxy.readResponse(response, UgyldigToken::class.java)
         }

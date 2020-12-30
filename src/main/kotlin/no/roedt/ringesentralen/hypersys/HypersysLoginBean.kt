@@ -20,8 +20,7 @@ class HypersysLoginBean(
     lateinit var brukarSecret: String
 
     fun login(loginRequest: LoginRequest): Token {
-        val request = hypersysProxy.createHttpPostWithHeader(brukarId, brukarSecret, "grant_type=password&username=${loginRequest.brukarnamn}&password=${loginRequest.passord}")
-        val response = hypersysProxy.httpCall(request)
+        val response = hypersysProxy.post(brukarId, brukarSecret, "grant_type=password&username=${loginRequest.brukarnamn}&password=${loginRequest.passord}")
         if (response.statusCode() != 200) {
             return hypersysProxy.readResponse(response, UgyldigToken::class.java)
         }
@@ -32,13 +31,13 @@ class HypersysLoginBean(
     }
 
     private fun oppdaterRingerFraaHypersys(token: GyldigToken) {
-        val profile: Profile = hypersysProxy.readResponse(hypersysProxy.gjennomfoerGetkall("actor/api/profile/", token), Profile::class.java)
+        val profile: Profile = hypersysProxy.get("actor/api/profile/", token, Profile::class.java)
         val brukarinformasjon: Brukarinformasjon = modelConverter.convert(profile)
 
         entityManager.createNativeQuery(brukarinformasjon.toSQL()).resultList
     }
 
-    fun Brukarinformasjon.toSQL(): String = "CALL sp_registrerNyBruker(" +
+    private fun Brukarinformasjon.toSQL(): String = "CALL sp_registrerNyBruker(" +
             "'${fornamn}'," +
             "'${etternamn}', " +
             "'${telefonnummer.nummer}'," +
