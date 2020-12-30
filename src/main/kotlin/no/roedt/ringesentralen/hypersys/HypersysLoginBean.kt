@@ -37,9 +37,6 @@ class HypersysLoginBean(
         val profile: Profile = hypersysProxy.readResponse(hypersysProxy.gjennomfoerGetkall("actor/api/profile/", token))
         val brukarinformasjon: Brukarinformasjon = modelConverter.convert(profile)
 
-        // TODO: Vurder kor mykje av dette som no bør lagrast i systemet, og kva som bør hentast ved behov
-        // Eventuelt om vi skal hente dette frå hypersys ved kvar innlogging, og så mellomlagre?
-        // Sånn at ved første gongs innlogging blir infoen registrert, og ved andre gongs innlogging og utover oppdatert
         entityManager.createNativeQuery(brukarinformasjon.toSQL()).resultList
     }
 
@@ -49,6 +46,6 @@ class HypersysLoginBean(
             "'${telefonnummer.nummer}'," +
             "'${epost}'," +
             "${postnummer.postnummer}," +
-            "${fylke.ordinal}" +
+            "${fylke.nr}" +
             ")"
 }
