@@ -424,7 +424,8 @@ inner join `person` p on c.callerPhone = p.phone;
 -- --------------------------------------------------------
 
 DELIMITER //
-  CREATE OR REPLACE PROCEDURE sp_updateGroupID(
+  DROP PROCEDURE IF EXISTS sp_updateGroupID;
+  CREATE PROCEDURE sp_updateGroupID(
   phone_In varchar(15),
   groupID_In int(2)
 )
@@ -437,7 +438,8 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  CREATE OR REPLACE PROCEDURE sp_registrerSamtale(
+  DROP PROCEDURE IF EXISTS sp_registrerSamtale;
+  CREATE PROCEDURE sp_registrerSamtale(
     calledPhoneIn varchar(15),
     callerPhoneIn varchar(15),
     resultIn int(1),
@@ -453,7 +455,8 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  CREATE OR REPLACE PROCEDURE sp_godkjennBruker(
+  DROP PROCEDURE IF EXISTS sp_godkjennBruker;
+  CREATE PROCEDURE sp_godkjennBruker(
     callerPhoneIn varchar(15),
     calledPhoneIn varchar(15),
     nyGroupIdIn int(2)
@@ -469,7 +472,8 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  CREATE OR REPLACE PROCEDURE sp_registrerOppfoelgingKorona(
+  DROP PROCEDURE IF EXISTS sp_registrerOppfoelgingKorona;
+  CREATE PROCEDURE sp_registrerOppfoelgingKorona(
     calledPhoneIn varchar(15),
     koronaprogramIn tinyint(1),
     merAktivIn tinyint(1),
@@ -484,7 +488,8 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  CREATE OR REPLACE PROCEDURE sp_registrerOppfoelgingEkstern(
+  DROP PROCEDURE IF EXISTS sp_registrerOppfoelgingEkstern;
+  CREATE PROCEDURE sp_registrerOppfoelgingEkstern(
     calledPhoneIn varchar(15),
     hasActuallyReceivedIn tinyint(1),
     stopSubscriptionIn tinyint(1),
@@ -498,7 +503,8 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  CREATE OR REPLACE PROCEDURE sp_startSamtale(
+  DROP PROCEDURE IF EXISTS sp_startSamtale;
+  CREATE PROCEDURE sp_startSamtale(
     calledPhoneIn varchar(15),
     callerPhoneIn varchar(15)
 )
@@ -511,7 +517,8 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  CREATE OR REPLACE PROCEDURE sp_enlistAddress(
+  DROP PROCEDURE IF EXISTS sp_enlistAddress;
+  CREATE PROCEDURE sp_enlistAddress(
     givenNameIn varchar(60),
     familyNameIn varchar(60),
     calledPhoneIn varchar(15),
@@ -531,7 +538,8 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  CREATE OR REPLACE PROCEDURE sp_registrerNyBruker(
+  DROP PROCEDURE IF EXISTS sp_registrerNyBruker;
+  CREATE PROCEDURE sp_registrerNyBruker(
     hypersysIDIn int(4),
     givenNameIn varchar(60),
     familyNameIn varchar(60),
@@ -577,7 +585,8 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  CREATE OR REPLACE PROCEDURE sp_vervEnVenn (
+  DROP PROCEDURE IF EXISTS sp_vervEnVenn;
+  CREATE PROCEDURE sp_vervEnVenn (
     nameIn varchar(60),
     phoneIn varchar(15),
     phoneEnlisterIn varchar(15),
@@ -591,7 +600,8 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  CREATE OR REPLACE PROCEDURE sp_vervEnVennProcessEnlist (
+  DROP PROCEDURE IF EXISTS sp_vervEnVennProcessEnlist;
+  CREATE PROCEDURE sp_vervEnVennProcessEnlist (
     nameIn varchar(60),
     phoneIn varchar(15),
     nameEnlisterIn varchar(60),
@@ -605,7 +615,8 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  CREATE OR REPLACE PROCEDURE sp_deletePersonAfterSMS (
+  DROP PROCEDURE IF EXISTS sp_deletePersonAfterSMS;
+  CREATE PROCEDURE sp_deletePersonAfterSMS (
     addressIn mediumtext,
     addressIn2 mediumtext,
     postnumberIn int(4),
@@ -626,7 +637,8 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  CREATE OR REPLACE PROCEDURE sp_slettPerson (
+  DROP PROCEDURE IF EXISTS sp_slettPerson;
+  CREATE PROCEDURE sp_slettPerson (
     phoneIn varchar(15)
 )
 BEGIN
@@ -640,7 +652,8 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  CREATE OR REPLACE PROCEDURE sp_registerSMS (
+  DROP PROCEDURE IF EXISTS sp_registerSMS;
+  CREATE PROCEDURE sp_registerSMS (
     addressIn mediumtext,
     addressIn2 mediumtext,
     emailIn varchar(100),
@@ -672,7 +685,8 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  CREATE OR REPLACE PROCEDURE sp_updateAfterSendDigital (
+  DROP PROCEDURE IF EXISTS sp_updateAfterSendDigital;
+  CREATE PROCEDURE sp_updateAfterSendDigital (
     descReceivingIn mediumtext
 )
 BEGIN
@@ -692,7 +706,8 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  CREATE OR REPLACE PROCEDURE sp_updateAfterSendAdress ()
+  DROP PROCEDURE IF EXISTS sp_updateAfterSendAdress;
+  CREATE PROCEDURE sp_updateAfterSendAdress ()
 BEGIN
 UPDATE `person` 
   SET 
@@ -708,7 +723,8 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  CREATE OR REPLACE PROCEDURE sp_lagreAtSMSErSendt (
+  DROP PROCEDURE IF EXISTS sp_lagreAtSMSErSendt;
+  CREATE PROCEDURE sp_lagreAtSMSErSendt (
     calledPhoneIn varchar(15),
     callerPhoneIn varchar(15)
   )
@@ -721,7 +737,8 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  CREATE OR REPLACE PROCEDURE sp_recordLoginAttempt (
+  DROP PROCEDURE IF EXISTS sp_recordLoginAttempt;
+  CREATE PROCEDURE sp_recordLoginAttempt (
     userId_in int(6)
   )
 BEGIN
