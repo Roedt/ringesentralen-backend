@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.samtale
 
 import com.nhaarman.mockitokotlin2.*
+import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Lokallag
 import no.roedt.ringesentralen.PersonRepository
 import no.roedt.ringesentralen.hypersys.GyldigToken
@@ -13,13 +14,14 @@ internal class RingTest {
 
     private val entityManager: EntityManager = mock()
     private val personRepository: PersonRepository = mock()
+    private val databaseUpdater: DatabaseUpdater = mock()
 
     lateinit var ringService: RingService
     lateinit var ringController: RingController
 
     @BeforeEach
     fun setup() {
-        ringService = RingServiceBean(personRepository = personRepository, entityManager = entityManager)
+        ringService = RingServiceBean(personRepository = personRepository, entityManager = entityManager, databaseUpdater = databaseUpdater)
         ringController = RingController(ringService)
     }
 

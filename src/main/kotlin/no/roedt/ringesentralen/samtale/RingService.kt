@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.samtale
 
+import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.PersonRepository
 import java.time.LocalDateTime
@@ -16,7 +17,8 @@ interface RingService {
 @ApplicationScoped
 class RingServiceBean(
         val personRepository: PersonRepository,
-        val entityManager: EntityManager
+        val entityManager: EntityManager,
+        val databaseUpdater: DatabaseUpdater
 ): RingService {
 
     //TODO: Vurder om dette skal loggast
@@ -31,7 +33,7 @@ class RingServiceBean(
     override fun startSamtale(request: StartSamtaleRequest): StartSamtaleResponse {
         val callerPhone = personRepository.findById(request.ringerID).phone
         val calledPhone = personRepository.findById(request.skalRingesID).phone
-        entityManager.executeQuery("CALL sp_startSamtale($calledPhone, $callerPhone)")
+        databaseUpdater.update("CALL sp_startSamtale($calledPhone, $callerPhone)")
         return StartSamtaleResponse(request.ringerID, request.skalRingesID, LocalDateTime.now())
     }
 
@@ -39,13 +41,13 @@ class RingServiceBean(
         val callerPhone = personRepository.findById(request.ringerID).phone
         val calledPhone = personRepository.findById(request.ringtID).phone
         assert(request.result in request.modus.gyldigeResultattyper)
-        entityManager.executeQuery("CALL sp_registrerSamtale($calledPhone, $callerPhone, ${request.result.nr}, '${request.kommentar}')")
+        databaseUpdater.update("CALL sp_registrerSamtale($calledPhone, $callerPhone, ${request.result.nr}, '${request.kommentar}')")
         val nesteGroupID: GroupID? = when  {
             request.result.nesteGroupID != null -> request.result.nesteGroupID
             erFleireEnnToIkkeSvar(calledPhone, request) -> GroupID.Ferdigringt
             else -> null
         }
-        nesteGroupID?.nr?.let { entityManager.executeQuery("CALL sp_updateGroupID($calledPhone, $it)") }
+        nesteGroupID?.nr?.let { databaseUpdater.updateWithResult("CALL sp_updateGroupID($calledPhone, $it)") }
         if (request.modus == Modus.Korona && request.result == Resultat.Svarte) {
             registrerKoronaspesifikkeResultat(request, calledPhone)
         }
@@ -69,7 +71,7 @@ class RingServiceBean(
     }
 
     private fun erFleireEnnToIkkeSvar(calledPhone: String, request: ResultatFraSamtaleRequest): Boolean {
-        val resultat: List<Int>? = entityManager.executeQuery("select result from `call` where calledPhone = $calledPhone and result = 0")?.map { it as Int }
+        val resultat: List<Int>? = databaseUpdater.updateWithResult("select result from `call` where calledPhone = $calledPhone and result = 0")?.map { it as Int }
         val fleireEnnToIkkeSvar: Boolean = (resultat?.filter { it == 0 }?.count() ?: 0) > 2
         val ingenSvar: Boolean = (resultat?.filter { it != 0 && it != 9 }?.count() ?: 0) == 0
         return ingenSvar && fleireEnnToIkkeSvar && request.result == Resultat.Ikke_svar
@@ -77,7 +79,7 @@ class RingServiceBean(
 
     private fun registrerKoronaspesifikkeResultat(request: ResultatFraSamtaleRequest, calledPhone: String) {
         val resultat: KoronaspesifikkeResultat = request.modusspesifikkeResultat as KoronaspesifikkeResultat
-        entityManager.executeQuery("CALL sp_registrerOppfoelgingKorona($calledPhone, ${resultat.vilHaKoronaprogram}, ${resultat.vilBliMerAktiv}, ${resultat.vilHaValgkampsbrev}, ${request.vilIkkeBliRingt})")
+        databaseUpdater.update("CALL sp_registrerOppfoelgingKorona($calledPhone, ${resultat.vilHaKoronaprogram}, ${resultat.vilBliMerAktiv}, ${resultat.vilHaValgkampsbrev}, ${request.vilIkkeBliRingt})")
     }
 
     fun EntityManager.executeQuery(query: String) = entityManager.createNativeQuery(query).resultList

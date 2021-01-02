@@ -1,9 +1,9 @@
 package no.roedt.ringesentralen.brukere
 
+import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.PersonRepository
 import no.roedt.ringesentralen.samtale.GroupID
 import javax.enterprise.context.ApplicationScoped
-import javax.persistence.EntityManager
 
 interface BrukereService {
     fun godkjennRinger(godkjennRequest: TilgangsendringsRequest): Brukerendring
@@ -17,7 +17,7 @@ interface BrukereService {
 @ApplicationScoped
 class BrukereServiceBean(
         val personRepository: PersonRepository,
-        val entityManager: EntityManager
+        val databaseUpdater: DatabaseUpdater
 ): BrukereService {
 
     override fun godkjennRinger(godkjennRequest: TilgangsendringsRequest): Brukerendring = endreTilgang(godkjennRequest, GroupID.GodkjentRinger)
@@ -33,7 +33,7 @@ class BrukereServiceBean(
     override fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = endreTilgang(fjernSomLokalGodkjennerRequest, GroupID.GodkjentRinger)
 
     private fun endreTilgang(request: TilgangsendringsRequest, nyTilgang: GroupID): Brukerendring {
-        entityManager.createNativeQuery("CALL sp_godkjennBruker(${getPhone(request.utfoerende)}, ${getPhone(request.personMedEndraTilgang)}, ${nyTilgang.nr})").resultList
+        databaseUpdater.update("CALL sp_godkjennBruker(${getPhone(request.utfoerende)}, ${getPhone(request.personMedEndraTilgang)}, ${nyTilgang.nr})")
         return Brukerendring(personID = request.personMedEndraTilgang, nyGroupId = nyTilgang)
     }
 

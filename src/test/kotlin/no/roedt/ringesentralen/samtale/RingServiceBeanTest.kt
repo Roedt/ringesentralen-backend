@@ -4,13 +4,14 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.PersonRepository
 import no.roedt.ringesentralen.hypersys.GyldigToken
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.lang.AssertionError
 import javax.persistence.EntityManager
 import javax.persistence.Query
 
@@ -18,8 +19,9 @@ internal class RingServiceBeanTest {
 
     private val personRepository: PersonRepository = mock()
     private val entityManager: EntityManager = mock()
+    private val databaseUpdater: DatabaseUpdater = mock()
 
-    private val ringService = RingServiceBean(personRepository = personRepository, entityManager = entityManager)
+    private val ringService = RingServiceBean(personRepository = personRepository, entityManager = entityManager, databaseUpdater = databaseUpdater )
 
     private val mockQuery: Query = mock()
 

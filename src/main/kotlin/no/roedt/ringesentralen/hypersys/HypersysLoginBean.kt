@@ -1,16 +1,16 @@
 package no.roedt.ringesentralen.hypersys
 
 import no.roedt.ringesentralen.Brukarinformasjon
+import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.hypersys.externalModel.Profile
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.enterprise.context.Dependent
-import javax.persistence.EntityManager
 
 @Dependent
 class HypersysLoginBean(
-        private val hypersysProxy: HypersysProxy,
-        private val entityManager: EntityManager,
-        private val modelConverter: ModelConverter
+    private val hypersysProxy: HypersysProxy,
+    private val databaseUpdater: DatabaseUpdater,
+    private val modelConverter: ModelConverter
 ) {
 
     @ConfigProperty(name = "brukarId")
@@ -34,7 +34,7 @@ class HypersysLoginBean(
         val profile: Profile = hypersysProxy.get("actor/api/profile/", token, Profile::class.java)
         val brukarinformasjon: Brukarinformasjon = modelConverter.convert(profile)
 
-        entityManager.createNativeQuery(brukarinformasjon.toSQL()).resultList
+        databaseUpdater.update(brukarinformasjon.toSQL())
     }
 
     private fun Brukarinformasjon.toSQL(): String = "CALL sp_registrerNyBruker(" +
