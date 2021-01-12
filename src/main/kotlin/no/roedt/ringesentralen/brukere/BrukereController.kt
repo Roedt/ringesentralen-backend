@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.brukere
 
+import no.roedt.ringesentralen.Brukarinformasjon
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.openapi.annotations.Operation
@@ -11,6 +12,12 @@ import javax.ws.rs.core.MediaType
 @Path("/brukere")
 @Tag(name = "Brukere")
 class BrukereController(val brukereService: BrukereService) {
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/brukere")
+    @Operation(summary ="List ut brukarar")
+    fun hentBrukarar(hentBrukararRequest: HentBrukararRequest) : List<Brukarinformasjon> = brukereService.hentBrukarar(hentBrukararRequest)
 
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
