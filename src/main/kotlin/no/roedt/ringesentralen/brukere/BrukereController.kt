@@ -3,9 +3,11 @@ package no.roedt.ringesentralen.brukere
 import no.roedt.ringesentralen.Brukarinformasjon
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
+import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
-import javax.annotation.security.PermitAll
+import javax.annotation.security.RolesAllowed
+import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 
@@ -14,13 +16,17 @@ import javax.ws.rs.core.MediaType
 @Tag(name = "Brukere")
 class BrukereController(val brukereService: BrukereService) {
 
-    @PermitAll
+    @Inject
+    lateinit var jwt: JsonWebToken
+
+    @RolesAllowed("ringar")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/brukere")
     @Operation(summary ="List ut brukarar")
     fun hentBrukarar(hentBrukararRequest: HentBrukararRequest) : List<Brukarinformasjon> = brukereService.hentBrukarar(hentBrukararRequest)
 
+    @RolesAllowed("ringar")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -30,6 +36,7 @@ class BrukereController(val brukereService: BrukereService) {
     @Retry
     fun godkjennRinger(godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.godkjennRinger(godkjennRequest)
 
+    @RolesAllowed("ringar")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -39,6 +46,7 @@ class BrukereController(val brukereService: BrukereService) {
     @Retry
     fun avslaaRinger(avslaaRequest: TilgangsendringsRequest): Brukerendring = brukereService.avslaaRinger(avslaaRequest)
 
+    @RolesAllowed("ringar")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -48,6 +56,7 @@ class BrukereController(val brukereService: BrukereService) {
     @Retry
     fun reaktiverRinger(reaktiverRequest: TilgangsendringsRequest): Brukerendring = brukereService.reaktiverRinger(reaktiverRequest)
 
+    @RolesAllowed("ringar")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -57,6 +66,7 @@ class BrukereController(val brukereService: BrukereService) {
     @Retry
     fun deaktiverRinger(deaktiverRequest: TilgangsendringsRequest): Brukerendring = brukereService.deaktiverRinger(deaktiverRequest)
 
+    @RolesAllowed("ringar")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -66,6 +76,7 @@ class BrukereController(val brukereService: BrukereService) {
     @Retry
     fun gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = brukereService.gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest)
 
+    @RolesAllowed("ringar")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
