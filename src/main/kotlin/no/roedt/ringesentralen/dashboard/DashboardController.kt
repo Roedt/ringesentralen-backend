@@ -9,7 +9,9 @@ import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.RequestScoped
 import javax.inject.Inject
 import javax.ws.rs.*
+import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.SecurityContext
 
 @Path("/dashboard")
 @Tag(name = "Dashboard")
@@ -27,5 +29,5 @@ class DashboardController(val dashboardService: DashboardService) {
     @Operation(summary = "Dashboard")
     @Bulkhead(5)
     @Retry
-    fun getDashboard(@QueryParam("ringerID") ringerID: Long): DashboardResponse = dashboardService.getDashboard(ringerID)
+    fun getDashboard(@Context ctx: SecurityContext, @QueryParam("ringerID") ringerID: Long): DashboardResponse = dashboardService.getDashboard(ringerID)
 }

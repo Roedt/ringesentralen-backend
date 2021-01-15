@@ -9,7 +9,9 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.annotation.security.RolesAllowed
 import javax.inject.Inject
 import javax.ws.rs.*
+import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.SecurityContext
 
 
 @Path("/brukere")
@@ -24,7 +26,7 @@ class BrukereController(val brukereService: BrukereService) {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/brukere")
     @Operation(summary ="List ut brukarar")
-    fun hentBrukarar(hentBrukararRequest: HentBrukararRequest) : List<Brukarinformasjon> = brukereService.hentBrukarar(hentBrukararRequest)
+    fun hentBrukarar(@Context ctx: SecurityContext, hentBrukararRequest: HentBrukararRequest) : List<Brukarinformasjon> = brukereService.hentBrukarar(hentBrukararRequest)
 
     @RolesAllowed("ringar")
     @PUT
@@ -34,7 +36,7 @@ class BrukereController(val brukereService: BrukereService) {
     @Operation(summary = "Godkjenn ringer")
     @Bulkhead(5)
     @Retry
-    fun godkjennRinger(godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.godkjennRinger(godkjennRequest)
+    fun godkjennRinger(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.godkjennRinger(godkjennRequest)
 
     @RolesAllowed("ringar")
     @PUT
@@ -44,7 +46,7 @@ class BrukereController(val brukereService: BrukereService) {
     @Operation(summary = "Avslå ringer")
     @Bulkhead(5)
     @Retry
-    fun avslaaRinger(avslaaRequest: TilgangsendringsRequest): Brukerendring = brukereService.avslaaRinger(avslaaRequest)
+    fun avslaaRinger(@Context ctx: SecurityContext, avslaaRequest: TilgangsendringsRequest): Brukerendring = brukereService.avslaaRinger(avslaaRequest)
 
     @RolesAllowed("ringar")
     @PUT
@@ -54,7 +56,7 @@ class BrukereController(val brukereService: BrukereService) {
     @Operation(summary = "Reaktiver ringer")
     @Bulkhead(5)
     @Retry
-    fun reaktiverRinger(reaktiverRequest: TilgangsendringsRequest): Brukerendring = brukereService.reaktiverRinger(reaktiverRequest)
+    fun reaktiverRinger(@Context ctx: SecurityContext, reaktiverRequest: TilgangsendringsRequest): Brukerendring = brukereService.reaktiverRinger(reaktiverRequest)
 
     @RolesAllowed("ringar")
     @PUT
@@ -64,7 +66,7 @@ class BrukereController(val brukereService: BrukereService) {
     @Operation(summary = "Deaktiver ringer")
     @Bulkhead(5)
     @Retry
-    fun deaktiverRinger(deaktiverRequest: TilgangsendringsRequest): Brukerendring = brukereService.deaktiverRinger(deaktiverRequest)
+    fun deaktiverRinger(@Context ctx: SecurityContext, deaktiverRequest: TilgangsendringsRequest): Brukerendring = brukereService.deaktiverRinger(deaktiverRequest)
 
     @RolesAllowed("ringar")
     @PUT
@@ -74,7 +76,7 @@ class BrukereController(val brukereService: BrukereService) {
     @Operation(summary = "Gjør til lokal godkjenner")
     @Bulkhead(5)
     @Retry
-    fun gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = brukereService.gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest)
+    fun gjoerRingerTilLokalGodkjenner(@Context ctx: SecurityContext, tilLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = brukereService.gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest)
 
     @RolesAllowed("ringar")
     @PUT
@@ -84,6 +86,6 @@ class BrukereController(val brukereService: BrukereService) {
     @Operation(summary = "Fjern som lokal godkjenner")
     @Bulkhead(5)
     @Retry
-    fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = brukereService.fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest)
+    fun fjernRingerSomLokalGodkjenner(@Context ctx: SecurityContext, fjernSomLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = brukereService.fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest)
 
 }

@@ -10,7 +10,9 @@ import javax.ws.rs.Consumes
 import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
+import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.SecurityContext
 
 @Path("/samtale")
 @Tag(name = "Ring")
@@ -26,7 +28,7 @@ class RingController(val ringService: RingService) {
     @Path("/neste")
     @Operation(summary = "Finn neste person å ringe")
     @Retry
-    fun hentNestePersonAaRinge(nestePersonAaRingeRequest: NestePersonAaRingeRequest): RingbarPerson? = ringService.hentNestePersonAaRinge(nestePersonAaRingeRequest)
+    fun hentNestePersonAaRinge(@Context ctx: SecurityContext, nestePersonAaRingeRequest: NestePersonAaRingeRequest): RingbarPerson? = ringService.hentNestePersonAaRinge(nestePersonAaRingeRequest)
 
     @RolesAllowed("ringar")
     @POST
@@ -35,7 +37,7 @@ class RingController(val ringService: RingService) {
     @Path("/startSamtale")
     @Operation(summary = "Start samtale")
     @Retry
-    fun startSamtale(startSamtaleRequest: StartSamtaleRequest): StartSamtaleResponse = ringService.startSamtale(startSamtaleRequest)
+    fun startSamtale(@Context ctx: SecurityContext, startSamtaleRequest: StartSamtaleRequest): StartSamtaleResponse = ringService.startSamtale(startSamtaleRequest)
 
     @RolesAllowed("ringar")
     @POST
@@ -44,7 +46,7 @@ class RingController(val ringService: RingService) {
     @Path("/registrerResultatFraSamtale")
     @Operation(summary = "Registrer resultat fra samtale")
     @Retry
-    fun registrerResultatFraSamtale(resultatFraSatmtaleRequest: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse = ringService.registrerResultatFraSamtale(resultatFraSatmtaleRequest)
+    fun registrerResultatFraSamtale(@Context ctx: SecurityContext, resultatFraSatmtaleRequest: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse = ringService.registrerResultatFraSamtale(resultatFraSatmtaleRequest)
 
 
     @RolesAllowed("ringar")
@@ -54,6 +56,6 @@ class RingController(val ringService: RingService) {
     @Path("/noenRingerTilbake")
     @Operation(summary = "Noen ringer tilbake")
     @Retry
-    fun noenRingerTilbake(request: RingerTilbakeRequest): RingbarPerson = ringService.noenRingerTilbake(request)
+    fun noenRingerTilbake(@Context ctx: SecurityContext, request: RingerTilbakeRequest): RingbarPerson = ringService.noenRingerTilbake(request)
 
 }
