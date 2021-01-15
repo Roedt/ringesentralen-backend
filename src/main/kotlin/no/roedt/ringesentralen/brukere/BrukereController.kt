@@ -5,6 +5,7 @@ import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
+import javax.annotation.security.PermitAll
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 
@@ -13,6 +14,7 @@ import javax.ws.rs.core.MediaType
 @Tag(name = "Brukere")
 class BrukereController(val brukereService: BrukereService) {
 
+    @PermitAll
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/brukere")
