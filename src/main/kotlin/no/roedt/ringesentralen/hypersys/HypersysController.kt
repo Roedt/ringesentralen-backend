@@ -2,9 +2,12 @@ package no.roedt.ringesentralen.hypersys
 
 import no.roedt.ringesentralen.hypersys.externalModel.Organisasjonsledd
 import no.roedt.ringesentralen.hypersys.externalModel.SingleOrgan
+import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
+import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
+import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.POST
 import javax.ws.rs.Path
@@ -16,21 +19,28 @@ import javax.ws.rs.core.MediaType
 @Tag(name = "Hypersys-integrasjon")
 class HypersysController(val service: HypersysService) {
 
+    @Inject
+    lateinit var jwt: JsonWebToken
+
+    @RolesAllowed("ringar")
     @POST
     @Path("/login")
     @Produces(MediaType.APPLICATION_JSON)
     fun login(loginRequest: LoginRequest): Token = service.login(loginRequest)
 
+    @RolesAllowed("ringar")
     @GET
     @Path("/token")
     @Produces(MediaType.APPLICATION_JSON)
     fun getTokenFromHypersys(): Token = service.getTokenFromHypersys()
 
+    @RolesAllowed("ringar")
     @GET
     @Path("/lokallag")
     @Produces(MediaType.APPLICATION_JSON)
     fun getAlleLokallag() : List<Organisasjonsledd> = service.getAlleLokallag()
 
+    @RolesAllowed("ringar")
     @GET
     @Path("/alleOrgan")
     @Operation(summary = "Hent alle organ på lågaste nivå")
