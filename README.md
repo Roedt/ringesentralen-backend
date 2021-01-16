@@ -18,3 +18,11 @@ Push til main-greina startar automatisk eit bygg på Google Cloud Build, som gje
 
 ## Teknisk
 Systemet er bygd i Kotlin, basert på appserveren Quarkus
+
+## Kopling frå klient til server
+Flyten er omtrent sånn:
+
+1. Klienten kallar /token, med _key_ som er avtalt mellom klient og server på forhand (og definert som miljøvariabel serverside)
+   som er ei post-teneste for å kunne halde. Da får klienten ein token tilbake, basert på serverens både private- og public-key
+1. Alle andre kall til serveren krev at dette tokenet sendast med
+1. TODO: Finn ut korleis dette korresponderer med kall mot hypersys og tokens derifrå
