@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType
 @ApplicationScoped
 @Path("/hypersys")
 @Tag(name = "Hypersys-integrasjon")
-class HypersysEndpoint(val service: HypersysService) {
+class HypersysController(val service: HypersysService) {
 
     @POST
     @Path("/login")
