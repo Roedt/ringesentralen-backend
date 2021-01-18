@@ -1,24 +1,29 @@
 package no.roedt.ringesentralen.token
 
 import io.smallrye.jwt.build.Jwt
+import no.roedt.ringesentralen.hypersys.*
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Duration
 import javax.enterprise.context.RequestScoped
 
 @RequestScoped
-class TokenGenerator {
+class TokenGenerator(val hypersysService: HypersysService) {
 
     @ConfigProperty(name = "frontendTokenKey")
     lateinit var frontendTokenKey: String
 
-    fun generateToken(key: String): String {
-        if (key != frontendTokenKey) {
+    fun login(loginRequest: LoginRequest): String {
+        if (loginRequest.key != frontendTokenKey) {
             throw IllegalArgumentException("Illegal key")
         }
-        return generateToken()
+
+        val hypersysToken: Token = hypersysService.login(loginRequest)
+        if (hypersysToken is UgyldigToken)
+            throw RuntimeException(hypersysToken.error)
+        return generateToken(hypersysToken as GyldigToken)
     }
 
-    fun generateToken(): String = Jwt
+    private fun generateToken(hypersysToken: GyldigToken): String = Jwt
         .audience("ringar")
         .issuer("https://ringesentralen.no")
         .subject("Ringesentralen")
@@ -26,5 +31,9 @@ class TokenGenerator {
         .issuedAt(System.currentTimeMillis())
         .expiresAt(System.currentTimeMillis() + Duration.ofMinutes(1).toSeconds())
         .groups("ringar")
+        .claim("hypersys.token_type", hypersysToken.token_type)
+        .claim("hypersys.scope", hypersysToken.scope)
+        .claim("hypersys.access_token", hypersysToken.access_token)
+        .claim("hypersys.expires_in", hypersysToken.expires_in)
         .sign("META-INF/resources/privatekey.pem")
 }

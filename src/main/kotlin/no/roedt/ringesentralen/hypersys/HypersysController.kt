@@ -9,7 +9,6 @@ import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.GET
-import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
@@ -21,18 +20,6 @@ class HypersysController(val service: HypersysService) {
 
     @Inject
     lateinit var jwt: JsonWebToken
-
-    @RolesAllowed("ringar")
-    @POST
-    @Path("/login")
-    @Produces(MediaType.APPLICATION_JSON)
-    fun login(loginRequest: LoginRequest): Token = service.login(loginRequest)
-
-    @RolesAllowed("ringar")
-    @GET
-    @Path("/token")
-    @Produces(MediaType.APPLICATION_JSON)
-    fun getTokenFromHypersys(): Token = service.getTokenFromHypersys()
 
     @RolesAllowed("ringar")
     @GET

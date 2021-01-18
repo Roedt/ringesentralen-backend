@@ -6,7 +6,6 @@ import no.roedt.ringesentralen.hypersys.externalModel.SingleOrgan
 import javax.enterprise.context.ApplicationScoped
 
 interface HypersysService {
-    fun getTokenFromHypersys(): Token
     fun getAlleLokallag(): List<Organisasjonsledd>
     fun getAlleOrganPaaLaagasteNivaa(): List<SingleOrgan>
     fun login(loginRequest: LoginRequest): Token
@@ -18,8 +17,6 @@ class HypersysServiceBean(
         val hypersysTokenVerifier: HypersysTokenVerifier,
         val hypersysLoginBean: HypersysLoginBean
 ) : HypersysService {
-
-    override fun getTokenFromHypersys() = hypersysTokenVerifier.getTokenFromHypersys()
 
     override fun getAlleLokallag(): List<Organisasjonsledd> =
         hypersysProxy.get("/org/api/", getToken(), ListOrganisasjonsleddTypeReference())
