@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.PersonRepository
-import no.roedt.ringesentralen.hypersys.GyldigToken
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
@@ -36,7 +35,6 @@ internal class RingServiceBeanTest {
         doReturn(mockQuery).whenever(entityManager).createNativeQuery(any())
 
         val request = ResultatFraSamtaleRequest(
-                token = GyldigToken("a", 1, "a", "a"),
                 modus = Modus.Korona,
                 ringerID = 1,
                 ringtID = 2,
@@ -57,7 +55,6 @@ internal class RingServiceBeanTest {
     @Test
     fun `resultattype som ikkje passar med modusen kastar feilmelding`() {
         val request = ResultatFraSamtaleRequest(
-                token = GyldigToken("a", 1, "a", "a"),
                 modus = Modus.Korona,
                 ringerID = 1,
                 ringtID = 2,
@@ -77,7 +74,9 @@ internal class RingServiceBeanTest {
     }
 
     private fun createRingbarPerson(fornavn: String, etternavn: String, telefonnummer: String, id: Long) {
-        val person = RingbarPerson(givenName = fornavn, familyName = etternavn, phone = telefonnummer, lastCall = 0, nameEnlister = null, postnumber = "1234", countyID = 0, lokallag = 0)
+        val person = RingbarPerson(hypersysID = null, givenName = fornavn, familyName = etternavn,
+            phone = telefonnummer, lastCall = 0, email = "", nameEnlister = null,
+            postnumber = "1234", countyID = 0, lokallag = 0)
         doReturn(person).whenever(personRepository).findById(id)
     }
 }
