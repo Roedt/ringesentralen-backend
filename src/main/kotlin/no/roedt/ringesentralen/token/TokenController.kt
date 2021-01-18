@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.token
 
-import org.eclipse.microprofile.openapi.annotations.Operation
+import no.roedt.ringesentralen.hypersys.LoginRequest
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.annotation.security.PermitAll
 import javax.ws.rs.POST
@@ -14,8 +14,8 @@ class TokenController(val tokenGenerator: TokenGenerator) {
 
     @PermitAll
     @POST
+    @Path("/login")
     @Produces(MediaType.TEXT_PLAIN)
-    @Path("/")
-    @Operation(summary = "Fetch JWT token")
-    fun getToken(key: String) : String = tokenGenerator.generateToken(key)
+    fun login(loginRequest: LoginRequest): String = tokenGenerator.login(loginRequest)
+
 }
