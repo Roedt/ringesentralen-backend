@@ -13,8 +13,8 @@
     <maven.compiler.target>11</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus-plugin.version>1.10.5.Final</quarkus-plugin.version>
-    <quarkus.platform.version>1.10.5.Final</quarkus.platform.version>
+    <quarkus-plugin.version>1.11.0.Final</quarkus-plugin.version>
+    <quarkus.platform.version>1.11.0.Final</quarkus.platform.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
   </properties>
   <dependencyManagement>
@@ -77,6 +77,10 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-kotlin</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-jwt-build</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
