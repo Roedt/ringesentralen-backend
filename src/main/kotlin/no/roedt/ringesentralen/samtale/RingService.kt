@@ -63,7 +63,6 @@ class RingServiceBean(
             throw Exception("Du kan berre registrere å bli ringt opp frå folk du har ringt tidlegare.")
         }
         startSamtale(StartSamtaleRequest(
-                token = request.token,
                 ringerID = request.ringerID,
                 skalRingesID = personSomRingerTilbake.id
         ))
