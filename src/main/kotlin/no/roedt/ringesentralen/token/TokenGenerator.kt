@@ -5,8 +5,13 @@ import no.roedt.ringesentralen.hypersys.*
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.nio.file.Files
 import java.nio.file.Path
+import java.security.KeyFactory
+import java.security.interfaces.RSAPrivateKey
+import java.security.spec.PKCS8EncodedKeySpec
 import java.time.Duration
+import java.util.*
 import javax.enterprise.context.RequestScoped
+
 
 @RequestScoped
 class TokenGenerator(val hypersysService: HypersysService) {
@@ -49,7 +54,7 @@ class TokenGenerator(val hypersysService: HypersysService) {
         .claim("hypersys.scope", hypersysToken.scope)
         .claim("hypersys.access_token", hypersysToken.access_token)
         .claim("hypersys.expires_in", hypersysToken.expires_in)
-        .signWithSecret(getPrivateKey())
+        .sign(readPrivateKey(getPrivateKey()))
 
     private fun getPrivateKey(): String =
         if (usePrivateKeyFromSecretManager.toBoolean()) getPrivateKeyFromSecretManager()
@@ -60,5 +65,16 @@ class TokenGenerator(val hypersysService: HypersysService) {
 //        val client = SecretManagerServiceClient.create()
 //        val secretVersionName = SecretVersionName.of(secretManagerProjectId, secretManagerSecretName, "latest")
 //        return client.accessSecretVersion(secretVersionName).payload.data.toStringUtf8()
+    }
+
+    private fun readPrivateKey(key: String): RSAPrivateKey {
+        val privateKeyPEM = key
+            .replace("-----BEGIN PRIVATE KEY-----", "")
+            .replace(System.lineSeparator().toRegex(), "")
+            .replace("-----END PRIVATE KEY-----", "")
+        val encoded: ByteArray = Base64.getDecoder().decode(privateKeyPEM)
+        val keyFactory = KeyFactory.getInstance("RSA")
+        val keySpec = PKCS8EncodedKeySpec(encoded)
+        return keyFactory.generatePrivate(keySpec) as RSAPrivateKey
     }
 }
