@@ -4,6 +4,7 @@ import no.roedt.ringesentralen.hypersys.externalModel.Organisasjonsledd
 import no.roedt.ringesentralen.hypersys.externalModel.SingleOrgan
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
+import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
@@ -16,6 +17,7 @@ import javax.ws.rs.core.MediaType
 @ApplicationScoped
 @Path("/hypersys")
 @Tag(name = "Hypersys-integrasjon")
+@SecurityRequirement(name = "jwt")
 class HypersysController(val service: HypersysService) {
 
     @Inject

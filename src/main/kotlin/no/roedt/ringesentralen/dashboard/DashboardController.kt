@@ -4,6 +4,7 @@ import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
+import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.RequestScoped
@@ -16,6 +17,7 @@ import javax.ws.rs.core.SecurityContext
 @Path("/dashboard")
 @Tag(name = "Dashboard")
 @RequestScoped
+@SecurityRequirement(name = "jwt")
 class DashboardController(val dashboardService: DashboardService) {
 
     @Inject

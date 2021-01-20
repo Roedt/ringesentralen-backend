@@ -3,6 +3,7 @@ package no.roedt.ringesentralen.samtale
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
+import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.annotation.security.RolesAllowed
 import javax.inject.Inject
@@ -16,6 +17,7 @@ import javax.ws.rs.core.SecurityContext
 
 @Path("/samtale")
 @Tag(name = "Ring")
+@SecurityRequirement(name = "jwt")
 class RingController(val ringService: RingService) {
 
     @Inject
@@ -28,7 +30,7 @@ class RingController(val ringService: RingService) {
     @Path("/neste")
     @Operation(summary = "Finn neste person å ringe")
     @Retry
-    fun     hentNestePersonAaRinge(@Context ctx: SecurityContext, nestePersonAaRingeRequest: NestePersonAaRingeRequest): RingbarPerson? = ringService.hentNestePersonAaRinge(nestePersonAaRingeRequest)
+    fun hentNestePersonAaRinge(@Context ctx: SecurityContext, nestePersonAaRingeRequest: NestePersonAaRingeRequest): RingbarPerson? = ringService.hentNestePersonAaRinge(nestePersonAaRingeRequest)
 
     @RolesAllowed("ringar")
     @POST
