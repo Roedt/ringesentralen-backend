@@ -3,7 +3,9 @@ package no.roedt.ringesentralen.hypersys
 import no.roedt.ringesentralen.hypersys.externalModel.Organisasjonsledd
 import no.roedt.ringesentralen.hypersys.externalModel.Organs
 import no.roedt.ringesentralen.hypersys.externalModel.SingleOrgan
+import org.eclipse.microprofile.jwt.JsonWebToken
 import javax.enterprise.context.ApplicationScoped
+import javax.inject.Inject
 
 interface HypersysService {
     fun getAlleLokallag(): List<Organisasjonsledd>
@@ -17,6 +19,9 @@ class HypersysServiceBean(
         val hypersysTokenVerifier: HypersysTokenVerifier,
         val hypersysLoginBean: HypersysLoginBean
 ) : HypersysService {
+
+    @Inject
+    lateinit var jwt: JsonWebToken
 
     override fun getAlleLokallag(): List<Organisasjonsledd> =
         hypersysProxy.get("/org/api/", getToken(), ListOrganisasjonsleddTypeReference())
