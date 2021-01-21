@@ -18,6 +18,8 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
 
 ENV MAVEN_HOME /usr/share/maven
 ENV GRAALVM_HOME $JAVA_HOME
+RUN ${GRAALVM_HOME}/bin/gu install native-image
+
 RUN $MAVEN_HOME/bin/mvn clean package -Pnative -B -e
 
 # Step 2: build the running container
