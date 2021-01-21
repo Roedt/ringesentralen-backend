@@ -18,7 +18,7 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
 
 ENV MAVEN_HOME /usr/share/maven
 ENV GRAALVM_HOME $JAVA_HOME
-RUN $MAVEN_HOME/bin/mvn clean package -Pnative
+RUN $MAVEN_HOME/bin/mvn clean package -Pnative -B -e
 
 # Step 2: build the running container
 FROM registry.fedoraproject.org/fedora-minimal
