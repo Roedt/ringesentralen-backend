@@ -296,6 +296,7 @@
         </plugins>
       </build>
       <properties>
+        <quarkus.native.native-image-xmx>8g</quarkus.native.native-image-xmx>
         <quarkus.package.type>native</quarkus.package.type>
       </properties>
     </profile>
