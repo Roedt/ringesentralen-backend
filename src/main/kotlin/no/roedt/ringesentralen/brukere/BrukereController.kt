@@ -24,11 +24,11 @@ class BrukereController(val brukereService: BrukereService) {
     lateinit var jwt: JsonWebToken
 
     @RolesAllowed("ringar")
-    @POST
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/brukere")
     @Operation(summary ="List ut brukarar")
-    fun hentBrukarar(@Context ctx: SecurityContext, hentBrukararRequest: HentBrukararRequest) : List<Brukarinformasjon> = brukereService.hentBrukarar(hentBrukararRequest)
+    fun hentBrukarar(@Context ctx: SecurityContext) : List<Brukarinformasjon> = brukereService.hentBrukarar()
 
     @RolesAllowed("ringar")
     @PUT

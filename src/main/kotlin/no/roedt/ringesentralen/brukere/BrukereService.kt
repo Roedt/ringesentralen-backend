@@ -12,7 +12,7 @@ interface BrukereService {
     fun deaktiverRinger(deaktiverRequest: TilgangsendringsRequest): Brukerendring
     fun gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring
     fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring
-    fun hentBrukarar(hentBrukararRequest: HentBrukararRequest): List<Brukarinformasjon>
+    fun hentBrukarar(): List<Brukarinformasjon>
 }
 
 @ApplicationScoped
@@ -21,7 +21,7 @@ class BrukereServiceBean(
         val databaseUpdater: DatabaseUpdater
 ): BrukereService {
 
-    override fun hentBrukarar(hentBrukararRequest: HentBrukararRequest): List<Brukarinformasjon> =
+    override fun hentBrukarar(): List<Brukarinformasjon> =
         personRepository.find("groupID >= ${GroupID.GodkjentRinger.nr}")
             .list<RingbarPerson>()
             .map { r ->
