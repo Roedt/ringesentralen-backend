@@ -1,5 +1,5 @@
 # Step 1: build the native image
-FROM oracle/graalvm-ce:1.0.0-rc15 as graalvm
+FROM oracle/graalvm-ce:20.3.0-java11 as graalvm
 COPY . /home/app
 WORKDIR /home/app
 
