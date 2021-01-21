@@ -1,48 +1,24 @@
 steps:
-  # Grab cached M2 repo
-  - name: gcr.io/cloud-builders/gsutil
-    id: Get M2 Cache
-    args: ['cp', 'gs://ringesentralen-mavenrepo/m2.tar.gz', 'm2.tar.gz']
-  - name: gcr.io/$PROJECT_ID/tar
-    id: Expand M2 Cache
-    args: [ 'xpzf', 'm2.tar.gz' ]
-  # Run the Maven build
-  - name: maven:3.6.0-jdk-11-slim
-    entrypoint: 'mvn'
-    args: [ '-Dmaven.repo.local=/workspace/.m2/repository', 'package', '-B' ]
-  # Update M2 repo cache
-  - name: gcr.io/$PROJECT_ID/tar
-    id: Compress M2 Cache
-    args: [ 'cpzf', 'm2.tar.gz', '.m2' ]
-  - name: gcr.io/cloud-builders/gsutil
-    id: Save M2 Cache
-    args: [ 'cp', 'm2.tar.gz', 'gs://ringesentralen-mavenrepo/m2.tar.gz' ]
+  # Create docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/ringesentralen-backend', '.']
 
-  # Build Docker image
-  - name: 'gcr.io/cloud-builders/docker'
-    entrypoint: 'bash'
-    args: [ '-c', 'docker pull gcr.io/$PROJECT_ID/ringesentralen-backend:latest || exit 0' ]
-  - name: 'gcr.io/cloud-builders/docker'
-    args: [
-        'build',
-        '-t', 'gcr.io/$PROJECT_ID/ringesentralen-backend:latest',
-        '--cache-from', 'gcr.io/$PROJECT_ID/ringesentralen-backend:latest',
-        '.'
-    ]
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'push', 'gcr.io/$PROJECT_ID/ringesentralen-backend' ]
-  # Deploy container image to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: gcloud
-    args:
-      - 'run'
-      - 'deploy'
-      - 'ringesentralen-backend'
-      - '--image'
-      - 'gcr.io/$PROJECT_ID/ringesentralen-backend:latest'
-      - '--region'
-      - 'europe-north1'
-      - '--platform'
-      - 'managed'
-images: ['gcr.io/$PROJECT_ID/ringesentralen-backend:latest']
+    args: ['push', 'gcr.io/$PROJECT_ID/ringesentralen-backend']
+
+  # Start up a cloud instance
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: [
+      'beta',
+      'run',
+      'deploy',
+      'ringesentralen-backend',
+      '--image', 'gcr.io/$PROJECT_ID/ringesentralen-backend',
+      '--region',
+      'europe-north1',
+      '--allow-unauthenticated'
+    ]
+
+# Image name
+images: ['gcr.io/$PROJECT_ID/ringesentralen-backend']
