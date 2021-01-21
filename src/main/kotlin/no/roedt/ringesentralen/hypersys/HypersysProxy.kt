@@ -21,7 +21,9 @@ class HypersysProxy(private val gcpSecretManager: GCPSecretManager) {
     lateinit var baseURL: String
 
     @PostConstruct
-    fun hentBaseURL() = gcpSecretManager.getHypersysBaseURL()
+    fun hentBaseURL() {
+        baseURL = gcpSecretManager.getHypersysBaseURL()
+    }
 
     val kMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
