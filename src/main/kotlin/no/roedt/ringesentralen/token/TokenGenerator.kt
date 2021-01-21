@@ -61,6 +61,7 @@ class TokenGenerator(val hypersysService: HypersysService) {
         else Files.readString(Path.of("../src/main/resources/META-INF/resources/privatekey.pem"))
 
     private fun getPrivateKeyFromSecretManager(): String {
+        println(parsedPrivateKey)
         return parsedPrivateKey
 //        val client = SecretManagerServiceClient.create()
 //        val secretVersionName = SecretVersionName.of(secretManagerProjectId, secretManagerSecretName, "latest")
