@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import org.eclipse.microprofile.config.inject.ConfigProperty
+import no.roedt.ringesentralen.token.GCPSecretManager
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -12,13 +12,18 @@ import java.net.http.HttpRequest.BodyPublishers
 import java.net.http.HttpResponse
 import java.net.http.HttpResponse.BodyHandlers
 import java.util.*
+import javax.annotation.PostConstruct
 import javax.enterprise.context.Dependent
 
 @Dependent
-class HypersysProxy {
+class HypersysProxy(private val gcpSecretManager: GCPSecretManager) {
 
-    @ConfigProperty(name = "baseURL")
     lateinit var baseURL: String
+
+    @PostConstruct
+    fun hentBaseURL() {
+        baseURL = gcpSecretManager.getHypersysBaseURL()
+    }
 
     val kMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

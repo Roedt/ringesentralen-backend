@@ -1,20 +1,14 @@
 package no.roedt.ringesentralen.hypersys
 
-import org.eclipse.microprofile.config.inject.ConfigProperty
+import no.roedt.ringesentralen.token.GCPSecretManager
 import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class HypersysTokenVerifier(
-        val hypersysProxy: HypersysProxy
+        val hypersysProxy: HypersysProxy,
+        val gcpSecretManager: GCPSecretManager
 ) {
-
-    @ConfigProperty(name = "clientId")
-    lateinit var clientId: String
-
-    @ConfigProperty(name = "clientSecret")
-    lateinit var clientSecret: String
-
     lateinit var token: Token
 
     @PostConstruct
@@ -23,7 +17,7 @@ class HypersysTokenVerifier(
     }
 
     fun getTokenFromHypersys(): Token {
-        val response = hypersysProxy.post(clientId, clientSecret, "grant_type=client_credentials")
+        val response = hypersysProxy.post(gcpSecretManager.getHypersysClientId(), gcpSecretManager.getHypersysClientSecret(), "grant_type=client_credentials")
         if (response.statusCode() != 200) {
             return hypersysProxy.readResponse(response, UgyldigToken::class.java)
         }
