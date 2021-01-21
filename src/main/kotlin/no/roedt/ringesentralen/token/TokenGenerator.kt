@@ -1,5 +1,7 @@
 package no.roedt.ringesentralen.token
 
+import com.google.cloud.secretmanager.v1.SecretManagerServiceClient
+import com.google.cloud.secretmanager.v1.SecretVersionName
 import io.smallrye.jwt.build.Jwt
 import no.roedt.ringesentralen.hypersys.*
 import org.eclipse.microprofile.config.inject.ConfigProperty
@@ -61,12 +63,14 @@ class TokenGenerator(val hypersysService: HypersysService) {
         else Files.readString(Path.of("../src/main/resources/META-INF/resources/privatekey.pem"))
 
     private fun getPrivateKeyFromSecretManager(): String {
-        println(parsedPrivateKey)
-        return parsedPrivateKey
-//        val client = SecretManagerServiceClient.create()
-//        val secretVersionName = SecretVersionName.of(secretManagerProjectId, secretManagerSecretName, "latest")
-//        return client.accessSecretVersion(secretVersionName).payload.data.toStringUtf8()
+//        println(parsedPrivateKey)
+//        return parsedPrivateKey
+        val client = SecretManagerServiceClient.create()
+        val secretVersionName = SecretVersionName.of(secretManagerProjectId, secretManagerSecretName, "latest")
+        return client.accessSecretVersion(secretVersionName).payload.data.toStringUtf8()
     }
+    //TODO: Kopier parsedprivatekey sånn den er når den blir lese inn i getPrivateKey-metoden ,og lim inn som miljøvariabel på gcp
+    //TODO: Github-issues på å bruke secretmanager generelt og på å gå over til quarkus native
 
     private fun readPrivateKey(key: String): RSAPrivateKey {
         val privateKeyPEM = key
