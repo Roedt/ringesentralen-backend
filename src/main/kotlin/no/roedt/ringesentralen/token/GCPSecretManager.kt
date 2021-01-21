@@ -11,12 +11,21 @@ class GCPSecretManager {
     @ConfigProperty(name = "secretManagerProjectId", defaultValue = "")
     lateinit var secretManagerProjectId: String
 
-    @ConfigProperty(name = "secretManagerSecretName", defaultValue = "")
-    lateinit var secretManagerSecretName: String
+    internal fun getPrivateKeyFromSecretManager() = getSecretFromSecretManager("privatekey")
 
-    internal fun getPrivateKeyFromSecretManager(): String {
+    fun getHypersysBrukerId() = getSecretFromSecretManager("hypersysBrukerId")
+
+    fun getHypersysBrukerSecret() = getSecretFromSecretManager("hypersysBrukerSecret")
+
+    fun getHypersysClientId() = getSecretFromSecretManager("hypersysClientId")
+
+    fun getHypersysClientSecret() = getSecretFromSecretManager("hypersysClientSecret")
+
+    fun getHypersysBaseURL() = getSecretFromSecretManager("hypersysBaseUrl")
+
+    private fun getSecretFromSecretManager(secretName: String): String {
+        val secretVersionName = SecretVersionName.of("215530995670", secretName, "latest")
         val client = SecretManagerServiceClient.create()
-        val secretVersionName = SecretVersionName.of(secretManagerProjectId, secretManagerSecretName, "latest")
         return client.accessSecretVersion(secretVersionName).payload.data.toStringUtf8()
     }
 }
