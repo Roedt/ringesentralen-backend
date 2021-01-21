@@ -30,9 +30,6 @@ class TokenGenerator(val hypersysService: HypersysService) {
     @ConfigProperty(name = "secretManagerSecretName", defaultValue = "")
     lateinit var secretManagerSecretName: String
 
-    @ConfigProperty(name = "parsedPrivateKey", defaultValue = "")
-    lateinit var parsedPrivateKey: String
-
     fun login(loginRequest: LoginRequest): String {
         if (loginRequest.key != frontendTokenKey) {
             throw IllegalArgumentException("Illegal key")
@@ -63,14 +60,10 @@ class TokenGenerator(val hypersysService: HypersysService) {
         else Files.readString(Path.of("../src/main/resources/META-INF/resources/privatekey.pem"))
 
     private fun getPrivateKeyFromSecretManager(): String {
-//        println(parsedPrivateKey)
-//        return parsedPrivateKey
         val client = SecretManagerServiceClient.create()
         val secretVersionName = SecretVersionName.of(secretManagerProjectId, secretManagerSecretName, "latest")
         return client.accessSecretVersion(secretVersionName).payload.data.toStringUtf8()
     }
-    //TODO: Kopier parsedprivatekey sånn den er når den blir lese inn i getPrivateKey-metoden ,og lim inn som miljøvariabel på gcp
-    //TODO: Github-issues på å bruke secretmanager generelt og på å gå over til quarkus native
 
     private fun readPrivateKey(key: String): RSAPrivateKey {
         val privateKeyPEM = key
