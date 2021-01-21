@@ -24,7 +24,7 @@ class GCPSecretManager {
     fun getHypersysBaseURL() = getSecretFromSecretManager("hypersysBaseUrl")
 
     private fun getSecretFromSecretManager(secretName: String): String {
-        val secretVersionName = SecretVersionName.of("215530995670", secretName, "latest")
+        val secretVersionName = SecretVersionName.of(secretManagerProjectId, secretName, "latest")
         val client = SecretManagerServiceClient.create()
         return client.accessSecretVersion(secretVersionName).payload.data.toStringUtf8()
     }
