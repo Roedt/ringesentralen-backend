@@ -133,6 +133,12 @@
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-secretmanager</artifactId>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/io.quarkus/quarkus-elytron-security -->
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-elytron-security</artifactId>
+    </dependency>
+
   </dependencies>
   <build>
     <sourceDirectory>src/main/kotlin</sourceDirectory>
