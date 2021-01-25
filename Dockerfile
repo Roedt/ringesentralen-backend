@@ -2,6 +2,8 @@
 FROM oracle/graalvm-ce:20.3.0-java11 as graalvm
 COPY . /home/app
 WORKDIR /home/app
+COPY settings.xml /root/.m2/settings.xml
+COPY gcp.json /home/app
 
 # Download and install Maven
 ARG MAVEN_VERSION=3.6.3
@@ -16,6 +18,7 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
   && rm -f /tmp/apache-maven.tar.gz \
   && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
 
+ENV GOOGLE_APPLICATION_CREDENTIALS=gcp.json
 ENV MAVEN_HOME /usr/share/maven
 ENV GRAALVM_HOME $JAVA_HOME
 RUN ${GRAALVM_HOME}/bin/gu install native-image
@@ -26,6 +29,8 @@ RUN $MAVEN_HOME/bin/mvn clean package -Pnative -B -e
 FROM registry.fedoraproject.org/fedora-minimal
 WORKDIR /work/
 COPY --from=graalvm /home/app/target/*-runner /work/application
+COPY --from=graalvm /home/app/gcp.json gcp.json
+ENV GOOGLE_APPLICATION_CREDENTIALS=gcp.json
 RUN chmod 775 /work
 EXPOSE 8080
 ENTRYPOINT ["./application", "-Dquarkus.http.host=0.0.0.0"]

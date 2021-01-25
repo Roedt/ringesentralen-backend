@@ -5,3 +5,5 @@
 !target/quarkus-app/*
 !src/
 !pom.xml
+!settings.xml
+!gcp.json
