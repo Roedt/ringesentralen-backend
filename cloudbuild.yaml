@@ -12,16 +12,12 @@ steps:
 
   # Create docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: [
-        'build',
-        '-t',
-        'gcr.io/$PROJECT_ID/ringesentralen-backend',
-        '--build-arg',
-        'github_user_in=$(cat github_user.txt)',
-        '--build-arg',
-        'github_password_in=$(cat github_password.txt)',
-        '.'
-    ]
+    args:
+      - 'build'
+      - |
+        export GH_USER=$(cat github_user.txt) &&
+        export GH_PASSWORD=$(cat github_password.txt) &&
+        docker build --build-arg github_user_in=$GH_USER --build-arg github_password_in=$GH_PASSWORD -t gcr.io/$PROJECT_ID/ringesentralen-backend .
 
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
@@ -29,7 +25,8 @@ steps:
 
   # Start up a cloud instance
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: [
+    args:
+      [
       'beta',
       'run',
       'deploy',
