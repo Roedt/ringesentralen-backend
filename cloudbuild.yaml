@@ -12,7 +12,6 @@ steps:
 
   # Create docker image
   - name: 'gcr.io/cloud-builders/docker'
-    entrypoint: 'bash'
     args: [ 'build',
             '--build-arg', 'GITHUB_USER_IN=$( < github_user.txt)',
             '--build-arg', 'GITHUB_PASSWORD_IN=$( < github_password.txt)',
