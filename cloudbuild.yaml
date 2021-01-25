@@ -17,9 +17,9 @@ steps:
         '-t',
         'gcr.io/$PROJECT_ID/ringesentralen-backend',
         '--build-arg',
-        'github_user_in < github_user.txt',
+        'github_user_in=$(cat github_user.txt)',
         '--build-arg',
-        'github_password_in < github_password.txt',
+        'github_password_in=$(cat github_password.txt)',
         '.'
     ]
 
