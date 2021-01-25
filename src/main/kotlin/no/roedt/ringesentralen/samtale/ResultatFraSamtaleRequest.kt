@@ -6,11 +6,11 @@ import no.roedt.ringesentralen.Modus
 
 @RegisterForReflection
 data class ResultatFraSamtaleRequest(
-        @JsonProperty("modus") var modus: Modus,
-        @JsonProperty("ringerID") var ringerID: Long,
-        @JsonProperty("ringtID") var ringtID: Long,
-        @JsonProperty("resultat") var result: Resultat,
-        @JsonProperty("kommentar") var kommentar: String,
-        @JsonProperty("modusspesifikkeResultat") var modusspesifikkeResultat: ModusspesifikkeResultat,
-        @JsonProperty("vilIkkeBliRingt") var vilIkkeBliRingt: Boolean
+        @JsonProperty("modus") val modus: Modus,
+        @JsonProperty("ringerID") val ringerID: Long,
+        @JsonProperty("ringtID") val ringtID: Long,
+        @JsonProperty("resultat") val result: Resultat,
+        @JsonProperty("kommentar") val kommentar: String,
+        @JsonProperty("modusspesifikkeResultat") val modusspesifikkeResultat: ModusspesifikkeResultat,
+        @JsonProperty("vilIkkeBliRingt") val vilIkkeBliRingt: Boolean
 )

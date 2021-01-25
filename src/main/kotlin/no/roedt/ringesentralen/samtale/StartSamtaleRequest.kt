@@ -5,6 +5,6 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 
 @RegisterForReflection
 data class StartSamtaleRequest(
-        @JsonProperty("ringerID") var ringerID: Long,
-        @JsonProperty("skalRingesID") var skalRingesID: Long
+        @JsonProperty("ringerID") val ringerID: Long,
+        @JsonProperty("skalRingesID") val skalRingesID: Long
 )

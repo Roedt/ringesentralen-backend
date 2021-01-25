@@ -5,6 +5,6 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 
 @RegisterForReflection
 data class RingerTilbakeRequest(
-        @JsonProperty("ringerID") var ringerID: Long,
-        @JsonProperty("ringtNummer") var ringtNummer: String
+        @JsonProperty("ringerID") val ringerID: Long,
+        @JsonProperty("ringtNummer") val ringtNummer: String
 )

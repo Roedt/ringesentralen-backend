@@ -314,7 +314,7 @@
   <repositories>
     <repository>
       <id>github</id>
-      <name>GitHub OWNER Apache Maven Packages</name>
+      <name>GitHub Packages Quarkus Google Cloud Services</name>
       <url>https://maven.pkg.github.com/madsop/quarkus-google-cloud-services</url>
     </repository>
   </repositories>
