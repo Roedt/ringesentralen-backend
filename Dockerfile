@@ -3,9 +3,11 @@ FROM oracle/graalvm-ce:20.3.0-java11 as graalvm
 COPY . /home/app
 WORKDIR /home/app
 COPY settings.xml /root/.m2/settings.xml
-COPY gcp.json /home/app
+#COPY gcp.json /home/app
 
 # Download and install Maven
+ARG github_user
+ARG github_password
 ARG MAVEN_VERSION=3.6.3
 ARG USER_HOME_DIR="/root"
 ARG SHA=c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0
@@ -23,14 +25,14 @@ ENV MAVEN_HOME /usr/share/maven
 ENV GRAALVM_HOME $JAVA_HOME
 RUN ${GRAALVM_HOME}/bin/gu install native-image
 
-RUN $MAVEN_HOME/bin/mvn clean package -Pnative -B -e
+RUN $MAVEN_HOME/bin/mvn clean package -Pnative -B -e -Dgithub_user=${github_user} -Dgithub_password=${github_password}
 
 # Step 2: build the running container
 FROM registry.fedoraproject.org/fedora-minimal
 WORKDIR /work/
 COPY --from=graalvm /home/app/target/*-runner /work/application
-COPY --from=graalvm /home/app/gcp.json gcp.json
-ENV GOOGLE_APPLICATION_CREDENTIALS=gcp.json
+#COPY --from=graalvm /home/app/gcp.json gcp.json
+#ENV GOOGLE_APPLICATION_CREDENTIALS=gcp.json
 RUN chmod 775 /work
 EXPOSE 8080
 ENTRYPOINT ["./application", "-Dquarkus.http.host=0.0.0.0"]
