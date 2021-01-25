@@ -16,8 +16,10 @@ steps:
         'build',
         '-t',
         'gcr.io/$PROJECT_ID/ringesentralen-backend',
-        '--build-arg github_user=${github_user}',
-        '--build-arg github_password=${github_password}',
+        '--build-arg',
+        'github_user=${github_user}',
+        '--build-arg',
+        'github_password=${github_password}',
         '.'
     ]
 
