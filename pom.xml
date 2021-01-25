@@ -284,6 +284,8 @@
                   <goal>verify</goal>
                 </goals>
                 <configuration>
+                  <reportErrorsAtRuntime>true</reportErrorsAtRuntime>
+                  <containerRuntimeOptions>--report-unsupported-elements-at-runtime</containerRuntimeOptions>
                   <systemPropertyVariables>
                     <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
                     <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
