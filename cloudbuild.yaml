@@ -10,6 +10,14 @@ steps:
     entrypoint: 'bash'
     args: [ '-c', "gcloud secrets versions access latest --secret=github-password --format='get(payload.data)' | tr '_-' '/+' | base64 -d > github_password.txt" ]
 
+ # debug
+  - name: debug
+    id: debug
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - cat github_user.txt
+
   # Create docker image
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
