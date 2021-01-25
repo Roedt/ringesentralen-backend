@@ -12,6 +12,7 @@ steps:
 
   # Create docker image
   - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
     args:
       - '-c'
       - |
