@@ -18,8 +18,6 @@ steps:
       - |
         docker build --build-arg GITHUB_USER_IN=$( < github_user.txt) --build-arg GITHUB_PASSWORD_IN=$( < github_password.txt) -t gcr.io/$PROJECT_ID/ringesentralen-backend .
 
-
-
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/ringesentralen-backend']
@@ -37,6 +35,8 @@ steps:
       'europe-north1',
       '--allow-unauthenticated'
     ]
+options:
+  machineType: N1_HIGHCPU_32
 
 # Image name
 images: ['gcr.io/$PROJECT_ID/ringesentralen-backend']
