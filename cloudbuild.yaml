@@ -11,11 +11,12 @@ steps:
     args: [ '-c', "gcloud secrets versions access latest --secret=github-password --format='get(payload.data)' | tr '_-' '/+' | base64 -d > github_password.txt" ]
 
   # Create docker image
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: gcr.io/cloud-builders/docker
+    entrypoint: "bash"
     args:
-      - '-c'
+      - "-c"
       - |
-        export GH_USER=$(cat github_user.txt) && export GH_PASSWORD=$(cat github_password.txt) && docker build --build-arg github_user_in=$GH_USER --build-arg github_password_in=$GH_PASSWORD -t gcr.io/$PROJECT_ID/ringesentralen-backend .
+        docker build --build-arg GITHUB_USER_IN=$( < github_user.txt) --build-arg GITHUB_PASSWORD_IN=$( < github_password.txt) -t gcr.io/$PROJECT_ID/ringesentralen-backend .
 
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
@@ -30,10 +31,12 @@ steps:
       'deploy',
       'ringesentralen-backend',
       '--image', 'gcr.io/$PROJECT_ID/ringesentralen-backend',
-      '--region',
-      'europe-north1',
-      '--allow-unauthenticated'
-    ]
+      '--allow-unauthenticated',
+      '--platform=managed',
+      '--region=europe-north1'
+      ]
+options:
+  machineType: N1_HIGHCPU_32
 
 # Image name
 images: ['gcr.io/$PROJECT_ID/ringesentralen-backend']
