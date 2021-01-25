@@ -31,10 +31,10 @@ steps:
       'deploy',
       'ringesentralen-backend',
       '--image', 'gcr.io/$PROJECT_ID/ringesentralen-backend',
-      '--region',
-      'europe-north1',
-      '--allow-unauthenticated'
-    ]
+      '--allow-unauthenticated',
+      '--platform=managed',
+      '--region=europe-north1'
+      ]
 options:
   machineType: N1_HIGHCPU_32
 
