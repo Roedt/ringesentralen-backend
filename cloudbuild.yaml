@@ -3,12 +3,12 @@ steps:
   # github-brukarnamn
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: 'bash'
-    args: [ '-c', "gcloud secrets versions access latest --secret=github-user --format='get(payload.data)' | tr '_-' '/+' | base64 -d > github_user" ]
+    args: [ '-c', "gcloud secrets versions access latest --secret=github-user --format='get(payload.data)' | tr '_-' '/+' | base64 -d > github_user.txt" ]
 
  # github-passord
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: 'bash'
-    args: [ '-c', "gcloud secrets versions access latest --secret=github-password --format='get(payload.data)' | tr '_-' '/+' | base64 -d > github_password" ]
+    args: [ '-c', "gcloud secrets versions access latest --secret=github-password --format='get(payload.data)' | tr '_-' '/+' | base64 -d > github_password.txt" ]
 
   # Create docker image
   - name: 'gcr.io/cloud-builders/docker'
@@ -17,9 +17,9 @@ steps:
         '-t',
         'gcr.io/$PROJECT_ID/ringesentralen-backend',
         '--build-arg',
-        'github_user=${github_user}',
+        'github_user_in=<github_user.txt',
         '--build-arg',
-        'github_password=${github_password}',
+        'github_password_in=<github_password.txt',
         '.'
     ]
 

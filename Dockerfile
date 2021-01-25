@@ -6,8 +6,8 @@ COPY settings.xml /root/.m2/settings.xml
 #COPY gcp.json /home/app
 
 # Download and install Maven
-ARG github_user
-ARG github_password
+ARG github_user_in
+ARG github_password_in
 ARG MAVEN_VERSION=3.6.3
 ARG USER_HOME_DIR="/root"
 ARG SHA=c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0
@@ -25,7 +25,7 @@ ENV MAVEN_HOME /usr/share/maven
 ENV GRAALVM_HOME $JAVA_HOME
 RUN ${GRAALVM_HOME}/bin/gu install native-image
 
-RUN $MAVEN_HOME/bin/mvn clean package -Pnative -B -e -Dgithub_user=${github_user} -Dgithub_password=${github_password}
+RUN $MAVEN_HOME/bin/mvn clean package -Pnative -B -e -Dgithub_user=${github_user_in} -Dgithub_password=${github_password_in}
 
 # Step 2: build the running container
 FROM registry.fedoraproject.org/fedora-minimal
