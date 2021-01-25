@@ -11,7 +11,7 @@ steps:
     args: [ '-c', "gcloud secrets versions access latest --secret=github-password --format='get(payload.data)' | tr '_-' '/+' | base64 -d > github_password.txt" ]
 
  # debug
-  - name: debug
+  - name: gcr.io/cloud-builders/gcloud
     id: debug
     entrypoint: 'bash'
     args:
