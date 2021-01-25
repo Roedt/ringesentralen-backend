@@ -13,10 +13,11 @@ steps:
   # Create docker image
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
-    args:
-      - "-c"
-      - |
-        docker build --build-arg GITHUB_USER_IN=$(cat github_user.txt) --build-arg GITHUB_PASSWORD_IN=$(cat github_password.txt) -t gcr.io/$PROJECT_ID/ringesentralen-backend .
+    args: [ 'build',
+            '--build-arg', 'GITHUB_USER_IN=$( < github_user.txt)',
+            '--build-arg', 'GITHUB_PASSWORD_IN=$( < github_password.txt)',
+            '-t', 'gcr.io/$PROJECT_ID/ringesentralen-backend',
+            '.' ]
 
 
   # Push the container image to Container Registry
