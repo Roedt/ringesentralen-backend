@@ -13,7 +13,7 @@ steps:
   # Create docker image
   - name: 'gcr.io/cloud-builders/docker'
     args:
-      - 'build'
+      - '-c'
       - |
         export GH_USER=$(cat github_user.txt) && export GH_PASSWORD=$(cat github_password.txt) && docker build --build-arg github_user_in=$GH_USER --build-arg github_password_in=$GH_PASSWORD -t gcr.io/$PROJECT_ID/ringesentralen-backend .
 
