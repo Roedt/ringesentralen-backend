@@ -1,57 +1,38 @@
-####
-# This Dockerfile is used in order to build a container that runs the Quarkus application in JVM mode
-#
-# Before building the container image run:
-#
-# mvn package
-#
-# Then, build the image with:
-#
-# docker build -f src/main/docker/Dockerfile.jvm -t quarkus/code-with-quarkus-jvm .
-#
-# Then run the container using:
-#
-# docker run -i --rm -p 8080:8080 quarkus/code-with-quarkus-jvm
-#
-# If you want to include the debug port into your docker image
-# you will have to expose the debug port (default 5005) like this :  EXPOSE 8080 5050
-# 
-# Then run the container using : 
-#
-# docker run -i --rm -p 8080:8080 -p 5005:5005 -e JAVA_ENABLE_DEBUG="true" quarkus/code-with-quarkus-jvm
-#
-###
+# Step 1: build the native image
+FROM ghcr.io/graalvm/graalvm-ce:java11-21.0.0 as graalvm
+COPY . /home/app
+WORKDIR /home/app
+COPY settings.xml /root/.m2/settings.xml
+#COPY gcp.json /home/app
 
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1
+# Download and install Maven
+ARG GITHUB_USER_IN
+ARG GITHUB_PASSWORD_IN
+ARG MAVEN_VERSION=3.6.3
+ARG USER_HOME_DIR="/root"
+ARG SHA=c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0
+ARG BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
 
+RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
+  && curl -fsSL -o /tmp/apache-maven.tar.gz ${BASE_URL}/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+  && echo "${SHA}  /tmp/apache-maven.tar.gz" | sha512sum -c - \
+  && tar -xzf /tmp/apache-maven.tar.gz -C /usr/share/maven --strip-components=1 \
+  && rm -f /tmp/apache-maven.tar.gz \
+  && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
 
-ARG JAVA_PACKAGE=java-11-openjdk-headless
-ARG RUN_JAVA_VERSION=1.3.8
+ENV GOOGLE_APPLICATION_CREDENTIALS=gcp.json
+ENV MAVEN_HOME /usr/share/maven
+ENV GRAALVM_HOME $JAVA_HOME
+RUN ${GRAALVM_HOME}/bin/gu install native-image
 
-ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
+RUN $MAVEN_HOME/bin/mvn clean package -Pnative -B -e -Dgithub_user=${GITHUB_USER_IN} -Dgithub_password=${GITHUB_PASSWORD_IN}
 
-
-# Install java and the run-java script
-# Also set up permissions for user `1001`
-RUN microdnf install curl ca-certificates ${JAVA_PACKAGE} \
-    && microdnf update \
-    && microdnf clean all \
-    && mkdir /deployments \
-    && chown 1001 /deployments \
-    && chmod "g+rwX" /deployments \
-    && chown 1001:root /deployments \
-    && curl https://repo1.maven.org/maven2/io/fabric8/run-java-sh/${RUN_JAVA_VERSION}/run-java-sh-${RUN_JAVA_VERSION}-sh.sh -o /deployments/run-java.sh \
-    && chown 1001 /deployments/run-java.sh \
-    && chmod 540 /deployments/run-java.sh \
-    && echo "securerandom.source=file:/dev/urandom" >> /etc/alternatives/jre/lib/security/java.security
-
-# Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
-ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
-
-COPY target/lib/* /deployments/lib/
-COPY target/*-runner.jar /deployments/app.jar
-
+# Step 2: build the running container
+FROM registry.fedoraproject.org/fedora-minimal
+WORKDIR /work/
+COPY --from=graalvm /home/app/target/*-runner /work/application
+#COPY --from=graalvm /home/app/gcp.json gcp.json
+#ENV GOOGLE_APPLICATION_CREDENTIALS=gcp.json
+RUN chmod 775 /work
 EXPOSE 8080
-USER 1001
-
-ENTRYPOINT [ "/deployments/run-java.sh" ]
+ENTRYPOINT ["./application", "-Dquarkus.http.host=0.0.0.0"]

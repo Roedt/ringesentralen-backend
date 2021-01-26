@@ -1,48 +1,42 @@
 steps:
-  # Grab cached M2 repo
-  - name: gcr.io/cloud-builders/gsutil
-    id: Get M2 Cache
-    args: ['cp', 'gs://ringesentralen-mavenrepo/m2.tar.gz', 'm2.tar.gz']
-  - name: gcr.io/$PROJECT_ID/tar
-    id: Expand M2 Cache
-    args: [ 'xpzf', 'm2.tar.gz' ]
-  # Run the Maven build
-  - name: maven:3.6.0-jdk-11-slim
-    entrypoint: 'mvn'
-    args: [ '-Dmaven.repo.local=/workspace/.m2/repository', 'package', '-B' ]
-  # Update M2 repo cache
-  - name: gcr.io/$PROJECT_ID/tar
-    id: Compress M2 Cache
-    args: [ 'cpzf', 'm2.tar.gz', '.m2' ]
-  - name: gcr.io/cloud-builders/gsutil
-    id: Save M2 Cache
-    args: [ 'cp', 'm2.tar.gz', 'gs://ringesentralen-mavenrepo/m2.tar.gz' ]
 
-  # Build Docker image
-  - name: 'gcr.io/cloud-builders/docker'
+  # github-brukarnamn
+  - name: gcr.io/cloud-builders/gcloud
     entrypoint: 'bash'
-    args: [ '-c', 'docker pull gcr.io/$PROJECT_ID/ringesentralen-backend:latest || exit 0' ]
-  - name: 'gcr.io/cloud-builders/docker'
-    args: [
-        'build',
-        '-t', 'gcr.io/$PROJECT_ID/ringesentralen-backend:latest',
-        '--cache-from', 'gcr.io/$PROJECT_ID/ringesentralen-backend:latest',
-        '.'
-    ]
+    args: [ '-c', "gcloud secrets versions access latest --secret=github-user --format='get(payload.data)' | tr '_-' '/+' | base64 -d > github_user.txt" ]
+
+ # github-passord
+  - name: gcr.io/cloud-builders/gcloud
+    entrypoint: 'bash'
+    args: [ '-c', "gcloud secrets versions access latest --secret=github-password --format='get(payload.data)' | tr '_-' '/+' | base64 -d > github_password.txt" ]
+
+  # Create docker image
+  - name: gcr.io/cloud-builders/docker
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        docker build --build-arg GITHUB_USER_IN=$( < github_user.txt) --build-arg GITHUB_PASSWORD_IN=$( < github_password.txt) -t gcr.io/$PROJECT_ID/ringesentralen-backend .
+
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'push', 'gcr.io/$PROJECT_ID/ringesentralen-backend' ]
-  # Deploy container image to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: gcloud
+    args: ['push', 'gcr.io/$PROJECT_ID/ringesentralen-backend']
+
+  # Start up a cloud instance
+  - name: 'gcr.io/cloud-builders/gcloud'
     args:
-      - 'run'
-      - 'deploy'
-      - 'ringesentralen-backend'
-      - '--image'
-      - 'gcr.io/$PROJECT_ID/ringesentralen-backend:latest'
-      - '--region'
-      - 'europe-north1'
-      - '--platform'
-      - 'managed'
-images: ['gcr.io/$PROJECT_ID/ringesentralen-backend:latest']
+      [
+      'beta',
+      'run',
+      'deploy',
+      'ringesentralen-backend',
+      '--image', 'gcr.io/$PROJECT_ID/ringesentralen-backend',
+      '--allow-unauthenticated',
+      '--platform=managed',
+      '--region=europe-north1'
+      ]
+options:
+  machineType: N1_HIGHCPU_32
+
+# Image name
+images: ['gcr.io/$PROJECT_ID/ringesentralen-backend']

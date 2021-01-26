@@ -3,3 +3,7 @@
 !target/*-runner.jar
 !target/lib/*
 !target/quarkus-app/*
+!src/
+!pom.xml
+!settings.xml
+!gcp.json

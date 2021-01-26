@@ -130,9 +130,16 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.google.cloud</groupId>
-      <artifactId>google-cloud-secretmanager</artifactId>
+      <groupId>io.quarkiverse.googlecloudservices</groupId>
+      <artifactId>quarkus-google-cloud-secret-manager</artifactId>
+      <version>0.4.0-SNAPSHOT</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/io.quarkus/quarkus-elytron-security -->
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-elytron-security</artifactId>
+    </dependency>
+
   </dependencies>
   <build>
     <sourceDirectory>src/main/kotlin</sourceDirectory>
@@ -263,5 +270,53 @@
       </plugins>
     </pluginManagement>
   </build>
+
+  <profiles>
+    <profile>
+      <id>native</id>
+      <activation>
+        <property>
+          <name>native</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>${surefire-plugin.version}</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>verify</goal>
+                </goals>
+                <configuration>
+                  <reportErrorsAtRuntime>true</reportErrorsAtRuntime>
+                  <containerRuntimeOptions>--report-unsupported-elements-at-runtime</containerRuntimeOptions>
+                  <systemPropertyVariables>
+                    <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
+                    <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                    <maven.home>${maven.home}</maven.home>
+                  </systemPropertyVariables>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+      <properties>
+        <quarkus.native.native-image-xmx>16g</quarkus.native.native-image-xmx>
+        <quarkus.package.type>native</quarkus.package.type>
+      </properties>
+    </profile>
+  </profiles>
+
+  <repositories>
+    <repository>
+      <id>github</id>
+      <name>GitHub Packages Quarkus Google Cloud Services</name>
+      <url>https://maven.pkg.github.com/madsop/quarkus-google-cloud-services</url>
+    </repository>
+  </repositories>
 
 </project>

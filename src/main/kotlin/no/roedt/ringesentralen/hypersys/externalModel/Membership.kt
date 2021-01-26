@@ -1,7 +1,9 @@
 package no.roedt.ringesentralen.hypersys.externalModel
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import io.quarkus.runtime.annotations.RegisterForReflection
 
+@RegisterForReflection
 data class Membership(
         @JsonProperty("organisation") val organisation: Int,
         @JsonProperty("organisation_name") val organisationName: String,
