@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.brukere
 
+import RingesentralenController
 import UserId
 import no.roedt.ringesentralen.Brukarinformasjon
 import org.eclipse.microprofile.faulttolerance.Bulkhead
@@ -19,7 +20,7 @@ import javax.ws.rs.core.SecurityContext
 @Path("/brukere")
 @Tag(name = "Brukere")
 @SecurityRequirement(name = "jwt")
-class BrukereController(val brukereService: BrukereService) {
+class BrukereController(val brukereService: BrukereService) : RingesentralenController {
 
     @Inject
     lateinit var jwt: JsonWebToken
@@ -91,5 +92,4 @@ class BrukereController(val brukereService: BrukereService) {
     @Retry
     fun fjernRingerSomLokalGodkjenner(@Context ctx: SecurityContext, fjernSomLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = brukereService.fjernRingerSomLokalGodkjenner(AutentisertTilgangsendringRequest(ctx.userId(), fjernSomLokalGodkjennerRequest))
 
-    fun SecurityContext.userId(): UserId = UserId((userPrincipal as JsonWebToken).claim<Any>("hypersys.user_id").get().toString().toInt())
 }
