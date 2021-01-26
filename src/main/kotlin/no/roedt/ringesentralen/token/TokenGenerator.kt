@@ -24,10 +24,10 @@ class TokenGenerator(
         val hypersysToken: Token = hypersysService.login(loginRequest)
         if (hypersysToken is UgyldigToken)
             throw RuntimeException(hypersysToken.error)
-        return generateToken(hypersysToken as GyldigToken)
+        return generateToken(hypersysToken as GyldigPersonToken)
     }
 
-    private fun generateToken(hypersysToken: GyldigToken): String = Jwt
+    private fun generateToken(hypersysToken: GyldigPersonToken): String = Jwt
         .audience("ringar")
         .issuer("https://ringesentralen.no")
         .subject("Ringesentralen")
@@ -39,5 +39,7 @@ class TokenGenerator(
         .claim("hypersys.scope", hypersysToken.scope)
         .claim("hypersys.access_token", hypersysToken.access_token)
         .claim("hypersys.expires_in", hypersysToken.expires_in)
+        .claim("hypersys.refresh_token", hypersysToken.refresh_token)
+        .claim("hypersys.user_id", hypersysToken.user_id)
         .sign(privateKeyFactory.readPrivateKey())
 }

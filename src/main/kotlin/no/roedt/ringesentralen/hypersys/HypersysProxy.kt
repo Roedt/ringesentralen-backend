@@ -53,5 +53,5 @@ class HypersysProxy(private val gcpSecretManager: GCPSecretManager) {
         return response
     }
 
-    private fun get(uri: String, token: GyldigToken): HttpRequest = HttpRequest.newBuilder().GET().header("Authorization", "Bearer ${token.access_token}").uri(URI.create(uri)).build()
+    private fun get(uri: String, token: GyldigToken): HttpRequest = HttpRequest.newBuilder().GET().header("Authorization", "Bearer ${token.access_token()}").uri(URI.create(uri)).build()
 }

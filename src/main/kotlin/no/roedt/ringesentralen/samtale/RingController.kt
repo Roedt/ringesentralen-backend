@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.samtale
 
+import RingesentralenController
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
@@ -18,7 +19,7 @@ import javax.ws.rs.core.SecurityContext
 @Path("/samtale")
 @Tag(name = "Ring")
 @SecurityRequirement(name = "jwt")
-class RingController(val ringService: RingService) {
+class RingController(val ringService: RingService) : RingesentralenController {
 
     @Inject
     lateinit var jwt: JsonWebToken
@@ -30,7 +31,7 @@ class RingController(val ringService: RingService) {
     @Path("/neste")
     @Operation(summary = "Finn neste person å ringe")
     @Retry
-    fun hentNestePersonAaRinge(@Context ctx: SecurityContext, nestePersonAaRingeRequest: NestePersonAaRingeRequest): RingbarPerson? = ringService.hentNestePersonAaRinge(nestePersonAaRingeRequest)
+    fun hentNestePersonAaRinge(@Context ctx: SecurityContext, nestePersonAaRingeRequest: NestePersonAaRingeRequest): RingbarPerson? = ringService.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(ctx.userId(), nestePersonAaRingeRequest))
 
     @RolesAllowed("ringar")
     @POST
@@ -39,7 +40,7 @@ class RingController(val ringService: RingService) {
     @Path("/startSamtale")
     @Operation(summary = "Start samtale")
     @Retry
-    fun startSamtale(@Context ctx: SecurityContext, startSamtaleRequest: StartSamtaleRequest): StartSamtaleResponse = ringService.startSamtale(startSamtaleRequest)
+    fun startSamtale(@Context ctx: SecurityContext, startSamtaleRequest: StartSamtaleRequest): StartSamtaleResponse = ringService.startSamtale(AutentisertStartSamtaleRequest(ctx.userId(), startSamtaleRequest))
 
     @RolesAllowed("ringar")
     @POST
@@ -48,7 +49,7 @@ class RingController(val ringService: RingService) {
     @Path("/registrerResultatFraSamtale")
     @Operation(summary = "Registrer resultat fra samtale")
     @Retry
-    fun registrerResultatFraSamtale(@Context ctx: SecurityContext, resultatFraSatmtaleRequest: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse = ringService.registrerResultatFraSamtale(resultatFraSatmtaleRequest)
+    fun registrerResultatFraSamtale(@Context ctx: SecurityContext, resultatFraSatmtaleRequest: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse = ringService.registrerResultatFraSamtale(AutentisertResultatFraSamtaleRequest(ctx.userId(), resultatFraSatmtaleRequest))
 
 
     @RolesAllowed("ringar")
@@ -58,6 +59,6 @@ class RingController(val ringService: RingService) {
     @Path("/noenRingerTilbake")
     @Operation(summary = "Noen ringer tilbake")
     @Retry
-    fun noenRingerTilbake(@Context ctx: SecurityContext, request: RingerTilbakeRequest): RingbarPerson = ringService.noenRingerTilbake(request)
+    fun noenRingerTilbake(@Context ctx: SecurityContext, request: RingerTilbakeRequest): RingbarPerson = ringService.noenRingerTilbake(AutentisertRingerTilbakeRequest(ctx.userId(), request))
 
 }

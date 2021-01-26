@@ -5,7 +5,6 @@ import java.time.LocalDateTime
 
 @RegisterForReflection
 data class StartSamtaleResponse(
-        val ringerID: Long,
         val skalRingesID: Long,
         val timeStarted: LocalDateTime
 )

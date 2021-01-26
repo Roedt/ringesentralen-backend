@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.samtale
 
+import UserId
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -34,9 +35,9 @@ internal class RingServiceBeanTest {
     fun `samtale blir registrert`() {
         doReturn(mockQuery).whenever(entityManager).createNativeQuery(any())
 
-        val request = ResultatFraSamtaleRequest(
+        val request = AutentisertResultatFraSamtaleRequest(
+            UserId(1), ResultatFraSamtaleRequest(
                 modus = Modus.Korona,
-                ringerID = 1,
                 ringtID = 2,
                 result = Resultat.Svarte,
                 kommentar = "Hei",
@@ -46,7 +47,7 @@ internal class RingServiceBeanTest {
                         vilHaValgkampsbrev = false
                 ),
                 vilIkkeBliRingt = false
-        )
+        ))
 
         val response = ringService.registrerResultatFraSamtale(request)
         assertNotNull(response)
@@ -54,9 +55,10 @@ internal class RingServiceBeanTest {
 
     @Test
     fun `resultattype som ikkje passar med modusen kastar feilmelding`() {
-        val request = ResultatFraSamtaleRequest(
+        val request = AutentisertResultatFraSamtaleRequest(
+            userId = UserId(1),
+            ResultatFraSamtaleRequest(
                 modus = Modus.Korona,
-                ringerID = 1,
                 ringtID = 2,
                 result = Resultat.Ringes_etter_valget,
                 kommentar = "Hei",
@@ -66,7 +68,7 @@ internal class RingServiceBeanTest {
                         vilHaValgkampsbrev = false
                 ),
                 vilIkkeBliRingt = false
-        )
+        ))
 
         assertThrows(AssertionError::class.java) {
             ringService.registrerResultatFraSamtale(request)

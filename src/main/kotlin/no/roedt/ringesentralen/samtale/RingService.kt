@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.samtale
 
+import UserId
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.PersonRepository
@@ -8,10 +9,10 @@ import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
 
 interface RingService {
-    fun hentNestePersonAaRinge(nestePersonAaRingeRequest: NestePersonAaRingeRequest): RingbarPerson?
-    fun startSamtale(request: StartSamtaleRequest): StartSamtaleResponse
-    fun registrerResultatFraSamtale(request: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse
-    fun noenRingerTilbake(request: RingerTilbakeRequest): RingbarPerson
+    fun hentNestePersonAaRinge(nestePersonAaRingeRequest: AutentisertNestePersonAaRingeRequest): RingbarPerson?
+    fun startSamtale(request: AutentisertStartSamtaleRequest): StartSamtaleResponse
+    fun registrerResultatFraSamtale(request: AutentisertResultatFraSamtaleRequest): ResultatFraSamtaleResponse
+    fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): RingbarPerson
 }
 
 @ApplicationScoped
@@ -22,23 +23,24 @@ class RingServiceBean(
 ): RingService {
 
     //TODO: Vurder om dette skal loggast
-    override fun hentNestePersonAaRinge(nestePersonAaRingeRequest: NestePersonAaRingeRequest): RingbarPerson? =
+    override fun hentNestePersonAaRinge(nestePersonAaRingeRequest: AutentisertNestePersonAaRingeRequest): RingbarPerson? =
             entityManager
-                    .createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${nestePersonAaRingeRequest.lokallag.id}'")
+                    .createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${nestePersonAaRingeRequest.lokallagId()}'")
                     .resultList
                     .firstOrNull()
                     ?.let { it as Int}
                     ?.let { personRepository.findById(it.toLong()) }
 
-    override fun startSamtale(request: StartSamtaleRequest): StartSamtaleResponse {
-        val callerPhone = personRepository.findById(request.ringerID).phone
-        val calledPhone = personRepository.findById(request.skalRingesID).phone
+    override fun startSamtale(request: AutentisertStartSamtaleRequest): StartSamtaleResponse {
+        val callerPhone = hypersysIdTilTelefonnummer(request.userId)
+        val calledPhone = personRepository.findById(request.skalRingesID()).phone
         databaseUpdater.update("CALL sp_startSamtale($calledPhone, $callerPhone)")
-        return StartSamtaleResponse(request.ringerID, request.skalRingesID, LocalDateTime.now())
+        return StartSamtaleResponse(request.skalRingesID(), LocalDateTime.now())
     }
 
-    override fun registrerResultatFraSamtale(request: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse {
-        val callerPhone = personRepository.findById(request.ringerID).phone
+    override fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest): ResultatFraSamtaleResponse {
+        val request = autentisertRequest.resultatFraSamtaleRequest
+        val callerPhone = hypersysIdTilTelefonnummer(autentisertRequest.userId)
         val calledPhone = personRepository.findById(request.ringtID).phone
         assert(request.result in request.modus.gyldigeResultattyper)
         databaseUpdater.update("CALL sp_registrerSamtale($calledPhone, $callerPhone, ${request.result.nr}, '${request.kommentar}')")
@@ -55,17 +57,19 @@ class RingServiceBean(
         return ResultatFraSamtaleResponse(oppdatert = LocalDateTime.now())
     }
 
-    override fun noenRingerTilbake(request: RingerTilbakeRequest): RingbarPerson {
-        val callerPhone = personRepository.findById(request.ringerID).phone
-        val calledPhone = request.ringtNummer
+    override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): RingbarPerson {
+        val callerPhone = hypersysIdTilTelefonnummer(request.userId)
+        val calledPhone = request.ringtNummer()
         val personSomRingerTilbake: RingbarPerson = personRepository.find("phone", calledPhone).firstResult()
         if (entityManager.executeQuery("SELECT 1 FROM v_noenRingerTilbake WHERE phone = '$calledPhone' AND callerPhone = '$callerPhone' LIMIT 1").isEmpty()) {
             throw Exception("Du kan berre registrere å bli ringt opp frå folk du har ringt tidlegare.")
         }
-        startSamtale(StartSamtaleRequest(
-                ringerID = request.ringerID,
+        startSamtale(
+            AutentisertStartSamtaleRequest(
+                userId = request.userId,
+                StartSamtaleRequest(
                 skalRingesID = personSomRingerTilbake.id
-        ))
+        )))
         return personSomRingerTilbake
     }
 
@@ -83,4 +87,5 @@ class RingServiceBean(
 
     fun EntityManager.executeQuery(query: String) = entityManager.createNativeQuery(query).resultList
 
+    private fun hypersysIdTilTelefonnummer(hypersysId: UserId) = personRepository.find("hypersysID", hypersysId.userId).firstResult<RingbarPerson>().phone
 }
