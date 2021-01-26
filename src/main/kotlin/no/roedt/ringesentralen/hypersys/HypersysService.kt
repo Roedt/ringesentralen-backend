@@ -15,16 +15,16 @@ interface HypersysService {
 
 @ApplicationScoped
 class HypersysServiceBean(
-        val hypersysProxy: HypersysProxy,
-        val hypersysTokenVerifier: HypersysTokenVerifier,
-        val hypersysLoginBean: HypersysLoginBean
+    val hypersysProxy: HypersysProxy,
+    val hypersysSystemTokenVerifier: HypersysSystemTokenVerifier,
+    val hypersysLoginBean: HypersysLoginBean
 ) : HypersysService {
 
     @Inject
     lateinit var jwt: JsonWebToken
 
     override fun getAlleLokallag(): List<Organisasjonsledd> =
-        hypersysProxy.get("/org/api/", getToken(), ListOrganisasjonsleddTypeReference())
+        hypersysProxy.get("/org/api/", getSystemToken(), ListOrganisasjonsleddTypeReference())
 
     override fun getAlleOrganPaaLaagasteNivaa(): List<SingleOrgan> = getAlleLokallag().map { toSingleOrgans(it) }.flatten()
 
@@ -32,11 +32,11 @@ class HypersysServiceBean(
 
     private fun toSingleOrgans(lokallag: Organisasjonsledd): List<SingleOrgan> {
         // TODO: Denne må forbetrast. Tar berre med under-under, men vil at denne skal ta med alle som ikkje har organ under seg
-        val organs: Organs = hypersysProxy.get("org/api/${lokallag.id}/organ/", getToken(), Organs::class.java)
+        val organs: Organs = hypersysProxy.get("org/api/${lokallag.id}/organ/", getSystemToken(), Organs::class.java)
         return organs.organs.map {
-            hypersysProxy.get("org/api/${lokallag.id}/organ/${it.id}/", getToken(), SingleOrgan::class.java)
+            hypersysProxy.get("org/api/${lokallag.id}/organ/${it.id}/", getSystemToken(), SingleOrgan::class.java)
         }
     }
 
-    private fun getToken() = hypersysTokenVerifier.assertGyldigToken()
+    private fun getSystemToken() = hypersysSystemTokenVerifier.assertGyldigSystemToken()
 }

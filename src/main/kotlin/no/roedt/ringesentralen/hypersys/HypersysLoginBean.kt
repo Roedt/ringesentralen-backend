@@ -21,12 +21,12 @@ class HypersysLoginBean(
             return hypersysProxy.readResponse(response, UgyldigToken::class.java)
         }
 
-        val gyldigToken = hypersysProxy.readResponse(response, GyldigToken::class.java)
+        val gyldigToken = hypersysProxy.readResponse(response, GyldigPersonToken::class.java)
         oppdaterRingerFraaHypersys(gyldigToken)
         return gyldigToken
     }
 
-    private fun oppdaterRingerFraaHypersys(token: GyldigToken) {
+    private fun oppdaterRingerFraaHypersys(token: GyldigPersonToken) {
         val profile: Profile = hypersysProxy.get("actor/api/profile/", token, Profile::class.java)
         val brukarinformasjon: Brukarinformasjon = modelConverter.convert(profile)
 

@@ -5,7 +5,7 @@ import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
-class HypersysTokenVerifier(
+class HypersysSystemTokenVerifier(
         val hypersysProxy: HypersysProxy,
         val gcpSecretManager: GCPSecretManager
 ) {
@@ -21,22 +21,22 @@ class HypersysTokenVerifier(
         if (response.statusCode() != 200) {
             return hypersysProxy.readResponse(response, UgyldigToken::class.java)
         }
-        return hypersysProxy.readResponse(response, GyldigToken::class.java)
+        return hypersysProxy.readResponse(response, GyldigSystemToken::class.java)
     }
 
-    fun assertGyldigToken(): GyldigToken {
+    fun assertGyldigSystemToken(): GyldigSystemToken {
         if (token is UgyldigToken) {
             throw RuntimeException("Ugyldig token $token")
         }
         ensureTokenIsValid()
-        return token as GyldigToken
+        return token as GyldigSystemToken
     }
 
     private fun ensureTokenIsValid() {
         if (token is UgyldigToken) {
             return
         }
-        if ((token as GyldigToken).expires_in <= 0) {
+        if ((token as GyldigSystemToken).expires_in <= 0) {
             fetchToken()
         }
     }
