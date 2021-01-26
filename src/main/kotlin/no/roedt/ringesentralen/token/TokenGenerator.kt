@@ -39,5 +39,7 @@ class TokenGenerator(
         .claim("hypersys.scope", hypersysToken.scope)
         .claim("hypersys.access_token", hypersysToken.access_token)
         .claim("hypersys.expires_in", hypersysToken.expires_in)
+        .claim("hypersys.refresh_token", hypersysToken.refresh_token)
+        .claim("hypersys.user_id", hypersysToken.user_id)
         .sign(privateKeyFactory.readPrivateKey())
 }

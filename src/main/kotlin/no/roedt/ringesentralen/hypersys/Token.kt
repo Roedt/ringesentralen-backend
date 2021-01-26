@@ -10,7 +10,9 @@ data class GyldigToken(
         @JsonProperty("access_token") val access_token: String,
         @JsonProperty("expires_in") val expires_in: Int,
         @JsonProperty("token_type") val token_type: String,
-        @JsonProperty("scope") val scope: String
+        @JsonProperty("scope") val scope: String,
+        @JsonProperty("refresh_token") val refresh_token: String,
+        @JsonProperty("user_id") val user_id: String
 ) : Token
 
 @RegisterForReflection
