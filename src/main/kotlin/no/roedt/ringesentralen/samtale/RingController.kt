@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.samtale
 
+import RingesentralenController
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
@@ -18,7 +19,7 @@ import javax.ws.rs.core.SecurityContext
 @Path("/samtale")
 @Tag(name = "Ring")
 @SecurityRequirement(name = "jwt")
-class RingController(val ringService: RingService) {
+class RingController(val ringService: RingService) : RingesentralenController {
 
     @Inject
     lateinit var jwt: JsonWebToken
@@ -48,7 +49,7 @@ class RingController(val ringService: RingService) {
     @Path("/registrerResultatFraSamtale")
     @Operation(summary = "Registrer resultat fra samtale")
     @Retry
-    fun registrerResultatFraSamtale(@Context ctx: SecurityContext, resultatFraSatmtaleRequest: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse = ringService.registrerResultatFraSamtale(resultatFraSatmtaleRequest)
+    fun registrerResultatFraSamtale(@Context ctx: SecurityContext, resultatFraSatmtaleRequest: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse = ringService.registrerResultatFraSamtale(AutentisertResultatFraSamtaleRequest(ctx.userId(), resultatFraSatmtaleRequest))
 
 
     @RolesAllowed("ringar")

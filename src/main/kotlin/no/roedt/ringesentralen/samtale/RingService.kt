@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.samtale
 
+import UserId
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.PersonRepository
@@ -10,7 +11,7 @@ import javax.persistence.EntityManager
 interface RingService {
     fun hentNestePersonAaRinge(nestePersonAaRingeRequest: NestePersonAaRingeRequest): RingbarPerson?
     fun startSamtale(request: StartSamtaleRequest): StartSamtaleResponse
-    fun registrerResultatFraSamtale(request: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse
+    fun registrerResultatFraSamtale(request: AutentisertResultatFraSamtaleRequest): ResultatFraSamtaleResponse
     fun noenRingerTilbake(request: RingerTilbakeRequest): RingbarPerson
 }
 
@@ -37,8 +38,9 @@ class RingServiceBean(
         return StartSamtaleResponse(request.ringerID, request.skalRingesID, LocalDateTime.now())
     }
 
-    override fun registrerResultatFraSamtale(request: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse {
-        val callerPhone = personRepository.findById(request.ringerID).phone
+    override fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest): ResultatFraSamtaleResponse {
+        val request = autentisertRequest.resultatFraSamtaleRequest
+        val callerPhone = personRepository.findById(hypersysIdToPersonId(autentisertRequest.userId)).phone
         val calledPhone = personRepository.findById(request.ringtID).phone
         assert(request.result in request.modus.gyldigeResultattyper)
         databaseUpdater.update("CALL sp_registrerSamtale($calledPhone, $callerPhone, ${request.result.nr}, '${request.kommentar}')")
@@ -54,6 +56,8 @@ class RingServiceBean(
 
         return ResultatFraSamtaleResponse(oppdatert = LocalDateTime.now())
     }
+
+    private fun hypersysIdToPersonId(hypersysId: UserId) = personRepository.find("hypersysID", hypersysId.userId).firstResult<RingbarPerson>().id
 
     override fun noenRingerTilbake(request: RingerTilbakeRequest): RingbarPerson {
         val callerPhone = personRepository.findById(request.ringerID).phone
