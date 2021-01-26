@@ -50,11 +50,11 @@ class BrukereServiceBean(
     override fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(fjernSomLokalGodkjennerRequest, GroupID.GodkjentRinger)
 
     private fun endreTilgang(request: AutentisertTilgangsendringRequest, nyTilgang: GroupID): Brukerendring {
-        databaseUpdater.update("CALL sp_godkjennBruker(${getPhone(hypersysIdToPersonId(request.userId))}, ${getPhone(request.personMedEndraTilgang())}, ${nyTilgang.nr})")
+        databaseUpdater.update("CALL sp_godkjennBruker(${hypersysIdTilTelefonnummer(request.userId)}, ${getPhone(request.personMedEndraTilgang())}, ${nyTilgang.nr})")
         return Brukerendring(personID = request.personMedEndraTilgang(), nyGroupId = nyTilgang)
     }
 
     private fun getPhone(personID: Long) = personRepository.findById(personID).phone
 
-    private fun hypersysIdToPersonId(hypersysId: UserId) = personRepository.find("hypersysID", hypersysId.userId).firstResult<RingbarPerson>().id
+    private fun hypersysIdTilTelefonnummer(hypersysId: UserId) = personRepository.find("hypersysID", hypersysId.userId).firstResult<RingbarPerson>().phone
 }

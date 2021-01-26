@@ -9,7 +9,7 @@ import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
 
 interface RingService {
-    fun hentNestePersonAaRinge(nestePersonAaRingeRequest: NestePersonAaRingeRequest): RingbarPerson?
+    fun hentNestePersonAaRinge(nestePersonAaRingeRequest: AutentisertNestePersonAaRingeRequest): RingbarPerson?
     fun startSamtale(request: AutentisertStartSamtaleRequest): StartSamtaleResponse
     fun registrerResultatFraSamtale(request: AutentisertResultatFraSamtaleRequest): ResultatFraSamtaleResponse
     fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): RingbarPerson
@@ -23,9 +23,9 @@ class RingServiceBean(
 ): RingService {
 
     //TODO: Vurder om dette skal loggast
-    override fun hentNestePersonAaRinge(nestePersonAaRingeRequest: NestePersonAaRingeRequest): RingbarPerson? =
+    override fun hentNestePersonAaRinge(nestePersonAaRingeRequest: AutentisertNestePersonAaRingeRequest): RingbarPerson? =
             entityManager
-                    .createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${nestePersonAaRingeRequest.lokallag.id}'")
+                    .createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${nestePersonAaRingeRequest.lokallagId()}'")
                     .resultList
                     .firstOrNull()
                     ?.let { it as Int}
@@ -57,8 +57,6 @@ class RingServiceBean(
         return ResultatFraSamtaleResponse(oppdatert = LocalDateTime.now())
     }
 
-    private fun hypersysIdTilTelefonnummer(hypersysId: UserId) = personRepository.find("hypersysID", hypersysId.userId).firstResult<RingbarPerson>().phone
-
     override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): RingbarPerson {
         val callerPhone = hypersysIdTilTelefonnummer(request.userId)
         val calledPhone = request.ringtNummer()
@@ -89,4 +87,5 @@ class RingServiceBean(
 
     fun EntityManager.executeQuery(query: String) = entityManager.createNativeQuery(query).resultList
 
+    private fun hypersysIdTilTelefonnummer(hypersysId: UserId) = personRepository.find("hypersysID", hypersysId.userId).firstResult<RingbarPerson>().phone
 }
