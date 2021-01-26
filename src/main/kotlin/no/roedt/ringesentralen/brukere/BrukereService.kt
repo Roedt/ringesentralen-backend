@@ -1,17 +1,18 @@
 package no.roedt.ringesentralen.brukere
 
+import UserId
 import no.roedt.ringesentralen.*
 import no.roedt.ringesentralen.samtale.GroupID
 import no.roedt.ringesentralen.samtale.RingbarPerson
 import javax.enterprise.context.ApplicationScoped
 
 interface BrukereService {
-    fun godkjennRinger(godkjennRequest: TilgangsendringsRequest): Brukerendring
-    fun avslaaRinger(avslaaRequest: TilgangsendringsRequest): Brukerendring
-    fun reaktiverRinger(reaktiverRequest: TilgangsendringsRequest): Brukerendring
-    fun deaktiverRinger(deaktiverRequest: TilgangsendringsRequest): Brukerendring
-    fun gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring
-    fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring
+    fun godkjennRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring
+    fun avslaaRinger(avslaaRequest: AutentisertTilgangsendringRequest): Brukerendring
+    fun reaktiverRinger(reaktiverRequest: AutentisertTilgangsendringRequest): Brukerendring
+    fun deaktiverRinger(deaktiverRequest: AutentisertTilgangsendringRequest): Brukerendring
+    fun gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring
+    fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring
     fun hentBrukarar(): List<Brukarinformasjon>
 }
 
@@ -36,22 +37,24 @@ class BrukereServiceBean(
                 )
             }
 
-    override fun godkjennRinger(godkjennRequest: TilgangsendringsRequest): Brukerendring = endreTilgang(godkjennRequest, GroupID.GodkjentRinger)
+    override fun godkjennRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(godkjennRequest, GroupID.GodkjentRinger)
 
-    override fun avslaaRinger(avslaaRequest: TilgangsendringsRequest): Brukerendring = endreTilgang(avslaaRequest, GroupID.AvslaattRinger)
+    override fun avslaaRinger(avslaaRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(avslaaRequest, GroupID.AvslaattRinger)
 
-    override fun reaktiverRinger(reaktiverRequest: TilgangsendringsRequest): Brukerendring = endreTilgang(reaktiverRequest, GroupID.GodkjentRinger)
+    override fun reaktiverRinger(reaktiverRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(reaktiverRequest, GroupID.GodkjentRinger)
 
-    override fun deaktiverRinger(deaktiverRequest: TilgangsendringsRequest): Brukerendring = endreTilgang(deaktiverRequest, GroupID.AvslaattRinger)
+    override fun deaktiverRinger(deaktiverRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(deaktiverRequest, GroupID.AvslaattRinger)
 
-    override fun gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = endreTilgang(tilLokalGodkjennerRequest, GroupID.LokalGodkjenner)
+    override fun gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(tilLokalGodkjennerRequest, GroupID.LokalGodkjenner)
 
-    override fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = endreTilgang(fjernSomLokalGodkjennerRequest, GroupID.GodkjentRinger)
+    override fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(fjernSomLokalGodkjennerRequest, GroupID.GodkjentRinger)
 
-    private fun endreTilgang(request: TilgangsendringsRequest, nyTilgang: GroupID): Brukerendring {
-        databaseUpdater.update("CALL sp_godkjennBruker(${getPhone(request.utfoerende)}, ${getPhone(request.personMedEndraTilgang)}, ${nyTilgang.nr})")
-        return Brukerendring(personID = request.personMedEndraTilgang, nyGroupId = nyTilgang)
+    private fun endreTilgang(request: AutentisertTilgangsendringRequest, nyTilgang: GroupID): Brukerendring {
+        databaseUpdater.update("CALL sp_godkjennBruker(${getPhone(hypersysIdToPersonId(request.userId))}, ${getPhone(request.personMedEndraTilgang())}, ${nyTilgang.nr})")
+        return Brukerendring(personID = request.personMedEndraTilgang(), nyGroupId = nyTilgang)
     }
 
     private fun getPhone(personID: Long) = personRepository.findById(personID).phone
+
+    private fun hypersysIdToPersonId(hypersysId: UserId) = personRepository.find("hypersysID", hypersysId.userId).firstResult<RingbarPerson>().id
 }
