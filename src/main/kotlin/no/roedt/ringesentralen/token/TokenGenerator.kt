@@ -3,6 +3,7 @@ package no.roedt.ringesentralen.token
 import io.smallrye.jwt.build.Jwt
 import no.roedt.ringesentralen.hypersys.*
 import org.eclipse.microprofile.config.inject.ConfigProperty
+import org.eclipse.microprofile.jwt.JsonWebToken
 import java.time.Duration
 import javax.enterprise.context.RequestScoped
 
@@ -33,7 +34,7 @@ class TokenGenerator(
         .subject("Ringesentralen")
         .upn("Ringesentralen")
         .issuedAt(System.currentTimeMillis())
-        .expiresAt(System.currentTimeMillis() + Duration.ofMinutes(1).toSeconds())
+        .expiresAt(System.currentTimeMillis() + Duration.ofHours(1).toSeconds())
         .groups("ringar")
         .claim("hypersys.token_type", hypersysToken.token_type)
         .claim("hypersys.scope", hypersysToken.scope)
@@ -42,4 +43,19 @@ class TokenGenerator(
         .claim("hypersys.refresh_token", hypersysToken.refresh_token)
         .claim("hypersys.user_id", hypersysToken.user_id)
         .sign(privateKeyFactory.readPrivateKey())
+
+    fun refresh(jwt: JsonWebToken): String = generateToken(
+        GyldigPersonToken(
+            token_type = extract(jwt, "token_type"),
+            scope = extract(jwt, "scope"),
+            access_token = extract(jwt, "access_token"),
+            expires_in = extractInt(jwt, "expires_in"),
+            refresh_token = extract(jwt, "refresh_token"),
+            user_id = extract(jwt, "user_id")
+        )
+    )
+
+    private fun extractInt(jwt: JsonWebToken, claim: String) = jwt.claim<Int>("hypersys.$claim").get()
+
+    private fun extract(jwt: JsonWebToken, claim: String) = jwt.claim<String>("hypersys.$claim").get()
 }
