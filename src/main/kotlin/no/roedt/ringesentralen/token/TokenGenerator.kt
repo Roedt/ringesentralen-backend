@@ -6,6 +6,8 @@ import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.eclipse.microprofile.jwt.JsonWebToken
 import java.time.Duration
 import javax.enterprise.context.RequestScoped
+import javax.json.JsonNumber
+import kotlin.math.max
 
 
 @RequestScoped
@@ -49,13 +51,17 @@ class TokenGenerator(
             token_type = extract(jwt, "token_type"),
             scope = extract(jwt, "scope"),
             access_token = extract(jwt, "access_token"),
-            expires_in = extractInt(jwt, "expires_in"),
+            expires_in = getExpiresIn(jwt),
             refresh_token = extract(jwt, "refresh_token"),
             user_id = extract(jwt, "user_id")
         )
     )
 
-    private fun extractInt(jwt: JsonWebToken, claim: String) = jwt.claim<Int>("hypersys.$claim").get()
+    private fun getExpiresIn(jwt: JsonWebToken): Int {
+        val fromHypersys = jwt.claim<JsonNumber>("hypersys.expires_in").get().longValue()
+        val sinceIssued = (System.currentTimeMillis() - jwt.issuedAtTime) / 1000
+        return max(fromHypersys - sinceIssued, 0).toInt()
+    }
 
     private fun extract(jwt: JsonWebToken, claim: String) = jwt.claim<String>("hypersys.$claim").get()
 }
