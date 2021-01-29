@@ -20,7 +20,8 @@ data class RingbarPerson(
         var nameEnlister: String?,
         var postnumber: String,
         var countyID: Int,
-        var lokallag: Int
+        var lokallag: Int,
+        var groupID: Int,
 ) : PanacheEntity() {
     constructor() : this(
             hypersysID = null,
@@ -32,6 +33,7 @@ data class RingbarPerson(
             nameEnlister = null,
             postnumber = "0",
             countyID = -1,
-            lokallag = 1
+            lokallag = 1,
+            groupID = 0
     )
 }

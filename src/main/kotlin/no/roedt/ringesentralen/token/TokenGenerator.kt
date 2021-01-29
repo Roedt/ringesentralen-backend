@@ -1,7 +1,10 @@
 package no.roedt.ringesentralen.token
 
 import io.smallrye.jwt.build.Jwt
+import no.roedt.ringesentralen.PersonRepository
 import no.roedt.ringesentralen.hypersys.*
+import no.roedt.ringesentralen.samtale.GroupID
+import no.roedt.ringesentralen.samtale.RingbarPerson
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.eclipse.microprofile.jwt.JsonWebToken
 import java.time.Duration
@@ -13,6 +16,7 @@ import kotlin.math.max
 @RequestScoped
 class TokenGenerator(
     private val hypersysService: HypersysService,
+    private val personRepository: PersonRepository,
     private val privateKeyFactory: PrivateKeyFactory
 ) {
 
@@ -37,7 +41,7 @@ class TokenGenerator(
         .upn("Ringesentralen")
         .issuedAt(System.currentTimeMillis())
         .expiresAt(System.currentTimeMillis() + Duration.ofHours(1).toSeconds())
-        .groups(setOf("ringar", "admin"))
+        .groups(getGroups(hypersysToken))
         .claim("hypersys.token_type", hypersysToken.token_type)
         .claim("hypersys.scope", hypersysToken.scope)
         .claim("hypersys.access_token", hypersysToken.access_token)
@@ -45,6 +49,17 @@ class TokenGenerator(
         .claim("hypersys.refresh_token", hypersysToken.refresh_token)
         .claim("hypersys.user_id", hypersysToken.user_id)
         .sign(privateKeyFactory.readPrivateKey())
+
+    private fun getGroups(hypersysToken: GyldigPersonToken): Set<String> =
+        when (getPersonFromHypersysID(hypersysToken).groupID) {
+            GroupID.Admin.nr -> setOf("ringar", "admin", "godkjenner")
+            GroupID.LokalGodkjenner.nr -> setOf("ringar", "godkjenner")
+            GroupID.GodkjentRinger.nr -> setOf("ringar")
+            else -> setOf()
+        }
+
+    private fun getPersonFromHypersysID(hypersysToken: GyldigPersonToken) =
+        personRepository.find("hypersysID", hypersysToken.user_id.toInt()).firstResult<RingbarPerson>()
 
     fun refresh(jwt: JsonWebToken): String = generateToken(
         GyldigPersonToken(

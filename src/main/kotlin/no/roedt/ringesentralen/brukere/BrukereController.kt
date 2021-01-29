@@ -1,7 +1,6 @@
 package no.roedt.ringesentralen.brukere
 
 import RingesentralenController
-import UserId
 import no.roedt.ringesentralen.Brukarinformasjon
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
@@ -25,14 +24,14 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed("ringar")
+    @RolesAllowed("godkjenner")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/brukere")
     @Operation(summary ="List ut brukarar")
     fun hentBrukarar(@Context ctx: SecurityContext) : List<Brukarinformasjon> = brukereService.hentBrukarar()
 
-    @RolesAllowed("ringar")
+    @RolesAllowed("godkjenner")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -42,7 +41,7 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Retry
     fun godkjennRinger(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.godkjennRinger(AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest))
 
-    @RolesAllowed("ringar")
+    @RolesAllowed("godkjenner")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -52,7 +51,7 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Retry
     fun avslaaRinger(@Context ctx: SecurityContext, avslaaRequest: TilgangsendringsRequest): Brukerendring = brukereService.avslaaRinger(AutentisertTilgangsendringRequest(ctx.userId(), avslaaRequest))
 
-    @RolesAllowed("ringar")
+    @RolesAllowed("godkjenner")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -62,7 +61,7 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Retry
     fun reaktiverRinger(@Context ctx: SecurityContext, reaktiverRequest: TilgangsendringsRequest): Brukerendring = brukereService.reaktiverRinger(AutentisertTilgangsendringRequest(ctx.userId(), reaktiverRequest))
 
-    @RolesAllowed("ringar")
+    @RolesAllowed("godkjenner")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -72,7 +71,7 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Retry
     fun deaktiverRinger(@Context ctx: SecurityContext, deaktiverRequest: TilgangsendringsRequest): Brukerendring = brukereService.deaktiverRinger(AutentisertTilgangsendringRequest(ctx.userId(), deaktiverRequest))
 
-    @RolesAllowed("ringar")
+    @RolesAllowed("admin")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -82,7 +81,7 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Retry
     fun gjoerRingerTilLokalGodkjenner(@Context ctx: SecurityContext, tilLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = brukereService.gjoerRingerTilLokalGodkjenner(AutentisertTilgangsendringRequest(ctx.userId(), tilLokalGodkjennerRequest))
 
-    @RolesAllowed("ringar")
+    @RolesAllowed("admin")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
