@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import io.quarkus.hibernate.orm.panache.PanacheQuery
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.PersonRepository
@@ -27,8 +28,8 @@ internal class RingServiceBeanTest {
 
     @BeforeEach
     fun setup() {
-        createRingbarPerson("Anders", "And", "12345678", 1)
-        createRingbarPerson("Andre", "Kvakk", "12345679", 2)
+        createRingbarPerson("Anders", "And", "12345678", 1, 1)
+        createRingbarPerson("Andre", "Kvakk", "12345679", 2, 2)
     }
 
     @Test
@@ -75,10 +76,13 @@ internal class RingServiceBeanTest {
         }
     }
 
-    private fun createRingbarPerson(fornavn: String, etternavn: String, telefonnummer: String, id: Long) {
-        val person = RingbarPerson(hypersysID = null, givenName = fornavn, familyName = etternavn,
+    private fun createRingbarPerson(fornavn: String, etternavn: String, telefonnummer: String, id: Long, hypersysID: Int) {
+        val person = RingbarPerson(hypersysID = hypersysID, givenName = fornavn, familyName = etternavn,
             phone = telefonnummer, lastCall = 0, email = "", nameEnlister = null,
             postnumber = "1234", countyID = 0, lokallag = 0)
         doReturn(person).whenever(personRepository).findById(id)
+        val query : PanacheQuery<RingbarPerson> = mock()
+        doReturn(person).whenever(query).firstResult<RingbarPerson>()
+        doReturn(query).whenever(personRepository).find("hypersysID", hypersysID)
     }
 }

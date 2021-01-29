@@ -6,8 +6,10 @@ import no.roedt.ringesentralen.Lokallag
 import no.roedt.ringesentralen.PersonRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.*
 import javax.persistence.EntityManager
 import javax.persistence.TypedQuery
+import javax.ws.rs.core.SecurityContext
 
 internal class RingTest {
 
@@ -22,6 +24,7 @@ internal class RingTest {
     fun setup() {
         ringService = RingServiceBean(personRepository = personRepository, entityManager = entityManager, databaseUpdater = databaseUpdater)
         ringController = RingController(ringService)
+        ringController.jwt = mock()
     }
 
     @Test
@@ -30,7 +33,8 @@ internal class RingTest {
         doReturn(listOf(1234)).whenever(typedQuery).resultList
         doReturn(typedQuery).whenever(entityManager).createNativeQuery(any())
 
-        ringController.hentNestePersonAaRinge(mock(), NestePersonAaRingeRequest(
+        ringController.hentNestePersonAaRinge(
+            getContext(), NestePersonAaRingeRequest(
                 lokallag = Lokallag("lag1")
         ))
         verify(entityManager).createNativeQuery(any())
@@ -45,11 +49,19 @@ internal class RingTest {
         doReturn(typedQuery).whenever(entityManager).createNativeQuery(any())
 
 
-        ringController.hentNestePersonAaRinge(mock(), NestePersonAaRingeRequest(
+        ringController.hentNestePersonAaRinge(
+            getContext(), NestePersonAaRingeRequest(
                 lokallag = Lokallag("lag1")
         ))
         verify(entityManager).createNativeQuery(any())
         verifyZeroInteractions(personRepository)
+    }
+
+    private fun getContext(): SecurityContext {
+        val ctx : SecurityContext = mock()
+        doReturn(ringController.jwt).whenever(ctx).userPrincipal
+        doReturn(Optional.of(1)).whenever(ringController.jwt).claim<Any>(any())
+        return ctx
     }
 
 }
