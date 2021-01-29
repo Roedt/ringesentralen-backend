@@ -12,6 +12,8 @@ enum class GroupID(val nr: Int, val skildring: String) {
     LokalGodkjenner(8, "ringer som kan godkjenne ringere i sitt lokallag"),
     Admin(9, "admin");
 
+    fun references(value: Int): Boolean = nr == value
+
     companion object {
         fun from(value: Int): GroupID = values().first { it.nr == value }
     }

@@ -5,6 +5,7 @@ import no.roedt.ringesentralen.*
 import no.roedt.ringesentralen.samtale.GroupID
 import no.roedt.ringesentralen.samtale.RingbarPerson
 import javax.enterprise.context.ApplicationScoped
+import javax.ws.rs.NotAuthorizedException
 
 interface BrukereService {
     fun godkjennRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring
@@ -50,11 +51,23 @@ class BrukereServiceBean(
     override fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(fjernSomLokalGodkjennerRequest, GroupID.GodkjentRinger)
 
     private fun endreTilgang(request: AutentisertTilgangsendringRequest, nyTilgang: GroupID): Brukerendring {
-        databaseUpdater.update("CALL sp_godkjennBruker(${hypersysIdTilTelefonnummer(request.userId)}, ${getPhone(request.personMedEndraTilgang())}, ${nyTilgang.nr})")
-        return Brukerendring(personID = request.personMedEndraTilgang(), nyGroupId = nyTilgang)
+        val personMedEndraTilgang = request.personMedEndraTilgang()
+        val ringer = hypersysIdTilPerson(request.userId)
+        val groupID = personRepository.findById(personMedEndraTilgang).groupID
+
+        if (!GroupID.Admin.references(ringer.groupID) && GroupID.Admin.references(groupID)) {
+            throw NotAuthorizedException("Godkjennere kan ikkje endre admins")
+        }
+        if (GroupID.LokalGodkjenner.references(ringer.groupID) && GroupID.LokalGodkjenner.references(groupID)) {
+            throw NotAuthorizedException("Godkjennere kan ikkje endre andre godjennere")
+        }
+
+        databaseUpdater.update("CALL sp_godkjennBruker(${ringer.phone}, ${getPhone(personMedEndraTilgang)}, ${nyTilgang.nr})")
+        return Brukerendring(personID = personMedEndraTilgang, nyGroupId = nyTilgang)
     }
 
     private fun getPhone(personID: Long) = personRepository.findById(personID).phone
 
-    private fun hypersysIdTilTelefonnummer(hypersysId: UserId) = personRepository.find("hypersysID", hypersysId.userId).firstResult<RingbarPerson>().phone
+    private fun hypersysIdTilPerson(hypersysId: UserId) =
+        personRepository.find("hypersysID", hypersysId.userId).firstResult<RingbarPerson>()
 }
