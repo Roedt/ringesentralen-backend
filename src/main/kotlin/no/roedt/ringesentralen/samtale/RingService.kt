@@ -4,12 +4,13 @@ import UserId
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.PersonRepository
+import java.sql.Timestamp
 import java.time.LocalDateTime
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
 
 interface RingService {
-    fun hentNestePersonAaRinge(nestePersonAaRingeRequest: AutentisertNestePersonAaRingeRequest): RingbarPerson?
+    fun hentNestePersonAaRinge(nestePersonAaRingeRequest: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse?
     fun startSamtale(request: AutentisertStartSamtaleRequest): StartSamtaleResponse
     fun registrerResultatFraSamtale(request: AutentisertResultatFraSamtaleRequest): ResultatFraSamtaleResponse
     fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): RingbarPerson
@@ -23,13 +24,26 @@ class RingServiceBean(
 ): RingService {
 
     //TODO: Vurder om dette skal loggast
-    override fun hentNestePersonAaRinge(nestePersonAaRingeRequest: AutentisertNestePersonAaRingeRequest): RingbarPerson? =
-            entityManager
-                    .createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${nestePersonAaRingeRequest.lokallagId()}'")
-                    .resultList
-                    .firstOrNull()
-                    ?.let { it as Int}
-                    ?.let { personRepository.findById(it.toLong()) }
+    override fun hentNestePersonAaRinge(nestePersonAaRingeRequest: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? =
+        entityManager
+            .createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${nestePersonAaRingeRequest.lokallagId()}'")
+            .resultList
+            .firstOrNull()
+            ?.let { it as Int }
+            ?.let { personRepository.findById(it.toLong()) }
+            ?.let { NestePersonAaRingeResponse(ringbarPerson = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.phone))}
+
+    private fun getTidlegareSamtalarMedDennePersonen(calledPhone: String): List<Samtale> =
+        entityManager.createNativeQuery("SELECT result, callerName, datetime, comment FROM `v_callsResult` WHERE calledPhone = '$calledPhone'")
+            .resultList
+            .map { it as Array<*> }
+            .map { Samtale(
+                resultat = it[0] as String,
+                ringer = it[1] as String,
+                tidspunkt = (it[2] as Timestamp).toLocalDateTime(),
+                kommentar = it[3] as String
+            ) }
+            .toList()
 
     override fun startSamtale(request: AutentisertStartSamtaleRequest): StartSamtaleResponse {
         val callerPhone = hypersysIdTilTelefonnummer(request.userId)

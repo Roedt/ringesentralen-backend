@@ -31,7 +31,7 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Path("/neste")
     @Operation(summary = "Finn neste person å ringe")
     @Retry
-    fun hentNestePersonAaRinge(@Context ctx: SecurityContext, nestePersonAaRingeRequest: NestePersonAaRingeRequest): RingbarPerson? = ringService.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(ctx.userId(), nestePersonAaRingeRequest))
+    fun hentNestePersonAaRinge(@Context ctx: SecurityContext, nestePersonAaRingeRequest: NestePersonAaRingeRequest): NestePersonAaRingeResponse? = ringService.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(ctx.userId(), nestePersonAaRingeRequest))
 
     @RolesAllowed("ringar")
     @POST
