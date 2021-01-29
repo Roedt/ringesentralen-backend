@@ -5,5 +5,6 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 @RegisterForReflection
 data class StatistikkResponse(
     val samtalerStatistikkResponse: SamtalerStatistikkResponse,
-    val ringereStatistikkResponse: RingereStatistikkResponse
+    val ringereStatistikkResponse: RingereStatistikkResponse,
+    val personerStatistikkResponse: PersonerStatistikkResponse
 )

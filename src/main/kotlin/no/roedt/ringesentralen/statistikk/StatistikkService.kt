@@ -11,7 +11,8 @@ class StatistikkService(val entityManager: EntityManager) {
         val modus = Modus.Korona
         return StatistikkResponse(
             samtalerStatistikkResponse = getSamtalerStatistikkResponse(modus),
-            ringereStatistikkResponse = getRingereStatistikkResponse(modus)
+            ringereStatistikkResponse = getRingereStatistikkResponse(modus),
+            personerStatistikkResponse = getPersonerStatistikkResponse(modus)
         )
     }
 
@@ -42,6 +43,15 @@ class StatistikkService(val entityManager: EntityManager) {
             avvisteRingere = get("select 1 FROM person WHERE groupID=5").size,
             antallLokallagRingtFraTotalt = get("select distinct callerPhone from `call` c inner join person p on p.phone = c.callerPhone inner join lokallag l on l.id = p.lokallag").size
         )
+
+    private fun getPersonerStatistikkResponse(modus: Modus): PersonerStatistikkResponse = PersonerStatistikkResponse(
+        antallPersonerISystemetTotalt = get("SELECT 1 FROM person").size,
+        ringere = get("SELECT 1 FROM person WHERE groupID > 3").size,
+        ferdigringte = get("select 1 FROM person WHERE groupID=2 or groupID=3").size,
+        ringtUtenSvar = get("select 1 FROM person WHERE lastCall > 0 and groupID=1").size,
+        ikkeRingt = get("select 1 FROM person WHERE lastCall = 0 and groupID < 4").size,
+        antallLokallagMedPersonerTilknytta = get( "select distinct lokallag FROM person where lokallag is not null").size
+    )
 
     private fun get(query: String) = entityManager.createNativeQuery(query).resultList
 }
