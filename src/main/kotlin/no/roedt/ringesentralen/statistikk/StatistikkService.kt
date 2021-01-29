@@ -10,7 +10,8 @@ class StatistikkService(val entityManager: EntityManager) {
     fun getStatistikk(): StatistikkResponse {
         val modus = Modus.Korona
         return StatistikkResponse(
-            samtalerStatistikkResponse = getSamtalerStatistikkResponse(modus)
+            samtalerStatistikkResponse = getSamtalerStatistikkResponse(modus),
+            ringereStatistikkResponse = getRingereStatistikkResponse(modus)
         )
     }
 
@@ -30,6 +31,17 @@ class StatistikkService(val entityManager: EntityManager) {
             samtalerMedResultatSaaLangt = get("SELECT callerPhone FROM `call` WHERE typeCall = 1 and result != 9").size
         )
     }
+
+    private fun getRingereStatistikkResponse(modus: Modus): RingereStatistikkResponse =
+        RingereStatistikkResponse(
+            registrerteRingere = get("SELECT 1 FROM v_ringerForInnlogging").size,
+            antallSomHarRingt = get("select distinct callerPhone from `call`").size,
+            aktiveRingereDenSisteTimen = get("select distinct callerPhone from `call` where UNIX_TIMESTAMP(now()) - unix_timestamp(datetime) < 3600").size,
+            aktiveRingereIDag = get("select distinct callerPhone from `call` where CURDATE() =  DATE(datetime)").size,
+            lokaleGodkjennere = get("select 1 FROM person WHERE groupID=8").size,
+            avvisteRingere = get("select 1 FROM person WHERE groupID=5").size,
+            antallLokallagRingtFraTotalt = get("select distinct callerPhone from `call` c inner join person p on p.phone = c.callerPhone inner join lokallag l on l.id = p.lokallag").size
+        )
 
     private fun get(query: String) = entityManager.createNativeQuery(query).resultList
 }
