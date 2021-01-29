@@ -21,7 +21,7 @@ class StatistikkController(val service: StatistikkService) : RingesentralenContr
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed("ringar")
+    @RolesAllowed("admin")
     @GET
     @Path("/statistikk")
     @Produces(MediaType.APPLICATION_JSON)

@@ -37,7 +37,7 @@ class TokenGenerator(
         .upn("Ringesentralen")
         .issuedAt(System.currentTimeMillis())
         .expiresAt(System.currentTimeMillis() + Duration.ofHours(1).toSeconds())
-        .groups("ringar")
+        .groups(setOf("ringar", "admin"))
         .claim("hypersys.token_type", hypersysToken.token_type)
         .claim("hypersys.scope", hypersysToken.scope)
         .claim("hypersys.access_token", hypersysToken.access_token)
