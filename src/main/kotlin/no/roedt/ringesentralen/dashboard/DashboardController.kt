@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.dashboard
 
+import RingesentralenController
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
@@ -9,7 +10,10 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.RequestScoped
 import javax.inject.Inject
-import javax.ws.rs.*
+import javax.ws.rs.Consumes
+import javax.ws.rs.GET
+import javax.ws.rs.Path
+import javax.ws.rs.Produces
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.SecurityContext
@@ -18,7 +22,7 @@ import javax.ws.rs.core.SecurityContext
 @Tag(name = "Dashboard")
 @RequestScoped
 @SecurityRequirement(name = "jwt")
-class DashboardController(val dashboardService: DashboardService) {
+class DashboardController(val dashboardService: DashboardService) : RingesentralenController {
 
     @Inject
     lateinit var jwt: JsonWebToken
@@ -31,5 +35,5 @@ class DashboardController(val dashboardService: DashboardService) {
     @Operation(summary = "Dashboard")
     @Bulkhead(5)
     @Retry
-    fun getDashboard(@Context ctx: SecurityContext, @QueryParam("ringerID") ringerID: Long): DashboardResponse = dashboardService.getDashboard(ringerID)
+    fun getDashboard(@Context ctx: SecurityContext): DashboardResponse = dashboardService.getDashboard(ctx.userId())
 }
