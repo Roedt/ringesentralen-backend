@@ -1,24 +1,27 @@
 package no.roedt.ringesentralen.dashboard
 
+import UserId
 import io.quarkus.panache.common.Sort
 import no.roedt.ringesentralen.Lokallag
 import no.roedt.ringesentralen.LokallagRepository
-import no.roedt.ringesentralen.Ringer
+import no.roedt.ringesentralen.PersonRepository
 import no.roedt.ringesentralen.samtale.GroupID
+import no.roedt.ringesentralen.samtale.RingbarPerson
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
 
 interface DashboardService {
-    fun getDashboard(ringerID: Long): DashboardResponse
+    fun getDashboard(ringerID: UserId): DashboardResponse
 }
 
 @ApplicationScoped
 class DashboardServiceBean(
         val lokallagRepository: LokallagRepository,
-        val entityManager: EntityManager
+        val entityManager: EntityManager,
+        val personRepository: PersonRepository
 ) : DashboardService {
 
-    override fun getDashboard(ringerID: Long): DashboardResponse {
+    override fun getDashboard(ringerID: UserId): DashboardResponse {
         val mineLokallag = getMineLokallag(ringerID)
 
         val statusliste: List<Lokallagsstatus> = mineLokallag
@@ -37,28 +40,15 @@ class DashboardServiceBean(
         return DashboardResponse(statusliste = statusliste)
     }
 
-    private fun getMineLokallag(ringerID: Long): List<Lokallag> {
-        if (ringerID == 0L)
-            return listOf()
-        val ringer = toRinger(ringerID)
-        return if (ringer.isAdmin()) {
+    private fun getMineLokallag(ringerID: UserId): List<Lokallag> {
+        val ringer = hypersysIdTilPerson(ringerID)
+        return if (GroupID.Admin.references(ringer.groupID)) {
             lokallagRepository.findAll(Sort.ascending("name")).list()
         } else {
             lokallagRepository.find("id", ringer.lokallag).list()
         }
     }
 
-    private fun toRinger(ringerID: Long): Ringer {
-        val r = entityManager.createNativeQuery("SELECT id, groupID, lokallag from person where id = $ringerID").resultList
-        if (r.isEmpty())
-            throw RuntimeException("Ikkje logga inn")
-        val ringerinfo = r.first() as Array<*>
-        return Ringer(
-                id = ringerinfo[0].toLong(),
-                groupID = GroupID.from(ringerinfo[1] as Int),
-                lokallag = lokallagRepository.findById(ringerinfo[2].toLong())
-        )
-    }
-
-    fun Any?.toLong() : Long = (this as Int).toLong()
+    private fun hypersysIdTilPerson(hypersysId: UserId) =
+        personRepository.find("hypersysID", hypersysId.userId).firstResult<RingbarPerson>()
 }
