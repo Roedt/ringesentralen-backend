@@ -31,7 +31,7 @@ class ModelConverter(
         )
     }
 
-    private fun toTelefonnummer(phone: String): Telefonnummer? {
+    fun toTelefonnummer(phone: String): Telefonnummer? {
         val splitted = phone.split(" ")
 
         return when {
