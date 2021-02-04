@@ -7,12 +7,16 @@ import no.roedt.ringesentralen.hypersys.externalModel.User
 import javax.enterprise.context.Dependent
 import javax.persistence.EntityManager
 
+interface ModelConverter {
+    fun convert(profile: Profile): Brukarinformasjon
+}
+
 @Dependent
-class ModelConverter(
+class ModelConverterBean(
     private val entityManager: EntityManager,
     private val lokallagRepository: LokallagRepository
-) {
-    fun convert(profile: Profile) : Brukarinformasjon = convert(profile.user)
+) : ModelConverter {
+    override fun convert(profile: Profile) : Brukarinformasjon = convert(profile.user)
 
     private fun convert(user: User): Brukarinformasjon {
         val sisteMellomrom = user.name.lastIndexOf(" ")
