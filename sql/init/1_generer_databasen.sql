@@ -546,7 +546,8 @@ DELIMITER //
     phoneIn varchar(15),
     emailIn varchar(100),
     postnumberIn int(4),
-    countyIDIn tinyint(2)
+    countyIDIn tinyint(2),
+    lokallagIn int(3)
 )
 BEGIN
 
@@ -571,13 +572,14 @@ BEGIN
           postnumber = postnumberIn, 
           groupID = greatest(4, groupID),
           countyID = countyIDIn,
-          ringerID = @ringerID
+          ringerID = @ringerID,
+          lokallag = lokallagIn
         WHERE phone = phoneIn;
     END;
   ELSE
     BEGIN
-        INSERT INTO `person` (hypersysID, givenName, familyName, phone, email, postnumber, countyID, groupID, ringerID)
-            VALUES (hypersysIDIn, givenNameIn, familyNameIn, phoneIn, emailIn, postnumberIn, countyIDIn, '4', (SELECT last_insert_id()));
+        INSERT INTO `person` (hypersysID, givenName, familyName, phone, email, postnumber, countyID, groupID, ringerID, lokallag)
+            VALUES (hypersysIDIn, givenNameIn, familyNameIn, phoneIn, emailIn, postnumberIn, countyIDIn, '4', (SELECT last_insert_id()), lokallagIn);
     END;
   END IF;
 END //
