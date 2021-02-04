@@ -1,12 +1,32 @@
+
 # Ringesentralen
 
 Backend for Ringesentralen v2.
 
+## Føresetnadar
+### Alternativ A (å føretrekkje)
+- Tilgang til Ringesentralen-prosjektet på Google Cloud Platform
+
+### Alternativ B
+- Sett opp eit eiget prosjekt på Google Cloud Platform
+  - Sett opp Secret Manager med følgjande variablar
+    - hypersysBaseUrl
+    - hypersysBrukerId
+    - hypersysBrukerSecret
+    - hypersysClientId
+    - hypersysClientSecret
+  - Midlertidig treng du også _github-user_, _github-password_ og _settings_xml_, men det vil snart vera unødvendig.
+- Endre i application.properties så _secretManagerProjectId_ peikar på ditt nye prosjekt
+- Generér matchande private- og publickey, og sørg for at dei ligg i resources\META-INF.resources 
+
 ## Utvikling
 1. `docker-compose -f mysql.yaml down -v && docker-compose -f mysql.yaml up` (startar databasen frå tom tilstand, køyrer alle databaseskript og legg inn eksempelpersonar)
-1. Autentiser deg mot [Google Cloud Platform](https://cloud.google.com/docs/authentication/getting-started)[1], ringesentralen-prosjektet[2]. Dette inneber typisk at du må køyre `export GOOGLE_APPLICATION_CREDENTIALS="/sti/til/jsonfil/frå/gcp"`
+1. Autentiser deg mot [Google Cloud Platform](https://cloud.google.com/docs/authentication/getting-started)[1], ringesentralen-prosjektet[2].
+   - Dette inneber typisk at du må køyre `export GOOGLE_APPLICATION_CREDENTIALS="/sti/til/jsonfil/frå/gcp"`
 1. mvn compile quarkus:dev
-1. No køyrer applikasjonen på port 8080. Swagger UI er tilgjengeleg på http://localhost:8080/swagger-ui, OpenAPI-definisjonar på http://localhost:8080/openapi
+1. No køyrer applikasjonen på port 8080. 
+   - Swagger UI er tilgjengeleg på http://localhost:8080/swagger-ui, 
+   - OpenAPI-definisjonar på http://localhost:8080/openapi
 1. sql\toemRingeinfo.sql tilbakestiller registrerte samtalar, så du startar på scratch igjen
 
 Punkt 1 startar databasen på port 3306, og admin-panelet for databasen på port 9080.
