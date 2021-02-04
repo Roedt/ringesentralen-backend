@@ -51,8 +51,10 @@ class ModelConverterBean(
 
     fun toLokallag(memberships: List<Membership>): Lokallag? =
         memberships
+            .sortedByDescending { it.startDate }
             .map { it.organisationName }
             .map { lokallagRepository.find("name", it) }
             .firstOrNull()
             ?.firstResult()
+
 }
