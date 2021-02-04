@@ -49,7 +49,7 @@ class ModelConverterBean(
     private fun toFylke(postnummer: Postnummer): Fylke =
         entityManager.createNativeQuery("select countyID from `postnumber` where postnumber = ${postnummer.getPostnummer()}").resultList.first().let { Fylke.from(it as Int) }
 
-    private fun toLokallag(memberships: List<Membership>): Lokallag? =
+    fun toLokallag(memberships: List<Membership>): Lokallag? =
         memberships
             .map { it.organisationName }
             .map { lokallagRepository.find("name", it) }

@@ -8,7 +8,7 @@ import javax.persistence.EntityManager
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-internal class ModelConverterTest {
+internal class ModelConverterBeanTest {
 
     private val entityManager: EntityManager = mock()
     private val lokallagRepository: LokallagRepository = mock()
@@ -28,5 +28,10 @@ internal class ModelConverterTest {
         assertEquals(
             modelConverter.toTelefonnummer("+47 81549300"),
             Telefonnummer(landkode = "+47", nummer = 81549300))
+    }
+
+    @Test
+    fun `taklar manglande lokallag`() {
+        assertNull(modelConverter.toLokallag(listOf()))
     }
 }
