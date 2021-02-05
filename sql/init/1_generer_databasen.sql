@@ -387,9 +387,9 @@ DELIMITER //
 )
 BEGIN
 
-  IF (SELECT count(1) FROM `person` where phone = phoneIn and ringerID is not null)>0 THEN
+  IF (SELECT count(1) FROM `person` where email = emailIn and ringerID is not null)>0 THEN
     BEGIN
-      SET @ringerID =(select `ringerID` FROM `person` where phone = phoneIn);
+      SET @ringerID =(select `ringerID` FROM `person` where email = emailIn);
     END;
   ELSE
     BEGIN
@@ -409,7 +409,7 @@ BEGIN
           groupID = greatest(4, groupID),
           countyID = countyIDIn,
           ringerID = @ringerID,
-          lokallagId = lokallagIn
+          lokallag = lokallagIn
         WHERE phone = phoneIn;
     END;
   ELSE
