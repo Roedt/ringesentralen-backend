@@ -113,16 +113,10 @@ CREATE TABLE IF NOT EXISTS `person` (
   `givenName` varchar(60) DEFAULT NULL,
   `familyName` varchar(60) DEFAULT NULL,
   `phone` varchar(15) NOT NULL UNIQUE,
-  `nameEnlister` varchar(30) DEFAULT NULL,
-  `adressLine1` mediumtext,
-  `adressLine2` mediumtext,
   `postnumber` varchar(4) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `countyID` int(2) DEFAULT -1 NOT NULL,
   `groupID` int(2) DEFAULT NULL,
-  `hasReceived` int(1) DEFAULT NULL,
-  `hasConsented` tinyint(1) DEFAULT NULL,
-  `isDigital` tinyint(1) NOT NULL DEFAULT 0,
   `userCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lastCall` int(11) NOT NULL DEFAULT '0',
   `ringerID` int(6) unsigned DEFAULT NULL,
@@ -288,52 +282,12 @@ INNER JOIN `modus` m on mr.modus = m.id;
 
 -- --------------------------------------------------------
 
-create or replace view v_navnOgAdresse as
-SELECT concat(p.givenName,' ',p.familyName) as name, p.adressLine1, p.adressLine2, p.postnumber 
-FROM person p 
-WHERE p.groupID <= 1 AND p.adressLine1 IS NOT NULL AND p.adressLine1 != '' AND p.hasReceived IS NULL;
-
--- --------------------------------------------------------
-
-create or replace view v_soekForSMSsamtale as
-SELECT id, phone, email, isDigital, nameEnlister, concat(p.givenName,' ',p.familyName) as name, postnumber, adressLine1, adressLine2 
-FROM person  p
-WHERE groupID = 0;
-
--- --------------------------------------------------------
-
 create or replace view v_personerSomKanRinges as
-SELECT p.nameEnlister, p.lastCall, p.phone, concat(p.givenName,' ',p.familyName) as name, p.postnumber, p.countyID, p.lokallag, l.name as lokallagNavn, p.id as id
+SELECT p.lastCall, p.phone, concat(p.givenName,' ',p.familyName) as name, p.postnumber, p.countyID, p.lokallag, l.name as lokallagNavn, p.id as id
   FROM person p
   LEFT OUTER JOIN lokallag l on p.lokallag = l.id
   WHERE groupID = '1'
   AND UNIX_TIMESTAMP(now()) - lastCall > 86400; -- 86400 sekund = 1 døgn
-
--- --------------------------------------------------------
-
-create or replace view v_fysiskIkkeSamtykketIkkeAdresse as
-SELECT id, phone, givenName, familyName
-        FROM person p
-        WHERE groupID = 0
-          AND isDigital = 0
-          AND hasReceived IS NULL
-          AND hasConsented IS NULL;
-
--- --------------------------------------------------------
-
-create or replace view v_faarRoedtNytt as
-SELECT hasReceived, isDigital, phone FROM person;
-
--- --------------------------------------------------------
-
-create or replace view v_numbersForSendDigital as
-SELECT email, id, phone, p.givenName, p.familyName
-FROM person p
-WHERE CHAR_LENGTH(phone) = 8
-  AND groupID <= 1
-  AND isDigital = 1
-  AND hasReceived IS NULL
-  AND email != '';
 
 -- --------------------------------------------------------
 
@@ -377,7 +331,7 @@ WHERE p.groupID = 2;
 -- --------------------------------------------------------
 
 create or replace view v_noenRingerTilbake AS
-SELECT p.nameEnlister, concat(p.givenName,' ',p.familyName) as name, p.postnumber, p.phone, l.name as lokallagNavn, l.id as lokallag, c.callerPhone as callerPhone
+SELECT concat(p.givenName,' ',p.familyName) as name, p.postnumber, p.phone, l.name as lokallagNavn, l.id as lokallag, c.callerPhone as callerPhone
 FROM person p
 inner join `call` c on p.phone = c.calledPhone
 left outer join lokallag l on p.lokallag = l.id;
@@ -396,14 +350,6 @@ select count(c.callerPhone) as max, p.lokallag from
 inner join person p on c.callerPhone = p.phone and c.result != 9 and c.typeCall = 1
 group by(c.callerPhone)
 order by count(c.callerPhone) desc;
-
--- --------------------------------------------------------
-
-
-create or replace view v_ringerForInnlogging AS
-select distinct r.id, p.phone, p.email
-from `person` p
-inner join `ringer` r on p.ringerID = r.id;
 
 -- --------------------------------------------------------
 
@@ -517,27 +463,6 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  DROP PROCEDURE IF EXISTS sp_enlistAddress;
-  CREATE PROCEDURE sp_enlistAddress(
-    givenNameIn varchar(60),
-    familyNameIn varchar(60),
-    calledPhoneIn varchar(15),
-    calledAddressIn mediumtext,
-    calledAddressIn2 mediumtext,
-    calledPostnumberIn int(4),
-    calledCountyIn tinyint(2),
-    nameEnlisterIn varchar(30),
-    hasConsentedIn tinyint(1)
-)
-BEGIN
-INSERT INTO `person` (givenName, familyName, phone, adressLine1, adressLine2, postnumber, countyID, nameEnlister, groupID) 
-VALUES (givenNameIn, familyNameIn, calledPhoneIn, calledAddressIn, calledAddressIn2, calledPostnumberIn, calledCountyIn,
- nameEnlisterIn, hasConsentedIn);   
-END //
-
--- --------------------------------------------------------
-
-DELIMITER //
   DROP PROCEDURE IF EXISTS sp_registrerNyBruker;
   CREATE PROCEDURE sp_registrerNyBruker(
     hypersysIDIn int(4),
@@ -585,58 +510,6 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  DROP PROCEDURE IF EXISTS sp_vervEnVenn;
-  CREATE PROCEDURE sp_vervEnVenn (
-    nameIn varchar(60),
-    phoneIn varchar(15),
-    phoneEnlisterIn varchar(15),
-    nameEnlisterIn varchar(60)
-)
-BEGIN
-INSERT INTO `person` (name, phone, phoneEnlister, nameEnlister, groupID) 
-        VALUES (nameIn, phoneIn, phoneEnlisterIn, nameEnlisterIn, '0');        
-END //
-
--- --------------------------------------------------------
-
-DELIMITER //
-  DROP PROCEDURE IF EXISTS sp_vervEnVennProcessEnlist;
-  CREATE PROCEDURE sp_vervEnVennProcessEnlist (
-    nameIn varchar(60),
-    phoneIn varchar(15),
-    nameEnlisterIn varchar(60),
-    isDigital tinyint(1)
-)
-BEGIN
-INSERT INTO `person` (name, phone, nameEnlister, groupID, isDigital, countyID) 
-        VALUES (nameIn, phoneIn, nameEnlisterIn, '0', isDigital, -1);
-END //
-
--- --------------------------------------------------------
-
-DELIMITER //
-  DROP PROCEDURE IF EXISTS sp_deletePersonAfterSMS;
-  CREATE PROCEDURE sp_deletePersonAfterSMS (
-    addressIn mediumtext,
-    addressIn2 mediumtext,
-    postnumberIn int(4),
-    countyIn tinyint(2),
-    phoneIn varchar(15)
-)
-BEGIN
-UPDATE `person` 
-  SET
-    adressLine1 = addressIn, 
-    adressLine2 = addressIn2, 
-    postnumber = postnumberIn, 
-    countyID = countyIn, 
-    groupID = '3' 
-    WHERE phone = phoneIn;
-END //
-
--- --------------------------------------------------------
-
-DELIMITER //
   DROP PROCEDURE IF EXISTS sp_slettPerson;
   CREATE PROCEDURE sp_slettPerson (
     phoneIn varchar(15)
@@ -647,91 +520,6 @@ DELETE FROM `oppfoelgingEkstern` where personId = (select id from person where p
 DELETE FROM `oppfoelgingKorona` where personId = (select id from person where phone = phoneIn);
 DELETE FROM `ringer` where id = (select ringerID from person where phone = phoneIn);
 DELETE FROM `person` where phone = phoneIn;
-END //
-
--- --------------------------------------------------------
-
-DELIMITER //
-  DROP PROCEDURE IF EXISTS sp_registerSMS;
-  CREATE PROCEDURE sp_registerSMS (
-    addressIn mediumtext,
-    addressIn2 mediumtext,
-    emailIn varchar(100),
-    postnumberIn int(4),
-    countyIn tinyint(2),
-    calledPhoneIn varchar(15),
-    commentIn longtext,
-    callerPhoneIn varchar(15) 
-)
-BEGIN
-UPDATE `person` 
-  SET
-    adressLine1 = addressIn, 
-    adressLine2 = addressIn2, 
-    email = emailIn,
-    postnumber = postnumberIn, 
-    countyID = countyIn
-    WHERE phone = calledPhoneIn;
-UPDATE `call` 
-  SET 
-    result = 1, 
-    comment = commentIn 
-  WHERE 
-  calledPhone = calledPhoneIn AND 
-  callerPhone = callerPhoneIn AND 
-  typeCall = 2;
-END //
-
--- --------------------------------------------------------
-
-DELIMITER //
-  DROP PROCEDURE IF EXISTS sp_updateAfterSendDigital;
-  CREATE PROCEDURE sp_updateAfterSendDigital (
-    descReceivingIn mediumtext
-)
-BEGIN
-UPDATE `person` 
-  SET 
-    groupID = 1, 
-    hasReceived = 2, 
-    descReceiving = descReceivingIn
-  WHERE 
-    CHAR_LENGTH(phone) = 8 AND 
-    groupID <= 1 AND 
-    isDigital = 1 AND 
-    hasReceived IS NULL AND 
-    email != '';
-END //
-
--- --------------------------------------------------------
-
-DELIMITER //
-  DROP PROCEDURE IF EXISTS sp_updateAfterSendAdress;
-  CREATE PROCEDURE sp_updateAfterSendAdress ()
-BEGIN
-UPDATE `person` 
-  SET 
-    groupID = 1, 
-    hasReceived = 2
-  WHERE 
-    groupID <= 1 AND
-    adressLine1 IS NOT NULL AND 
-    adressLine1 != '' AND
-    hasReceived IS NULL;
-END //
-
--- --------------------------------------------------------
-
-DELIMITER //
-  DROP PROCEDURE IF EXISTS sp_lagreAtSMSErSendt;
-  CREATE PROCEDURE sp_lagreAtSMSErSendt (
-    calledPhoneIn varchar(15),
-    callerPhoneIn varchar(15)
-  )
-BEGIN
-INSERT INTO `call` (calledPhone, callerPhone, typeCall)
-VALUES
-  (calledPhoneIn, callerPhoneIn, 2);
 END //
 
 -- --------------------------------------------------------

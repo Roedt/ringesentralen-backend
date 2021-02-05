@@ -35,7 +35,7 @@ class StatistikkService(val entityManager: EntityManager) {
 
     private fun getRingereStatistikkResponse(modus: Modus): RingereStatistikkResponse =
         RingereStatistikkResponse(
-            registrerteRingere = get("SELECT 1 FROM v_ringerForInnlogging").size,
+            registrerteRingere = get("SELECT 1 FROM ringer").size,
             antallSomHarRingt = get("select distinct callerPhone from `call`").size,
             aktiveRingereDenSisteTimen = get("select distinct callerPhone from `call` where UNIX_TIMESTAMP(now()) - unix_timestamp(datetime) < 3600").size,
             aktiveRingereIDag = get("select distinct callerPhone from `call` where CURDATE() =  DATE(datetime)").size,
