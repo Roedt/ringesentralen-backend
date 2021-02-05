@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.hypersys
 
 import no.roedt.ringesentralen.*
+import no.roedt.ringesentralen.hypersys.externalModel.Membership
 import no.roedt.ringesentralen.hypersys.externalModel.Profile
 import no.roedt.ringesentralen.hypersys.externalModel.User
 import javax.enterprise.context.Dependent
@@ -13,7 +14,8 @@ interface ModelConverter {
 @Dependent
 class ModelConverterBean(
     private val entityManager: EntityManager,
-    private val fylkeRepository: FylkeRepository
+    private val fylkeRepository: FylkeRepository,
+    private val lokallagRepository: LokallagRepository
 ) : ModelConverter {
     override fun convert(profile: Profile) : Brukarinformasjon = convert(profile.user)
 
@@ -23,13 +25,14 @@ class ModelConverterBean(
         val etternamn = user.name.substring(sisteMellomrom+1)
         val postnummer = toPostnummer(user)
         return Brukarinformasjon(
-                hypersysID = user.id,
-                fornamn = fornamn,
-                etternamn = etternamn,
-                epost = user.email,
-                telefonnummer = toTelefonnummer(user.phone),
-                postnummer = postnummer,
-                fylke = toFylke(postnummer)
+            hypersysID = user.id,
+            fornamn = fornamn,
+            etternamn = etternamn,
+            epost = user.email,
+            telefonnummer = toTelefonnummer(user.phone),
+            postnummer = postnummer,
+            fylke = toFylke(postnummer),
+            lokallag = toLokallag(user.memberships)
         )
     }
 
@@ -49,4 +52,13 @@ class ModelConverterBean(
             .map { it as Int }
             .map { fylkeRepository.findById(it) }
             .first()
+
+
+    fun toLokallag(memberships: List<Membership>): Lokallag? =
+        memberships
+            .sortedByDescending { it.startDate }
+            .map { it.organisationName }
+            .map { lokallagRepository.find("name", it) }
+            .firstOrNull()
+            ?.firstResult()
 }

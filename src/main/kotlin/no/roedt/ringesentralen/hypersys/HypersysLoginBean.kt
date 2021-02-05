@@ -40,6 +40,7 @@ class HypersysLoginBean(
             "'${telefonnummer?.nummer}', " +
             "'${epost}', " +
             "${postnummer.postnummer}, " +
-            "${fylke.id}" +
+            "${fylke.id}," +
+            "${lokallag?.id}" +
             ")"
 }

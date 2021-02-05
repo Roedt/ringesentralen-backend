@@ -2,6 +2,7 @@ package no.roedt.ringesentralen.hypersys
 
 import com.nhaarman.mockitokotlin2.mock
 import no.roedt.ringesentralen.FylkeRepository
+import no.roedt.ringesentralen.LokallagRepository
 import no.roedt.ringesentralen.Telefonnummer
 import org.junit.jupiter.api.Test
 import javax.persistence.EntityManager
@@ -12,10 +13,12 @@ internal class ModelConverterTest {
 
     private val entityManager: EntityManager = mock()
     private val fylkeRepository: FylkeRepository = mock()
+    private val lokallagRepository: LokallagRepository = mock()
 
     private val modelConverter: ModelConverterBean = ModelConverterBean(
         entityManager = entityManager,
-        fylkeRepository = fylkeRepository
+        fylkeRepository = fylkeRepository,
+        lokallagRepository = lokallagRepository
     )
 
     @Test
@@ -28,5 +31,10 @@ internal class ModelConverterTest {
         assertEquals(
             modelConverter.toTelefonnummer("+47 81549300"),
             Telefonnummer(landkode = "+47", nummer = 81549300))
+    }
+
+    @Test
+    fun `taklar manglande lokallag`() {
+        assertNull(modelConverter.toLokallag(listOf()))
     }
 }

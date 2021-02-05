@@ -21,7 +21,8 @@ interface BrukereService {
 class BrukereServiceBean(
         val personRepository: PersonRepository,
         val databaseUpdater: DatabaseUpdater,
-        val fylkeRepository: FylkeRepository
+        val fylkeRepository: FylkeRepository,
+        val lokallagRepository: LokallagRepository
 ): BrukereService {
 
     override fun hentBrukarar(): List<Brukarinformasjon> =
@@ -35,7 +36,8 @@ class BrukereServiceBean(
                     postnummer = Postnummer(r.postnumber.padStart(4, '0')),
                     fylke = fylkeRepository.findById(r.countyID),
                     epost = r.email ?: "",
-                    hypersysID = r.hypersysID ?: -1
+                    hypersysID = r.hypersysID ?: -1,
+                    lokallag = lokallagRepository.findById(r.lokallag.toLong())
                 )
             }
 
