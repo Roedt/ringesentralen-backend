@@ -218,17 +218,6 @@ INSERT INTO modusTilResultat VALUES (2, 11);
 
 -- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `typeCall` (
-  `id` int(1) NOT NULL PRIMARY KEY,
-  `name` varchar(20) NOT NULL 
-);
-
-INSERT INTO typeCall VALUES(1, 'ringt');
-INSERT INTO typeCall VALUES(2, 'SMS');
-INSERT INTO typeCall VALUES(3, 'e-post');
-
--- --------------------------------------------------------
-
 CREATE TABLE IF NOT EXISTS `godkjenning` (
   `id` int(1) AUTO_INCREMENT NOT NULL PRIMARY KEY,
   `godkjenner` varchar(15) NOT NULL,
@@ -250,15 +239,12 @@ CREATE TABLE IF NOT EXISTS `call` (
   `calledPhone` varchar(15) NOT NULL,
   `callerPhone` varchar(8) NOT NULL,
   `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `typeCall` int(1) DEFAULT NULL,
   `result` int(1) NOT NULL DEFAULT '0',
   `comment` longtext,
   UNIQUE KEY `callID` (`callID`),
   KEY `callID_2` (`callID`),
   INDEX (`result`),
   FOREIGN KEY (`result`) REFERENCES `result` (`id`),
-  INDEX(`typeCall`),
-  FOREIGN KEY (`typeCall`) REFERENCES `typeCall` (`id`),
   INDEX(`calledPhone`),
   FOREIGN KEY (`calledPhone`) REFERENCES `person` (`phone`),
   INDEX(`callerPhone`),
@@ -296,8 +282,7 @@ SELECT distinct concat(caller.givenName,' ',caller.familyName) as callerName, ca
 FROM `call` c
 INNER JOIN `result`r on r.id = c.result
 INNER JOIN `person` caller on caller.phone = c.callerPhone
-WHERE typeCall = 1
-AND c.result != 9
+WHERE c.result != 9
 ORDER BY c.datetime ASC;
 
 -- --------------------------------------------------------
@@ -306,20 +291,6 @@ create or replace view v_igjenAaRinge AS
 SELECT p.countyID, p.lokallag
 FROM `person` p
 WHERE p.groupID = 1 or p.groupID = 0;
-
--- --------------------------------------------------------
-
-create or replace view v_kanRingesNaa AS
-SELECT p.countyID
-FROM `person` p
-WHERE p.groupID = 1;
-
--- --------------------------------------------------------
-
-create or replace view v_ringer AS
-SELECT p.phone, l.name as lokallag, concat(p.givenName,' ',p.familyName) as name
-FROM `person` p
-left outer join lokallag l on p.lokallag = l.id;
 
 -- --------------------------------------------------------
 
@@ -347,7 +318,7 @@ FROM `person` p left outer join lokallag l on p.lokallag = l.id;
 create or replace view v_ringtFlest AS
 select count(c.callerPhone) as max, p.lokallag from
 `call` c
-inner join person p on c.callerPhone = p.phone and c.result != 9 and c.typeCall = 1
+inner join person p on c.callerPhone = p.phone and c.result != 9
 group by(c.callerPhone)
 order by count(c.callerPhone) desc;
 
@@ -358,14 +329,6 @@ SELECT r.userCreated, concat(givenName, ' ', familyName) as name, phone, l.id as
 FROM `person` p
 inner join `ringer` r on p.ringerID = r.id
 left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.userCreated asc;
-
--- --------------------------------------------------------
-
-create or replace view v_hvorMangeRingt AS
-SELECT p.lokallag as lokallag, c.callerPhone, c.typeCall, c.result
-FROM 
-`call` c
-inner join `person` p on c.callerPhone = p.phone;
 
 -- --------------------------------------------------------
 
@@ -392,8 +355,8 @@ DELIMITER //
     commentIn longtext
 )
 BEGIN
-INSERT INTO `call` (calledPhone, callerPhone, typeCall, result, comment) 
-VALUES (calledPhoneIn, callerPhoneIn, '1', resultIn, commentIn);
+INSERT INTO `call` (calledPhone, callerPhone, result, comment)
+VALUES (calledPhoneIn, callerPhoneIn, resultIn, commentIn);
 UPDATE `person` 
   SET lastCall = UNIX_TIMESTAMP(now())
   WHERE phone = calledPhoneIn;
@@ -455,8 +418,8 @@ DELIMITER //
     callerPhoneIn varchar(15)
 )
 BEGIN
-INSERT INTO `call` (calledPhone, callerPhone, typeCall, result, comment) 
-VALUES (calledPhoneIn, callerPhoneIn, '1', '9', 'Starter samtale');
+INSERT INTO `call` (calledPhone, callerPhone, result, comment)
+VALUES (calledPhoneIn, callerPhoneIn, '9', 'Starter samtale');
 UPDATE `person` SET lastCall = UNIX_TIMESTAMP(now()) WHERE phone = calledPhoneIn;
 END //
 
