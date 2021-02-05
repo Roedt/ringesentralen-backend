@@ -309,12 +309,6 @@ left outer join lokallag l on p.lokallag = l.id;
 
 -- --------------------------------------------------------
 
-create or replace view v_caller AS
-SELECT p.postnumber, concat(p.givenName,' ',p.familyName) as name, p.countyID, p.phone, p.lokallag as lokallagID, l.name as lokallag
-FROM `person` p left outer join lokallag l on p.lokallag = l.id;
-
--- --------------------------------------------------------
-
 create or replace view v_ringtFlest AS
 select count(c.callerPhone) as max, p.lokallag from
 `call` c
