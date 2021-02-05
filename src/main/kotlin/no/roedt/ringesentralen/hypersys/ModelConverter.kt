@@ -6,12 +6,16 @@ import no.roedt.ringesentralen.hypersys.externalModel.User
 import javax.enterprise.context.Dependent
 import javax.persistence.EntityManager
 
+interface ModelConverter {
+    fun convert(profile: Profile): Brukarinformasjon
+}
+
 @Dependent
-class ModelConverter(
+class ModelConverterBean(
     private val entityManager: EntityManager,
     private val fylkeRepository: FylkeRepository
-) {
-    fun convert(profile: Profile) : Brukarinformasjon = convert(profile.user)
+) : ModelConverter {
+    override fun convert(profile: Profile) : Brukarinformasjon = convert(profile.user)
 
     private fun convert(user: User): Brukarinformasjon {
         val sisteMellomrom = user.name.lastIndexOf(" ")
@@ -29,9 +33,12 @@ class ModelConverter(
         )
     }
 
-    private fun toTelefonnummer(phone: String): Telefonnummer {
+    fun toTelefonnummer(phone: String): Telefonnummer? {
         val splitted = phone.split(" ")
-        return Telefonnummer(landkode = splitted[0], nummer = Integer.parseInt(splitted[1]))
+        return when {
+            splitted.size >= 2 -> Telefonnummer(landkode = splitted[0], nummer = Integer.parseInt(splitted[1]))
+            else -> null
+        }
     }
 
     fun toPostnummer(user: User) = user.addresses.map { it.postalCode }.map{ it[1] }.map { Postnummer(it) }.firstOrNull() ?: Postnummer("0000")
