@@ -1,28 +1,23 @@
 package no.roedt.ringesentralen
 
-enum class Fylke(val nr: Int) {
-    Uassosiert(-1),
-    Oestfold(1),
-    Akershus(2),
-    Oslo(3),
-    Hedmark(4),
-    Oppland(5),
-    Buskerud(6),
-    Vestfold(7),
-    Telemark(8),
-    AustAgder(9),
-    VestAgder(10),
-    Rogaland(11),
-    Hordaland(12),
-    SognOgFjordane(14),
-    MoereOgRomsdal(15),
-    Nordland(18),
-    Troms(19),
-    Finnmark(20),
-    Svalbard(21),
-    Troendelag(50);
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase
+import io.quarkus.runtime.annotations.RegisterForReflection
+import javax.persistence.Cacheable
+import javax.persistence.Entity
+import javax.persistence.Id
+import javax.persistence.Table
 
-    companion object {
-        fun from(value: Int): Fylke = values().first { it.nr == value }
-    }
+@Entity
+@Table(name = "fylker")
+@Cacheable
+@RegisterForReflection
+data class Fylke(
+    @Id
+    var id: Int,
+    var name: String
+) : PanacheEntityBase() {
+    constructor() : this(
+        id = 0,
+        name = ""
+    )
 }

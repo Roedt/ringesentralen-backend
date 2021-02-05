@@ -20,7 +20,8 @@ interface BrukereService {
 @ApplicationScoped
 class BrukereServiceBean(
         val personRepository: PersonRepository,
-        val databaseUpdater: DatabaseUpdater
+        val databaseUpdater: DatabaseUpdater,
+        val fylkeRepository: FylkeRepository
 ): BrukereService {
 
     override fun hentBrukarar(): List<Brukarinformasjon> =
@@ -32,7 +33,7 @@ class BrukereServiceBean(
                     etternamn = r.familyName,
                     telefonnummer = Telefonnummer(nummer = r.phone.toInt()),
                     postnummer = Postnummer(r.postnumber.padStart(4, '0')),
-                    fylke = Fylke.from(r.countyID),
+                    fylke = fylkeRepository.findById(r.countyID),
                     epost = r.email ?: "",
                     hypersysID = r.hypersysID ?: -1
                 )
