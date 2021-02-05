@@ -11,14 +11,14 @@ class StatistikkService(val entityManager: EntityManager) {
         val modus = Modus.Korona
         return StatistikkResponse(
             samtalerStatistikkResponse = getSamtalerStatistikkResponse(modus),
-            ringereStatistikkResponse = getRingereStatistikkResponse(modus),
-            personerStatistikkResponse = getPersonerStatistikkResponse(modus)
+            ringereStatistikkResponse = getRingereStatistikkResponse(),
+            personerStatistikkResponse = getPersonerStatistikkResponse()
         )
     }
 
     private fun getSamtalerStatistikkResponse(modus: Modus) : SamtalerStatistikkResponse {
         val list = get("SELECT id, displaytext FROM v_resultatForModus where modus=${modus.id} ORDER BY id ASC")
-            .map { it as Array<Any> }
+            .map { it as Array<*> }
             .map { Resultattype(id = it[0] as Int, displaytext = it[1].toString()) }
             .map {
                 SamtaleResultat(
@@ -33,7 +33,7 @@ class StatistikkService(val entityManager: EntityManager) {
         )
     }
 
-    private fun getRingereStatistikkResponse(modus: Modus): RingereStatistikkResponse =
+    private fun getRingereStatistikkResponse(): RingereStatistikkResponse =
         RingereStatistikkResponse(
             registrerteRingere = get("SELECT 1 FROM ringer").size,
             antallSomHarRingt = get("select distinct callerPhone from `call`").size,
@@ -44,7 +44,7 @@ class StatistikkService(val entityManager: EntityManager) {
             antallLokallagRingtFraTotalt = get("select distinct callerPhone from `call` c inner join person p on p.phone = c.callerPhone inner join lokallag l on l.id = p.lokallag").size
         )
 
-    private fun getPersonerStatistikkResponse(modus: Modus): PersonerStatistikkResponse = PersonerStatistikkResponse(
+    private fun getPersonerStatistikkResponse(): PersonerStatistikkResponse = PersonerStatistikkResponse(
         antallPersonerISystemetTotalt = get("SELECT 1 FROM person").size,
         ringere = get("SELECT 1 FROM person WHERE groupID > 3").size,
         ferdigringte = get("select 1 FROM person WHERE groupID=2 or groupID=3").size,
