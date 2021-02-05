@@ -51,14 +51,11 @@ CREATE TABLE IF NOT EXISTS `postnumber` (
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `modus` (
-  `id` int(2) NOT NULL PRIMARY KEY,
+  `id` int(2) PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(60) NOT NULL
 );
 
-INSERT INTO modus VALUES (0, 'ekstern');
-INSERT INTO modus VALUES (1, 'intern');
-INSERT INTO modus VALUES (2, 'korona');
-
+INSERT INTO modus(name) VALUES ('korona');
 
 -- --------------------------------------------------------
 
@@ -147,18 +144,6 @@ CREATE TABLE IF NOT EXISTS `oppfoelgingKorona` (
 
 -- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `oppfoelgingEkstern` (
-  `personId` int(6) unsigned PRIMARY KEY NOT NULL,
-  `hasActuallyReceived` tinyint(1) DEFAULT NULL,
-  `stopSubscription` tinyint(1) DEFAULT NULL,
-  `smsReminder` tinyint(1) DEFAULT NULL,
-  FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
-  INDEX (`personId`)
-);
-
-
--- --------------------------------------------------------
-
 CREATE TABLE IF NOT EXISTS `result` (
   `id` int(1) NOT NULL PRIMARY KEY,
   `name` varchar(200) NOT NULL,
@@ -192,29 +177,12 @@ CREATE TABLE IF NOT EXISTS `modusTilResultat` (
   FOREIGN KEY (`modus`) REFERENCES `modus` (`id`)
 );
 
--- Ekstern
-INSERT INTO modusTilResultat VALUES (0, 0);
-INSERT INTO modusTilResultat VALUES (0, 1);
-INSERT INTO modusTilResultat VALUES (0, 2);
-INSERT INTO modusTilResultat VALUES (0, 3);
-INSERT INTO modusTilResultat VALUES (0, 4);
-INSERT INTO modusTilResultat VALUES (0, 5);
-INSERT INTO modusTilResultat VALUES (0, 9);
-
--- Intern
-INSERT INTO modusTilResultat VALUES (1, 0);
-INSERT INTO modusTilResultat VALUES (1, 6);
-INSERT INTO modusTilResultat VALUES (1, 7);
-INSERT INTO modusTilResultat VALUES (1, 8);
-INSERT INTO modusTilResultat VALUES (1, 9);
-INSERT INTO modusTilResultat VALUES (1, 4);
-INSERT INTO modusTilResultat VALUES (1, 10);
 
 -- Korona
-INSERT INTO modusTilResultat VALUES (2, 0);
-INSERT INTO modusTilResultat VALUES (2, 4);
-INSERT INTO modusTilResultat VALUES (2, 9);
-INSERT INTO modusTilResultat VALUES (2, 11);
+INSERT INTO modusTilResultat VALUES ((select id from modus where name = 'korona'), 0);
+INSERT INTO modusTilResultat VALUES ((select id from modus where name = 'korona'), 4);
+INSERT INTO modusTilResultat VALUES ((select id from modus where name = 'korona'), 9);
+INSERT INTO modusTilResultat VALUES ((select id from modus where name = 'korona'), 11);
 
 -- --------------------------------------------------------
 
@@ -391,21 +359,6 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  DROP PROCEDURE IF EXISTS sp_registrerOppfoelgingEkstern;
-  CREATE PROCEDURE sp_registrerOppfoelgingEkstern(
-    calledPhoneIn varchar(15),
-    hasActuallyReceivedIn tinyint(1),
-    stopSubscriptionIn tinyint(1),
-    smsReminderIn tinyint(1)
-)
-BEGIN
-INSERT INTO `oppfoelgingEkstern` (personId, hasActuallyReceived, stopSubscription, smsReminder)
-  VALUES ((select id from person where phone = calledPhoneIn), hasActuallyReceiveIn, stopSubscriptionIn, smsReminderIn);
-END //
-
--- --------------------------------------------------------
-
-DELIMITER //
   DROP PROCEDURE IF EXISTS sp_startSamtale;
   CREATE PROCEDURE sp_startSamtale(
     calledPhoneIn varchar(15),
@@ -473,7 +426,6 @@ DELIMITER //
 )
 BEGIN
 DELETE FROM `call` where calledPhone = phoneIn;
-DELETE FROM `oppfoelgingEkstern` where personId = (select id from person where phone = phoneIn);
 DELETE FROM `oppfoelgingKorona` where personId = (select id from person where phone = phoneIn);
 DELETE FROM `ringer` where id = (select ringerID from person where phone = phoneIn);
 DELETE FROM `person` where phone = phoneIn;
