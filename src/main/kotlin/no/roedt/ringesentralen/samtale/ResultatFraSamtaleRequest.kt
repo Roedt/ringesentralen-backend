@@ -8,7 +8,7 @@ import no.roedt.ringesentralen.Modus
 data class ResultatFraSamtaleRequest(
         @JsonProperty("modus") val modus: Modus,
         @JsonProperty("ringtID") val ringtID: Long,
-        @JsonProperty("resultat") val result: Resultat,
+        @JsonProperty("result") val result: Resultat,
         @JsonProperty("kommentar") val kommentar: String,
         @JsonProperty("modusspesifikkeResultat") val modusspesifikkeResultat: ModusspesifikkeResultat,
         @JsonProperty("vilIkkeBliRingt") val vilIkkeBliRingt: Boolean
