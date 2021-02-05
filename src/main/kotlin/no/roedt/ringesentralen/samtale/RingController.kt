@@ -40,7 +40,7 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Path("/startSamtale")
     @Operation(summary = "Start samtale")
     @Retry
-    fun startSamtale(@Context ctx: SecurityContext, startSamtaleRequest: StartSamtaleRequest): StartSamtaleResponse = ringService.startSamtale(AutentisertStartSamtaleRequest(ctx.userId(), startSamtaleRequest))
+    fun startSamtale(@Context ctx: SecurityContext, startSamtaleRequest: StartSamtaleRequest) = ringService.startSamtale(AutentisertStartSamtaleRequest(ctx.userId(), startSamtaleRequest))
 
     @RolesAllowed("ringar")
     @POST
@@ -49,7 +49,7 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Path("/registrerResultatFraSamtale")
     @Operation(summary = "Registrer resultat fra samtale")
     @Retry
-    fun registrerResultatFraSamtale(@Context ctx: SecurityContext, resultatFraSatmtaleRequest: ResultatFraSamtaleRequest): ResultatFraSamtaleResponse = ringService.registrerResultatFraSamtale(AutentisertResultatFraSamtaleRequest(ctx.userId(), resultatFraSatmtaleRequest))
+    fun registrerResultatFraSamtale(@Context ctx: SecurityContext, resultatFraSatmtaleRequest: ResultatFraSamtaleRequest) = ringService.registrerResultatFraSamtale(AutentisertResultatFraSamtaleRequest(ctx.userId(), resultatFraSatmtaleRequest))
 
 
     @RolesAllowed("ringar")

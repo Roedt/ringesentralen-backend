@@ -5,14 +5,13 @@ import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.PersonRepository
 import java.sql.Timestamp
-import java.time.LocalDateTime
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
 
 interface RingService {
     fun hentNestePersonAaRinge(nestePersonAaRingeRequest: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse?
-    fun startSamtale(request: AutentisertStartSamtaleRequest): StartSamtaleResponse
-    fun registrerResultatFraSamtale(request: AutentisertResultatFraSamtaleRequest): ResultatFraSamtaleResponse
+    fun startSamtale(request: AutentisertStartSamtaleRequest)
+    fun registrerResultatFraSamtale(request: AutentisertResultatFraSamtaleRequest)
     fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): RingbarPerson
 }
 
@@ -45,14 +44,13 @@ class RingServiceBean(
             ) }
             .toList()
 
-    override fun startSamtale(request: AutentisertStartSamtaleRequest): StartSamtaleResponse {
+    override fun startSamtale(request: AutentisertStartSamtaleRequest) {
         val callerPhone = hypersysIdTilTelefonnummer(request.userId)
         val calledPhone = personRepository.findById(request.skalRingesID()).phone
         databaseUpdater.update("CALL sp_startSamtale($calledPhone, $callerPhone)")
-        return StartSamtaleResponse(request.skalRingesID(), LocalDateTime.now())
     }
 
-    override fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest): ResultatFraSamtaleResponse {
+    override fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest) {
         val request = autentisertRequest.resultatFraSamtaleRequest
         val callerPhone = hypersysIdTilTelefonnummer(autentisertRequest.userId)
         val calledPhone = personRepository.findById(request.ringtID).phone
@@ -67,8 +65,6 @@ class RingServiceBean(
         if (request.modus == Modus.Korona && request.result == Resultat.Svarte) {
             registrerKoronaspesifikkeResultat(request, calledPhone)
         }
-
-        return ResultatFraSamtaleResponse(oppdatert = LocalDateTime.now())
     }
 
     override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): RingbarPerson {
