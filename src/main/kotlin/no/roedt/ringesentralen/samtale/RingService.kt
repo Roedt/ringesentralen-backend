@@ -45,17 +45,17 @@ class RingServiceBean(
             .toList()
 
     override fun startSamtale(request: AutentisertStartSamtaleRequest) {
-        val callerPhone = hypersysIdTilTelefonnummer(request.userId)
+        val ringerId = hypersysIDTilRingerId(request.userId)
         val calledPhone = personRepository.findById(request.skalRingesID()).phone
-        databaseUpdater.update("CALL sp_startSamtale($calledPhone, $callerPhone)")
+        databaseUpdater.update("CALL sp_startSamtale($calledPhone, $ringerId)")
     }
 
     override fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest) {
         val request = autentisertRequest.resultatFraSamtaleRequest
-        val callerPhone = hypersysIdTilTelefonnummer(autentisertRequest.userId)
-        val calledPhone = personRepository.findById(request.ringtID).phone
         assert(request.result in request.modus.gyldigeResultattyper)
-        databaseUpdater.update("CALL sp_registrerSamtale($calledPhone, $callerPhone, ${request.result.nr}, '${request.kommentar}')")
+        val calledPhone = personRepository.findById(request.ringtID).phone
+        val ringerId = hypersysIDTilRingerId(autentisertRequest.userId)
+        databaseUpdater.update("CALL sp_registrerSamtale($calledPhone, $ringerId, ${request.result.nr}, '${request.kommentar}')")
         val nesteGroupID: GroupID? = when  {
             request.result.nesteGroupID != null -> request.result.nesteGroupID
             erFleireEnnToIkkeSvar(calledPhone, request) -> GroupID.Ferdigringt
@@ -68,10 +68,10 @@ class RingServiceBean(
     }
 
     override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): RingbarPerson {
-        val callerPhone = hypersysIdTilTelefonnummer(request.userId)
+        val ringer = hypersysIDTilRingerId(request.userId)
         val calledPhone = request.ringtNummer()
         val personSomRingerTilbake: RingbarPerson = personRepository.find("phone", calledPhone).firstResult()
-        if (entityManager.executeQuery("SELECT 1 FROM v_noenRingerTilbake WHERE phone = '$calledPhone' AND callerPhone = '$callerPhone' LIMIT 1").isEmpty()) {
+        if (entityManager.executeQuery("SELECT 1 FROM v_noenRingerTilbake WHERE phone = '$calledPhone' AND ringer = '$ringer' LIMIT 1").isEmpty()) {
             throw Exception("Du kan berre registrere å bli ringt opp frå folk du har ringt tidlegare.")
         }
         startSamtale(
@@ -97,5 +97,8 @@ class RingServiceBean(
 
     fun EntityManager.executeQuery(query: String) = entityManager.createNativeQuery(query).resultList
 
-    private fun hypersysIdTilTelefonnummer(hypersysId: UserId) = personRepository.find("hypersysID", hypersysId.userId).firstResult<RingbarPerson>().phone
+    private fun hypersysIDTilRingerId(userId: UserId) =
+        entityManager.createNativeQuery(
+            "select ringer.id from ringer inner join person on person.id = ringer.personId and person.hypersysID = ${userId.userId} "
+        ).resultList.first()
 }

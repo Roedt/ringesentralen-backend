@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `person` (
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `ringer` (
-  `id` int(6) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `userCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `personId` int(6) unsigned NOT NULL UNIQUE,
   FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
@@ -191,12 +191,12 @@ INSERT INTO modusTilResultat VALUES ((select id from modus where name = 'korona'
 
 CREATE TABLE IF NOT EXISTS `godkjenning` (
   `id` int(1) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-  `godkjenner` varchar(15) NOT NULL,
+  `godkjenner` int(6) NOT NULL,
   `godkjentPerson` varchar(15) NOT NULL,
   `nyGroupId` int(2) NOT NULL,
   `tidspunkt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX(`godkjenner`),
-  FOREIGN KEY (`godkjenner`) REFERENCES `person` (`phone`),
+  FOREIGN KEY (`godkjenner`) REFERENCES `ringer` (`id`),
   INDEX(`godkjentPerson`),
   FOREIGN KEY (`godkjentPerson`) REFERENCES `person` (`phone`),
   INDEX(`nyGroupId`),
@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `godkjenning` (
 CREATE TABLE IF NOT EXISTS `call` (
   `callID` int(11) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `calledPhone` varchar(15) NOT NULL,
-  `callerPhone` varchar(8) NOT NULL,
+  `ringer` int(6) NOT NULL,
   `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `result` int(1) NOT NULL DEFAULT '0',
   `comment` longtext,
@@ -218,8 +218,8 @@ CREATE TABLE IF NOT EXISTS `call` (
   FOREIGN KEY (`result`) REFERENCES `result` (`id`),
   INDEX(`calledPhone`),
   FOREIGN KEY (`calledPhone`) REFERENCES `person` (`phone`),
-  INDEX(`callerPhone`),
-  FOREIGN KEY (`callerPhone`) REFERENCES `person` (`phone`)
+  INDEX(`ringer`),
+  FOREIGN KEY (`ringer`) REFERENCES `ringer` (`id`)
 );
 
 -- --------------------------------------------------------
@@ -251,10 +251,11 @@ SELECT p.lastCall, p.phone, concat(p.givenName,' ',p.familyName) as name, p.post
 -- --------------------------------------------------------
 
 create or replace view v_callsResult AS
-SELECT distinct concat(caller.givenName,' ',caller.familyName) as callerName, caller.phone as callerPhone, c.datetime as `datetime`, c.comment, r.displaytext as result, c.calledPhone, r.svarte, r.id as resultId
+SELECT distinct concat(ringerPerson.givenName,' ',ringerPerson.familyName) as callerName, ringerPerson.phone as callerPhone, c.datetime as `datetime`, c.comment, r.displaytext as result, c.calledPhone, r.svarte, r.id as resultId
 FROM `call` c
 INNER JOIN `result`r on r.id = c.result
-INNER JOIN `person` caller on caller.phone = c.callerPhone
+INNER JOIN `ringer` ringer on ringer.id = c.ringer
+INNER join `person` ringerPerson on ringerPerson.id = ringer.personId
 WHERE c.result != 9
 ORDER BY c.datetime ASC;
 
@@ -275,19 +276,21 @@ WHERE p.groupID = 2;
 -- --------------------------------------------------------
 
 create or replace view v_noenRingerTilbake AS
-SELECT concat(p.givenName,' ',p.familyName) as name, p.postnumber, p.phone, l.name as lokallagNavn, l.id as lokallag, c.callerPhone as callerPhone
+SELECT concat(p.givenName,' ',p.familyName) as name, p.postnumber, p.phone, l.name as lokallagNavn, l.id as lokallag, ringer.id as ringer
 FROM person p
 inner join `call` c on p.phone = c.calledPhone
+inner join `ringer` ringer on ringer.id = c.ringer
 left outer join lokallag l on p.lokallag = l.id;
 
 -- --------------------------------------------------------
 
 create or replace view v_ringtFlest AS
-select count(c.callerPhone) as max, p.lokallag from
+select count(ringer.id) as max, person.lokallag from
 `call` c
-inner join person p on c.callerPhone = p.phone and c.result != 9
-group by(c.callerPhone)
-order by count(c.callerPhone) desc;
+inner join ringer ringer on ringer.id = c.ringer and c.result != 9
+inner join `person` person on person.id = ringer.personId
+group by(ringer.id)
+order by count(ringer.id) desc;
 
 -- --------------------------------------------------------
 
@@ -317,13 +320,13 @@ DELIMITER //
   DROP PROCEDURE IF EXISTS sp_registrerSamtale;
   CREATE PROCEDURE sp_registrerSamtale(
     calledPhoneIn varchar(15),
-    callerPhoneIn varchar(15),
+    ringerIdIn varchar(15),
     resultIn int(1),
     commentIn longtext
 )
 BEGIN
-INSERT INTO `call` (calledPhone, callerPhone, result, comment)
-VALUES (calledPhoneIn, callerPhoneIn, resultIn, commentIn);
+INSERT INTO `call` (calledPhone, ringer, result, comment)
+VALUES (calledPhoneIn, ringerIdIn, resultIn, commentIn);
 UPDATE `person` 
   SET lastCall = UNIX_TIMESTAMP(now())
   WHERE phone = calledPhoneIn;
@@ -333,13 +336,13 @@ END //
 DELIMITER //
   DROP PROCEDURE IF EXISTS sp_godkjennBruker;
   CREATE PROCEDURE sp_godkjennBruker(
-    callerPhoneIn varchar(15),
+    ringerIdIn varchar(15),
     calledPhoneIn varchar(15),
     nyGroupIdIn int(2)
 )
 BEGIN
 INSERT INTO `godkjenning` (godkjenner, godkjentPerson, nyGroupId) 
-VALUES (callerPhoneIn, calledPhoneIn, nyGroupIdIn);
+VALUES (ringerIdIn, calledPhoneIn, nyGroupIdIn);
 UPDATE `person` 
   SET groupID = nyGroupIdIn
   WHERE phone = calledPhoneIn;
@@ -367,11 +370,11 @@ DELIMITER //
   DROP PROCEDURE IF EXISTS sp_startSamtale;
   CREATE PROCEDURE sp_startSamtale(
     calledPhoneIn varchar(15),
-    callerPhoneIn varchar(15)
+    ringerIdIn varchar(15)
 )
 BEGIN
-INSERT INTO `call` (calledPhone, callerPhone, result, comment)
-VALUES (calledPhoneIn, callerPhoneIn, '9', 'Starter samtale');
+INSERT INTO `call` (calledPhone, ringer, result, comment)
+VALUES (calledPhoneIn, ringerIdIn, '9', 'Starter samtale');
 UPDATE `person` SET lastCall = UNIX_TIMESTAMP(now()) WHERE phone = calledPhoneIn;
 END //
 
