@@ -77,13 +77,6 @@ INSERT INTO callGroup VALUES (9, 'admin');
 
 -- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `ringer` (
-  `id` int(6) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `userCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
--- --------------------------------------------------------
-
 CREATE TABLE IF NOT EXISTS `lokallag` (
   `id` int(3) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(100) NOT NULL UNIQUE
@@ -117,11 +110,9 @@ CREATE TABLE IF NOT EXISTS `person` (
   `groupID` int(2) DEFAULT NULL,
   `userCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lastCall` int(11) NOT NULL DEFAULT '0',
-  `ringerID` int(6) unsigned DEFAULT NULL,
   `lokallag` int(3) unsigned DEFAULT NULL,
   FOREIGN KEY (`groupID`) REFERENCES `callGroup` (`id`),
   FOREIGN KEY(`countyID`) REFERENCES `fylker` (`id`),
-  FOREIGN KEY(`ringerID`) REFERENCES `ringer` (`id`),
   FOREIGN KEY(`lokallag`) REFERENCES `lokallag` (`id`),
   FOREIGN KEY(`postnumber`) REFERENCES `postnumber` (`postnumber`),
   INDEX (`groupID`),
@@ -130,6 +121,16 @@ CREATE TABLE IF NOT EXISTS `person` (
   INDEX (`lokallag`),
   INDEX (`postnumber`),
   INDEX (`hypersysID`)
+);
+
+-- --------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `ringer` (
+  `id` int(6) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `userCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `personId` int(6) unsigned NOT NULL UNIQUE,
+  FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
+  INDEX(`personId`)
 );
 
 -- --------------------------------------------------------
@@ -293,7 +294,7 @@ order by count(c.callerPhone) desc;
 create or replace view v_personerGodkjenning AS
 SELECT r.userCreated, concat(givenName, ' ', familyName) as name, phone, l.id as lokallagId, l.name as lokallag, email, postnumber, p.groupID
 FROM `person` p
-inner join `ringer` r on p.ringerID = r.id
+inner join `ringer` r on p.id = r.personId
 left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.userCreated asc;
 
 -- --------------------------------------------------------
@@ -390,17 +391,6 @@ DELIMITER //
 )
 BEGIN
 
-  IF (SELECT count(1) FROM `person` where email = emailIn and ringerID is not null)>0 THEN
-    BEGIN
-      SET @ringerID =(select `ringerID` FROM `person` where email = emailIn);
-    END;
-  ELSE
-    BEGIN
-        INSERT INTO `ringer` () VALUES();
-        SET @ringerID:=(SELECT last_insert_id());
-    END;
-  END IF;
-
   IF (SELECT count(1) FROM `person` where phone = phoneIn)>0 THEN
     BEGIN
       UPDATE `person` SET
@@ -411,16 +401,28 @@ BEGIN
           postnumber = postnumberIn, 
           groupID = greatest(4, groupID),
           countyID = countyIDIn,
-          ringerID = @ringerID,
           lokallag = lokallagIn
         WHERE phone = phoneIn;
     END;
   ELSE
     BEGIN
-        INSERT INTO `person` (hypersysID, givenName, familyName, phone, email, postnumber, countyID, groupID, ringerID, lokallag)
-            VALUES (hypersysIDIn, givenNameIn, familyNameIn, phoneIn, emailIn, postnumberIn, countyIDIn, '4', (SELECT last_insert_id()), lokallagIn);
+        INSERT INTO `person` (hypersysID, givenName, familyName, phone, email, postnumber, countyID, groupID, lokallag)
+            VALUES (hypersysIDIn, givenNameIn, familyNameIn, phoneIn, emailIn, postnumberIn, countyIDIn, '4', lokallagIn);
     END;
   END IF;
+
+  IF (SELECT count(1) FROM `person` p inner join `ringer` r on p.id = r.personId where p.email = emailIn and r.id is not null)>0 THEN
+    BEGIN
+      SET @personId =(select `id` FROM `person` where email = emailIn);
+    END;
+  ELSE
+    BEGIN
+      SET @personId =(SELECT last_insert_id());
+      INSERT INTO `ringer` (`personId`) VALUES(@personId);
+    END;
+
+  END IF;
+
 END //
 
 -- --------------------------------------------------------
@@ -433,7 +435,7 @@ DELIMITER //
 BEGIN
 DELETE FROM `call` where calledPhone = phoneIn;
 DELETE FROM `oppfoelgingKorona` where personId = (select id from person where phone = phoneIn);
-DELETE FROM `ringer` where id = (select ringerID from person where phone = phoneIn);
+DELETE FROM `ringer` where personId = (select id from person where phone = phoneIn);
 DELETE FROM `person` where phone = phoneIn;
 END //
 
