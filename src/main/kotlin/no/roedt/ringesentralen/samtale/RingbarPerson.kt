@@ -17,7 +17,7 @@ data class RingbarPerson(
         var phone: String,
         var lastCall: Int,
         var email: String?,
-        var postnumber: String,
+        var postnummer: Int,
         var countyID: Int,
         var lokallag: Int,
         var groupID: Int,
@@ -29,7 +29,7 @@ data class RingbarPerson(
             phone = "",
             lastCall = 0,
             email = null,
-            postnumber = "0",
+            postnummer = 0,
             countyID = -1,
             lokallag = 1,
             groupID = 0
