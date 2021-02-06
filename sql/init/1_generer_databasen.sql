@@ -107,7 +107,7 @@ insert into `lokallag` (name) values
 
 CREATE TABLE IF NOT EXISTS `person` (
   `id` int(6) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `hypersysID` int(6) unsigned DEFAULT NULL,
+  `hypersysID` int(6) DEFAULT NULL,
   `givenName` varchar(60) DEFAULT NULL,
   `familyName` varchar(60) DEFAULT NULL,
   `phone` varchar(15) NOT NULL UNIQUE,
@@ -128,7 +128,8 @@ CREATE TABLE IF NOT EXISTS `person` (
   INDEX (`countyID`),
   INDEX (`phone`),
   INDEX (`lokallag`),
-  INDEX (`postnumber`)
+  INDEX (`postnumber`),
+  INDEX (`hypersysID`)
 );
 
 -- --------------------------------------------------------
@@ -223,8 +224,10 @@ CREATE TABLE IF NOT EXISTS `call` (
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `login_attempts` (
-  `user_id` int(6) NOT NULL,
-  `time` varchar(30) NOT NULL
+  `hypersysID` int(6) NOT NULL,
+  `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`hypersysID`) REFERENCES `person` (`hypersysID`),
+  INDEX(`hypersysID`)
 );
 
 -- --------------------------------------------------------
@@ -439,12 +442,12 @@ END //
 DELIMITER //
   DROP PROCEDURE IF EXISTS sp_recordLoginAttempt;
   CREATE PROCEDURE sp_recordLoginAttempt (
-    userId_in int(6)
+    hypersysIDIn int(6)
   )
 BEGIN
-INSERT INTO `login_attempts` (user_id, time)
+INSERT INTO `login_attempts` (hypersysID)
 VALUES
-  (userId_in, UNIX_TIMESTAMP(now()));
+  (hypersysIDIn);
 END //
 
 

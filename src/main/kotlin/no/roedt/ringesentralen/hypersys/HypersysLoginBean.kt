@@ -29,8 +29,9 @@ class HypersysLoginBean(
     private fun oppdaterRingerFraaHypersys(token: GyldigPersonToken) {
         val profile: Profile = hypersysProxy.get("actor/api/profile/", token, Profile::class.java)
         val brukarinformasjon: Brukarinformasjon = modelConverter.convert(profile)
-
         databaseUpdater.update(brukarinformasjon.toSQL())
+        
+        databaseUpdater.update("CALL sp_recordLoginAttempt(${brukarinformasjon.hypersysID})")
     }
 
     private fun Brukarinformasjon.toSQL(): String = "CALL sp_registrerNyBruker(" +
