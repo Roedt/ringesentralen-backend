@@ -12,4 +12,11 @@ data class Brukarinformasjon(
         val postnummer: Postnummer,
         val fylke: Fylke,
         val lokallag: Lokallag?
-)
+) {
+        fun toTelefonnummer() : String? {
+                if (telefonnummer == null) {
+                        return null
+                }
+                return "'${telefonnummer.nummer}'"
+        }
+}

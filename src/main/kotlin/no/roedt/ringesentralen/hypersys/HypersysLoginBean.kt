@@ -38,7 +38,7 @@ class HypersysLoginBean(
             "'${hypersysID}', " +
             "'${fornamn}', " +
             "'${etternamn}', " +
-            "'${telefonnummer?.nummer}', " +
+            "${toTelefonnummer()}, " +
             "'${epost}', " +
             "${postnummer.postnummer}, " +
             "${fylke.id}," +
