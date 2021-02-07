@@ -5442,21 +5442,21 @@ INSERT INTO modus(name) VALUES ('korona');
 
 -- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `callGroup` (
+CREATE TABLE IF NOT EXISTS `brukergruppe` (
   `id` int(2) NOT NULL PRIMARY KEY,
   `name` varchar(60) NOT NULL
 );
 
-INSERT INTO callGroup VALUES (0, 'mangler info/samtykke før ringing');
-INSERT INTO callGroup VALUES (1, 'klar til å ringes');
-INSERT INTO callGroup VALUES (2, 'ferdigringt');
-INSERT INTO callGroup VALUES (3, 'slett');
-INSERT INTO callGroup VALUES (4, 'ugodkjent ringer');
-INSERT INTO callGroup VALUES (5, 'ringer som aktivt ikke er godkjent');
-INSERT INTO callGroup VALUES (6, 'godkjent ringer og relay-bruker');
-INSERT INTO callGroup VALUES (7, 'trenger oppfølging');
-INSERT INTO callGroup VALUES (8, 'ringer som kan godkjenne ringere i sitt lokallag');
-INSERT INTO callGroup VALUES (9, 'admin');
+INSERT INTO brukergruppe VALUES (0, 'mangler info/samtykke før ringing');
+INSERT INTO brukergruppe VALUES (1, 'klar til å ringes');
+INSERT INTO brukergruppe VALUES (2, 'ferdigringt');
+INSERT INTO brukergruppe VALUES (3, 'slett');
+INSERT INTO brukergruppe VALUES (4, 'ugodkjent ringer');
+INSERT INTO brukergruppe VALUES (5, 'ringer som aktivt ikke er godkjent');
+INSERT INTO brukergruppe VALUES (6, 'godkjent ringer og relay-bruker');
+INSERT INTO brukergruppe VALUES (7, 'trenger oppfølging');
+INSERT INTO brukergruppe VALUES (8, 'ringer som kan godkjenne ringere i sitt lokallag');
+INSERT INTO brukergruppe VALUES (9, 'admin');
 
 -- --------------------------------------------------------
 
@@ -5473,7 +5473,7 @@ CREATE TABLE IF NOT EXISTS `person` (
   `oppretta` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `sisteSamtale` int(11) NOT NULL DEFAULT '0',
   `lokallag` int(3) unsigned DEFAULT NULL,
-  FOREIGN KEY (`groupID`) REFERENCES `callGroup` (`id`),
+  FOREIGN KEY (`groupID`) REFERENCES `brukergruppe` (`id`),
   FOREIGN KEY(`fylke`) REFERENCES `fylker` (`id`),
   FOREIGN KEY(`lokallag`) REFERENCES `lokallag` (`id`),
   FOREIGN KEY(`postnummer`) REFERENCES `postnummer` (`postnummer`),
@@ -5562,7 +5562,7 @@ CREATE TABLE IF NOT EXISTS `godkjenning` (
   INDEX(`godkjentPerson`),
   FOREIGN KEY (`godkjentPerson`) REFERENCES `person` (`phone`),
   INDEX(`nyGroupId`),
-  FOREIGN KEY (`nyGroupId`) REFERENCES `callGroup` (`id`)
+  FOREIGN KEY (`nyGroupId`) REFERENCES `brukergruppe` (`id`)
 );
 
 -- --------------------------------------------------------
