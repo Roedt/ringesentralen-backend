@@ -6,7 +6,6 @@ import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.hypersys.LoginRequest
 import no.roedt.ringesentralen.samtale.*
 import org.hamcrest.CoreMatchers.equalTo
-import org.junit.jupiter.api.Test
 
 class FullFlytTest {
 
@@ -46,7 +45,7 @@ class FullFlytTest {
             .post("/samtale/noenRingerTilbake")
             .then()
             .statusCode(200)
-            .body("givenName", equalTo("Donald"))
+            .body("fornavn", equalTo("Donald"))
     }
 
     private fun login(): String {

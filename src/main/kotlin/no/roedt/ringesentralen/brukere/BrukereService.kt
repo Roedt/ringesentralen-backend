@@ -32,7 +32,7 @@ class BrukereServiceBean(
             .list<RingbarPerson>()
             .map { r ->
                 Brukarinformasjon(
-                    fornamn = r.givenName,
+                    fornamn = r.fornavn,
                     etternamn = r.etternavn,
                     telefonnummer = Telefonnummer(nummer = r.phone.toInt()),
                     postnummer = Postnummer(r.postnummer.toString().padStart(4, '0')),

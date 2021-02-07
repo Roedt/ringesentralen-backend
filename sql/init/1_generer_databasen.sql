@@ -5463,7 +5463,7 @@ INSERT INTO callGroup VALUES (9, 'admin');
 CREATE TABLE IF NOT EXISTS `person` (
   `id` int(6) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `hypersysID` int(6) DEFAULT NULL,
-  `givenName` varchar(60) DEFAULT NULL,
+  `fornavn` varchar(60) DEFAULT NULL,
   `etternavn` varchar(60) DEFAULT NULL,
   `phone` varchar(15) DEFAULT NULL UNIQUE,
   `postnummer` integer DEFAULT NULL,
@@ -5604,7 +5604,7 @@ INNER JOIN `modus` m on mr.modus = m.id;
 -- --------------------------------------------------------
 
 create or replace view v_personerSomKanRinges as
-SELECT p.lastCall, p.phone, concat(p.givenName,' ',p.etternavn) as name, p.postnummer, p.fylke, p.lokallag, l.name as lokallagNavn, p.id as id
+SELECT p.lastCall, p.phone, concat(p.fornavn,' ',p.etternavn) as name, p.postnummer, p.fylke, p.lokallag, l.name as lokallagNavn, p.id as id
   FROM person p
   LEFT OUTER JOIN lokallag l on p.lokallag = l.id
   WHERE groupID = '1'
@@ -5613,7 +5613,7 @@ SELECT p.lastCall, p.phone, concat(p.givenName,' ',p.etternavn) as name, p.postn
 -- --------------------------------------------------------
 
 create or replace view v_callsResult AS
-SELECT distinct concat(ringerPerson.givenName,' ',ringerPerson.etternavn) as callerName, ringerPerson.phone as callerPhone, c.datetime as `datetime`, c.comment, r.displaytext as result, c.calledPhone, r.svarte, r.id as resultId
+SELECT distinct concat(ringerPerson.fornavn,' ',ringerPerson.etternavn) as callerName, ringerPerson.phone as callerPhone, c.datetime as `datetime`, c.comment, r.displaytext as result, c.calledPhone, r.svarte, r.id as resultId
 FROM `call` c
 INNER JOIN `result`r on r.id = c.result
 INNER JOIN `ringer` ringer on ringer.id = c.ringer
@@ -5638,7 +5638,7 @@ WHERE p.groupID = 2;
 -- --------------------------------------------------------
 
 create or replace view v_noenRingerTilbake AS
-SELECT concat(p.givenName,' ',p.etternavn) as name, p.postnummer, p.phone, l.name as lokallagNavn, l.id as lokallag, ringer.id as ringer
+SELECT concat(p.fornavn,' ',p.etternavn) as name, p.postnummer, p.phone, l.name as lokallagNavn, l.id as lokallag, ringer.id as ringer
 FROM person p
 inner join `call` c on p.phone = c.calledPhone
 inner join `ringer` ringer on ringer.id = c.ringer
@@ -5657,7 +5657,7 @@ order by count(ringer.id) desc;
 -- --------------------------------------------------------
 
 create or replace view v_personerGodkjenning AS
-SELECT r.userCreated, concat(givenName, ' ', etternavn) as name, phone, l.id as lokallagId, l.name as lokallag, email, postnummer, p.groupID
+SELECT r.userCreated, concat(fornavn, ' ', etternavn) as name, phone, l.id as lokallagId, l.name as lokallag, email, postnummer, p.groupID
 FROM `person` p
 inner join `ringer` r on p.id = r.personId
 left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.userCreated asc;
@@ -5746,7 +5746,7 @@ DELIMITER //
   DROP PROCEDURE IF EXISTS sp_registrerNyBruker;
   CREATE PROCEDURE sp_registrerNyBruker(
     hypersysIDIn int(4),
-    givenNameIn varchar(60),
+    fornavnIn varchar(60),
     etternavnIn varchar(60),
     phoneIn varchar(15),
     emailIn varchar(100),
@@ -5760,7 +5760,7 @@ BEGIN
     BEGIN
       UPDATE `person` SET
           hypersysID = hypersysIDIn,
-          givenName = givenNameIn, 
+          fornavn = fornavnIn,
           etternavn = etternavnIn,
           email = emailIn, 
           postnummer = postnummerIn,
@@ -5771,8 +5771,8 @@ BEGIN
     END;
   ELSE
     BEGIN
-        INSERT INTO `person` (hypersysID, givenName, etternavn, phone, email, postnummer, fylke, groupID, lokallag)
-            VALUES (hypersysIDIn, givenNameIn, etternavnIn, phoneIn, emailIn, postnummerIn, fylkeIdIn, '4', lokallagIn);
+        INSERT INTO `person` (hypersysID, fornavn, etternavn, phone, email, postnummer, fylke, groupID, lokallag)
+            VALUES (hypersysIDIn, fornavnIn, etternavnIn, phoneIn, emailIn, postnummerIn, fylkeIdIn, '4', lokallagIn);
     END;
   END IF;
 
