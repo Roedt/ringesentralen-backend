@@ -33,7 +33,7 @@ class RingServiceBean(
             ?.let { NestePersonAaRingeResponse(ringbarPerson = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.phone))}
 
     private fun getTidlegareSamtalarMedDennePersonen(oppringtNummer: String): List<Samtale> =
-        entityManager.createNativeQuery("SELECT resultat, ringerNavn, datetime, kommentar FROM `v_callsResultat` WHERE oppringtNummer = '$oppringtNummer'")
+        entityManager.createNativeQuery("SELECT resultat, ringerNavn, datetime, kommentar FROM `v_samtalerResultat` WHERE oppringtNummer = '$oppringtNummer'")
             .resultList
             .map { it as Array<*> }
             .map { Samtale(
@@ -84,7 +84,7 @@ class RingServiceBean(
     }
 
     private fun erFleireEnnToIkkeSvar(oppringtNummer: String, request: ResultatFraSamtaleRequest): Boolean {
-        val resultat: List<Int>? = databaseUpdater.updateWithResult("select resultat from `call` where oppringtNummer = $oppringtNummer and resultat = 0")?.map { it as Int }
+        val resultat: List<Int>? = databaseUpdater.updateWithResult("select resultat from `samtale` where oppringtNummer = $oppringtNummer and resultat = 0")?.map { it as Int }
         val fleireEnnToIkkeSvar: Boolean = (resultat?.filter { it == 0 }?.count() ?: 0) > 2
         val ingenSvar: Boolean = (resultat?.filter { it != 0 && it != 9 }?.count() ?: 0) == 0
         return ingenSvar && fleireEnnToIkkeSvar && request.resultat == Resultat.Ikke_svar

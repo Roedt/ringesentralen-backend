@@ -23,25 +23,25 @@ class StatistikkService(val entityManager: EntityManager) {
             .map {
                 SamtaleResultat(
                     displaytext = it.displaytext,
-                    antal = get("SELECT ringer FROM `call` WHERE resultat = ${it.id}").size
+                    antal = get("SELECT ringer FROM `samtale` WHERE resultat = ${it.id}").size
                 )
             }
 
         return SamtalerStatistikkResponse(
             resultat = list,
-            samtalerMedResultatSaaLangt = get("SELECT ringer FROM `call` WHERE resultat != 9").size
+            samtalerMedResultatSaaLangt = get("SELECT ringer FROM `samtale` WHERE resultat != 9").size
         )
     }
 
     private fun getRingereStatistikkResponse(): RingereStatistikkResponse =
         RingereStatistikkResponse(
             registrerteRingere = get("SELECT 1 FROM ringer").size,
-            antallSomHarRingt = get("select distinct ringer from `call`").size,
-            aktiveRingereDenSisteTimen = get("select distinct ringer from `call` where UNIX_TIMESTAMP(now()) - unix_timestamp(datetime) < 3600").size,
-            aktiveRingereIDag = get("select distinct ringer from `call` where CURDATE() =  DATE(datetime)").size,
+            antallSomHarRingt = get("select distinct ringer from `samtale`").size,
+            aktiveRingereDenSisteTimen = get("select distinct ringer from `samtale` where UNIX_TIMESTAMP(now()) - unix_timestamp(datetime) < 3600").size,
+            aktiveRingereIDag = get("select distinct ringer from `samtale` where CURDATE() =  DATE(datetime)").size,
             lokaleGodkjennere = get("select 1 FROM person WHERE groupID=8").size,
             avvisteRingere = get("select 1 FROM person WHERE groupID=5").size,
-            antallLokallagRingtFraTotalt = get("select distinct ringer from `call` c " +
+            antallLokallagRingtFraTotalt = get("select distinct ringer from `samtale` c " +
                     "inner join ringer ringer on c.ringer = ringer.id " +
                     "inner join person p on ringer.personId = p.id " +
                     "inner join lokallag l on l.id = p.lokallag").size

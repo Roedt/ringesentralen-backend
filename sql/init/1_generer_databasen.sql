@@ -5567,7 +5567,7 @@ CREATE TABLE IF NOT EXISTS `godkjenning` (
 
 -- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `call` (
+CREATE TABLE IF NOT EXISTS `samtale` (
   `id` int(11) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `oppringtNummer` varchar(15) NOT NULL,
   `ringer` int(6) NOT NULL,
@@ -5610,9 +5610,9 @@ SELECT p.sisteSamtale, p.phone, concat(p.fornavn,' ',p.etternavn) as name, p.pos
 
 -- --------------------------------------------------------
 
-create or replace view v_callsResultat AS
+create or replace view v_samtalerResultat AS
 SELECT distinct concat(ringerPerson.fornavn,' ',ringerPerson.etternavn) as ringerNavn, c.datetime as `datetime`, c.kommentar, r.displaytext as result
-FROM `call` c
+FROM `samtale` c
 INNER JOIN `resultat` r on r.id = c.result
 INNER JOIN `ringer` ringer on ringer.id = c.ringer
 INNER join `person` ringerPerson on ringerPerson.id = ringer.personId
@@ -5638,7 +5638,7 @@ WHERE p.groupID = 2;
 create or replace view v_noenRingerTilbake AS
 SELECT concat(p.fornavn,' ',p.etternavn) as name, p.postnummer, p.phone, l.name as lokallagNavn, l.id as lokallag, ringer.id as ringer
 FROM person p
-inner join `call` c on p.phone = c.oppringtNummer
+inner join `samtale` c on p.phone = c.oppringtNummer
 inner join `ringer` ringer on ringer.id = c.ringer
 left outer join lokallag l on p.lokallag = l.id;
 
@@ -5646,7 +5646,7 @@ left outer join lokallag l on p.lokallag = l.id;
 
 create or replace view v_ringtFlest AS
 select count(ringer.id) as max, person.lokallag from
-`call` c
+`samtale` c
 inner join ringer ringer on ringer.id = c.ringer and c.resultat != 9
 inner join `person` person on person.id = ringer.personId
 group by(ringer.id)
@@ -5685,7 +5685,7 @@ DELIMITER //
     kommentarIn longtext
 )
 BEGIN
-INSERT INTO `call` (oppringtNummer, ringer, resultat, kommentar)
+INSERT INTO `samtale` (oppringtNummer, ringer, resultat, kommentar)
 VALUES (oppringtNummerIn, ringerIdIn, resultatIn, kommentarIn);
 UPDATE `person` 
   SET sisteSamtale = UNIX_TIMESTAMP(now())
@@ -5733,7 +5733,7 @@ DELIMITER //
     ringerIdIn varchar(15)
 )
 BEGIN
-INSERT INTO `call` (oppringtNummer, ringer, resultat, kommentar)
+INSERT INTO `samtale` (oppringtNummer, ringer, resultat, kommentar)
 VALUES (oppringtNummerIn, ringerIdIn, '9', 'Starter samtale');
 UPDATE `person` SET sisteSamtale = UNIX_TIMESTAMP(now()) WHERE phone = oppringtNummerIn;
 END //
@@ -5796,7 +5796,7 @@ DELIMITER //
     phoneIn varchar(15)
 )
 BEGIN
-DELETE FROM `call` where oppringtNummer = phoneIn;
+DELETE FROM `samtale` where oppringtNummer = phoneIn;
 DELETE FROM `oppfoelgingKorona` where personId = (select id from person where phone = phoneIn);
 DELETE FROM `ringer` where personId = (select id from person where phone = phoneIn);
 DELETE FROM `person` where phone = phoneIn;
