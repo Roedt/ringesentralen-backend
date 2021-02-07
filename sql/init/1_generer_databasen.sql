@@ -5569,7 +5569,7 @@ CREATE TABLE IF NOT EXISTS `godkjenning` (
 
 CREATE TABLE IF NOT EXISTS `call` (
   `callID` int(11) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `calledPhone` varchar(15) NOT NULL,
+  `oppringtNummer` varchar(15) NOT NULL,
   `ringer` int(6) NOT NULL,
   `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `resultat` int(1) NOT NULL DEFAULT '0',
@@ -5578,8 +5578,8 @@ CREATE TABLE IF NOT EXISTS `call` (
   KEY `callID_2` (`callID`),
   INDEX (`resultat`),
   FOREIGN KEY (`resultat`) REFERENCES `resultat` (`id`),
-  INDEX(`calledPhone`),
-  FOREIGN KEY (`calledPhone`) REFERENCES `person` (`phone`),
+  INDEX(`oppringtNummer`),
+  FOREIGN KEY (`oppringtNummer`) REFERENCES `person` (`phone`),
   INDEX(`ringer`),
   FOREIGN KEY (`ringer`) REFERENCES `ringer` (`id`)
 );
@@ -5640,7 +5640,7 @@ WHERE p.groupID = 2;
 create or replace view v_noenRingerTilbake AS
 SELECT concat(p.fornavn,' ',p.etternavn) as name, p.postnummer, p.phone, l.name as lokallagNavn, l.id as lokallag, ringer.id as ringer
 FROM person p
-inner join `call` c on p.phone = c.calledPhone
+inner join `call` c on p.phone = c.oppringtNummer
 inner join `ringer` ringer on ringer.id = c.ringer
 left outer join lokallag l on p.lokallag = l.id;
 
@@ -5681,17 +5681,17 @@ END //
 DELIMITER //
   DROP PROCEDURE IF EXISTS sp_registrerSamtale;
   CREATE PROCEDURE sp_registrerSamtale(
-    calledPhoneIn varchar(15),
+    oppringtNummerIn varchar(15),
     ringerIdIn varchar(15),
     resultatIn int(1),
     kommentarIn longtext
 )
 BEGIN
-INSERT INTO `call` (calledPhone, ringer, resultat, kommentar)
-VALUES (calledPhoneIn, ringerIdIn, resultatIn, kommentarIn);
+INSERT INTO `call` (oppringtNummer, ringer, resultat, kommentar)
+VALUES (oppringtNummerIn, ringerIdIn, resultatIn, kommentarIn);
 UPDATE `person` 
   SET lastCall = UNIX_TIMESTAMP(now())
-  WHERE phone = calledPhoneIn;
+  WHERE phone = oppringtNummerIn;
 END //
 -- --------------------------------------------------------
 
@@ -5699,15 +5699,15 @@ DELIMITER //
   DROP PROCEDURE IF EXISTS sp_godkjennBruker;
   CREATE PROCEDURE sp_godkjennBruker(
     ringerIdIn varchar(15),
-    calledPhoneIn varchar(15),
+    oppringtNummerIn varchar(15),
     nyGroupIdIn int(2)
 )
 BEGIN
 INSERT INTO `godkjenning` (godkjenner, godkjentPerson, nyGroupId) 
-VALUES (ringerIdIn, calledPhoneIn, nyGroupIdIn);
+VALUES (ringerIdIn, oppringtNummerIn, nyGroupIdIn);
 UPDATE `person` 
   SET groupID = nyGroupIdIn
-  WHERE phone = calledPhoneIn;
+  WHERE phone = oppringtNummerIn;
 END //
 
 -- --------------------------------------------------------
@@ -5715,7 +5715,7 @@ END //
 DELIMITER //
   DROP PROCEDURE IF EXISTS sp_registrerOppfoelgingKorona;
   CREATE PROCEDURE sp_registrerOppfoelgingKorona(
-    calledPhoneIn varchar(15),
+    oppringtNummerIn varchar(15),
     koronaprogramIn tinyint(1),
     merAktivIn tinyint(1),
     valgkampsbrevIn tinyint(1),
@@ -5723,7 +5723,7 @@ DELIMITER //
 )
 BEGIN
 INSERT INTO `oppfoelgingKorona` (personId, koronaprogram, merAktiv, valgkampsbrev, vilIkkeBliRingt)
-  VALUES ((select id from person where phone = calledPhoneIn), koronaprogramIn, merAktivIn, valgkampsbrevIn, vilIkkeBliRingtIn);
+  VALUES ((select id from person where phone = oppringtNummerIn), koronaprogramIn, merAktivIn, valgkampsbrevIn, vilIkkeBliRingtIn);
 END //
 
 -- --------------------------------------------------------
@@ -5731,13 +5731,13 @@ END //
 DELIMITER //
   DROP PROCEDURE IF EXISTS sp_startSamtale;
   CREATE PROCEDURE sp_startSamtale(
-    calledPhoneIn varchar(15),
+    oppringtNummerIn varchar(15),
     ringerIdIn varchar(15)
 )
 BEGIN
-INSERT INTO `call` (calledPhone, ringer, resultat, kommentar)
-VALUES (calledPhoneIn, ringerIdIn, '9', 'Starter samtale');
-UPDATE `person` SET lastCall = UNIX_TIMESTAMP(now()) WHERE phone = calledPhoneIn;
+INSERT INTO `call` (oppringtNummer, ringer, resultat, kommentar)
+VALUES (oppringtNummerIn, ringerIdIn, '9', 'Starter samtale');
+UPDATE `person` SET lastCall = UNIX_TIMESTAMP(now()) WHERE phone = oppringtNummerIn;
 END //
 
 -- --------------------------------------------------------
@@ -5798,7 +5798,7 @@ DELIMITER //
     phoneIn varchar(15)
 )
 BEGIN
-DELETE FROM `call` where calledPhone = phoneIn;
+DELETE FROM `call` where oppringtNummer = phoneIn;
 DELETE FROM `oppfoelgingKorona` where personId = (select id from person where phone = phoneIn);
 DELETE FROM `ringer` where personId = (select id from person where phone = phoneIn);
 DELETE FROM `person` where phone = phoneIn;
