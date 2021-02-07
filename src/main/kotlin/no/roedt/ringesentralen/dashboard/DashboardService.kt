@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.dashboard
 
-import UserId
+import no.roedt.ringesentralen.UserId
 import io.quarkus.panache.common.Sort
 import no.roedt.ringesentralen.Lokallag
 import no.roedt.ringesentralen.LokallagRepository
@@ -43,7 +43,7 @@ class DashboardServiceBean(
     private fun getMineLokallag(ringerID: UserId): List<Lokallag> {
         val ringer = hypersysIdTilPerson(ringerID)
         return if (GroupID.Admin.references(ringer.groupID)) {
-            lokallagRepository.findAll(Sort.ascending("name")).list()
+            lokallagRepository.findAll(Sort.ascending("navn")).list()
         } else {
             lokallagRepository.find("id", ringer.lokallag).list()
         }

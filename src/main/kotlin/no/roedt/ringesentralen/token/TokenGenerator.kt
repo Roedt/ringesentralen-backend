@@ -55,7 +55,7 @@ class TokenGenerator(
             GroupID.Admin.nr -> setOf("ringar", "admin", "godkjenner")
             GroupID.LokalGodkjenner.nr -> setOf("ringar", "godkjenner")
             GroupID.GodkjentRinger.nr -> setOf("ringar")
-            else -> setOf()
+            else -> setOf("uatorisert")
         }
 
     private fun getPersonFromHypersysID(hypersysToken: GyldigPersonToken) =

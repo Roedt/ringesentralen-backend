@@ -28,7 +28,7 @@ class TokenController(val tokenGenerator: TokenGenerator) {
     @Produces(MediaType.TEXT_PLAIN)
     fun login(loginRequest: LoginRequest): String = tokenGenerator.login(loginRequest)
 
-    @RolesAllowed("ringar")
+    @RolesAllowed("ringar", "godkjenner", "admin")
     @POST
     @Path("/refresh")
     @Produces(MediaType.TEXT_PLAIN)

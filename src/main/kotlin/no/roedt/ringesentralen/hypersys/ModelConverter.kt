@@ -8,7 +8,7 @@ import javax.enterprise.context.Dependent
 import javax.persistence.EntityManager
 
 interface ModelConverter {
-    fun convert(profile: Profile): Brukarinformasjon
+    fun convert(profile: Profile): Brukerinformasjon
 }
 
 @Dependent
@@ -17,14 +17,14 @@ class ModelConverterBean(
     private val fylkeRepository: FylkeRepository,
     private val lokallagRepository: LokallagRepository
 ) : ModelConverter {
-    override fun convert(profile: Profile) : Brukarinformasjon = convert(profile.user)
+    override fun convert(profile: Profile) : Brukerinformasjon = convert(profile.user)
 
-    private fun convert(user: User): Brukarinformasjon {
+    private fun convert(user: User): Brukerinformasjon {
         val sisteMellomrom = user.name.lastIndexOf(" ")
         val fornamn = user.name.substring(0, sisteMellomrom)
         val etternamn = user.name.substring(sisteMellomrom+1)
         val postnummer = toPostnummer(user)
-        return Brukarinformasjon(
+        return Brukerinformasjon(
             hypersysID = user.id,
             fornamn = fornamn,
             etternamn = etternamn,
@@ -36,8 +36,8 @@ class ModelConverterBean(
         )
     }
 
-    fun toTelefonnummer(phone: String): Telefonnummer? {
-        val splitted = phone.split(" ")
+    fun toTelefonnummer(telefonnummer: String): Telefonnummer? {
+        val splitted = telefonnummer.split(" ")
         return when {
             splitted.size >= 2 -> Telefonnummer(landkode = splitted[0], nummer = Integer.parseInt(splitted[1]))
             else -> null
@@ -46,8 +46,13 @@ class ModelConverterBean(
 
     fun toPostnummer(user: User) = user.addresses.map { it.postalCode }.map{ it[1] }.map { Postnummer(it) }.firstOrNull() ?: Postnummer("0000")
 
+    //TODO fix
     private fun toFylke(postnummer: Postnummer): Fylke =
-        entityManager.createNativeQuery("select countyID from `postnumber` where postnumber = ${postnummer.getPostnummer()}")
+        entityManager.createNativeQuery(
+            "select fylke.id from `postnummer` p " +
+                    "inner join kommune kommune on p.KommuneKode = kommune.nummer " +
+                    "inner join `fylker` fylke on fylke.id=kommune.fylke_id where postnummer = ${postnummer.getPostnummer()}"
+        )
             .resultList
             .map { it as Int }
             .map { fylkeRepository.findById(it) }
@@ -58,7 +63,7 @@ class ModelConverterBean(
         memberships
             .sortedByDescending { it.startDate }
             .map { it.organisationName }
-            .map { lokallagRepository.find("name", it) }
+            .map { lokallagRepository.find("navn", it) }
             .firstOrNull()
             ?.firstResult()
 }

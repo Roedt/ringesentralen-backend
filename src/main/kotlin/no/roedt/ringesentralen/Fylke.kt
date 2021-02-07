@@ -14,10 +14,10 @@ import javax.persistence.Table
 data class Fylke(
     @Id
     var id: Int,
-    var name: String
+    var navn: String
 ) : PanacheEntityBase() {
     constructor() : this(
         id = 0,
-        name = ""
+        navn = ""
     )
 }

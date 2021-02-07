@@ -1,10 +1,7 @@
 package no.roedt.ringesentralen.samtale
 
-import UserId
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import no.roedt.ringesentralen.UserId
+import com.nhaarman.mockitokotlin2.*
 import io.quarkus.hibernate.orm.panache.PanacheQuery
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
@@ -22,7 +19,7 @@ internal class RingServiceBeanTest {
     private val entityManager: EntityManager = mock()
     private val databaseUpdater: DatabaseUpdater = mock()
 
-    private val ringService = RingServiceBean(personRepository = personRepository, entityManager = entityManager, databaseUpdater = databaseUpdater )
+    private var ringService = RingServiceBean(personRepository = personRepository, entityManager = entityManager, databaseUpdater = databaseUpdater )
 
     private val mockQuery: Query = mock()
 
@@ -35,12 +32,14 @@ internal class RingServiceBeanTest {
     @Test
     fun `samtale blir registrert`() {
         doReturn(mockQuery).whenever(entityManager).createNativeQuery(any())
+        ringService = spy(ringService)
+        doReturn(1).whenever(ringService).hypersysIDTilRingerId(any())
 
         val request = AutentisertResultatFraSamtaleRequest(
             UserId(1), ResultatFraSamtaleRequest(
                 modus = Modus.Korona,
                 ringtID = 2,
-                result = Resultat.Svarte,
+                resultat = Resultat.Svarte,
                 kommentar = "Hei",
                 modusspesifikkeResultat = KoronaspesifikkeResultat(
                         vilHaKoronaprogram = false,
@@ -61,7 +60,7 @@ internal class RingServiceBeanTest {
             ResultatFraSamtaleRequest(
                 modus = Modus.Korona,
                 ringtID = 2,
-                result = Resultat.Ringes_etter_valget,
+                resultat = Resultat.Ringes_etter_valget,
                 kommentar = "Hei",
                 modusspesifikkeResultat = KoronaspesifikkeResultat(
                         vilHaKoronaprogram = false,
@@ -77,9 +76,9 @@ internal class RingServiceBeanTest {
     }
 
     private fun createRingbarPerson(fornavn: String, etternavn: String, telefonnummer: String, id: Long, hypersysID: Int) {
-        val person = RingbarPerson(hypersysID = hypersysID, givenName = fornavn, familyName = etternavn,
-            phone = telefonnummer, lastCall = 0, email = "",
-            postnumber = "1234", countyID = 0, lokallag = 0, groupID = 0)
+        val person = RingbarPerson(hypersysID = hypersysID, fornavn = fornavn, etternavn = etternavn,
+            telefonnummer = telefonnummer, sisteSamtale = 0, email = "",
+            postnummer = 1234, fylke = 0, lokallag = 0, groupID = 0)
         doReturn(person).whenever(personRepository).findById(id)
         val query : PanacheQuery<RingbarPerson> = mock()
         doReturn(person).whenever(query).firstResult<RingbarPerson>()

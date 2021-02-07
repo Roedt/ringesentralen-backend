@@ -3,7 +3,7 @@ package no.roedt.ringesentralen
 import io.quarkus.runtime.annotations.RegisterForReflection
 
 @RegisterForReflection
-data class Brukarinformasjon(
+data class Brukerinformasjon(
         val hypersysID: Int,
         val fornamn: String,
         val etternamn: String,
@@ -12,4 +12,11 @@ data class Brukarinformasjon(
         val postnummer: Postnummer,
         val fylke: Fylke,
         val lokallag: Lokallag?
-)
+) {
+        fun toTelefonnummer() : String? {
+                if (telefonnummer == null) {
+                        return null
+                }
+                return "'${telefonnummer.nummer}'"
+        }
+}

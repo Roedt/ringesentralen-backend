@@ -7,16 +7,18 @@ import javax.persistence.EntityManager
 @ApplicationScoped
 class DatabaseUpdater(val entityManager: EntityManager) {
 
-    fun update(query: String) {
-        TransactionManager.transactionManager().begin()
-        entityManager.createNativeQuery(query).executeUpdate()
-        TransactionManager.transactionManager().commit()
+    fun update(vararg query: String) {
+        val transactionManager = TransactionManager.transactionManager()
+        transactionManager.begin()
+        query.forEach { entityManager.createNativeQuery(it).executeUpdate() }
+        transactionManager.commit()
     }
 
     fun updateWithResult(query: String): MutableList<Any?>? {
-        TransactionManager.transactionManager().begin()
+        val transactionManager = TransactionManager.transactionManager()
+        transactionManager.begin()
         val results = entityManager.createNativeQuery(query).resultList
-        TransactionManager.transactionManager().commit()
+        transactionManager.commit()
         return results
     }
 }

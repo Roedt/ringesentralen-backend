@@ -8,5 +8,7 @@ data class Samtale(
     val tidspunkt: LocalDateTime,
     val ringer: String,
     val kommentar: String,
-    val resultat: String
+    val resultat: String,
+    val ringtNummer: String,
+    val ringtNavn: String
 )

@@ -12,25 +12,25 @@ import javax.persistence.Table
 @RegisterForReflection
 data class RingbarPerson(
         var hypersysID: Int?,
-        var givenName: String,
-        var familyName: String,
-        var phone: String,
-        var lastCall: Int,
+        var fornavn: String,
+        var etternavn: String,
+        var telefonnummer: String,
+        var sisteSamtale: Int,
         var email: String?,
-        var postnumber: String,
-        var countyID: Int,
+        var postnummer: Int,
+        var fylke: Int,
         var lokallag: Int,
         var groupID: Int,
 ) : PanacheEntity() {
     constructor() : this(
             hypersysID = null,
-            givenName = "",
-            familyName = "",
-            phone = "",
-            lastCall = 0,
+            fornavn = "",
+            etternavn = "",
+            telefonnummer = "",
+            sisteSamtale = 0,
             email = null,
-            postnumber = "0",
-            countyID = -1,
+            postnummer = 0,
+            fylke = -1,
             lokallag = 1,
             groupID = 0
     )

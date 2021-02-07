@@ -1,3 +1,5 @@
+package no.roedt.ringesentralen
+
 import io.quarkus.runtime.annotations.RegisterForReflection
 
 @RegisterForReflection
