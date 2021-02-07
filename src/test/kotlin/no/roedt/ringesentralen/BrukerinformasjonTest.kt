@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-internal class BrukarinformasjonTest {
+internal class BrukerinformasjonTest {
 
     @Test
     fun nulltelefonnummerGirNull() {
@@ -17,7 +17,7 @@ internal class BrukarinformasjonTest {
     }
 
     private fun toTelefonnummer(telefonnummer: Telefonnummer?): String? {
-        return Brukarinformasjon(
+        return Brukerinformasjon(
             hypersysID = 0,
             fornamn = "",
             etternamn = "",
