@@ -5613,7 +5613,7 @@ SELECT p.sisteSamtale, p.telefonnummer, concat(p.fornavn,' ',p.etternavn) as nav
 create or replace view v_samtalerResultat AS
 SELECT distinct concat(ringerPerson.fornavn,' ',ringerPerson.etternavn) as ringerNavn, c.datetime as `datetime`, c.kommentar, r.displaytext as result
 FROM `samtale` c
-INNER JOIN `resultat` r on r.id = c.result
+INNER JOIN `resultat` r on r.id = c.resultat
 INNER JOIN `ringer` ringer on ringer.id = c.ringer
 INNER join `person` ringerPerson on ringerPerson.id = ringer.personId
 WHERE c.resultat != 9
@@ -5754,36 +5754,34 @@ DELIMITER //
 )
 BEGIN
 
+  SET @inserted = 0;
   IF (SELECT count(1) FROM `person` where email = emailIn)>0 THEN
     BEGIN
       UPDATE `person` SET
           hypersysID = hypersysIDIn,
           fornavn = fornavnIn,
           etternavn = etternavnIn,
-          email = emailIn, 
+          email = emailIn,
           postnummer = postnummerIn,
           groupID = greatest(4, groupID),
           fylke = fylkeIdIn,
           lokallag = lokallagIn
-        WHERE telefonnummer = telefonnummer_In;
+        WHERE email = emailIn;
     END;
   ELSE
     BEGIN
         INSERT INTO `person` (hypersysID, fornavn, etternavn, telefonnummer, email, postnummer, fylke, groupID, lokallag)
             VALUES (hypersysIDIn, fornavnIn, etternavnIn, telefonnummer_In, emailIn, postnummerIn, fylkeIdIn, '4', lokallagIn);
+        SET @personId =(SELECT last_insert_id());
+        INSERT INTO `ringer` (`personId`) VALUES(@personId);
     END;
   END IF;
 
-  IF (SELECT count(1) FROM `person` p inner join `ringer` r on p.id = r.personId where p.email = emailIn and r.id is not null)>0 THEN
+  IF (SELECT count(1) FROM `person` p inner join `ringer` r on p.id = r.personId where p.email = emailIn and r.id is not null)=0 THEN
     BEGIN
-      SET @personId =(select `id` FROM `person` where email = emailIn);
-    END;
-  ELSE
-    BEGIN
-      SET @personId =(SELECT last_insert_id());
+      SET @personId =(select `id` FROM `person` where email = emailIn LIMIT 1);
       INSERT INTO `ringer` (`personId`) VALUES(@personId);
     END;
-
   END IF;
 
 END //
