@@ -27,9 +27,18 @@ class HistorikkController(private val historikkService: HistorikkService) : Ring
     @RolesAllowed("ringar")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/")
+    @Path("/meg")
     @Operation(summary = "Historikk over mine samtaler")
     @Bulkhead(5)
     @Retry
-    fun getMineSamtaler(@Context ctx: SecurityContext) = historikkService.getMineSataler(ctx.userId())
+    fun getMineSamtaler(@Context ctx: SecurityContext) = historikkService.getMineSamtaler(ctx.userId())
+
+    @RolesAllowed("admin", "godkjenner")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/laget")
+    @Operation(summary = "Historikk over lagets samtaler")
+    @Bulkhead(5)
+    @Retry
+    fun getLagetsSamtaler(@Context ctx: SecurityContext) = historikkService.getLagetsSamtaler(ctx.userId())
 }

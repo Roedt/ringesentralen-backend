@@ -5596,7 +5596,7 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
 create or replace view v_mineSamtaler as
 select samtale.datetime as tidspunkt, samtale.oppringtNummer, concat(ringt.fornavn, ' ', ringt.etternavn) as ringtNavn, r.displaytext as resultat,
 samtale.kommentar, ok.merAktiv, ok.valgkampsbrev,
-ringerPerson.telefonnummer as ringersTelefonnummer, ringerPerson.hypersysID, concat(ringerPerson.fornavn, ' ', ringerPerson.etternavn) as ringerNavn
+ringerPerson.telefonnummer as ringersTelefonnummer, ringerPerson.hypersysID, concat(ringerPerson.fornavn, ' ', ringerPerson.etternavn) as ringerNavn, ringerPerson.lokallag
 from `samtale` samtale
 inner join person ringt on samtale.oppringtNummer = ringt.telefonnummer
 inner join ringer ringer on ringer.id = samtale.ringer

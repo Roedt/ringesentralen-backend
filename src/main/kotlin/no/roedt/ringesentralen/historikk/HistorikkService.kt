@@ -1,27 +1,29 @@
 package no.roedt.ringesentralen.historikk
 
 import UserId
+import no.roedt.ringesentralen.PersonRepository
+import no.roedt.ringesentralen.samtale.RingbarPerson
 import no.roedt.ringesentralen.samtale.Samtale
 import java.sql.Timestamp
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
 
 @ApplicationScoped
-class HistorikkService(private val entityManager: EntityManager) {
+class HistorikkService(
+    private val entityManager: EntityManager,
+    private val personRepository: PersonRepository
+) {
 
-    fun getMineSataler(userId: UserId): List<Samtale> {
+    fun getMineSamtaler(userId: UserId): List<Samtale> = getSamtaler("where hypersysID='${userId.userId}'")
+
+    fun getLagetsSamtaler(userId: UserId): List<Samtale> = getSamtaler(
+        "where lokallag = ${personRepository.find("hypersysID", userId.userId).firstResult<RingbarPerson>().lokallag}"
+    )
+
+    private fun getSamtaler(whereklausul: String): List<Samtale> {
         val sql =
-            "select " +
-                    "resultat, " +
-                    "ringerNavn, " +
-                    "tidspunkt, " +
-                    "kommentar, " +
-                    "oppringtNummer, " +
-                    "ringtNavn, " +
-                    "merAktiv, " +
-                    "valgkampsbrev " +
-                    "from v_mineSamtaler " +
-                    "where hypersysID='${userId.userId}'"
+            "select resultat, ringerNavn, tidspunkt, kommentar, oppringtNummer, ringtNavn, merAktiv, valgkampsbrev " +
+                    "from v_mineSamtaler $whereklausul"
         return entityManager.createNativeQuery(sql)
             .resultList
             .map { it as Array<*> }
