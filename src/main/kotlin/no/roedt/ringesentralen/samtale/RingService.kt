@@ -1,9 +1,9 @@
 package no.roedt.ringesentralen.samtale
 
-import no.roedt.ringesentralen.UserId
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.PersonRepository
+import no.roedt.ringesentralen.UserId
 import java.sql.Timestamp
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
@@ -43,7 +43,7 @@ class RingServiceBean(
             .map { Samtale(
                 resultat = it[0] as String,
                 ringer = it[1] as String,
-                tidspunkt = (it[2] as Timestamp).toLocalDateTime(),
+                tidspunkt = (it[2] as Timestamp).toString(),
                 kommentar = it[3] as String,
                 ringtNummer = oppringtNummer,
                 ringtNavn = it[4] as String

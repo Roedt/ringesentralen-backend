@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.historikk
 
-import no.roedt.ringesentralen.UserId
 import no.roedt.ringesentralen.PersonRepository
+import no.roedt.ringesentralen.UserId
 import no.roedt.ringesentralen.samtale.RingbarPerson
 import no.roedt.ringesentralen.samtale.Samtale
 import java.sql.Timestamp
@@ -31,7 +31,7 @@ class HistorikkService(
                 Samtale(
                     resultat = it[0] as String,
                     ringer = it[1] as String,
-                    tidspunkt = (it[2] as Timestamp).toLocalDateTime(),
+                    tidspunkt = (it[2] as Timestamp).toString(),
                     kommentar = it[3] as String,
                     ringtNummer = it[4] as String,
                     ringtNavn = it[5] as String
