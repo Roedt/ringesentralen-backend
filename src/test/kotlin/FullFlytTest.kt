@@ -25,7 +25,7 @@ class FullFlytTest {
             .body(ResultatFraSamtaleRequest(
                 modus = Modus.Korona,
                 ringtID = ringtId,
-                result = Resultat.Passet_ikke,
+                resultat = Resultat.Passet_ikke,
                 kommentar = "Frå automatisk test",
                 modusspesifikkeResultat = KoronaspesifikkeResultat(
                     vilBliMerAktiv = true,

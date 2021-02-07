@@ -23,13 +23,13 @@ class StatistikkService(val entityManager: EntityManager) {
             .map {
                 SamtaleResultat(
                     displaytext = it.displaytext,
-                    antal = get("SELECT ringer FROM `call` WHERE result = ${it.id}").size
+                    antal = get("SELECT ringer FROM `call` WHERE resultat = ${it.id}").size
                 )
             }
 
         return SamtalerStatistikkResponse(
             resultat = list,
-            samtalerMedResultatSaaLangt = get("SELECT ringer FROM `call` WHERE result != 9").size
+            samtalerMedResultatSaaLangt = get("SELECT ringer FROM `call` WHERE resultat != 9").size
         )
     }
 

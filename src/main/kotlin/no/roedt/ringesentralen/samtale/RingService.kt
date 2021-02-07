@@ -33,7 +33,7 @@ class RingServiceBean(
             ?.let { NestePersonAaRingeResponse(ringbarPerson = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.phone))}
 
     private fun getTidlegareSamtalarMedDennePersonen(calledPhone: String): List<Samtale> =
-        entityManager.createNativeQuery("SELECT result, ringerNavn, datetime, kommentar FROM `v_callsResult` WHERE calledPhone = '$calledPhone'")
+        entityManager.createNativeQuery("SELECT resultat, ringerNavn, datetime, kommentar FROM `v_callsResultat` WHERE calledPhone = '$calledPhone'")
             .resultList
             .map { it as Array<*> }
             .map { Samtale(
@@ -52,17 +52,17 @@ class RingServiceBean(
 
     override fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest) {
         val request = autentisertRequest.resultatFraSamtaleRequest
-        assert(request.result in request.modus.gyldigeResultattyper)
+        assert(request.resultat in request.modus.gyldigeResultattyper)
         val calledPhone = personRepository.findById(request.ringtID).phone
         val ringerId = hypersysIDTilRingerId(autentisertRequest.userId)
-        databaseUpdater.update("CALL sp_registrerSamtale($calledPhone, $ringerId, ${request.result.nr}, '${request.kommentar}')")
+        databaseUpdater.update("CALL sp_registrerSamtale($calledPhone, $ringerId, ${request.resultat.nr}, '${request.kommentar}')")
         val nesteGroupID: GroupID? = when  {
-            request.result.nesteGroupID != null -> request.result.nesteGroupID
+            request.resultat.nesteGroupID != null -> request.resultat.nesteGroupID
             erFleireEnnToIkkeSvar(calledPhone, request) -> GroupID.Ferdigringt
             else -> null
         }
         nesteGroupID?.nr?.let { databaseUpdater.updateWithResult("CALL sp_updateGroupID($calledPhone, $it)") }
-        if (request.modus == Modus.Korona && request.result == Resultat.Svarte) {
+        if (request.modus == Modus.Korona && request.resultat == Resultat.Svarte) {
             registrerKoronaspesifikkeResultat(request, calledPhone)
         }
     }
@@ -84,10 +84,10 @@ class RingServiceBean(
     }
 
     private fun erFleireEnnToIkkeSvar(calledPhone: String, request: ResultatFraSamtaleRequest): Boolean {
-        val resultat: List<Int>? = databaseUpdater.updateWithResult("select result from `call` where calledPhone = $calledPhone and result = 0")?.map { it as Int }
+        val resultat: List<Int>? = databaseUpdater.updateWithResult("select resultat from `call` where calledPhone = $calledPhone and resultat = 0")?.map { it as Int }
         val fleireEnnToIkkeSvar: Boolean = (resultat?.filter { it == 0 }?.count() ?: 0) > 2
         val ingenSvar: Boolean = (resultat?.filter { it != 0 && it != 9 }?.count() ?: 0) == 0
-        return ingenSvar && fleireEnnToIkkeSvar && request.result == Resultat.Ikke_svar
+        return ingenSvar && fleireEnnToIkkeSvar && request.resultat == Resultat.Ikke_svar
     }
 
     private fun registrerKoronaspesifikkeResultat(request: ResultatFraSamtaleRequest, calledPhone: String) {

@@ -5509,7 +5509,7 @@ CREATE TABLE IF NOT EXISTS `oppfoelgingKorona` (
 
 -- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `result` (
+CREATE TABLE IF NOT EXISTS `resultat` (
   `id` int(1) NOT NULL PRIMARY KEY,
   `name` varchar(200) NOT NULL,
   `displaytext`varchar(200) NOT NULL,
@@ -5517,18 +5517,18 @@ CREATE TABLE IF NOT EXISTS `result` (
   `svarte` BIT DEFAULT TRUE
 );
 
-INSERT INTO result (id, name, displaytext, svarte) VALUES (0, 'Ikke svar', 'Ikke svar', 0);
-INSERT INTO result (id, name, displaytext) VALUES (1, 'Vil ikke ringes før valget, men gjerne etterpå', 'Vil ikke ringes før valget, men gjerne etterpå');
-INSERT INTO result (id, name, displaytext) VALUES (2, 'Trenger ikke å bli oppringt igjen (slettes fra alle lister)', 'Trenger ikke å bli oppringt igjen');
-INSERT INTO result (id, name, displaytext) VALUES (3, 'Trenger oppfølging av toppkandidat (husk å skrive stikkord om tema i kommentarfeltet)', 'Trenger oppfølging');
-INSERT INTO result (id, name, displaytext) VALUES (4, 'Passet ikke, må bli oppringt på spesifikt tidspunkt', 'Ba om å bli oppringt på spesifikt tidspunkt.');
-INSERT INTO result (id, name, displaytext) VALUES (5, 'Vil bli valgkampfrivillig og aktiv i et lokallag', 'Vil bli valgkampfrivillig og aktiv i et lokallag');
-INSERT INTO result (id, name, displaytext) VALUES (6, 'Vil bli valgkampfrivillig (henvis til rødt.no/frivillig, og si at de også får en e-post med info)', 'Vil bli valgkampfrivillig (henvis til rødt.no/frivillig, og si at de også får en e-post med info om hvordan man kan melde seg.)');
-INSERT INTO result (id, name, displaytext) VALUES (7, 'Nei', 'Nei');
-INSERT INTO result (id, name, displaytext) VALUES (8, 'Vil bli aktiv i et lokallag(Vi følger opp aktivt med nærmeste lokallag. Om de sier at det ikke finnes lokallag der de bor, fortell hvordan man kan melde seg som kontaktperson og starte lokallag).', 'Vil bli aktiv i et lokallag(Vi følger opp aktivt med nærmeste lokallag. Om de sier at det ikke finnes lokallag der de bor, fortell hvordan man kan melde seg som kontaktperson og starte lokallag).');
-INSERT INTO result (id, name, displaytext, skalSkjules, svarte) VALUES (9, 'Samtale startet', 'Samtale startet', 1, 0);
-INSERT INTO result (id, name, displaytext, svarte) VALUES (10, 'Flere enn to ikke-svar', 'Flere enn to ikke-svar', 0);
-INSERT INTO result (id, name, displaytext) VALUES (11, 'Svarte', 'Svarte');
+INSERT INTO resultat (id, name, displaytext, svarte) VALUES (0, 'Ikke svar', 'Ikke svar', 0);
+INSERT INTO resultat (id, name, displaytext) VALUES (1, 'Vil ikke ringes før valget, men gjerne etterpå', 'Vil ikke ringes før valget, men gjerne etterpå');
+INSERT INTO resultat (id, name, displaytext) VALUES (2, 'Trenger ikke å bli oppringt igjen (slettes fra alle lister)', 'Trenger ikke å bli oppringt igjen');
+INSERT INTO resultat (id, name, displaytext) VALUES (3, 'Trenger oppfølging av toppkandidat (husk å skrive stikkord om tema i kommentarfeltet)', 'Trenger oppfølging');
+INSERT INTO resultat (id, name, displaytext) VALUES (4, 'Passet ikke, må bli oppringt på spesifikt tidspunkt', 'Ba om å bli oppringt på spesifikt tidspunkt.');
+INSERT INTO resultat (id, name, displaytext) VALUES (5, 'Vil bli valgkampfrivillig og aktiv i et lokallag', 'Vil bli valgkampfrivillig og aktiv i et lokallag');
+INSERT INTO resultat (id, name, displaytext) VALUES (6, 'Vil bli valgkampfrivillig (henvis til rødt.no/frivillig, og si at de også får en e-post med info)', 'Vil bli valgkampfrivillig (henvis til rødt.no/frivillig, og si at de også får en e-post med info om hvordan man kan melde seg.)');
+INSERT INTO resultat (id, name, displaytext) VALUES (7, 'Nei', 'Nei');
+INSERT INTO resultat (id, name, displaytext) VALUES (8, 'Vil bli aktiv i et lokallag(Vi følger opp aktivt med nærmeste lokallag. Om de sier at det ikke finnes lokallag der de bor, fortell hvordan man kan melde seg som kontaktperson og starte lokallag).', 'Vil bli aktiv i et lokallag(Vi følger opp aktivt med nærmeste lokallag. Om de sier at det ikke finnes lokallag der de bor, fortell hvordan man kan melde seg som kontaktperson og starte lokallag).');
+INSERT INTO resultat (id, name, displaytext, skalSkjules, svarte) VALUES (9, 'Samtale startet', 'Samtale startet', 1, 0);
+INSERT INTO resultat (id, name, displaytext, svarte) VALUES (10, 'Flere enn to ikke-svar', 'Flere enn to ikke-svar', 0);
+INSERT INTO resultat (id, name, displaytext) VALUES (11, 'Svarte', 'Svarte');
 
 -- --------------------------------------------------------
 
@@ -5537,7 +5537,7 @@ CREATE TABLE IF NOT EXISTS `modusTilResultat` (
   `resultat` int(2) NOT NULL,
   PRIMARY KEY (`modus`, `resultat`),
   INDEX (`resultat`),
-  FOREIGN KEY (`resultat`) REFERENCES `result` (`id`),
+  FOREIGN KEY (`resultat`) REFERENCES `resultat` (`id`),
   INDEX(`modus`),
   FOREIGN KEY (`modus`) REFERENCES `modus` (`id`)
 );
@@ -5572,12 +5572,12 @@ CREATE TABLE IF NOT EXISTS `call` (
   `calledPhone` varchar(15) NOT NULL,
   `ringer` int(6) NOT NULL,
   `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `result` int(1) NOT NULL DEFAULT '0',
+  `resultat` int(1) NOT NULL DEFAULT '0',
   `kommentar` longtext,
   UNIQUE KEY `callID` (`callID`),
   KEY `callID_2` (`callID`),
-  INDEX (`result`),
-  FOREIGN KEY (`result`) REFERENCES `result` (`id`),
+  INDEX (`resultat`),
+  FOREIGN KEY (`resultat`) REFERENCES `resultat` (`id`),
   INDEX(`calledPhone`),
   FOREIGN KEY (`calledPhone`) REFERENCES `person` (`phone`),
   INDEX(`ringer`),
@@ -5597,7 +5597,7 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
 
 create or replace view v_resultatForModus as
 SELECT r.id, r.name, m.id as modus, r.displaytext, r.skalSkjules
-FROM `result` r
+FROM `resultat` r
 INNER JOIN `modusTilResultat` mr on mr.resultat = r.id
 INNER JOIN `modus` m on mr.modus = m.id;
 
@@ -5612,13 +5612,13 @@ SELECT p.lastCall, p.phone, concat(p.fornavn,' ',p.etternavn) as name, p.postnum
 
 -- --------------------------------------------------------
 
-create or replace view v_callsResult AS
+create or replace view v_callsResultat AS
 SELECT distinct concat(ringerPerson.fornavn,' ',ringerPerson.etternavn) as ringerNavn, c.datetime as `datetime`, c.kommentar, r.displaytext as result
 FROM `call` c
-INNER JOIN `result`r on r.id = c.result
+INNER JOIN `resultat` r on r.id = c.result
 INNER JOIN `ringer` ringer on ringer.id = c.ringer
 INNER join `person` ringerPerson on ringerPerson.id = ringer.personId
-WHERE c.result != 9
+WHERE c.resultat != 9
 ORDER BY c.datetime ASC;
 
 -- --------------------------------------------------------
@@ -5649,7 +5649,7 @@ left outer join lokallag l on p.lokallag = l.id;
 create or replace view v_ringtFlest AS
 select count(ringer.id) as max, person.lokallag from
 `call` c
-inner join ringer ringer on ringer.id = c.ringer and c.result != 9
+inner join ringer ringer on ringer.id = c.ringer and c.resultat != 9
 inner join `person` person on person.id = ringer.personId
 group by(ringer.id)
 order by count(ringer.id) desc;
@@ -5683,12 +5683,12 @@ DELIMITER //
   CREATE PROCEDURE sp_registrerSamtale(
     calledPhoneIn varchar(15),
     ringerIdIn varchar(15),
-    resultIn int(1),
+    resultatIn int(1),
     kommentarIn longtext
 )
 BEGIN
-INSERT INTO `call` (calledPhone, ringer, result, kommentar)
-VALUES (calledPhoneIn, ringerIdIn, resultIn, kommentarIn);
+INSERT INTO `call` (calledPhone, ringer, resultat, kommentar)
+VALUES (calledPhoneIn, ringerIdIn, resultatIn, kommentarIn);
 UPDATE `person` 
   SET lastCall = UNIX_TIMESTAMP(now())
   WHERE phone = calledPhoneIn;
@@ -5735,7 +5735,7 @@ DELIMITER //
     ringerIdIn varchar(15)
 )
 BEGIN
-INSERT INTO `call` (calledPhone, ringer, result, kommentar)
+INSERT INTO `call` (calledPhone, ringer, resultat, kommentar)
 VALUES (calledPhoneIn, ringerIdIn, '9', 'Starter samtale');
 UPDATE `person` SET lastCall = UNIX_TIMESTAMP(now()) WHERE phone = calledPhoneIn;
 END //

@@ -40,7 +40,7 @@ internal class RingServiceBeanTest {
             UserId(1), ResultatFraSamtaleRequest(
                 modus = Modus.Korona,
                 ringtID = 2,
-                result = Resultat.Svarte,
+                resultat = Resultat.Svarte,
                 kommentar = "Hei",
                 modusspesifikkeResultat = KoronaspesifikkeResultat(
                         vilHaKoronaprogram = false,
@@ -61,7 +61,7 @@ internal class RingServiceBeanTest {
             ResultatFraSamtaleRequest(
                 modus = Modus.Korona,
                 ringtID = 2,
-                result = Resultat.Ringes_etter_valget,
+                resultat = Resultat.Ringes_etter_valget,
                 kommentar = "Hei",
                 modusspesifikkeResultat = KoronaspesifikkeResultat(
                         vilHaKoronaprogram = false,
