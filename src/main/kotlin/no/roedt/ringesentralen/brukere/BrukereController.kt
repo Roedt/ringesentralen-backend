@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.brukere
 
-import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.Brukerinformasjon
+import no.roedt.ringesentralen.RingesentralenController
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
@@ -24,14 +24,14 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed("godkjenner")
+    @RolesAllowed("godkjenner", "admin")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/brukere")
     @Operation(summary ="List ut brukarar")
     fun hentBrukarar(@Context ctx: SecurityContext) : List<Brukerinformasjon> = brukereService.hentBrukarar()
 
-    @RolesAllowed("godkjenner")
+    @RolesAllowed("godkjenner", "admin")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -41,7 +41,7 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Retry
     fun godkjennRinger(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.godkjennRinger(AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest))
 
-    @RolesAllowed("godkjenner")
+    @RolesAllowed("godkjenner", "admin")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -51,7 +51,7 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Retry
     fun avslaaRinger(@Context ctx: SecurityContext, avslaaRequest: TilgangsendringsRequest): Brukerendring = brukereService.avslaaRinger(AutentisertTilgangsendringRequest(ctx.userId(), avslaaRequest))
 
-    @RolesAllowed("godkjenner")
+    @RolesAllowed("godkjenner", "admin")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -61,7 +61,7 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Retry
     fun reaktiverRinger(@Context ctx: SecurityContext, reaktiverRequest: TilgangsendringsRequest): Brukerendring = brukereService.reaktiverRinger(AutentisertTilgangsendringRequest(ctx.userId(), reaktiverRequest))
 
-    @RolesAllowed("godkjenner")
+    @RolesAllowed("godkjenner", "admin")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

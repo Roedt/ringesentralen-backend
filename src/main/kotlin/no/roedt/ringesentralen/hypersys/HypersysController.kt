@@ -23,13 +23,13 @@ class HypersysController(val service: HypersysService) {
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed("ringar")
+    @RolesAllowed("admin")
     @GET
     @Path("/lokallag")
     @Produces(MediaType.APPLICATION_JSON)
     fun getAlleLokallag() : List<Organisasjonsledd> = service.getAlleLokallag()
 
-    @RolesAllowed("ringar")
+    @RolesAllowed("admin")
     @GET
     @Path("/alleOrgan")
     @Operation(summary = "Hent alle organ på lågaste nivå")
