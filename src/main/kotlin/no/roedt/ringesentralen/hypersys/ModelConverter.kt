@@ -63,7 +63,7 @@ class ModelConverterBean(
         memberships
             .sortedByDescending { it.startDate }
             .map { it.organisationName }
-            .map { lokallagRepository.find("name", it) }
+            .map { lokallagRepository.find("navn", it) }
             .firstOrNull()
             ?.firstResult()
 }

@@ -48,10 +48,10 @@ INSERT INTO `fylker` (`id`, `name`) VALUES
 
 CREATE TABLE IF NOT EXISTS `lokallag` (
   `id` int(3) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL UNIQUE
+  `navn` varchar(100) NOT NULL UNIQUE
 );
 
-insert into `lokallag` (name) values
+insert into `lokallag` (navn) values
 ('Raudt Alver'),
 ('Raudt Årdal'),
 ('Raudt Austrheim'),
@@ -5602,7 +5602,7 @@ INNER JOIN `modus` m on mr.modus = m.id;
 -- --------------------------------------------------------
 
 create or replace view v_personerSomKanRinges as
-SELECT p.sisteSamtale, p.phone, concat(p.fornavn,' ',p.etternavn) as name, p.postnummer, p.fylke, p.lokallag, l.name as lokallagNavn, p.id as id
+SELECT p.sisteSamtale, p.phone, concat(p.fornavn,' ',p.etternavn) as name, p.postnummer, p.fylke, p.lokallag, l.navn as lokallagNavn, p.id as id
   FROM person p
   LEFT OUTER JOIN lokallag l on p.lokallag = l.id
   WHERE groupID = '1'
@@ -5636,7 +5636,7 @@ WHERE p.groupID = 2;
 -- --------------------------------------------------------
 
 create or replace view v_noenRingerTilbake AS
-SELECT concat(p.fornavn,' ',p.etternavn) as name, p.postnummer, p.phone, l.name as lokallagNavn, l.id as lokallag, ringer.id as ringer
+SELECT concat(p.fornavn,' ',p.etternavn) as name, p.postnummer, p.phone, l.navn as lokallagNavn, l.id as lokallag, ringer.id as ringer
 FROM person p
 inner join `samtale` c on p.phone = c.oppringtNummer
 inner join `ringer` ringer on ringer.id = c.ringer
@@ -5655,7 +5655,7 @@ order by count(ringer.id) desc;
 -- --------------------------------------------------------
 
 create or replace view v_personerGodkjenning AS
-SELECT r.oppretta, concat(fornavn, ' ', etternavn) as name, phone, l.id as lokallagId, l.name as lokallag, email, postnummer, p.groupID
+SELECT r.oppretta, concat(fornavn, ' ', etternavn) as name, phone, l.id as lokallagId, l.navn as lokallag, email, postnummer, p.groupID
 FROM `person` p
 inner join `ringer` r on p.id = r.personId
 left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.oppretta asc;

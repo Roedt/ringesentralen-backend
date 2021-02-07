@@ -11,7 +11,7 @@ import javax.persistence.Table
 @Cacheable
 @RegisterForReflection
 data class Lokallag(
-        var name: String
+        var navn: String
 ): PanacheEntity() {
     constructor() : this("")
 }

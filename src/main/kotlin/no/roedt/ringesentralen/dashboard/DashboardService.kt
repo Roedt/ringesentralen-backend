@@ -43,7 +43,7 @@ class DashboardServiceBean(
     private fun getMineLokallag(ringerID: UserId): List<Lokallag> {
         val ringer = hypersysIdTilPerson(ringerID)
         return if (GroupID.Admin.references(ringer.groupID)) {
-            lokallagRepository.findAll(Sort.ascending("name")).list()
+            lokallagRepository.findAll(Sort.ascending("navn")).list()
         } else {
             lokallagRepository.find("id", ringer.lokallag).list()
         }
