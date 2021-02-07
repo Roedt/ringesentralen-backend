@@ -5568,14 +5568,12 @@ CREATE TABLE IF NOT EXISTS `godkjenning` (
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `call` (
-  `callID` int(11) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `oppringtNummer` varchar(15) NOT NULL,
   `ringer` int(6) NOT NULL,
   `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `resultat` int(1) NOT NULL DEFAULT '0',
   `kommentar` longtext,
-  UNIQUE KEY `callID` (`callID`),
-  KEY `callID_2` (`callID`),
   INDEX (`resultat`),
   FOREIGN KEY (`resultat`) REFERENCES `resultat` (`id`),
   INDEX(`oppringtNummer`),
