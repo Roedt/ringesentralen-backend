@@ -5593,6 +5593,19 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
 
 -- --------------------------------------------------------
 
+create or replace view v_mineSamtaler as
+select samtale.datetime as tidspunkt, samtale.oppringtNummer, concat(ringt.fornavn, ' ', ringt.etternavn) as ringtNavn, r.displaytext as resultat,
+samtale.kommentar, ok.merAktiv, ok.valgkampsbrev,
+ringerPerson.telefonnummer as ringersTelefonnummer, ringerPerson.hypersysID, concat(ringerPerson.fornavn, ' ', ringerPerson.etternavn) as ringerNavn
+from `samtale` samtale
+inner join person ringt on samtale.oppringtNummer = ringt.telefonnummer
+inner join ringer ringer on ringer.id = samtale.ringer
+inner join person ringerPerson on ringer.personId = ringerPerson.id
+left outer join oppfoelgingKorona ok on ok.personId = ringt.id
+inner join resultat r on r.id = samtale.resultat;
+
+-- --------------------------------------------------------
+
 create or replace view v_resultatForModus as
 SELECT r.id, r.navn, m.id as modus, r.displaytext, r.skalSkjules
 FROM `resultat` r
@@ -5611,8 +5624,9 @@ SELECT p.sisteSamtale, p.telefonnummer, concat(p.fornavn,' ',p.etternavn) as nav
 -- --------------------------------------------------------
 
 create or replace view v_samtalerResultat AS
-SELECT distinct concat(ringerPerson.fornavn,' ',ringerPerson.etternavn) as ringerNavn, c.datetime as `datetime`, c.kommentar, r.displaytext as result
+SELECT distinct concat(ringerPerson.fornavn,' ',ringerPerson.etternavn) as ringerNavn, c.datetime as `datetime`, c.kommentar, r.displaytext as result, concat(ringt.fornavn,' ',ringt.etternavn) as ringtNavn
 FROM `samtale` c
+INNER JOIN `person` ringt on ringt.telefonnummer = c.oppringtNummer
 INNER JOIN `resultat` r on r.id = c.resultat
 INNER JOIN `ringer` ringer on ringer.id = c.ringer
 INNER join `person` ringerPerson on ringerPerson.id = ringer.personId

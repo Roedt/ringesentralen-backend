@@ -37,14 +37,16 @@ class RingServiceBean(
         personRepository.find("hypersysID", userId.userId).firstResult<RingbarPerson>().lokallag
 
     private fun getTidlegareSamtalarMedDennePersonen(oppringtNummer: String): List<Samtale> =
-        entityManager.createNativeQuery("SELECT resultat, ringerNavn, datetime, kommentar FROM `v_samtalerResultat` WHERE oppringtNummer = '$oppringtNummer'")
+        entityManager.createNativeQuery("SELECT resultat, ringerNavn, datetime, kommentar, ringtNavn FROM `v_samtalerResultat` WHERE oppringtNummer = '$oppringtNummer'")
             .resultList
             .map { it as Array<*> }
             .map { Samtale(
                 resultat = it[0] as String,
                 ringer = it[1] as String,
                 tidspunkt = (it[2] as Timestamp).toLocalDateTime(),
-                kommentar = it[3] as String
+                kommentar = it[3] as String,
+                ringtNummer = oppringtNummer,
+                ringtNavn = it[4] as String
             ) }
             .toList()
 
