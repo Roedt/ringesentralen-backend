@@ -5593,6 +5593,12 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
 
 -- --------------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS `ringerIV1` (
+  `telefonnummer` varchar(15) NOT NULL UNIQUE
+);
+
+-- --------------------------------------------------------
+
 create or replace view v_mineSamtaler as
 select samtale.datetime as tidspunkt, samtale.oppringtNummer, concat(ringt.fornavn, ' ', ringt.etternavn) as ringtNavn, r.displaytext as resultat,
 samtale.kommentar, ok.merAktiv, ok.valgkampsbrev,
@@ -5795,6 +5801,12 @@ BEGIN
     BEGIN
       SET @personId =(select `id` FROM `person` where email = emailIn LIMIT 1);
       INSERT INTO `ringer` (`personId`) VALUES(@personId);
+    END;
+  END IF;
+
+  IF (SELECT count(1) FROM ringerIV1 where telefonnummer=telefonnummer_In)>0 THEN
+    BEGIN
+        UPDATE person SET groupID=greatest(6, groupID) WHERE telefonnummer=telefonnummer_In;
     END;
   END IF;
 
