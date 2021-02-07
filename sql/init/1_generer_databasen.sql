@@ -5613,7 +5613,7 @@ SELECT p.lastCall, p.phone, concat(p.fornavn,' ',p.etternavn) as name, p.postnum
 -- --------------------------------------------------------
 
 create or replace view v_callsResult AS
-SELECT distinct concat(ringerPerson.fornavn,' ',ringerPerson.etternavn) as callerName, ringerPerson.phone as callerPhone, c.datetime as `datetime`, c.comment, r.displaytext as result, c.calledPhone, r.svarte, r.id as resultId
+SELECT distinct concat(ringerPerson.fornavn,' ',ringerPerson.etternavn) as ringerNavn, c.datetime as `datetime`, c.comment, r.displaytext as result
 FROM `call` c
 INNER JOIN `result`r on r.id = c.result
 INNER JOIN `ringer` ringer on ringer.id = c.ringer
