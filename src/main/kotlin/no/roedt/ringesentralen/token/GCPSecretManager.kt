@@ -3,6 +3,7 @@ package no.roedt.ringesentralen.token
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient
 import com.google.cloud.secretmanager.v1.SecretVersionName
 import org.eclipse.microprofile.config.inject.ConfigProperty
+import javax.annotation.PostConstruct
 import javax.enterprise.context.RequestScoped
 
 @RequestScoped
@@ -12,6 +13,13 @@ class GCPSecretManager {
     lateinit var secretManagerProjectId: String
 
     internal fun getPrivateKeyFromSecretManager() = getSecretFromSecretManager("privatekey")
+
+    lateinit var client: SecretManagerServiceClient
+
+    @PostConstruct
+    fun setup() {
+        client = SecretManagerServiceClient.create()
+    }
 
     fun getHypersysBrukerId() = getSecretFromSecretManager("hypersysBrukerId")
 
@@ -25,7 +33,6 @@ class GCPSecretManager {
 
     private fun getSecretFromSecretManager(secretName: String): String {
         val secretVersionName = SecretVersionName.of(secretManagerProjectId, secretName, "latest")
-        val client = SecretManagerServiceClient.create()
         return client.accessSecretVersion(secretVersionName).payload.data.toStringUtf8()
     }
 }
