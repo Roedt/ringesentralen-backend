@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.brukere
 
 import RingesentralenController
-import no.roedt.ringesentralen.Brukarinformasjon
+import no.roedt.ringesentralen.Brukerinformasjon
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
@@ -29,7 +29,7 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/brukere")
     @Operation(summary ="List ut brukarar")
-    fun hentBrukarar(@Context ctx: SecurityContext) : List<Brukarinformasjon> = brukereService.hentBrukarar()
+    fun hentBrukarar(@Context ctx: SecurityContext) : List<Brukerinformasjon> = brukereService.hentBrukarar()
 
     @RolesAllowed("godkjenner")
     @PUT

@@ -15,7 +15,7 @@ interface BrukereService {
     fun deaktiverRinger(deaktiverRequest: AutentisertTilgangsendringRequest): Brukerendring
     fun gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring
     fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring
-    fun hentBrukarar(): List<Brukarinformasjon>
+    fun hentBrukarar(): List<Brukerinformasjon>
 }
 
 @ApplicationScoped
@@ -27,11 +27,11 @@ class BrukereServiceBean(
         val entityManager: EntityManager
 ): BrukereService {
 
-    override fun hentBrukarar(): List<Brukarinformasjon> =
+    override fun hentBrukarar(): List<Brukerinformasjon> =
         personRepository.find("groupID >= ${GroupID.GodkjentRinger.nr}")
             .list<RingbarPerson>()
             .map { r ->
-                Brukarinformasjon(
+                Brukerinformasjon(
                     fornamn = r.fornavn,
                     etternamn = r.etternavn,
                     telefonnummer = Telefonnummer(nummer = r.telefonnummer.toInt()),

@@ -8,7 +8,7 @@ import javax.enterprise.context.Dependent
 import javax.persistence.EntityManager
 
 interface ModelConverter {
-    fun convert(profile: Profile): Brukarinformasjon
+    fun convert(profile: Profile): Brukerinformasjon
 }
 
 @Dependent
@@ -17,14 +17,14 @@ class ModelConverterBean(
     private val fylkeRepository: FylkeRepository,
     private val lokallagRepository: LokallagRepository
 ) : ModelConverter {
-    override fun convert(profile: Profile) : Brukarinformasjon = convert(profile.user)
+    override fun convert(profile: Profile) : Brukerinformasjon = convert(profile.user)
 
-    private fun convert(user: User): Brukarinformasjon {
+    private fun convert(user: User): Brukerinformasjon {
         val sisteMellomrom = user.name.lastIndexOf(" ")
         val fornamn = user.name.substring(0, sisteMellomrom)
         val etternamn = user.name.substring(sisteMellomrom+1)
         val postnummer = toPostnummer(user)
-        return Brukarinformasjon(
+        return Brukerinformasjon(
             hypersysID = user.id,
             fornamn = fornamn,
             etternamn = etternamn,

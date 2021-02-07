@@ -3,7 +3,7 @@ package no.roedt.ringesentralen
 import io.quarkus.runtime.annotations.RegisterForReflection
 
 @RegisterForReflection
-data class Brukarinformasjon(
+data class Brukerinformasjon(
         val hypersysID: Int,
         val fornamn: String,
         val etternamn: String,
