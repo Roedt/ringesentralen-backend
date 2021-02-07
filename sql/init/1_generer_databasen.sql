@@ -5573,7 +5573,7 @@ CREATE TABLE IF NOT EXISTS `call` (
   `ringer` int(6) NOT NULL,
   `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `result` int(1) NOT NULL DEFAULT '0',
-  `comment` longtext,
+  `kommentar` longtext,
   UNIQUE KEY `callID` (`callID`),
   KEY `callID_2` (`callID`),
   INDEX (`result`),
@@ -5613,7 +5613,7 @@ SELECT p.lastCall, p.phone, concat(p.fornavn,' ',p.etternavn) as name, p.postnum
 -- --------------------------------------------------------
 
 create or replace view v_callsResult AS
-SELECT distinct concat(ringerPerson.fornavn,' ',ringerPerson.etternavn) as ringerNavn, c.datetime as `datetime`, c.comment, r.displaytext as result
+SELECT distinct concat(ringerPerson.fornavn,' ',ringerPerson.etternavn) as ringerNavn, c.datetime as `datetime`, c.kommentar, r.displaytext as result
 FROM `call` c
 INNER JOIN `result`r on r.id = c.result
 INNER JOIN `ringer` ringer on ringer.id = c.ringer
@@ -5684,11 +5684,11 @@ DELIMITER //
     calledPhoneIn varchar(15),
     ringerIdIn varchar(15),
     resultIn int(1),
-    commentIn longtext
+    kommentarIn longtext
 )
 BEGIN
-INSERT INTO `call` (calledPhone, ringer, result, comment)
-VALUES (calledPhoneIn, ringerIdIn, resultIn, commentIn);
+INSERT INTO `call` (calledPhone, ringer, result, kommentar)
+VALUES (calledPhoneIn, ringerIdIn, resultIn, kommentarIn);
 UPDATE `person` 
   SET lastCall = UNIX_TIMESTAMP(now())
   WHERE phone = calledPhoneIn;
@@ -5735,7 +5735,7 @@ DELIMITER //
     ringerIdIn varchar(15)
 )
 BEGIN
-INSERT INTO `call` (calledPhone, ringer, result, comment)
+INSERT INTO `call` (calledPhone, ringer, result, kommentar)
 VALUES (calledPhoneIn, ringerIdIn, '9', 'Starter samtale');
 UPDATE `person` SET lastCall = UNIX_TIMESTAMP(now()) WHERE phone = calledPhoneIn;
 END //

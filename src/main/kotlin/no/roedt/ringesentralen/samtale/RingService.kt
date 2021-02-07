@@ -33,7 +33,7 @@ class RingServiceBean(
             ?.let { NestePersonAaRingeResponse(ringbarPerson = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.phone))}
 
     private fun getTidlegareSamtalarMedDennePersonen(calledPhone: String): List<Samtale> =
-        entityManager.createNativeQuery("SELECT result, ringerNavn, datetime, comment FROM `v_callsResult` WHERE calledPhone = '$calledPhone'")
+        entityManager.createNativeQuery("SELECT result, ringerNavn, datetime, kommentar FROM `v_callsResult` WHERE calledPhone = '$calledPhone'")
             .resultList
             .map { it as Array<*> }
             .map { Samtale(
