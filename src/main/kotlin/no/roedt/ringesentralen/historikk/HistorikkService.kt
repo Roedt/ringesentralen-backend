@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.historikk
 
-import UserId
+import no.roedt.ringesentralen.UserId
 import no.roedt.ringesentralen.PersonRepository
 import no.roedt.ringesentralen.samtale.RingbarPerson
 import no.roedt.ringesentralen.samtale.Samtale

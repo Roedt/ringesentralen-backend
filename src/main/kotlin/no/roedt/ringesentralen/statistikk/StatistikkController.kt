@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.statistikk
 
-import RingesentralenController
+import no.roedt.ringesentralen.RingesentralenController
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag

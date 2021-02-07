@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.historikk
 
-import RingesentralenController
+import no.roedt.ringesentralen.RingesentralenController
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken

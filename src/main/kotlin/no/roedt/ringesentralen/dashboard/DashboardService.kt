@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.dashboard
 
-import UserId
+import no.roedt.ringesentralen.UserId
 import io.quarkus.panache.common.Sort
 import no.roedt.ringesentralen.Lokallag
 import no.roedt.ringesentralen.LokallagRepository

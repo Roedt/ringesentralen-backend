@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.samtale
 
-import UserId
+import no.roedt.ringesentralen.UserId
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.PersonRepository

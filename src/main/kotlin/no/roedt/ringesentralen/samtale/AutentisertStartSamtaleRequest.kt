@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.samtale
 
-import UserId
+import no.roedt.ringesentralen.UserId
 import io.quarkus.runtime.annotations.RegisterForReflection
 
 @RegisterForReflection

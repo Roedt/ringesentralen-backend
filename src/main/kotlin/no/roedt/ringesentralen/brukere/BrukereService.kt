@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.brukere
 
-import UserId
+import no.roedt.ringesentralen.UserId
 import no.roedt.ringesentralen.*
 import no.roedt.ringesentralen.samtale.GroupID
 import no.roedt.ringesentralen.samtale.RingbarPerson

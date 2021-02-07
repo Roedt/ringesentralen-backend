@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.samtale
 
-import RingesentralenController
+import no.roedt.ringesentralen.RingesentralenController
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation

@@ -1,3 +1,5 @@
+package no.roedt.ringesentralen
+
 import org.eclipse.microprofile.jwt.JsonWebToken
 import javax.ws.rs.core.SecurityContext
 
