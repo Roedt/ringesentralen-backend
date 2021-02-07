@@ -9,7 +9,7 @@ import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
 
 interface RingService {
-    fun hentNestePersonAaRinge(nestePersonAaRingeRequest: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse?
+    fun hentNestePersonAaRinge(userId: UserId): NestePersonAaRingeResponse?
     fun startSamtale(request: AutentisertStartSamtaleRequest)
     fun registrerResultatFraSamtale(request: AutentisertResultatFraSamtaleRequest)
     fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): RingbarPerson
@@ -23,14 +23,18 @@ class RingServiceBean(
 ): RingService {
 
     //TODO: Vurder om dette skal loggast
-    override fun hentNestePersonAaRinge(nestePersonAaRingeRequest: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? =
+    override fun hentNestePersonAaRinge(userId: UserId): NestePersonAaRingeResponse? =
         entityManager
-            .createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${nestePersonAaRingeRequest.lokallagId()}'")
+            .createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v " +
+                    "WHERE lokallag = '${getLokallag(userId)}'")
             .resultList
             .firstOrNull()
             ?.let { it as Int }
             ?.let { personRepository.findById(it.toLong()) }
             ?.let { NestePersonAaRingeResponse(ringbarPerson = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer))}
+
+    fun getLokallag(userId: UserId) =
+        personRepository.find("hypersysID", userId.userId).firstResult<RingbarPerson>().lokallag
 
     private fun getTidlegareSamtalarMedDennePersonen(oppringtNummer: String): List<Samtale> =
         entityManager.createNativeQuery("SELECT resultat, ringerNavn, datetime, kommentar FROM `v_samtalerResultat` WHERE oppringtNummer = '$oppringtNummer'")
