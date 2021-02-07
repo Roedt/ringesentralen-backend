@@ -52,19 +52,18 @@ class RingServiceBean(
 
     override fun startSamtale(request: AutentisertStartSamtaleRequest) {
         val ringerId = hypersysIDTilRingerId(request.userId)
-        val oppringtNummer = personRepository.findById(request.skalRingesID()).telefonnummer
-        databaseUpdater.update("CALL sp_startSamtale($oppringtNummer, $ringerId)")
+        databaseUpdater.update("CALL sp_startSamtale(${request.skalRingesID()}, $ringerId)")
     }
 
     override fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest) {
         val request = autentisertRequest.resultatFraSamtaleRequest
         assert(request.resultat in request.modus.gyldigeResultattyper)
-        val oppringtNummer = personRepository.findById(request.ringtID).telefonnummer
         val ringerId = hypersysIDTilRingerId(autentisertRequest.userId)
-        databaseUpdater.update("CALL sp_registrerSamtale($oppringtNummer, $ringerId, ${request.resultat.nr}, '${request.kommentar}')")
+        databaseUpdater.update("CALL sp_registrerSamtale(${request.ringtID}, $ringerId, ${request.resultat.nr}, '${request.kommentar}')")
+        personRepository.findById(request.ringtID).telefonnummer
         val nesteGroupID: GroupID? = when  {
             request.resultat.nesteGroupID != null -> request.resultat.nesteGroupID
-            erFleireEnnToIkkeSvar(oppringtNummer, request) -> GroupID.Ferdigringt
+            erFleireEnnToIkkeSvar(request) -> GroupID.Ferdigringt
             else -> null
         }
         nesteGroupID?.nr?.let { databaseUpdater.updateWithResult("CALL sp_updateGroupID(${request.ringtID}, $it)") }
@@ -89,8 +88,8 @@ class RingServiceBean(
         return personSomRingerTilbake
     }
 
-    private fun erFleireEnnToIkkeSvar(oppringtNummer: String, request: ResultatFraSamtaleRequest): Boolean {
-        val resultat: List<Int>? = databaseUpdater.updateWithResult("select resultat from `samtale` where oppringtNummer = $oppringtNummer and resultat = 0")?.map { it as Int }
+    private fun erFleireEnnToIkkeSvar(request: ResultatFraSamtaleRequest): Boolean {
+        val resultat: List<Int>? = databaseUpdater.updateWithResult("select resultat from `samtale` where ringt = ${request.ringtID} and resultat = 0")?.map { it as Int }
         val fleireEnnToIkkeSvar: Boolean = (resultat?.filter { it == 0 }?.count() ?: 0) > 2
         val ingenSvar: Boolean = (resultat?.filter { it != 0 && it != 9 }?.count() ?: 0) == 0
         return ingenSvar && fleireEnnToIkkeSvar && request.resultat == Resultat.Ikke_svar

@@ -5569,15 +5569,15 @@ CREATE TABLE IF NOT EXISTS `godkjenning` (
 
 CREATE TABLE IF NOT EXISTS `samtale` (
   `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `oppringtNummer` varchar(15) NOT NULL,
+  `ringt` int(6) NOT NULL,
   `ringer` int(6) NOT NULL,
   `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `resultat` int(1) NOT NULL DEFAULT '0',
   `kommentar` longtext,
   INDEX (`resultat`),
   FOREIGN KEY (`resultat`) REFERENCES `resultat` (`id`),
-  INDEX(`oppringtNummer`),
-  FOREIGN KEY (`oppringtNummer`) REFERENCES `person` (`telefonnummer`),
+  INDEX(`ringt`),
+  FOREIGN KEY (`ringt`) REFERENCES `person` (`id`),
   INDEX(`ringer`),
   FOREIGN KEY (`ringer`) REFERENCES `ringer` (`id`)
 );
@@ -5600,11 +5600,11 @@ CREATE TABLE IF NOT EXISTS `ringerIV1` (
 -- --------------------------------------------------------
 
 create or replace view v_mineSamtaler as
-select samtale.datetime as tidspunkt, samtale.oppringtNummer, concat(ringt.fornavn, ' ', ringt.etternavn) as ringtNavn, r.displaytext as resultat,
+select samtale.datetime as tidspunkt, ringt.telefonnummer as oppringtNummer, concat(ringt.fornavn, ' ', ringt.etternavn) as ringtNavn, r.displaytext as resultat,
 samtale.kommentar, ok.merAktiv, ok.valgkampsbrev,
 ringerPerson.telefonnummer as ringersTelefonnummer, ringerPerson.hypersysID, concat(ringerPerson.fornavn, ' ', ringerPerson.etternavn) as ringerNavn, ringerPerson.lokallag
 from `samtale` samtale
-inner join person ringt on samtale.oppringtNummer = ringt.telefonnummer
+inner join person ringt on samtale.ringt = ringt.id
 inner join ringer ringer on ringer.id = samtale.ringer
 inner join person ringerPerson on ringer.personId = ringerPerson.id
 left outer join oppfoelgingKorona ok on ok.personId = ringt.id
@@ -5630,14 +5630,15 @@ SELECT p.sisteSamtale, p.telefonnummer, concat(p.fornavn,' ',p.etternavn) as nav
 -- --------------------------------------------------------
 
 create or replace view v_samtalerResultat AS
-SELECT distinct concat(ringerPerson.fornavn,' ',ringerPerson.etternavn) as ringerNavn, c.datetime as `datetime`, c.kommentar, r.displaytext as result, concat(ringt.fornavn,' ',ringt.etternavn) as ringtNavn
-FROM `samtale` c
-INNER JOIN `person` ringt on ringt.telefonnummer = c.oppringtNummer
-INNER JOIN `resultat` r on r.id = c.resultat
-INNER JOIN `ringer` ringer on ringer.id = c.ringer
+SELECT distinct concat(ringerPerson.fornavn,' ',ringerPerson.etternavn) as ringerNavn, samtale.datetime as `datetime`, samtale.kommentar, r.displaytext as result,
+concat(ringt.fornavn,' ',ringt.etternavn) as ringtNavn, ringt.telefonnummer as oppringtNummer
+FROM `samtale` samtale
+INNER JOIN `person` ringt on ringt.id = samtale.ringt
+INNER JOIN `resultat` r on r.id = samtale.resultat
+INNER JOIN `ringer` ringer on ringer.id = samtale.ringer
 INNER join `person` ringerPerson on ringerPerson.id = ringer.personId
-WHERE c.resultat != 9
-ORDER BY c.datetime ASC;
+WHERE samtale.resultat != 9
+ORDER BY samtale.datetime ASC;
 
 -- --------------------------------------------------------
 
@@ -5656,11 +5657,11 @@ WHERE p.groupID = 2;
 -- --------------------------------------------------------
 
 create or replace view v_noenRingerTilbake AS
-SELECT concat(p.fornavn,' ',p.etternavn) as navn, p.postnummer, p.telefonnummer, l.navn as lokallagNavn, l.id as lokallag, ringer.id as ringer
-FROM person p
-inner join `samtale` c on p.telefonnummer = c.oppringtNummer
-inner join `ringer` ringer on ringer.id = c.ringer
-left outer join lokallag l on p.lokallag = l.id;
+SELECT concat(ringt.fornavn,' ',ringt.etternavn) as navn, ringt.postnummer, ringt.telefonnummer, l.navn as lokallagNavn, l.id as lokallag, ringer.id as ringer
+FROM person ringt
+inner join `samtale` samtale on ringt.telefonnummer = samtale.ringt
+inner join `ringer` ringer on ringer.id = samtale.ringer
+left outer join lokallag l on ringt.lokallag = l.id;
 
 -- --------------------------------------------------------
 
@@ -5699,17 +5700,17 @@ END //
 DELIMITER //
   DROP PROCEDURE IF EXISTS sp_registrerSamtale;
   CREATE PROCEDURE sp_registrerSamtale(
-    oppringtNummerIn varchar(15),
-    ringerIdIn varchar(15),
+    ringtIdIn int(6),
+    ringerIdIn int(6),
     resultatIn int(1),
     kommentarIn longtext
 )
 BEGIN
-INSERT INTO `samtale` (oppringtNummer, ringer, resultat, kommentar)
-VALUES (oppringtNummerIn, ringerIdIn, resultatIn, kommentarIn);
+INSERT INTO `samtale` (ringt, ringer, resultat, kommentar)
+VALUES (ringtIdIn, ringerIdIn, resultatIn, kommentarIn);
 UPDATE `person` 
   SET sisteSamtale = UNIX_TIMESTAMP(now())
-  WHERE telefonnummer = oppringtNummerIn;
+  WHERE id = ringtIdIn;
 END //
 -- --------------------------------------------------------
 
@@ -5749,13 +5750,13 @@ END //
 DELIMITER //
   DROP PROCEDURE IF EXISTS sp_startSamtale;
   CREATE PROCEDURE sp_startSamtale(
-    oppringtNummerIn varchar(15),
-    ringerIdIn varchar(15)
+    ringtIdIn int(6),
+    ringerIdIn int(6)
 )
 BEGIN
-INSERT INTO `samtale` (oppringtNummer, ringer, resultat, kommentar)
-VALUES (oppringtNummerIn, ringerIdIn, '9', 'Starter samtale');
-UPDATE `person` SET sisteSamtale = UNIX_TIMESTAMP(now()) WHERE telefonnummer = oppringtNummerIn;
+INSERT INTO `samtale` (ringt, ringer, resultat, kommentar)
+VALUES (ringtIdIn, ringerIdIn, '9', 'Starter samtale');
+UPDATE `person` SET sisteSamtale = UNIX_TIMESTAMP(now()) WHERE id = ringtIdIn;
 END //
 
 -- --------------------------------------------------------
@@ -5817,13 +5818,13 @@ END //
 DELIMITER //
   DROP PROCEDURE IF EXISTS sp_slettPerson;
   CREATE PROCEDURE sp_slettPerson (
-    telefonnummer_In varchar(15)
+    id_In int(6)
 )
 BEGIN
-DELETE FROM `samtale` where oppringtNummer = telefonnummer_In;
-DELETE FROM `oppfoelgingKorona` where personId = (select id from person where telefonnummer = telefonnummer_In);
-DELETE FROM `ringer` where personId = (select id from person where telefonnummer = telefonnummer_In);
-DELETE FROM `person` where telefonnummer = telefonnummer_In;
+DELETE FROM `samtale` where id = id_In;
+DELETE FROM `oppfoelgingKorona` where personId = id_In;
+DELETE FROM `ringer` where personId = id_In;
+DELETE FROM `person` where id = id_In;
 END //
 
 -- --------------------------------------------------------
