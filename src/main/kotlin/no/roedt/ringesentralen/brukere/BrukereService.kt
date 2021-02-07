@@ -76,8 +76,6 @@ class BrukereServiceBean(
         }
     }
 
-    private fun tilTelefonnummer(personID: Long) = personRepository.findById(personID).telefonnummer
-
     private fun hypersysIdTilPerson(hypersysId: UserId) =
         personRepository.find("hypersysID", hypersysId.userId).firstResult<RingbarPerson>()
 

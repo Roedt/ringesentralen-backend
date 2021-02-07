@@ -5733,7 +5733,7 @@ END //
 DELIMITER //
   DROP PROCEDURE IF EXISTS sp_registrerOppfoelgingKorona;
   CREATE PROCEDURE sp_registrerOppfoelgingKorona(
-    oppringtNummerIn varchar(15),
+    ringtIdIn int(6),
     koronaprogramIn tinyint(1),
     merAktivIn tinyint(1),
     valgkampsbrevIn tinyint(1),
@@ -5741,7 +5741,7 @@ DELIMITER //
 )
 BEGIN
 INSERT INTO `oppfoelgingKorona` (personId, koronaprogram, merAktiv, valgkampsbrev, vilIkkeBliRingt)
-  VALUES ((select id from person where telefonnummer = oppringtNummerIn), koronaprogramIn, merAktivIn, valgkampsbrevIn, vilIkkeBliRingtIn);
+  VALUES (ringtIdIn, koronaprogramIn, merAktivIn, valgkampsbrevIn, vilIkkeBliRingtIn);
 END //
 
 -- --------------------------------------------------------

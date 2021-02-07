@@ -69,7 +69,7 @@ class RingServiceBean(
         }
         nesteGroupID?.nr?.let { databaseUpdater.updateWithResult("CALL sp_updateGroupID(${request.ringtID}, $it)") }
         if (request.modus == Modus.Korona && request.resultat == Resultat.Svarte) {
-            registrerKoronaspesifikkeResultat(request, oppringtNummer)
+            registrerKoronaspesifikkeResultat(request)
         }
     }
 
@@ -96,9 +96,9 @@ class RingServiceBean(
         return ingenSvar && fleireEnnToIkkeSvar && request.resultat == Resultat.Ikke_svar
     }
 
-    private fun registrerKoronaspesifikkeResultat(request: ResultatFraSamtaleRequest, oppringtNummer: String) {
+    private fun registrerKoronaspesifikkeResultat(request: ResultatFraSamtaleRequest) {
         val resultat: KoronaspesifikkeResultat = request.modusspesifikkeResultat as KoronaspesifikkeResultat
-        databaseUpdater.update("CALL sp_registrerOppfoelgingKorona($oppringtNummer, ${resultat.vilHaKoronaprogram}, ${resultat.vilBliMerAktiv}, ${resultat.vilHaValgkampsbrev}, ${request.vilIkkeBliRingt})")
+        databaseUpdater.update("CALL sp_registrerOppfoelgingKorona(${request.ringtID}, ${resultat.vilHaKoronaprogram}, ${resultat.vilBliMerAktiv}, ${resultat.vilHaValgkampsbrev}, ${request.vilIkkeBliRingt})")
     }
 
     fun EntityManager.executeQuery(query: String) = entityManager.createNativeQuery(query).resultList
