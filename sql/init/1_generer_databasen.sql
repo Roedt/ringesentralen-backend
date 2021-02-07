@@ -5468,17 +5468,17 @@ CREATE TABLE IF NOT EXISTS `person` (
   `phone` varchar(15) DEFAULT NULL UNIQUE,
   `postnummer` integer DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
-  `countyID` int(2) DEFAULT -1 NOT NULL,
+  `('` int(2) DEFAULT -1 NOT NULL,
   `groupID` int(2) DEFAULT NULL,
   `userCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lastCall` int(11) NOT NULL DEFAULT '0',
   `lokallag` int(3) unsigned DEFAULT NULL,
   FOREIGN KEY (`groupID`) REFERENCES `callGroup` (`id`),
-  FOREIGN KEY(`countyID`) REFERENCES `fylker` (`id`),
+  FOREIGN KEY(`fylke`) REFERENCES `fylker` (`id`),
   FOREIGN KEY(`lokallag`) REFERENCES `lokallag` (`id`),
   FOREIGN KEY(`postnummer`) REFERENCES `postnummer` (`postnummer`),
   INDEX (`groupID`),
-  INDEX (`countyID`),
+  INDEX (`fylke`),
   INDEX (`phone`),
   INDEX (`lokallag`),
   INDEX (`postnummer`),
@@ -5604,7 +5604,7 @@ INNER JOIN `modus` m on mr.modus = m.id;
 -- --------------------------------------------------------
 
 create or replace view v_personerSomKanRinges as
-SELECT p.lastCall, p.phone, concat(p.givenName,' ',p.familyName) as name, p.postnummer, p.countyID, p.lokallag, l.name as lokallagNavn, p.id as id
+SELECT p.lastCall, p.phone, concat(p.givenName,' ',p.familyName) as name, p.postnummer, p.fylke, p.lokallag, l.name as lokallagNavn, p.id as id
   FROM person p
   LEFT OUTER JOIN lokallag l on p.lokallag = l.id
   WHERE groupID = '1'
@@ -5624,14 +5624,14 @@ ORDER BY c.datetime ASC;
 -- --------------------------------------------------------
 
 create or replace view v_igjenAaRinge AS
-SELECT p.countyID, p.lokallag
+SELECT p.fylke, p.lokallag
 FROM `person` p
 WHERE p.groupID = 1 or p.groupID = 0;
 
 -- --------------------------------------------------------
 
 create or replace view v_totaltInklRingte AS
-SELECT p.countyID, p.lokallag
+SELECT p.fylke, p.lokallag
 FROM `person` p
 WHERE p.groupID = 2;
 
@@ -5751,7 +5751,7 @@ DELIMITER //
     phoneIn varchar(15),
     emailIn varchar(100),
     postnummerIn integer,
-    countyIDIn tinyint(2),
+    fylkeIdIn tinyint(2),
     lokallagIn int(3)
 )
 BEGIN
@@ -5765,14 +5765,14 @@ BEGIN
           email = emailIn, 
           postnummer = postnummerIn,
           groupID = greatest(4, groupID),
-          countyID = countyIDIn,
+          fylke = fylkeIdIn,
           lokallag = lokallagIn
         WHERE phone = phoneIn;
     END;
   ELSE
     BEGIN
-        INSERT INTO `person` (hypersysID, givenName, familyName, phone, email, postnummer, countyID, groupID, lokallag)
-            VALUES (hypersysIDIn, givenNameIn, familyNameIn, phoneIn, emailIn, postnummerIn, countyIDIn, '4', lokallagIn);
+        INSERT INTO `person` (hypersysID, givenName, familyName, phone, email, postnummer, fylke, groupID, lokallag)
+            VALUES (hypersysIDIn, givenNameIn, familyNameIn, phoneIn, emailIn, postnummerIn, fylkeIdIn, '4', lokallagIn);
     END;
   END IF;
 

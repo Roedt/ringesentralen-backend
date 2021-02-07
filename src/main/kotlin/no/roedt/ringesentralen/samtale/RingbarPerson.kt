@@ -18,7 +18,7 @@ data class RingbarPerson(
         var lastCall: Int,
         var email: String?,
         var postnummer: Int,
-        var countyID: Int,
+        var fylke: Int,
         var lokallag: Int,
         var groupID: Int,
 ) : PanacheEntity() {
@@ -30,7 +30,7 @@ data class RingbarPerson(
             lastCall = 0,
             email = null,
             postnummer = 0,
-            countyID = -1,
+            fylke = -1,
             lokallag = 1,
             groupID = 0
     )

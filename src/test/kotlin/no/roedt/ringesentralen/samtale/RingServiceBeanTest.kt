@@ -79,7 +79,7 @@ internal class RingServiceBeanTest {
     private fun createRingbarPerson(fornavn: String, etternavn: String, telefonnummer: String, id: Long, hypersysID: Int) {
         val person = RingbarPerson(hypersysID = hypersysID, givenName = fornavn, familyName = etternavn,
             phone = telefonnummer, lastCall = 0, email = "",
-            postnummer = 1234, countyID = 0, lokallag = 0, groupID = 0)
+            postnummer = 1234, fylke = 0, lokallag = 0, groupID = 0)
         doReturn(person).whenever(personRepository).findById(id)
         val query : PanacheQuery<RingbarPerson> = mock()
         doReturn(person).whenever(query).firstResult<RingbarPerson>()

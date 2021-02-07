@@ -36,7 +36,7 @@ class BrukereServiceBean(
                     etternamn = r.familyName,
                     telefonnummer = Telefonnummer(nummer = r.phone.toInt()),
                     postnummer = Postnummer(r.postnummer.toString().padStart(4, '0')),
-                    fylke = fylkeRepository.findById(r.countyID),
+                    fylke = fylkeRepository.findById(r.('),
                     epost = r.email ?: "",
                     hypersysID = r.hypersysID ?: -1,
                     lokallag = lokallagRepository.findById(r.lokallag.toLong())

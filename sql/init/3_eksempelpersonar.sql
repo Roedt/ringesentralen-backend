@@ -9,7 +9,7 @@ SET NAMES utf8;
 /*!40101 SET NAMES utf8 */;
 
 -- --------------------------------------------------------
-INSERT INTO `person` (`givenName`, `familyName`, `phone`, `postnummer`, `email`, `countyID`, `groupID`, `userCreated`, `lastCall`, `lokallag`) VALUES
+INSERT INTO `person` (`givenName`, `familyName`, `phone`, `postnummer`, `email`, `fylke`, `groupID`, `userCreated`, `lastCall`, `lokallag`) VALUES
 ('Donald', ' Duck',	'12345678',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
 ('Hetti', ' Duck',	'12345677',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
 ('Letti', ' Duck',	'12345679',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
@@ -23,7 +23,7 @@ INSERT INTO `person` (`givenName`, `familyName`, `phone`, `postnummer`, `email`,
 
 
 
-INSERT INTO `person` (`givenName`, `familyName`, `phone`, `postnummer`, `email`, `countyID`, `groupID`, `userCreated`, `lastCall`, `lokallag`) VALUES
+INSERT INTO `person` (`givenName`, `familyName`, `phone`, `postnummer`, `email`, `fylke`, `groupID`, `userCreated`, `lastCall`, `lokallag`) VALUES
 ('Aster', 'ix',	'22345678',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
 ('Obel', 'ix',	'22345677',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
 ('Idef', 'ix',	'22345679',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
