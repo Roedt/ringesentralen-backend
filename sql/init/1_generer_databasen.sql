@@ -5468,7 +5468,7 @@ CREATE TABLE IF NOT EXISTS `person` (
   `phone` varchar(15) DEFAULT NULL UNIQUE,
   `postnummer` integer DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
-  `('` int(2) DEFAULT -1 NOT NULL,
+  `fylke` int(2) DEFAULT -1 NOT NULL,
   `groupID` int(2) DEFAULT NULL,
   `oppretta` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lastCall` int(11) NOT NULL DEFAULT '0',
