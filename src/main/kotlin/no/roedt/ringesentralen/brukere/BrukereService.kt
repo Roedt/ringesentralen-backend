@@ -33,10 +33,10 @@ class BrukereServiceBean(
             .map { r ->
                 Brukarinformasjon(
                     fornamn = r.givenName,
-                    etternamn = r.familyName,
+                    etternamn = r.etternavn,
                     telefonnummer = Telefonnummer(nummer = r.phone.toInt()),
                     postnummer = Postnummer(r.postnummer.toString().padStart(4, '0')),
-                    fylke = fylkeRepository.findById(r.('),
+                    fylke = fylkeRepository.findById(r.fylke),
                     epost = r.email ?: "",
                     hypersysID = r.hypersysID ?: -1,
                     lokallag = lokallagRepository.findById(r.lokallag.toLong())

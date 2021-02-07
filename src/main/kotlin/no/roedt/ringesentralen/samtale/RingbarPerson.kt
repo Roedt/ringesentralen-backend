@@ -13,7 +13,7 @@ import javax.persistence.Table
 data class RingbarPerson(
         var hypersysID: Int?,
         var givenName: String,
-        var familyName: String,
+        var etternavn: String,
         var phone: String,
         var lastCall: Int,
         var email: String?,
@@ -25,7 +25,7 @@ data class RingbarPerson(
     constructor() : this(
             hypersysID = null,
             givenName = "",
-            familyName = "",
+            etternavn = "",
             phone = "",
             lastCall = 0,
             email = null,
