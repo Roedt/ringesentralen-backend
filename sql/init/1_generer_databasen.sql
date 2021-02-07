@@ -47,7 +47,7 @@ INSERT INTO `fylker` (`id`, `navn`) VALUES
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `lokallag` (
-  `id` int(3) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `id` int(3) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `navn` varchar(100) NOT NULL UNIQUE
 );
 
@@ -267,7 +267,7 @@ insert into `lokallag` (navn) values
 CREATE TABLE IF NOT EXISTS `kommune` (
   `nummer` integer NOT NULL PRIMARY KEY,
   `navn` varchar(50) NOT NULL,
-  `lokallag_id` int(3) unsigned DEFAULT NULL,
+  `lokallag_id` int(3) DEFAULT NULL,
   `fylke_id` int(2) NOT NULL,
   FOREIGN KEY (`lokallag_id`) REFERENCES `lokallag` (`id`),
   INDEX(`lokallag_id`),
@@ -5461,7 +5461,7 @@ INSERT INTO brukergruppe VALUES (9, 'admin');
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `person` (
-  `id` int(6) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `hypersysID` int(6) DEFAULT NULL,
   `fornavn` varchar(60) DEFAULT NULL,
   `etternavn` varchar(60) DEFAULT NULL,
@@ -5472,7 +5472,7 @@ CREATE TABLE IF NOT EXISTS `person` (
   `groupID` int(2) DEFAULT NULL,
   `oppretta` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `sisteSamtale` int(11) NOT NULL DEFAULT '0',
-  `lokallag` int(3) unsigned DEFAULT NULL,
+  `lokallag` int(3) DEFAULT NULL,
   FOREIGN KEY (`groupID`) REFERENCES `brukergruppe` (`id`),
   FOREIGN KEY(`fylke`) REFERENCES `fylker` (`id`),
   FOREIGN KEY(`lokallag`) REFERENCES `lokallag` (`id`),
@@ -5490,7 +5490,7 @@ CREATE TABLE IF NOT EXISTS `person` (
 CREATE TABLE IF NOT EXISTS `ringer` (
   `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `oppretta` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `personId` int(6) unsigned NOT NULL UNIQUE,
+  `personId` int(6) NOT NULL UNIQUE,
   FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
   INDEX(`personId`)
 );
@@ -5498,7 +5498,7 @@ CREATE TABLE IF NOT EXISTS `ringer` (
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `oppfoelgingKorona` (
-  `personId` int(6) unsigned PRIMARY KEY NOT NULL,
+  `personId` int(6) PRIMARY KEY NOT NULL,
   `koronaprogram` tinyint(1) DEFAULT NULL,
   `merAktiv` tinyint(1) DEFAULT NULL,
   `valgkampsbrev` tinyint(1) DEFAULT NULL,
@@ -5554,13 +5554,13 @@ INSERT INTO modusTilResultat VALUES ((select id from modus where navn = 'korona'
 CREATE TABLE IF NOT EXISTS `godkjenning` (
   `id` int(1) AUTO_INCREMENT NOT NULL PRIMARY KEY,
   `godkjenner` int(6) NOT NULL,
-  `godkjentPerson` varchar(15) NOT NULL,
+  `godkjentPerson` int(6) NOT NULL,
   `nyGroupId` int(2) NOT NULL,
   `tidspunkt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX(`godkjenner`),
   FOREIGN KEY (`godkjenner`) REFERENCES `ringer` (`id`),
   INDEX(`godkjentPerson`),
-  FOREIGN KEY (`godkjentPerson`) REFERENCES `person` (`telefonnummer`),
+  FOREIGN KEY (`godkjentPerson`) REFERENCES `person` (`id`),
   INDEX(`nyGroupId`),
   FOREIGN KEY (`nyGroupId`) REFERENCES `brukergruppe` (`id`)
 );
@@ -5568,7 +5568,7 @@ CREATE TABLE IF NOT EXISTS `godkjenning` (
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `samtale` (
-  `id` int(11) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `oppringtNummer` varchar(15) NOT NULL,
   `ringer` int(6) NOT NULL,
   `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -5685,7 +5685,7 @@ left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.oppr
 DELIMITER //
   DROP PROCEDURE IF EXISTS sp_updateGroupID;
   CREATE PROCEDURE sp_updateGroupID(
-  id_In int(6) unsigned,
+  id_In int(6),
   groupID_In int(2)
 )
 BEGIN
@@ -5717,15 +5717,15 @@ DELIMITER //
   DROP PROCEDURE IF EXISTS sp_godkjennBruker;
   CREATE PROCEDURE sp_godkjennBruker(
     ringerIdIn varchar(15),
-    oppringtNummerIn varchar(15),
+    ringtIdIn varchar(15),
     nyGroupIdIn int(2)
 )
 BEGIN
 INSERT INTO `godkjenning` (godkjenner, godkjentPerson, nyGroupId) 
-VALUES (ringerIdIn, oppringtNummerIn, nyGroupIdIn);
+VALUES (ringerIdIn, ringtIdIn, nyGroupIdIn);
 UPDATE `person` 
   SET groupID = nyGroupIdIn
-  WHERE telefonnummer = oppringtNummerIn;
+  WHERE id = ringtIdIn;
 END //
 
 -- --------------------------------------------------------

@@ -61,7 +61,7 @@ class BrukereServiceBean(
         val personMedEndraTilgang = request.personMedEndraTilgang()
 
         val ringerId = hypersysIDTilRingerId(request.userId)
-        databaseUpdater.update("CALL sp_godkjennBruker(${ringerId}, ${tilTelefonnummer(personMedEndraTilgang)}, ${nyTilgang.nr})")
+        databaseUpdater.update("CALL sp_godkjennBruker(${ringerId}, ${personMedEndraTilgang}, ${nyTilgang.nr})")
         return Brukerendring(personID = personMedEndraTilgang, nyGroupId = nyTilgang)
     }
 
