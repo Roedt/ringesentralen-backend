@@ -16,7 +16,7 @@ import javax.ws.rs.core.SecurityContext
 
 
 @Path("/person")
-@Tag(name = "Slett person")
+@Tag(name = "Person")
 @SecurityRequirement(name = "jwt")
 class PersonController(
     private val databaseUpdater: DatabaseUpdater,
