@@ -5471,7 +5471,7 @@ CREATE TABLE IF NOT EXISTS `person` (
   `fylke` int(2) DEFAULT -1 NOT NULL,
   `groupID` int(2) DEFAULT NULL,
   `oppretta` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `lastCall` int(11) NOT NULL DEFAULT '0',
+  `sisteSamtale` int(11) NOT NULL DEFAULT '0',
   `lokallag` int(3) unsigned DEFAULT NULL,
   FOREIGN KEY (`groupID`) REFERENCES `callGroup` (`id`),
   FOREIGN KEY(`fylke`) REFERENCES `fylker` (`id`),
@@ -5602,11 +5602,11 @@ INNER JOIN `modus` m on mr.modus = m.id;
 -- --------------------------------------------------------
 
 create or replace view v_personerSomKanRinges as
-SELECT p.lastCall, p.phone, concat(p.fornavn,' ',p.etternavn) as name, p.postnummer, p.fylke, p.lokallag, l.name as lokallagNavn, p.id as id
+SELECT p.sisteSamtale, p.phone, concat(p.fornavn,' ',p.etternavn) as name, p.postnummer, p.fylke, p.lokallag, l.name as lokallagNavn, p.id as id
   FROM person p
   LEFT OUTER JOIN lokallag l on p.lokallag = l.id
   WHERE groupID = '1'
-  AND UNIX_TIMESTAMP(now()) - lastCall > 86400; -- 86400 sekund = 1 døgn
+  AND UNIX_TIMESTAMP(now()) - sisteSamtale > 86400; -- 86400 sekund = 1 døgn
 
 -- --------------------------------------------------------
 
@@ -5688,7 +5688,7 @@ BEGIN
 INSERT INTO `call` (oppringtNummer, ringer, resultat, kommentar)
 VALUES (oppringtNummerIn, ringerIdIn, resultatIn, kommentarIn);
 UPDATE `person` 
-  SET lastCall = UNIX_TIMESTAMP(now())
+  SET sisteSamtale = UNIX_TIMESTAMP(now())
   WHERE phone = oppringtNummerIn;
 END //
 -- --------------------------------------------------------
@@ -5735,7 +5735,7 @@ DELIMITER //
 BEGIN
 INSERT INTO `call` (oppringtNummer, ringer, resultat, kommentar)
 VALUES (oppringtNummerIn, ringerIdIn, '9', 'Starter samtale');
-UPDATE `person` SET lastCall = UNIX_TIMESTAMP(now()) WHERE phone = oppringtNummerIn;
+UPDATE `person` SET sisteSamtale = UNIX_TIMESTAMP(now()) WHERE phone = oppringtNummerIn;
 END //
 
 -- --------------------------------------------------------

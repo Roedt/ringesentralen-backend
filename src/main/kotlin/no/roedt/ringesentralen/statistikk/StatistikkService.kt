@@ -51,8 +51,8 @@ class StatistikkService(val entityManager: EntityManager) {
         antallPersonerISystemetTotalt = get("SELECT 1 FROM person").size,
         ringere = get("SELECT 1 FROM person WHERE groupID > 3").size,
         ferdigringte = get("select 1 FROM person WHERE groupID=2 or groupID=3").size,
-        ringtUtenSvar = get("select 1 FROM person WHERE lastCall > 0 and groupID=1").size,
-        ikkeRingt = get("select 1 FROM person WHERE lastCall = 0 and groupID < 4").size,
+        ringtUtenSvar = get("select 1 FROM person WHERE sisteSamtale > 0 and groupID=1").size,
+        ikkeRingt = get("select 1 FROM person WHERE sisteSamtale = 0 and groupID < 4").size,
         antallLokallagMedPersonerTilknytta = get( "select distinct lokallag FROM person where lokallag is not null").size
     )
 
