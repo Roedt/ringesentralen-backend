@@ -2,7 +2,6 @@ package no.roedt.ringesentralen.samtale
 
 import com.nhaarman.mockitokotlin2.*
 import no.roedt.ringesentralen.DatabaseUpdater
-import no.roedt.ringesentralen.Lokallag
 import no.roedt.ringesentralen.PersonRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -17,12 +16,12 @@ internal class RingTest {
     private val personRepository: PersonRepository = mock()
     private val databaseUpdater: DatabaseUpdater = mock()
 
-    lateinit var ringService: RingService
+    lateinit var ringService: RingServiceBean
     lateinit var ringController: RingController
 
     @BeforeEach
     fun setup() {
-        ringService = RingServiceBean(personRepository = personRepository, entityManager = entityManager, databaseUpdater = databaseUpdater)
+        ringService = spy(RingServiceBean(personRepository = personRepository, entityManager = entityManager, databaseUpdater = databaseUpdater))
         ringController = RingController(ringService)
         ringController.jwt = mock()
     }
@@ -33,10 +32,7 @@ internal class RingTest {
         doReturn(listOf(1234)).whenever(typedQuery).resultList
         doReturn(typedQuery).whenever(entityManager).createNativeQuery(any())
 
-        ringController.hentNestePersonAaRinge(
-            getContext(), NestePersonAaRingeRequest(
-                lokallag = Lokallag("lag1")
-        ))
+        ringController.hentNestePersonAaRinge(getContext())
         verify(entityManager).createNativeQuery(any())
         verify(personRepository).findById(1234)
     }
@@ -49,10 +45,7 @@ internal class RingTest {
         doReturn(typedQuery).whenever(entityManager).createNativeQuery(any())
 
 
-        ringController.hentNestePersonAaRinge(
-            getContext(), NestePersonAaRingeRequest(
-                lokallag = Lokallag("lag1")
-        ))
+        ringController.hentNestePersonAaRinge(getContext())
         verify(entityManager).createNativeQuery(any())
         verifyZeroInteractions(personRepository)
     }
@@ -61,6 +54,7 @@ internal class RingTest {
         val ctx : SecurityContext = mock()
         doReturn(ringController.jwt).whenever(ctx).userPrincipal
         doReturn(Optional.of(1)).whenever(ringController.jwt).claim<Any>(any())
+        doReturn(1).whenever(ringService).getLokallag(any())
         return ctx
     }
 

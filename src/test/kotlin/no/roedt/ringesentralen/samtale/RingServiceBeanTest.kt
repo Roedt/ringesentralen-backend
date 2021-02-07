@@ -1,10 +1,7 @@
 package no.roedt.ringesentralen.samtale
 
 import UserId
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import io.quarkus.hibernate.orm.panache.PanacheQuery
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
@@ -22,7 +19,7 @@ internal class RingServiceBeanTest {
     private val entityManager: EntityManager = mock()
     private val databaseUpdater: DatabaseUpdater = mock()
 
-    private val ringService = RingServiceBean(personRepository = personRepository, entityManager = entityManager, databaseUpdater = databaseUpdater )
+    private var ringService = RingServiceBean(personRepository = personRepository, entityManager = entityManager, databaseUpdater = databaseUpdater )
 
     private val mockQuery: Query = mock()
 
@@ -35,6 +32,8 @@ internal class RingServiceBeanTest {
     @Test
     fun `samtale blir registrert`() {
         doReturn(mockQuery).whenever(entityManager).createNativeQuery(any())
+        ringService = spy(ringService)
+        doReturn(1).whenever(ringService).hypersysIDTilRingerId(any())
 
         val request = AutentisertResultatFraSamtaleRequest(
             UserId(1), ResultatFraSamtaleRequest(

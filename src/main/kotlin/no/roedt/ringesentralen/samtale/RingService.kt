@@ -97,7 +97,7 @@ class RingServiceBean(
 
     fun EntityManager.executeQuery(query: String) = entityManager.createNativeQuery(query).resultList
 
-    private fun hypersysIDTilRingerId(userId: UserId) =
+    fun hypersysIDTilRingerId(userId: UserId) =
         entityManager.createNativeQuery(
             "select ringer.id from ringer inner join person on person.id = ringer.personId and person.hypersysID = ${userId.userId} "
         ).resultList.first()
