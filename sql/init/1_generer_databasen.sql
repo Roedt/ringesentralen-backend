@@ -5470,7 +5470,7 @@ CREATE TABLE IF NOT EXISTS `person` (
   `email` varchar(100) DEFAULT NULL,
   `('` int(2) DEFAULT -1 NOT NULL,
   `groupID` int(2) DEFAULT NULL,
-  `userCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `oppretta` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lastCall` int(11) NOT NULL DEFAULT '0',
   `lokallag` int(3) unsigned DEFAULT NULL,
   FOREIGN KEY (`groupID`) REFERENCES `callGroup` (`id`),
@@ -5489,7 +5489,7 @@ CREATE TABLE IF NOT EXISTS `person` (
 
 CREATE TABLE IF NOT EXISTS `ringer` (
   `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `userCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `oppretta` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `personId` int(6) unsigned NOT NULL UNIQUE,
   FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
   INDEX(`personId`)
@@ -5657,10 +5657,10 @@ order by count(ringer.id) desc;
 -- --------------------------------------------------------
 
 create or replace view v_personerGodkjenning AS
-SELECT r.userCreated, concat(fornavn, ' ', etternavn) as name, phone, l.id as lokallagId, l.name as lokallag, email, postnummer, p.groupID
+SELECT r.oppretta, concat(fornavn, ' ', etternavn) as name, phone, l.id as lokallagId, l.name as lokallag, email, postnummer, p.groupID
 FROM `person` p
 inner join `ringer` r on p.id = r.personId
-left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.userCreated asc;
+left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.oppretta asc;
 
 -- --------------------------------------------------------
 
