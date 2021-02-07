@@ -67,7 +67,7 @@ class RingServiceBean(
             erFleireEnnToIkkeSvar(oppringtNummer, request) -> GroupID.Ferdigringt
             else -> null
         }
-        nesteGroupID?.nr?.let { databaseUpdater.updateWithResult("CALL sp_updateGroupID($oppringtNummer, $it)") }
+        nesteGroupID?.nr?.let { databaseUpdater.updateWithResult("CALL sp_updateGroupID(${request.ringtID}, $it)") }
         if (request.modus == Modus.Korona && request.resultat == Resultat.Svarte) {
             registrerKoronaspesifikkeResultat(request, oppringtNummer)
         }

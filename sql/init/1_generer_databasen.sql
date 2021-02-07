@@ -5685,13 +5685,13 @@ left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.oppr
 DELIMITER //
   DROP PROCEDURE IF EXISTS sp_updateGroupID;
   CREATE PROCEDURE sp_updateGroupID(
-  telefonnummer_In varchar(15),
+  id_In int(6) unsigned,
   groupID_In int(2)
 )
 BEGIN
 update `person` 
 set groupID = groupID_In
-where telefonnummer = telefonnummer_In;
+where id = id_in;
 END //
 
 -- --------------------------------------------------------
