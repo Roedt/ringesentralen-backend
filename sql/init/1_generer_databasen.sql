@@ -5594,7 +5594,8 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `ringerIV1` (
-  `telefonnummer` varchar(15) NOT NULL UNIQUE
+  `telefonnummer` varchar(15) NOT NULL UNIQUE,
+  `brukergruppe` int(2) NOT NULL
 );
 
 -- --------------------------------------------------------
@@ -5630,7 +5631,7 @@ SELECT p.sisteSamtale, p.telefonnummer, concat(p.fornavn,' ',p.etternavn) as nav
 -- --------------------------------------------------------
 
 create or replace view v_samtalerResultat AS
-SELECT distinct concat(ringerPerson.fornavn,' ',ringerPerson.etternavn) as ringerNavn, samtale.datetime as `datetime`, samtale.kommentar, r.displaytext as result,
+SELECT distinct concat(ringerPerson.fornavn,' ',ringerPerson.etternavn) as ringerNavn, samtale.datetime as `datetime`, samtale.kommentar, r.displaytext as resultat,
 concat(ringt.fornavn,' ',ringt.etternavn) as ringtNavn, ringt.telefonnummer as oppringtNummer
 FROM `samtale` samtale
 INNER JOIN `person` ringt on ringt.id = samtale.ringt
@@ -5807,7 +5808,7 @@ BEGIN
 
   IF (SELECT count(1) FROM ringerIV1 where telefonnummer=telefonnummer_In)>0 THEN
     BEGIN
-        UPDATE person SET groupID=greatest(6, groupID) WHERE telefonnummer=telefonnummer_In;
+        UPDATE person SET groupID=greatest((SELECT brukergruppe FROM ringerIV1 where telefonnummer=telefonnummer_In), groupID) WHERE telefonnummer=telefonnummer_In;
     END;
   END IF;
 
