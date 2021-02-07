@@ -36,8 +36,8 @@ class ModelConverterBean(
         )
     }
 
-    fun toTelefonnummer(phone: String): Telefonnummer? {
-        val splitted = phone.split(" ")
+    fun toTelefonnummer(telefonnummer: String): Telefonnummer? {
+        val splitted = telefonnummer.split(" ")
         return when {
             splitted.size >= 2 -> Telefonnummer(landkode = splitted[0], nummer = Integer.parseInt(splitted[1]))
             else -> null

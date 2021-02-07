@@ -34,7 +34,7 @@ class BrukereServiceBean(
                 Brukarinformasjon(
                     fornamn = r.fornavn,
                     etternamn = r.etternavn,
-                    telefonnummer = Telefonnummer(nummer = r.phone.toInt()),
+                    telefonnummer = Telefonnummer(nummer = r.telefonnummer.toInt()),
                     postnummer = Postnummer(r.postnummer.toString().padStart(4, '0')),
                     fylke = fylkeRepository.findById(r.fylke),
                     epost = r.email ?: "",
@@ -61,7 +61,7 @@ class BrukereServiceBean(
         val personMedEndraTilgang = request.personMedEndraTilgang()
 
         val ringerId = hypersysIDTilRingerId(request.userId)
-        databaseUpdater.update("CALL sp_godkjennBruker(${ringerId}, ${getPhone(personMedEndraTilgang)}, ${nyTilgang.nr})")
+        databaseUpdater.update("CALL sp_godkjennBruker(${ringerId}, ${tilTelefonnummer(personMedEndraTilgang)}, ${nyTilgang.nr})")
         return Brukerendring(personID = personMedEndraTilgang, nyGroupId = nyTilgang)
     }
 
@@ -76,7 +76,7 @@ class BrukereServiceBean(
         }
     }
 
-    private fun getPhone(personID: Long) = personRepository.findById(personID).phone
+    private fun tilTelefonnummer(personID: Long) = personRepository.findById(personID).telefonnummer
 
     private fun hypersysIdTilPerson(hypersysId: UserId) =
         personRepository.find("hypersysID", hypersysId.userId).firstResult<RingbarPerson>()

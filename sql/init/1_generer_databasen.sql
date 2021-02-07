@@ -5465,7 +5465,7 @@ CREATE TABLE IF NOT EXISTS `person` (
   `hypersysID` int(6) DEFAULT NULL,
   `fornavn` varchar(60) DEFAULT NULL,
   `etternavn` varchar(60) DEFAULT NULL,
-  `phone` varchar(15) DEFAULT NULL UNIQUE,
+  `telefonnummer` varchar(15) DEFAULT NULL UNIQUE,
   `postnummer` integer DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `fylke` int(2) DEFAULT -1 NOT NULL,
@@ -5479,7 +5479,7 @@ CREATE TABLE IF NOT EXISTS `person` (
   FOREIGN KEY(`postnummer`) REFERENCES `postnummer` (`postnummer`),
   INDEX (`groupID`),
   INDEX (`fylke`),
-  INDEX (`phone`),
+  INDEX (`telefonnummer`),
   INDEX (`lokallag`),
   INDEX (`postnummer`),
   INDEX (`hypersysID`)
@@ -5560,7 +5560,7 @@ CREATE TABLE IF NOT EXISTS `godkjenning` (
   INDEX(`godkjenner`),
   FOREIGN KEY (`godkjenner`) REFERENCES `ringer` (`id`),
   INDEX(`godkjentPerson`),
-  FOREIGN KEY (`godkjentPerson`) REFERENCES `person` (`phone`),
+  FOREIGN KEY (`godkjentPerson`) REFERENCES `person` (`telefonnummer`),
   INDEX(`nyGroupId`),
   FOREIGN KEY (`nyGroupId`) REFERENCES `brukergruppe` (`id`)
 );
@@ -5577,7 +5577,7 @@ CREATE TABLE IF NOT EXISTS `samtale` (
   INDEX (`resultat`),
   FOREIGN KEY (`resultat`) REFERENCES `resultat` (`id`),
   INDEX(`oppringtNummer`),
-  FOREIGN KEY (`oppringtNummer`) REFERENCES `person` (`phone`),
+  FOREIGN KEY (`oppringtNummer`) REFERENCES `person` (`telefonnummer`),
   INDEX(`ringer`),
   FOREIGN KEY (`ringer`) REFERENCES `ringer` (`id`)
 );
@@ -5602,7 +5602,7 @@ INNER JOIN `modus` m on mr.modus = m.id;
 -- --------------------------------------------------------
 
 create or replace view v_personerSomKanRinges as
-SELECT p.sisteSamtale, p.phone, concat(p.fornavn,' ',p.etternavn) as navn, p.postnummer, p.fylke, p.lokallag, l.navn as lokallagNavn, p.id as id
+SELECT p.sisteSamtale, p.telefonnummer, concat(p.fornavn,' ',p.etternavn) as navn, p.postnummer, p.fylke, p.lokallag, l.navn as lokallagNavn, p.id as id
   FROM person p
   LEFT OUTER JOIN lokallag l on p.lokallag = l.id
   WHERE groupID = '1'
@@ -5636,9 +5636,9 @@ WHERE p.groupID = 2;
 -- --------------------------------------------------------
 
 create or replace view v_noenRingerTilbake AS
-SELECT concat(p.fornavn,' ',p.etternavn) as navn, p.postnummer, p.phone, l.navn as lokallagNavn, l.id as lokallag, ringer.id as ringer
+SELECT concat(p.fornavn,' ',p.etternavn) as navn, p.postnummer, p.telefonnummer, l.navn as lokallagNavn, l.id as lokallag, ringer.id as ringer
 FROM person p
-inner join `samtale` c on p.phone = c.oppringtNummer
+inner join `samtale` c on p.telefonnummer = c.oppringtNummer
 inner join `ringer` ringer on ringer.id = c.ringer
 left outer join lokallag l on p.lokallag = l.id;
 
@@ -5655,7 +5655,7 @@ order by count(ringer.id) desc;
 -- --------------------------------------------------------
 
 create or replace view v_personerGodkjenning AS
-SELECT r.oppretta, concat(fornavn, ' ', etternavn) as navn, phone, l.id as lokallagId, l.navn as lokallag, email, postnummer, p.groupID
+SELECT r.oppretta, concat(fornavn, ' ', etternavn) as navn, telefonnummer, l.id as lokallagId, l.navn as lokallag, email, postnummer, p.groupID
 FROM `person` p
 inner join `ringer` r on p.id = r.personId
 left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.oppretta asc;
@@ -5665,13 +5665,13 @@ left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.oppr
 DELIMITER //
   DROP PROCEDURE IF EXISTS sp_updateGroupID;
   CREATE PROCEDURE sp_updateGroupID(
-  phone_In varchar(15),
+  telefonnummer_In varchar(15),
   groupID_In int(2)
 )
 BEGIN
 update `person` 
 set groupID = groupID_In
-where phone = phone_In;
+where telefonnummer = telefonnummer_In;
 END //
 
 -- --------------------------------------------------------
@@ -5689,7 +5689,7 @@ INSERT INTO `samtale` (oppringtNummer, ringer, resultat, kommentar)
 VALUES (oppringtNummerIn, ringerIdIn, resultatIn, kommentarIn);
 UPDATE `person` 
   SET sisteSamtale = UNIX_TIMESTAMP(now())
-  WHERE phone = oppringtNummerIn;
+  WHERE telefonnummer = oppringtNummerIn;
 END //
 -- --------------------------------------------------------
 
@@ -5705,7 +5705,7 @@ INSERT INTO `godkjenning` (godkjenner, godkjentPerson, nyGroupId)
 VALUES (ringerIdIn, oppringtNummerIn, nyGroupIdIn);
 UPDATE `person` 
   SET groupID = nyGroupIdIn
-  WHERE phone = oppringtNummerIn;
+  WHERE telefonnummer = oppringtNummerIn;
 END //
 
 -- --------------------------------------------------------
@@ -5721,7 +5721,7 @@ DELIMITER //
 )
 BEGIN
 INSERT INTO `oppfoelgingKorona` (personId, koronaprogram, merAktiv, valgkampsbrev, vilIkkeBliRingt)
-  VALUES ((select id from person where phone = oppringtNummerIn), koronaprogramIn, merAktivIn, valgkampsbrevIn, vilIkkeBliRingtIn);
+  VALUES ((select id from person where telefonnummer = oppringtNummerIn), koronaprogramIn, merAktivIn, valgkampsbrevIn, vilIkkeBliRingtIn);
 END //
 
 -- --------------------------------------------------------
@@ -5735,7 +5735,7 @@ DELIMITER //
 BEGIN
 INSERT INTO `samtale` (oppringtNummer, ringer, resultat, kommentar)
 VALUES (oppringtNummerIn, ringerIdIn, '9', 'Starter samtale');
-UPDATE `person` SET sisteSamtale = UNIX_TIMESTAMP(now()) WHERE phone = oppringtNummerIn;
+UPDATE `person` SET sisteSamtale = UNIX_TIMESTAMP(now()) WHERE telefonnummer = oppringtNummerIn;
 END //
 
 -- --------------------------------------------------------
@@ -5746,7 +5746,7 @@ DELIMITER //
     hypersysIDIn int(4),
     fornavnIn varchar(60),
     etternavnIn varchar(60),
-    phoneIn varchar(15),
+    telefonnummer_In varchar(15),
     emailIn varchar(100),
     postnummerIn integer,
     fylkeIdIn tinyint(2),
@@ -5765,12 +5765,12 @@ BEGIN
           groupID = greatest(4, groupID),
           fylke = fylkeIdIn,
           lokallag = lokallagIn
-        WHERE phone = phoneIn;
+        WHERE telefonnummer = telefonnummer_In;
     END;
   ELSE
     BEGIN
-        INSERT INTO `person` (hypersysID, fornavn, etternavn, phone, email, postnummer, fylke, groupID, lokallag)
-            VALUES (hypersysIDIn, fornavnIn, etternavnIn, phoneIn, emailIn, postnummerIn, fylkeIdIn, '4', lokallagIn);
+        INSERT INTO `person` (hypersysID, fornavn, etternavn, telefonnummer, email, postnummer, fylke, groupID, lokallag)
+            VALUES (hypersysIDIn, fornavnIn, etternavnIn, telefonnummer_In, emailIn, postnummerIn, fylkeIdIn, '4', lokallagIn);
     END;
   END IF;
 
@@ -5793,13 +5793,13 @@ END //
 DELIMITER //
   DROP PROCEDURE IF EXISTS sp_slettPerson;
   CREATE PROCEDURE sp_slettPerson (
-    phoneIn varchar(15)
+    telefonnummer_In varchar(15)
 )
 BEGIN
-DELETE FROM `samtale` where oppringtNummer = phoneIn;
-DELETE FROM `oppfoelgingKorona` where personId = (select id from person where phone = phoneIn);
-DELETE FROM `ringer` where personId = (select id from person where phone = phoneIn);
-DELETE FROM `person` where phone = phoneIn;
+DELETE FROM `samtale` where oppringtNummer = telefonnummer_In;
+DELETE FROM `oppfoelgingKorona` where personId = (select id from person where telefonnummer = telefonnummer_In);
+DELETE FROM `ringer` where personId = (select id from person where telefonnummer = telefonnummer_In);
+DELETE FROM `person` where telefonnummer = telefonnummer_In;
 END //
 
 -- --------------------------------------------------------
