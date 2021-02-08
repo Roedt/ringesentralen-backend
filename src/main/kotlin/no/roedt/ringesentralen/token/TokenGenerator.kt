@@ -23,6 +23,9 @@ class TokenGenerator(
     @ConfigProperty(name = "frontendTokenKey")
     lateinit var frontendTokenKey: String
 
+    @ConfigProperty(name = "token.expiryPeriod")
+    lateinit var tokenExpiryPeriod: Duration
+
     fun login(loginRequest: LoginRequest): String {
         if (loginRequest.key != frontendTokenKey) {
             throw IllegalArgumentException("Illegal key")
@@ -40,7 +43,7 @@ class TokenGenerator(
         .subject("Ringesentralen")
         .upn("Ringesentralen")
         .issuedAt(System.currentTimeMillis())
-        .expiresAt(System.currentTimeMillis() + Duration.ofHours(1).toSeconds())
+        .expiresAt(getTokenExpiresAt())
         .groups(getGroups(hypersysToken))
         .claim("hypersys.token_type", hypersysToken.token_type)
         .claim("hypersys.scope", hypersysToken.scope)
@@ -49,6 +52,8 @@ class TokenGenerator(
         .claim("hypersys.refresh_token", hypersysToken.refresh_token)
         .claim("hypersys.user_id", hypersysToken.user_id)
         .sign(privateKeyFactory.readPrivateKey())
+
+    private fun getTokenExpiresAt() = System.currentTimeMillis() + tokenExpiryPeriod.toSeconds()
 
     private fun getGroups(hypersysToken: GyldigPersonToken): Set<String> =
         when (getPersonFromHypersysID(hypersysToken).groupID) {
