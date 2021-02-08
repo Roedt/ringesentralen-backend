@@ -2,7 +2,7 @@ package no.roedt.ringesentralen.samtale
 
 import com.nhaarman.mockitokotlin2.*
 import no.roedt.ringesentralen.DatabaseUpdater
-import no.roedt.ringesentralen.PersonRepository
+import no.roedt.ringesentralen.person.PersonRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*

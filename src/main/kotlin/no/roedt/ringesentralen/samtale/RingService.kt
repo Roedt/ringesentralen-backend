@@ -2,7 +2,7 @@ package no.roedt.ringesentralen.samtale
 
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.PersonRepository
+import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.UserId
 import no.roedt.ringesentralen.person.Person
 import java.sql.Timestamp
@@ -18,9 +18,9 @@ interface RingService {
 
 @ApplicationScoped
 class RingServiceBean(
-        val personRepository: PersonRepository,
-        val entityManager: EntityManager,
-        val databaseUpdater: DatabaseUpdater,
+    val personRepository: PersonRepository,
+    val entityManager: EntityManager,
+    val databaseUpdater: DatabaseUpdater,
 ): RingService {
 
     //TODO: Vurder om dette skal loggast

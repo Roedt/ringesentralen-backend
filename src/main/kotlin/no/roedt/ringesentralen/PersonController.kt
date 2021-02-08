@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen
 
 import no.roedt.ringesentralen.person.Person
+import no.roedt.ringesentralen.person.PersonRepository
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.openapi.annotations.Operation

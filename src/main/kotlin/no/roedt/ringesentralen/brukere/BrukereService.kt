@@ -3,6 +3,7 @@ package no.roedt.ringesentralen.brukere
 import no.roedt.ringesentralen.*
 import no.roedt.ringesentralen.samtale.GroupID
 import no.roedt.ringesentralen.person.Person
+import no.roedt.ringesentralen.person.PersonRepository
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
 import javax.ws.rs.NotAuthorizedException
@@ -19,11 +20,11 @@ interface BrukereService {
 
 @ApplicationScoped
 class BrukereServiceBean(
-        val personRepository: PersonRepository,
-        val databaseUpdater: DatabaseUpdater,
-        val fylkeRepository: FylkeRepository,
-        val lokallagRepository: LokallagRepository,
-        val entityManager: EntityManager
+    val personRepository: PersonRepository,
+    val databaseUpdater: DatabaseUpdater,
+    val fylkeRepository: FylkeRepository,
+    val lokallagRepository: LokallagRepository,
+    val entityManager: EntityManager
 ): BrukereService {
 
     override fun hentBrukarar(): List<Brukerinformasjon> =

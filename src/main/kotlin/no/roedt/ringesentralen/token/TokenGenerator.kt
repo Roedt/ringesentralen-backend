@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.token
 
 import io.smallrye.jwt.build.Jwt
-import no.roedt.ringesentralen.PersonRepository
+import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.hypersys.*
 import no.roedt.ringesentralen.samtale.GroupID
 import no.roedt.ringesentralen.person.Person
