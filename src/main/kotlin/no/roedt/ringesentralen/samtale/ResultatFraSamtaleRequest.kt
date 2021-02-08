@@ -3,6 +3,7 @@ package no.roedt.ringesentralen.samtale
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.ringesentralen.Modus
+import no.roedt.ringesentralen.UserId
 
 @RegisterForReflection
 data class ResultatFraSamtaleRequest(
@@ -13,3 +14,6 @@ data class ResultatFraSamtaleRequest(
         @JsonProperty("modusspesifikkeResultat") val modusspesifikkeResultat: ModusspesifikkeResultat,
         @JsonProperty("vilIkkeBliRingt") val vilIkkeBliRingt: Boolean
 )
+
+@RegisterForReflection
+data class AutentisertResultatFraSamtaleRequest(val userId: UserId, val resultatFraSamtaleRequest: ResultatFraSamtaleRequest)
