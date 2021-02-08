@@ -5,6 +5,9 @@ import io.restassured.response.ValidatableResponseOptions
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.hypersys.LoginRequest
 import no.roedt.ringesentralen.samtale.*
+import no.roedt.ringesentralen.samtale.resultat.KoronaspesifikkeResultat
+import no.roedt.ringesentralen.samtale.resultat.Resultat
+import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
 import org.hamcrest.CoreMatchers.equalTo
 
 class FullFlytTest {
@@ -22,7 +25,8 @@ class FullFlytTest {
             .statusCode(200)
 
         loginWithToken(token)
-            .body(ResultatFraSamtaleRequest(
+            .body(
+                ResultatFraSamtaleRequest(
                 modus = Modus.Korona,
                 ringtID = ringtId,
                 resultat = Resultat.Passet_ikke,

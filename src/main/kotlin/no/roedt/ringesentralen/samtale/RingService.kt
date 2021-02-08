@@ -5,6 +5,10 @@ import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.UserId
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
+import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
+import no.roedt.ringesentralen.samtale.resultat.KoronaspesifikkeResultat
+import no.roedt.ringesentralen.samtale.resultat.Resultat
+import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
 import java.sql.Timestamp
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager

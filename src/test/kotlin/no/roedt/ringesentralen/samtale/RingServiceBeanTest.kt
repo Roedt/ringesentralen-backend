@@ -7,6 +7,10 @@ import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.Person
+import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
+import no.roedt.ringesentralen.samtale.resultat.KoronaspesifikkeResultat
+import no.roedt.ringesentralen.samtale.resultat.Resultat
+import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
@@ -48,7 +52,8 @@ internal class RingServiceBeanTest {
                         vilHaValgkampsbrev = false
                 ),
                 vilIkkeBliRingt = false
-        ))
+        )
+        )
 
         val response = ringService.registrerResultatFraSamtale(request)
         assertNotNull(response)
@@ -69,7 +74,8 @@ internal class RingServiceBeanTest {
                         vilHaValgkampsbrev = false
                 ),
                 vilIkkeBliRingt = false
-        ))
+        )
+        )
 
         assertThrows(AssertionError::class.java) {
             ringService.registrerResultatFraSamtale(request)

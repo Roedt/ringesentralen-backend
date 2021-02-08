@@ -2,6 +2,8 @@ package no.roedt.ringesentralen.samtale
 
 import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.person.Person
+import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
+import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
@@ -47,7 +49,9 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Path("/registrerResultatFraSamtale")
     @Operation(summary = "Registrer resultat fra samtale")
     @Retry
-    fun registrerResultatFraSamtale(@Context ctx: SecurityContext, resultatFraSatmtaleRequest: ResultatFraSamtaleRequest) = ringService.registrerResultatFraSamtale(AutentisertResultatFraSamtaleRequest(ctx.userId(), resultatFraSatmtaleRequest))
+    fun registrerResultatFraSamtale(@Context ctx: SecurityContext, resultatFraSatmtaleRequest: ResultatFraSamtaleRequest) = ringService.registrerResultatFraSamtale(
+        AutentisertResultatFraSamtaleRequest(ctx.userId(), resultatFraSatmtaleRequest)
+    )
 
 
     @RolesAllowed("ringar")
