@@ -3,6 +3,8 @@ package no.roedt.ringesentralen.hypersys
 import no.roedt.ringesentralen.hypersys.externalModel.Membership
 import no.roedt.ringesentralen.hypersys.externalModel.Profile
 import no.roedt.ringesentralen.hypersys.externalModel.User
+import no.roedt.ringesentralen.lokallag.Lokallag
+import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.Person
 import javax.enterprise.context.Dependent
 import javax.persistence.EntityManager
@@ -13,7 +15,8 @@ interface ModelConverter {
 
 @Dependent
 class ModelConverterBean(
-    private val entityManager: EntityManager
+    private val entityManager: EntityManager,
+    private val lokallagRepository: LokallagRepository
 ) : ModelConverter {
 
     override fun convertToSQL(profile: Profile) = convert(profile.user).toSQL()
@@ -71,7 +74,12 @@ class ModelConverterBean(
 
     fun toLokallag(memberships: List<Membership>): Int? =
         memberships
+            .asSequence()
             .sortedByDescending { it.startDate }
-            .map { it.organisation }
+            .map { it.organisationName }
+            .map { lokallagRepository.find("navn", it) }
+            .map { it.firstResult<Lokallag>() }
+            .map { it.id }
+            .map { it.toInt() }
             .firstOrNull()
 }
