@@ -9,7 +9,7 @@ data class Brukerinformasjon(
         val etternamn: String,
         val epost: String,
         val telefonnummer: Telefonnummer?,
-        val postnummer: Postnummer,
+        val postnummer: Int,
         val fylke: Fylke,
         val lokallag: Lokallag?
 ) {

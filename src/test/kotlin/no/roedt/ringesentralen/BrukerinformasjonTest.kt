@@ -23,7 +23,7 @@ internal class BrukerinformasjonTest {
             etternamn = "",
             epost = "",
             telefonnummer = telefonnummer,
-            postnummer = Postnummer("7021"),
+            postnummer = 7021,
             fylke = Fylke(3, "Oslo"),
             lokallag = null
         ).toTelefonnummer()

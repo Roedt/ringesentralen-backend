@@ -1,6 +1,5 @@
 package no.roedt.ringesentralen.brukere
 
-import no.roedt.ringesentralen.UserId
 import no.roedt.ringesentralen.*
 import no.roedt.ringesentralen.samtale.GroupID
 import no.roedt.ringesentralen.samtale.RingbarPerson
@@ -35,7 +34,7 @@ class BrukereServiceBean(
                     fornamn = r.fornavn,
                     etternamn = r.etternavn,
                     telefonnummer = Telefonnummer(nummer = r.telefonnummer.toInt()),
-                    postnummer = Postnummer(r.postnummer.toString().padStart(4, '0')),
+                    postnummer = r.postnummer,
                     fylke = fylkeRepository.findById(r.fylke),
                     epost = r.email ?: "",
                     hypersysID = r.hypersysID ?: -1,

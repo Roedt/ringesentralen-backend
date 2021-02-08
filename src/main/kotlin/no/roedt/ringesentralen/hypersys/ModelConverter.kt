@@ -44,14 +44,14 @@ class ModelConverterBean(
         }
     }
 
-    fun toPostnummer(user: User) = user.addresses.map { it.postalCode }.map{ it[1] }.map { Postnummer(it) }.firstOrNull() ?: Postnummer("0000")
+    private fun toPostnummer(user: User) : Int = user.addresses.map { it.postalCode }.map{ it[1] }.map{ it.toInt() }.firstOrNull() ?: 1
 
     //TODO fix
-    private fun toFylke(postnummer: Postnummer): Fylke =
+    private fun toFylke(postnummer: Int): Fylke =
         entityManager.createNativeQuery(
             "select fylke.id from `postnummer` p " +
                     "inner join kommune kommune on p.KommuneKode = kommune.nummer " +
-                    "inner join `fylker` fylke on fylke.id=kommune.fylke_id where postnummer = ${postnummer.getPostnummer()}"
+                    "inner join `fylker` fylke on fylke.id=kommune.fylke_id where postnummer = $postnummer"
         )
             .resultList
             .map { it as Int }
