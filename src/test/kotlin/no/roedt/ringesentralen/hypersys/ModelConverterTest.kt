@@ -2,7 +2,7 @@ package no.roedt.ringesentralen.hypersys
 
 import com.nhaarman.mockitokotlin2.mock
 import no.roedt.ringesentralen.FylkeRepository
-import no.roedt.ringesentralen.LokallagRepository
+import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.Telefonnummer
 import org.junit.jupiter.api.Test
 import javax.persistence.EntityManager

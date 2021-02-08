@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen
+package no.roedt.ringesentralen.lokallag
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository
 import javax.enterprise.context.ApplicationScoped

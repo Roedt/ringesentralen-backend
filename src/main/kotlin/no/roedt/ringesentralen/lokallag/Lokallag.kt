@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen
+package no.roedt.ringesentralen.lokallag
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import io.quarkus.runtime.annotations.RegisterForReflection

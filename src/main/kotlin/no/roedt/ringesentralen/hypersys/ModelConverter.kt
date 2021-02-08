@@ -4,6 +4,8 @@ import no.roedt.ringesentralen.*
 import no.roedt.ringesentralen.hypersys.externalModel.Membership
 import no.roedt.ringesentralen.hypersys.externalModel.Profile
 import no.roedt.ringesentralen.hypersys.externalModel.User
+import no.roedt.ringesentralen.lokallag.Lokallag
+import no.roedt.ringesentralen.lokallag.LokallagRepository
 import javax.enterprise.context.Dependent
 import javax.persistence.EntityManager
 

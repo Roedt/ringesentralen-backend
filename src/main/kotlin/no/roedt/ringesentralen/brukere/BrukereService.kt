@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.brukere
 
 import no.roedt.ringesentralen.*
+import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.samtale.GroupID
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository

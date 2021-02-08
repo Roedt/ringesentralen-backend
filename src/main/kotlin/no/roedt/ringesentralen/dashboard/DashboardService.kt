@@ -2,8 +2,8 @@ package no.roedt.ringesentralen.dashboard
 
 import no.roedt.ringesentralen.UserId
 import io.quarkus.panache.common.Sort
-import no.roedt.ringesentralen.Lokallag
-import no.roedt.ringesentralen.LokallagRepository
+import no.roedt.ringesentralen.lokallag.Lokallag
+import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.samtale.GroupID
 import no.roedt.ringesentralen.person.Person
@@ -16,9 +16,9 @@ interface DashboardService {
 
 @ApplicationScoped
 class DashboardServiceBean(
-        val lokallagRepository: LokallagRepository,
-        val entityManager: EntityManager,
-        val personRepository: PersonRepository
+    val lokallagRepository: LokallagRepository,
+    val entityManager: EntityManager,
+    val personRepository: PersonRepository
 ) : DashboardService {
 
     override fun getDashboard(ringerID: UserId): DashboardResponse {

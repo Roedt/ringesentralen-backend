@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen
 
 import io.quarkus.runtime.annotations.RegisterForReflection
+import no.roedt.ringesentralen.lokallag.Lokallag
 
 @RegisterForReflection
 data class Brukerinformasjon(
