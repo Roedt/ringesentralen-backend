@@ -1,6 +1,5 @@
 package no.roedt.ringesentralen.brukere
 
-import no.roedt.ringesentralen.Brukerinformasjon
 import no.roedt.ringesentralen.RingesentralenController
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry

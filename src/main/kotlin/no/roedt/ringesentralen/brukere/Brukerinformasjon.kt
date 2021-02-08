@@ -1,6 +1,8 @@
-package no.roedt.ringesentralen
+package no.roedt.ringesentralen.brukere
 
 import io.quarkus.runtime.annotations.RegisterForReflection
+import no.roedt.ringesentralen.Fylke
+import no.roedt.ringesentralen.Telefonnummer
 import no.roedt.ringesentralen.lokallag.Lokallag
 
 @RegisterForReflection
