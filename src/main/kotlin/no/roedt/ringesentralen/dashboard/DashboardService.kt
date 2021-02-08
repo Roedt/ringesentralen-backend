@@ -5,7 +5,7 @@ import io.quarkus.panache.common.Sort
 import no.roedt.ringesentralen.lokallag.Lokallag
 import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.PersonRepository
-import no.roedt.ringesentralen.samtale.GroupID
+import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager

@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.samtale
+package no.roedt.ringesentralen.person
 
 enum class GroupID(val nr: Int, val skildring: String) {
     ManglerSmtykke(0, "mangler info/samtykke før ringing"),
