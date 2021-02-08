@@ -16,6 +16,8 @@ class ModelConverterBean(
     private val entityManager: EntityManager
 ) : ModelConverter {
 
+    override fun convertToSQL(profile: Profile) = convert(profile.user).toSQL()
+
     private fun convert(user: User): Person {
         val sisteMellomrom = user.name.lastIndexOf(" ")
         val fornamn = user.name.substring(0, sisteMellomrom)
@@ -34,8 +36,6 @@ class ModelConverterBean(
             sisteSamtale = 0 // Samme her
         )
     }
-
-    override fun convertToSQL(profile: Profile) = convert(profile.user).toSQL()
 
     private fun Person.toSQL(): String = "CALL sp_registrerNyBruker(" +
             "'${hypersysID}', " +
