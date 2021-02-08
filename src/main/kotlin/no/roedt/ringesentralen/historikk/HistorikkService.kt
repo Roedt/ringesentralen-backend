@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.historikk
 
 import no.roedt.ringesentralen.person.PersonRepository
-import no.roedt.ringesentralen.UserId
+import no.roedt.ringesentralen.person.UserId
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.samtale.Samtale
 import java.sql.Timestamp

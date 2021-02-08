@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.samtale
 
-import no.roedt.ringesentralen.UserId
+import no.roedt.ringesentralen.person.UserId
 import com.nhaarman.mockitokotlin2.*
 import io.quarkus.hibernate.orm.panache.PanacheQuery
 import no.roedt.ringesentralen.DatabaseUpdater

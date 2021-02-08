@@ -3,7 +3,7 @@ package no.roedt.ringesentralen.samtale.resultat
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.UserId
+import no.roedt.ringesentralen.person.UserId
 
 @RegisterForReflection
 data class ResultatFraSamtaleRequest(

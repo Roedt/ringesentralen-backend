@@ -5,6 +5,7 @@ import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
+import no.roedt.ringesentralen.person.UserId
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
 import javax.ws.rs.NotAuthorizedException

@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen
 
+import no.roedt.ringesentralen.person.UserId
 import org.eclipse.microprofile.jwt.JsonWebToken
 import javax.ws.rs.core.SecurityContext
 

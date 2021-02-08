@@ -2,7 +2,7 @@ package no.roedt.ringesentralen.brukere
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.ringesentralen.UserId
+import no.roedt.ringesentralen.person.UserId
 
 @RegisterForReflection
 data class TilgangsendringsRequest(
