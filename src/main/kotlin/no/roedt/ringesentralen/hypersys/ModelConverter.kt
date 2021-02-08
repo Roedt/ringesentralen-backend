@@ -56,7 +56,8 @@ class ModelConverterBean(
             .resultList
             .map { it as Int }
             .map { fylkeRepository.findById(it) }
-            .first()
+            .firstOrNull()
+            ?: fylkeRepository.findById(-1)
 
 
     fun toLokallag(memberships: List<Membership>): Lokallag? =
