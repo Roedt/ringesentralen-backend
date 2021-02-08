@@ -1,6 +1,5 @@
 package no.roedt.ringesentralen.hypersys
 
-import no.roedt.ringesentralen.Telefonnummer
 import no.roedt.ringesentralen.hypersys.externalModel.Membership
 import no.roedt.ringesentralen.hypersys.externalModel.Profile
 import no.roedt.ringesentralen.hypersys.externalModel.User
@@ -49,17 +48,8 @@ class ModelConverterBean(
             "$lokallag" +
             ")"
 
-    fun toTelefonnummer(telefonnummer: String): Telefonnummer? {
-        val splitted = telefonnummer.split(" ")
-        return when {
-            splitted.size >= 2 -> Telefonnummer(landkode = splitted[0], nummer = Integer.parseInt(splitted[1]))
-            else -> null
-        }
-    }
-
     private fun toPostnummer(user: User) : Int = user.addresses.map { it.postalCode }.map{ it[1] }.map{ it.toInt() }.firstOrNull() ?: 1
 
-    //TODO fix
     private fun toFylke(postnummer: Int): Int =
         entityManager.createNativeQuery(
             "select fylke.id from `postnummer` p " +
