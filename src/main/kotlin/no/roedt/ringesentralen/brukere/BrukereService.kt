@@ -2,7 +2,7 @@ package no.roedt.ringesentralen.brukere
 
 import no.roedt.ringesentralen.*
 import no.roedt.ringesentralen.samtale.GroupID
-import no.roedt.ringesentralen.samtale.RingbarPerson
+import no.roedt.ringesentralen.person.Person
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
 import javax.ws.rs.NotAuthorizedException
@@ -28,7 +28,7 @@ class BrukereServiceBean(
 
     override fun hentBrukarar(): List<Brukerinformasjon> =
         personRepository.find("groupID >= ${GroupID.GodkjentRinger.nr}")
-            .list<RingbarPerson>()
+            .list<Person>()
             .map { r ->
                 Brukerinformasjon(
                     fornamn = r.fornavn,
@@ -76,7 +76,7 @@ class BrukereServiceBean(
     }
 
     private fun hypersysIdTilPerson(hypersysId: UserId) =
-        personRepository.find("hypersysID", hypersysId.userId).firstResult<RingbarPerson>()
+        personRepository.find("hypersysID", hypersysId.userId).firstResult<Person>()
 
 
     private fun hypersysIDTilRingerId(userId: UserId) =

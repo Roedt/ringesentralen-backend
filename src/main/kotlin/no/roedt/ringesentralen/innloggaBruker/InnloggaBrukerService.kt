@@ -2,10 +2,10 @@ package no.roedt.ringesentralen.innloggaBruker
 
 import no.roedt.ringesentralen.UserId
 import no.roedt.ringesentralen.PersonRepository
-import no.roedt.ringesentralen.samtale.RingbarPerson
+import no.roedt.ringesentralen.person.Person
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class InnloggaBrukerService(private val personRepository: PersonRepository) {
-    fun getProfil(userId: UserId): RingbarPerson = personRepository.find("hypersysID", userId.userId).firstResult()
+    fun getProfil(userId: UserId): Person = personRepository.find("hypersysID", userId.userId).firstResult()
 }

@@ -6,6 +6,7 @@ import io.quarkus.hibernate.orm.panache.PanacheQuery
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.PersonRepository
+import no.roedt.ringesentralen.person.Person
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
@@ -76,12 +77,12 @@ internal class RingServiceBeanTest {
     }
 
     private fun createRingbarPerson(fornavn: String, etternavn: String, telefonnummer: String, id: Long, hypersysID: Int) {
-        val person = RingbarPerson(hypersysID = hypersysID, fornavn = fornavn, etternavn = etternavn,
+        val person = Person(hypersysID = hypersysID, fornavn = fornavn, etternavn = etternavn,
             telefonnummer = telefonnummer, sisteSamtale = 0, email = "",
             postnummer = 1234, fylke = 0, lokallag = 0, groupID = 0)
         doReturn(person).whenever(personRepository).findById(id)
-        val query : PanacheQuery<RingbarPerson> = mock()
-        doReturn(person).whenever(query).firstResult<RingbarPerson>()
+        val query : PanacheQuery<Person> = mock()
+        doReturn(person).whenever(query).firstResult<Person>()
         doReturn(query).whenever(personRepository).find("hypersysID", hypersysID)
     }
 }

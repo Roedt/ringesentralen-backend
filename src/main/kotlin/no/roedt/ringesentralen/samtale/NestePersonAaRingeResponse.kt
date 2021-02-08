@@ -1,9 +1,10 @@
 package no.roedt.ringesentralen.samtale
 
 import io.quarkus.runtime.annotations.RegisterForReflection
+import no.roedt.ringesentralen.person.Person
 
 @RegisterForReflection
 data class NestePersonAaRingeResponse(
-    val ringbarPerson: RingbarPerson,
+    val person: Person,
     val tidlegareSamtalar: List<Samtale>
 )

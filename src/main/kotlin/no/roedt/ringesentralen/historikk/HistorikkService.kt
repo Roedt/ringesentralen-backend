@@ -2,7 +2,7 @@ package no.roedt.ringesentralen.historikk
 
 import no.roedt.ringesentralen.PersonRepository
 import no.roedt.ringesentralen.UserId
-import no.roedt.ringesentralen.samtale.RingbarPerson
+import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.samtale.Samtale
 import java.sql.Timestamp
 import javax.enterprise.context.ApplicationScoped
@@ -17,7 +17,7 @@ class HistorikkService(
     fun getMineSamtaler(userId: UserId): List<Samtale> = getSamtaler("where hypersysID='${userId.userId}'")
 
     fun getLagetsSamtaler(userId: UserId): List<Samtale> = getSamtaler(
-        "where lokallag = ${personRepository.find("hypersysID", userId.userId).firstResult<RingbarPerson>().lokallag}"
+        "where lokallag = ${personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag}"
     )
 
     private fun getSamtaler(whereklausul: String): List<Samtale> {

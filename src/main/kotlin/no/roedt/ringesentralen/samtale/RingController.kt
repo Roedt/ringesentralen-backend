@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.samtale
 
 import no.roedt.ringesentralen.RingesentralenController
+import no.roedt.ringesentralen.person.Person
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
@@ -56,6 +57,6 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Path("/noenRingerTilbake")
     @Operation(summary = "Noen ringer tilbake")
     @Retry
-    fun noenRingerTilbake(@Context ctx: SecurityContext, request: RingerTilbakeRequest): RingbarPerson = ringService.noenRingerTilbake(AutentisertRingerTilbakeRequest(ctx.userId(), request))
+    fun noenRingerTilbake(@Context ctx: SecurityContext, request: RingerTilbakeRequest): Person = ringService.noenRingerTilbake(AutentisertRingerTilbakeRequest(ctx.userId(), request))
 
 }

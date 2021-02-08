@@ -4,7 +4,7 @@ import io.smallrye.jwt.build.Jwt
 import no.roedt.ringesentralen.PersonRepository
 import no.roedt.ringesentralen.hypersys.*
 import no.roedt.ringesentralen.samtale.GroupID
-import no.roedt.ringesentralen.samtale.RingbarPerson
+import no.roedt.ringesentralen.person.Person
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.eclipse.microprofile.jwt.JsonWebToken
 import java.time.Duration
@@ -64,7 +64,7 @@ class TokenGenerator(
         }
 
     private fun getPersonFromHypersysID(hypersysToken: GyldigPersonToken) =
-        personRepository.find("hypersysID", hypersysToken.user_id.toInt()).firstResult<RingbarPerson>()
+        personRepository.find("hypersysID", hypersysToken.user_id.toInt()).firstResult<Person>()
 
     fun refresh(jwt: JsonWebToken): String = generateToken(
         GyldigPersonToken(

@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.samtale
+package no.roedt.ringesentralen.person
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import io.quarkus.runtime.annotations.RegisterForReflection
@@ -10,7 +10,7 @@ import javax.persistence.Table
 @Table(name = "person")
 @Cacheable
 @RegisterForReflection
-data class RingbarPerson(
+data class Person(
         var hypersysID: Int?,
         var fornavn: String,
         var etternavn: String,

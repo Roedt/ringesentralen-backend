@@ -4,6 +4,7 @@ import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.PersonRepository
 import no.roedt.ringesentralen.UserId
+import no.roedt.ringesentralen.person.Person
 import java.sql.Timestamp
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
@@ -12,7 +13,7 @@ interface RingService {
     fun hentNestePersonAaRinge(userId: UserId): NestePersonAaRingeResponse?
     fun startSamtale(request: AutentisertStartSamtaleRequest)
     fun registrerResultatFraSamtale(request: AutentisertResultatFraSamtaleRequest)
-    fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): RingbarPerson
+    fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): Person
 }
 
 @ApplicationScoped
@@ -31,13 +32,13 @@ class RingServiceBean(
             .firstOrNull()
             ?.let { it as Int }
             ?.let { personRepository.findById(it.toLong()) }
-            ?.let { NestePersonAaRingeResponse(ringbarPerson = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer))}
+            ?.let { NestePersonAaRingeResponse(person = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer))}
             ?.also {
-                databaseUpdater.update("call sp_lagreOppslag(${it.ringbarPerson.id}, ${userId.userId})")
+                databaseUpdater.update("call sp_lagreOppslag(${it.person.id}, ${userId.userId})")
             }
 
     fun getLokallag(userId: UserId) =
-        personRepository.find("hypersysID", userId.userId).firstResult<RingbarPerson>().lokallag
+        personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag
 
     private fun getTidlegareSamtalarMedDennePersonen(oppringtNummer: String): List<Samtale> =
         entityManager.createNativeQuery("SELECT resultat, ringerNavn, datetime, kommentar, ringtNavn FROM `v_samtalerResultat` WHERE oppringtNummer = '$oppringtNummer'")
@@ -75,10 +76,10 @@ class RingServiceBean(
         }
     }
 
-    override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): RingbarPerson {
+    override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): Person {
         val ringer = hypersysIDTilRingerId(request.userId)
         val oppringtNummer = request.ringtNummer()
-        val personSomRingerTilbake: RingbarPerson = personRepository.find("telefonnummer", oppringtNummer).firstResult()
+        val personSomRingerTilbake: Person = personRepository.find("telefonnummer", oppringtNummer).firstResult()
         if (entityManager.executeQuery("SELECT 1 FROM v_noenRingerTilbake WHERE telefonnummer = '$oppringtNummer' AND ringer = '$ringer' LIMIT 1").isEmpty()) {
             throw Exception("Du kan berre registrere å bli ringt opp frå folk du har ringt tidlegare.")
         }

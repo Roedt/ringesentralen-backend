@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen
 
-import no.roedt.ringesentralen.samtale.RingbarPerson
+import no.roedt.ringesentralen.person.Person
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.openapi.annotations.Operation
@@ -31,7 +31,7 @@ class PersonController(
     @Bulkhead(5)
     @Retry
     fun slettPerson(@Context ctx: SecurityContext, slettPersonRequest : SlettPersonRequest) {
-        val id = personRepository.find("telefonnummer", slettPersonRequest.telefonnummer).firstResult<RingbarPerson>().id
+        val id = personRepository.find("telefonnummer", slettPersonRequest.telefonnummer).firstResult<Person>().id
         databaseUpdater.update("CALL sp_slettPerson($id)")
     }
 }

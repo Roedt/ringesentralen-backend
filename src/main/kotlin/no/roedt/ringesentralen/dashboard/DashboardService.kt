@@ -6,7 +6,7 @@ import no.roedt.ringesentralen.Lokallag
 import no.roedt.ringesentralen.LokallagRepository
 import no.roedt.ringesentralen.PersonRepository
 import no.roedt.ringesentralen.samtale.GroupID
-import no.roedt.ringesentralen.samtale.RingbarPerson
+import no.roedt.ringesentralen.person.Person
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
 
@@ -50,5 +50,5 @@ class DashboardServiceBean(
     }
 
     private fun hypersysIdTilPerson(hypersysId: UserId) =
-        personRepository.find("hypersysID", hypersysId.userId).firstResult<RingbarPerson>()
+        personRepository.find("hypersysID", hypersysId.userId).firstResult<Person>()
 }
