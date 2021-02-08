@@ -51,6 +51,8 @@ CREATE TABLE IF NOT EXISTS `lokallag` (
   `navn` varchar(100) NOT NULL UNIQUE
 );
 
+insert into `lokallag` (`id`, `navn`) values (-1, 'Udefinert');
+
 insert into `lokallag` (navn) values
 ('Raudt Alver'),
 ('Raudt Årdal'),

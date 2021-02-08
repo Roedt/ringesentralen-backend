@@ -16,9 +16,7 @@ internal class ModelConverterTest {
     private val lokallagRepository: LokallagRepository = mock()
 
     private val modelConverter: ModelConverterBean = ModelConverterBean(
-        entityManager = entityManager,
-        fylkeRepository = fylkeRepository,
-        lokallagRepository = lokallagRepository
+        entityManager = entityManager
     )
 
     @Test

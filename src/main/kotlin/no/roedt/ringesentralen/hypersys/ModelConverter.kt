@@ -1,58 +1,52 @@
 package no.roedt.ringesentralen.hypersys
 
-import no.roedt.ringesentralen.Brukerinformasjon
-import no.roedt.ringesentralen.Fylke
-import no.roedt.ringesentralen.FylkeRepository
 import no.roedt.ringesentralen.Telefonnummer
 import no.roedt.ringesentralen.hypersys.externalModel.Membership
 import no.roedt.ringesentralen.hypersys.externalModel.Profile
 import no.roedt.ringesentralen.hypersys.externalModel.User
-import no.roedt.ringesentralen.lokallag.Lokallag
-import no.roedt.ringesentralen.lokallag.LokallagRepository
+import no.roedt.ringesentralen.person.Person
 import javax.enterprise.context.Dependent
 import javax.persistence.EntityManager
 
 interface ModelConverter {
-    fun convert(profile: Profile): Brukerinformasjon
     fun convertToSQL(profile: Profile): String
 }
 
 @Dependent
 class ModelConverterBean(
-    private val entityManager: EntityManager,
-    private val fylkeRepository: FylkeRepository,
-    private val lokallagRepository: LokallagRepository
+    private val entityManager: EntityManager
 ) : ModelConverter {
-    override fun convert(profile: Profile) : Brukerinformasjon = convert(profile.user)
 
-    private fun convert(user: User): Brukerinformasjon {
+    private fun convert(user: User): Person {
         val sisteMellomrom = user.name.lastIndexOf(" ")
         val fornamn = user.name.substring(0, sisteMellomrom)
         val etternamn = user.name.substring(sisteMellomrom+1)
         val postnummer = toPostnummer(user)
-        return Brukerinformasjon(
+        return Person(
             hypersysID = user.id,
-            fornamn = fornamn,
-            etternamn = etternamn,
-            epost = user.email,
-            telefonnummer = toTelefonnummer(user.phone),
+            fornavn = fornamn,
+            etternavn = etternamn,
+            email = user.email,
+            telefonnummer = user.phone,
             postnummer = postnummer,
             fylke = toFylke(postnummer),
-            lokallag = toLokallag(user.memberships)
+            lokallag = toLokallag(user.memberships) ?: -1,
+            groupID = 0, //Ubrukt her uansett, blir automatisk satt i stored proc-en
+            sisteSamtale = 0 // Samme her
         )
     }
 
-    override fun convertToSQL(profile: Profile) = convert(profile).toSQL()
+    override fun convertToSQL(profile: Profile) = convert(profile.user).toSQL()
 
-    private fun Brukerinformasjon.toSQL(): String = "CALL sp_registrerNyBruker(" +
+    private fun Person.toSQL(): String = "CALL sp_registrerNyBruker(" +
             "'${hypersysID}', " +
-            "'${fornamn}', " +
-            "'${etternamn}', " +
-            "${toTelefonnummer()}, " +
-            "'${epost}', " +
+            "'${fornavn}', " +
+            "'${etternavn}', " +
+            "${telefonnummer}, " +
+            "'${email}', " +
             "${postnummer}, " +
-            "${fylke.id}," +
-            "${lokallag?.id}" +
+            "${fylke}," +
+            "$lokallag" +
             ")"
 
     fun toTelefonnummer(telefonnummer: String): Telefonnummer? {
@@ -66,7 +60,7 @@ class ModelConverterBean(
     private fun toPostnummer(user: User) : Int = user.addresses.map { it.postalCode }.map{ it[1] }.map{ it.toInt() }.firstOrNull() ?: 1
 
     //TODO fix
-    private fun toFylke(postnummer: Int): Fylke =
+    private fun toFylke(postnummer: Int): Int =
         entityManager.createNativeQuery(
             "select fylke.id from `postnummer` p " +
                     "inner join kommune kommune on p.KommuneKode = kommune.nummer " +
@@ -74,16 +68,13 @@ class ModelConverterBean(
         )
             .resultList
             .map { it as Int }
-            .map { fylkeRepository.findById(it) }
             .firstOrNull()
-            ?: fylkeRepository.findById(-1)
+            ?: -1
 
 
-    fun toLokallag(memberships: List<Membership>): Lokallag? =
+    fun toLokallag(memberships: List<Membership>): Int? =
         memberships
             .sortedByDescending { it.startDate }
-            .map { it.organisationName }
-            .map { lokallagRepository.find("navn", it) }
+            .map { it.organisation }
             .firstOrNull()
-            ?.firstResult()
 }
