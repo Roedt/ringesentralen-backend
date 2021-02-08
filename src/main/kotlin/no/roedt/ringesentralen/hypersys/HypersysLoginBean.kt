@@ -1,6 +1,5 @@
 package no.roedt.ringesentralen.hypersys
 
-import no.roedt.ringesentralen.Brukerinformasjon
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.hypersys.externalModel.Profile
 import no.roedt.ringesentralen.token.GCPSecretManager
@@ -28,18 +27,7 @@ class HypersysLoginBean(
 
     private fun oppdaterRingerFraaHypersys(token: GyldigPersonToken) {
         val profile: Profile = hypersysProxy.get("actor/api/profile/", token, Profile::class.java)
-        val brukerinformasjon: Brukerinformasjon = modelConverter.convert(profile)
-        databaseUpdater.update(brukerinformasjon.toSQL(), "CALL sp_recordLoginAttempt(${brukerinformasjon.hypersysID})")
+        val brukerinformasjon: String = modelConverter.convertToSQL(profile)
+        databaseUpdater.update(brukerinformasjon, "CALL sp_recordLoginAttempt(${profile.user.id})")
     }
-
-    private fun Brukerinformasjon.toSQL(): String = "CALL sp_registrerNyBruker(" +
-            "'${hypersysID}', " +
-            "'${fornamn}', " +
-            "'${etternamn}', " +
-            "${toTelefonnummer()}, " +
-            "'${epost}', " +
-            "${postnummer}, " +
-            "${fylke.id}," +
-            "${lokallag?.id}" +
-            ")"
 }

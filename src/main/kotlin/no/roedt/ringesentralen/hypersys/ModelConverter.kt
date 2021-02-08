@@ -1,6 +1,9 @@
 package no.roedt.ringesentralen.hypersys
 
-import no.roedt.ringesentralen.*
+import no.roedt.ringesentralen.Brukerinformasjon
+import no.roedt.ringesentralen.Fylke
+import no.roedt.ringesentralen.FylkeRepository
+import no.roedt.ringesentralen.Telefonnummer
 import no.roedt.ringesentralen.hypersys.externalModel.Membership
 import no.roedt.ringesentralen.hypersys.externalModel.Profile
 import no.roedt.ringesentralen.hypersys.externalModel.User
@@ -11,6 +14,7 @@ import javax.persistence.EntityManager
 
 interface ModelConverter {
     fun convert(profile: Profile): Brukerinformasjon
+    fun convertToSQL(profile: Profile): String
 }
 
 @Dependent
@@ -37,6 +41,19 @@ class ModelConverterBean(
             lokallag = toLokallag(user.memberships)
         )
     }
+
+    override fun convertToSQL(profile: Profile) = convert(profile).toSQL()
+
+    private fun Brukerinformasjon.toSQL(): String = "CALL sp_registrerNyBruker(" +
+            "'${hypersysID}', " +
+            "'${fornamn}', " +
+            "'${etternamn}', " +
+            "${toTelefonnummer()}, " +
+            "'${epost}', " +
+            "${postnummer}, " +
+            "${fylke.id}," +
+            "${lokallag?.id}" +
+            ")"
 
     fun toTelefonnummer(telefonnummer: String): Telefonnummer? {
         val splitted = telefonnummer.split(" ")
