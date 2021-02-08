@@ -1,11 +1,10 @@
 package no.roedt.ringesentralen.samtale
 
 import no.roedt.ringesentralen.DatabaseUpdater
-import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.person.UserId
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
+import no.roedt.ringesentralen.person.UserId
 import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.KoronaspesifikkeResultat
 import no.roedt.ringesentralen.samtale.resultat.Resultat
@@ -17,7 +16,7 @@ import javax.persistence.EntityManager
 interface RingService {
     fun hentNestePersonAaRinge(userId: UserId): NestePersonAaRingeResponse?
     fun startSamtale(request: AutentisertStartSamtaleRequest)
-    fun registrerResultatFraSamtale(request: AutentisertResultatFraSamtaleRequest)
+    fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest)
     fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): Person
 }
 
@@ -28,7 +27,6 @@ class RingServiceBean(
     val databaseUpdater: DatabaseUpdater,
 ): RingService {
 
-    //TODO: Vurder om dette skal loggast
     override fun hentNestePersonAaRinge(userId: UserId): NestePersonAaRingeResponse? =
         entityManager
             .createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v " +
@@ -65,18 +63,24 @@ class RingServiceBean(
     }
 
     override fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest) {
-        val request = autentisertRequest.resultatFraSamtaleRequest
-        assert(request.resultat in request.modus.gyldigeResultattyper)
-        val ringerId = hypersysIDTilRingerId(autentisertRequest.userId)
-        databaseUpdater.update("CALL sp_registrerSamtale(${request.ringtID}, $ringerId, ${request.resultat.nr}, '${request.kommentar}')")
-        personRepository.findById(request.ringtID).telefonnummer
-        val nesteGroupID: GroupID? = when  {
+        val request = autentisertRequest.request
+        assert(request.isGyldigResultat())
+        databaseUpdater.update("CALL sp_registrerSamtale(${request.ringtID}, ${hypersysIDTilRingerId(autentisertRequest.userId)}, ${request.resultat.nr}, '${request.kommentar}')")
+
+        lagreResultat(getNesteGroupID(request), request)
+    }
+
+    private fun getNesteGroupID(request: ResultatFraSamtaleRequest): GroupID? {
+        return when {
             request.resultat.nesteGroupID != null -> request.resultat.nesteGroupID
             erFleireEnnToIkkeSvar(request) -> GroupID.Ferdigringt
             else -> null
         }
-        nesteGroupID?.nr?.let { databaseUpdater.updateWithResult("CALL sp_updateGroupID(${request.ringtID}, $it)") }
-        if (request.modus == Modus.Korona && request.resultat == Resultat.Svarte) {
+    }
+
+    private fun lagreResultat(nesteGroupID: GroupID?, request: ResultatFraSamtaleRequest) {
+        nesteGroupID?.nr?.let { databaseUpdater.update("CALL sp_updateGroupID(${request.ringtID}, $it)") }
+        if (request.skalRegistrere()) {
             registrerKoronaspesifikkeResultat(request)
         }
     }
@@ -85,7 +89,7 @@ class RingServiceBean(
         val ringer = hypersysIDTilRingerId(request.userId)
         val oppringtNummer = request.ringtNummer()
         val personSomRingerTilbake: Person = personRepository.find("telefonnummer", oppringtNummer).firstResult()
-        if (entityManager.executeQuery("SELECT 1 FROM v_noenRingerTilbake WHERE telefonnummer = '$oppringtNummer' AND ringer = '$ringer' LIMIT 1").isEmpty()) {
+        if (entityManager.createNativeQuery("SELECT 1 FROM v_noenRingerTilbake WHERE telefonnummer = '$oppringtNummer' AND ringer = '$ringer' LIMIT 1").resultList.isEmpty()) {
             throw Exception("Du kan berre registrere å bli ringt opp frå folk du har ringt tidlegare.")
         }
         startSamtale(
@@ -105,11 +109,9 @@ class RingServiceBean(
     }
 
     private fun registrerKoronaspesifikkeResultat(request: ResultatFraSamtaleRequest) {
-        val resultat: KoronaspesifikkeResultat = request.modusspesifikkeResultat as KoronaspesifikkeResultat
+        val resultat = request.modusspesifikkeResultat as KoronaspesifikkeResultat
         databaseUpdater.update("CALL sp_registrerOppfoelgingKorona(${request.ringtID}, ${resultat.vilHaKoronaprogram}, ${resultat.vilBliMerAktiv}, ${resultat.vilHaValgkampsbrev}, ${request.vilIkkeBliRingt})")
     }
-
-    fun EntityManager.executeQuery(query: String) = entityManager.createNativeQuery(query).resultList
 
     fun hypersysIDTilRingerId(userId: UserId) =
         entityManager.createNativeQuery(

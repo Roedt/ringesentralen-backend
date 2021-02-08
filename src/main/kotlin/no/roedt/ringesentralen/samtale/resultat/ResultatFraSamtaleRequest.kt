@@ -13,7 +13,11 @@ data class ResultatFraSamtaleRequest(
         @JsonProperty("kommentar") val kommentar: String,
         @JsonProperty("modusspesifikkeResultat") val modusspesifikkeResultat: ModusspesifikkeResultat,
         @JsonProperty("vilIkkeBliRingt") val vilIkkeBliRingt: Boolean
-)
+) {
+        fun isGyldigResultat(): Boolean = resultat in modus.gyldigeResultattyper
+
+        fun skalRegistrere() = modus == Modus.Korona && resultat == Resultat.Svarte
+}
 
 @RegisterForReflection
-data class AutentisertResultatFraSamtaleRequest(val userId: UserId, val resultatFraSamtaleRequest: ResultatFraSamtaleRequest)
+data class AutentisertResultatFraSamtaleRequest(val userId: UserId, val request: ResultatFraSamtaleRequest)
