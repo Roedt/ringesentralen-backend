@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.brukere
 
-import no.roedt.ringesentralen.*
+import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
@@ -36,7 +36,7 @@ class BrukereServiceBean(
                 Brukerinformasjon(
                     fornamn = r.fornavn,
                     etternamn = r.etternavn,
-                    telefonnummer = Telefonnummer(nummer = r.telefonnummer.toInt()),
+                    telefonnummer = Telefonnummer(nummer = r.telefonnummer?.toInt() ?: -1),
                     postnummer = r.postnummer,
                     fylke = fylkeRepository.findById(r.fylke),
                     epost = r.email ?: "",

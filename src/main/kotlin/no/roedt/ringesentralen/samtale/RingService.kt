@@ -35,7 +35,8 @@ class RingServiceBean(
             .firstOrNull()
             ?.let { it as Int }
             ?.let { personRepository.findById(it.toLong()) }
-            ?.let { NestePersonAaRingeResponse(person = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer))}
+            ?.let { NestePersonAaRingeResponse(person = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(
+                it.telefonnummer ?: "-1"))}
             ?.also {
                 databaseUpdater.update("call sp_lagreOppslag(${it.person.id}, ${userId.userId})")
             }

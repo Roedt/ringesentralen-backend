@@ -5675,7 +5675,7 @@ WHERE p.groupID = 2;
 create or replace view v_noenRingerTilbake AS
 SELECT concat(ringt.fornavn,' ',ringt.etternavn) as navn, ringt.postnummer, ringt.telefonnummer, l.navn as lokallagNavn, l.id as lokallag, ringer.id as ringer
 FROM person ringt
-inner join `samtale` samtale on ringt.telefonnummer = samtale.ringt
+inner join `samtale` samtale on ringt.id = samtale.ringt
 inner join `ringer` ringer on ringer.id = samtale.ringer
 left outer join lokallag l on ringt.lokallag = l.id;
 

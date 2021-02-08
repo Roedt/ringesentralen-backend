@@ -14,7 +14,7 @@ data class Person(
         var hypersysID: Int?,
         var fornavn: String,
         var etternavn: String,
-        var telefonnummer: String,
+        var telefonnummer: String?,
         var sisteSamtale: Int,
         var email: String?,
         var postnummer: Int,

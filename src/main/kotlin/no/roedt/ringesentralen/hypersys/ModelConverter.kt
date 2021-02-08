@@ -28,7 +28,7 @@ class ModelConverterBean(
             fornavn = fornamn,
             etternavn = etternamn,
             email = user.email,
-            telefonnummer = user.phone,
+            telefonnummer = toTelefonnummer(user.phone),
             postnummer = postnummer,
             fylke = toFylke(postnummer),
             lokallag = toLokallag(user.memberships) ?: -1,
@@ -48,6 +48,13 @@ class ModelConverterBean(
             "$lokallag" +
             ")"
 
+    fun toTelefonnummer(telefonnummer: String): String? {
+        val splitted = telefonnummer.split(" ")
+        return when {
+            splitted.size >= 2 -> splitted[1]
+            else -> null
+        }
+    }
     private fun toPostnummer(user: User) : Int = user.addresses.map { it.postalCode }.map{ it[1] }.map{ it.toInt() }.firstOrNull() ?: 1
 
     private fun toFylke(postnummer: Int): Int =
