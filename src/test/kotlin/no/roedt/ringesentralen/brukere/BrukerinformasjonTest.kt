@@ -1,6 +1,5 @@
 package no.roedt.ringesentralen.brukere
 
-import no.roedt.ringesentralen.Fylke
 import no.roedt.ringesentralen.Telefonnummer
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
