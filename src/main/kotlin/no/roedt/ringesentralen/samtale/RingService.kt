@@ -19,7 +19,7 @@ interface RingService {
 class RingServiceBean(
         val personRepository: PersonRepository,
         val entityManager: EntityManager,
-        val databaseUpdater: DatabaseUpdater
+        val databaseUpdater: DatabaseUpdater,
 ): RingService {
 
     //TODO: Vurder om dette skal loggast
@@ -32,6 +32,9 @@ class RingServiceBean(
             ?.let { it as Int }
             ?.let { personRepository.findById(it.toLong()) }
             ?.let { NestePersonAaRingeResponse(ringbarPerson = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer))}
+            ?.also {
+                databaseUpdater.update("call sp_lagreOppslag(${it.ringbarPerson.id}, ${userId.userId})")
+            }
 
     fun getLokallag(userId: UserId) =
         personRepository.find("hypersysID", userId.userId).firstResult<RingbarPerson>().lokallag

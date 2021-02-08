@@ -5593,6 +5593,19 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
 
 -- --------------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS `oppslag` (
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `ringt` int(6) NOT NULL,
+  `ringerHypersysId` int(6) NOT NULL,
+  `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`ringt`) REFERENCES `person` (`id`),
+  INDEX(`ringt`),
+  FOREIGN KEY (`ringerHypersysId`) REFERENCES `person` (`hypersysID`),
+  INDEX(`ringerHypersysId`)
+);
+
+-- --------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS `ringerIV1` (
   `telefonnummer` varchar(15) NOT NULL UNIQUE,
   `brukergruppe` int(2) NOT NULL
@@ -5694,6 +5707,19 @@ BEGIN
 update `person` 
 set groupID = groupID_In
 where id = id_in;
+END //
+
+-- --------------------------------------------------------
+
+DELIMITER //
+  DROP PROCEDURE IF EXISTS sp_lagreOppslag;
+  CREATE PROCEDURE sp_lagreOppslag(
+    ringtIdIn int(6),
+    ringerHypersysIdIn int(6)
+)
+BEGIN
+INSERT INTO `oppslag` (ringt, ringerHypersysId)
+  VALUES (ringtIdIn, ringerHypersysIdIn);
 END //
 
 -- --------------------------------------------------------
