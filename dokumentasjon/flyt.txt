@@ -2,22 +2,22 @@
 
 title "Grunnleggjande flyt"
 
-actor Ringar
+actor ringer
 boundary "Frontend" as frontend
 control "Backend" as backend
 entity Hypersys as hypersys
 database Database as database
 
-Ringar -> frontend : To boundary
+ringer -> frontend : To boundary
 frontend -> backend: LoginRequest
 backend -> hypersys: Brukarnamn+passord
 hypersys -> backend: Token
 backend -> backend: Wrap token
-backend -> database: Lagre ringarinfo
+backend -> database: Lagre ringerinfo
 backend -> frontend: Token
 frontend -> frontend: Lagre token i session
 
-Ringar -> frontend: Ring neste
+ringer -> frontend: Ring neste
 frontend -> backend: Ring neste med token i header
 backend -> database: Finn neste å ringe
 backend -> frontend: Neste å ringe

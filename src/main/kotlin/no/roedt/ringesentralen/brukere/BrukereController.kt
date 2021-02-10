@@ -27,8 +27,8 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/brukere")
-    @Operation(summary ="List ut brukarar")
-    fun hentBrukarar(@Context ctx: SecurityContext) : List<Brukerinformasjon> = brukereService.hentBrukarar()
+    @Operation(summary ="List ut brukere")
+    fun getBrukere(@Context ctx: SecurityContext) : List<Brukerinformasjon> = brukereService.getBrukere()
 
     @RolesAllowed("godkjenner", "admin")
     @PUT

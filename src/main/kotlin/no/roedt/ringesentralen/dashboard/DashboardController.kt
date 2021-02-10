@@ -27,7 +27,7 @@ class DashboardController(val dashboardService: DashboardService) : Ringesentral
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed("ringar", "godkjenner", "admin")
+    @RolesAllowed("ringer", "godkjenner", "admin")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.TEXT_PLAIN)

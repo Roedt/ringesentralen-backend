@@ -28,5 +28,5 @@ import javax.ws.rs.core.Application
         bearerFormat = "jwt"
 )
 @LoginConfig(authMethod = "MP-JWT", realmName = "jwt-jaspi")
-@DeclareRoles("ringar")
+@DeclareRoles("ringer")
 class RingesentralenApplication : Application()

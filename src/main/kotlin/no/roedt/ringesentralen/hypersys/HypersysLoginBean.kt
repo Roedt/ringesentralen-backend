@@ -13,9 +13,9 @@ class HypersysLoginBean(
     private val gcpSecretManager: GCPSecretManager
 ) {
     fun login(loginRequest: LoginRequest): Token {
-        val brukarId = gcpSecretManager.getHypersysBrukerId()
-        val brukarSecret = gcpSecretManager.getHypersysBrukerSecret()
-        val response = hypersysProxy.post(brukarId, brukarSecret, "grant_type=password&username=${loginRequest.brukarnamn}&password=${loginRequest.passord}")
+        val brukerId = gcpSecretManager.getHypersysBrukerId()
+        val brukerSecret = gcpSecretManager.getHypersysBrukerSecret()
+        val response = hypersysProxy.post(brukerId, brukerSecret, "grant_type=password&username=${loginRequest.brukarnamn}&password=${loginRequest.passord}")
         if (response.statusCode() != 200) {
             return hypersysProxy.readResponse(response, UgyldigToken::class.java)
         }

@@ -23,13 +23,13 @@ class ModelConverterBean(
 
     private fun convert(user: User): Person {
         val sisteMellomrom = user.name.lastIndexOf(" ")
-        val fornamn = user.name.substring(0, sisteMellomrom)
-        val etternamn = user.name.substring(sisteMellomrom+1)
+        val fornavn = user.name.substring(0, sisteMellomrom)
+        val etternavn = user.name.substring(sisteMellomrom+1)
         val postnummer = toPostnummer(user)
         return Person(
             hypersysID = user.id,
-            fornavn = fornamn,
-            etternavn = etternamn,
+            fornavn = fornavn,
+            etternavn = etternavn,
             email = user.email,
             telefonnummer = toTelefonnummer(user.phone),
             postnummer = postnummer,

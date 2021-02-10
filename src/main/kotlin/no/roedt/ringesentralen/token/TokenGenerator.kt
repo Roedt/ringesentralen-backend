@@ -38,7 +38,7 @@ class TokenGenerator(
     }
 
     private fun generateToken(hypersysToken: GyldigPersonToken): String = Jwt
-        .audience("ringar")
+        .audience("ringer")
         .issuer("https://ringesentralen.no")
         .subject("Ringesentralen")
         .upn("Ringesentralen")
@@ -57,9 +57,9 @@ class TokenGenerator(
 
     private fun getGroups(hypersysToken: GyldigPersonToken): Set<String> =
         when (getPersonFromHypersysID(hypersysToken).groupID) {
-            GroupID.Admin.nr -> setOf("ringar", "admin", "godkjenner")
-            GroupID.LokalGodkjenner.nr -> setOf("ringar", "godkjenner")
-            GroupID.GodkjentRinger.nr -> setOf("ringar")
+            GroupID.Admin.nr -> setOf("ringer", "admin", "godkjenner")
+            GroupID.LokalGodkjenner.nr -> setOf("ringer", "godkjenner")
+            GroupID.GodkjentRinger.nr -> setOf("ringer")
             else -> setOf("uatorisert")
         }
 

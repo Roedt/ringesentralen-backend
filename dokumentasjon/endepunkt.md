@@ -1,4 +1,4 @@
-| Endepunkt     | Ikkje innlogga | Uuatorisert | Ringar  | Lokal godkjennar | Admin |
+| Endepunkt     | Ikkje innlogga | Uuatorisert | ringer  | Lokal godkjennar | Admin |
 | ------------- |:-------------:| ------------:|--------:|-----------------:|-----:|
 | **Token** | | | | |  |
 | Login         | X             |              |         |                  |       |

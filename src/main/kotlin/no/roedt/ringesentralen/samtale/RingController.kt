@@ -24,7 +24,7 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed("ringar")
+    @RolesAllowed("ringer")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -33,7 +33,7 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Retry
     fun hentNestePersonAaRinge(@Context ctx: SecurityContext): NestePersonAaRingeResponse? = ringService.hentNestePersonAaRinge(ctx.userId())
 
-    @RolesAllowed("ringar")
+    @RolesAllowed("ringer")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -42,7 +42,7 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Retry
     fun startSamtale(@Context ctx: SecurityContext, startSamtaleRequest: StartSamtaleRequest) = ringService.startSamtale(AutentisertStartSamtaleRequest(ctx.userId(), startSamtaleRequest))
 
-    @RolesAllowed("ringar")
+    @RolesAllowed("ringer")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -54,7 +54,7 @@ class RingController(val ringService: RingService) : RingesentralenController {
     )
 
 
-    @RolesAllowed("ringar")
+    @RolesAllowed("ringer")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

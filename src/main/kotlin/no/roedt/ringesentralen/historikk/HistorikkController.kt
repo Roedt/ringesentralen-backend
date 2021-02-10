@@ -24,7 +24,7 @@ class HistorikkController(private val historikkService: HistorikkService) : Ring
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed("ringar")
+    @RolesAllowed("ringer")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/meg")

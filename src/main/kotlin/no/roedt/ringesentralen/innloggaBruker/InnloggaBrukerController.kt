@@ -26,7 +26,7 @@ class InnloggaBrukerController(val innloggaBrukerService: InnloggaBrukerService)
     lateinit var jwt: JsonWebToken
 
 
-    @RolesAllowed("uautorisert", "ringar", "godkjenner", "admin")
+    @RolesAllowed("uautorisert", "ringer", "godkjenner", "admin")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/")

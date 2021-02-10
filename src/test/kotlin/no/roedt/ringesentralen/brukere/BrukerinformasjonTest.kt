@@ -19,8 +19,8 @@ internal class BrukerinformasjonTest {
     private fun toTelefonnummer(telefonnummer: Telefonnummer?): String? {
         return Brukerinformasjon(
             hypersysID = 0,
-            fornamn = "",
-            etternamn = "",
+            fornavn = "",
+            etternavn = "",
             epost = "",
             telefonnummer = telefonnummer,
             postnummer = 7021,

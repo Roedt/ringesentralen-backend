@@ -5,14 +5,14 @@ import no.roedt.ringesentralen.lokallag.Lokallag
 
 @RegisterForReflection
 data class Brukerinformasjon(
-        val hypersysID: Int,
-        val fornamn: String,
-        val etternamn: String,
-        val epost: String,
-        val telefonnummer: Telefonnummer?,
-        val postnummer: Int,
-        val fylke: Fylke,
-        val lokallag: Lokallag?
+    val hypersysID: Int,
+    val fornavn: String,
+    val etternavn: String,
+    val epost: String,
+    val telefonnummer: Telefonnummer?,
+    val postnummer: Int,
+    val fylke: Fylke,
+    val lokallag: Lokallag?
 ) {
         fun toTelefonnummer() : String? {
                 if (telefonnummer == null) {
