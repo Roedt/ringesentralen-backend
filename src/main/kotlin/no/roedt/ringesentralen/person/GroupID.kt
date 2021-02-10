@@ -16,5 +16,13 @@ enum class GroupID(val nr: Int, val skildring: String) {
 
     companion object {
         fun from(value: Int): GroupID = values().first { it.nr == value }
+
+        fun getRoller(groupID: Int) =
+            when (groupID) {
+                Admin.nr -> setOf("ringer", "admin", "godkjenner")
+                LokalGodkjenner.nr -> setOf("ringer", "godkjenner")
+                GodkjentRinger.nr -> setOf("ringer")
+                else -> setOf("uatorisert")
+            }
     }
 }

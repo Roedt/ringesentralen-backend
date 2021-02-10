@@ -1,10 +1,10 @@
 package no.roedt.ringesentralen.token
 
 import io.smallrye.jwt.build.Jwt
-import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.hypersys.*
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
+import no.roedt.ringesentralen.person.PersonRepository
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.eclipse.microprofile.jwt.JsonWebToken
 import java.time.Duration
@@ -55,13 +55,7 @@ class TokenGenerator(
 
     private fun getTokenExpiresAt() = System.currentTimeMillis() + tokenExpiryPeriod.toSeconds()
 
-    private fun getGroups(hypersysToken: GyldigPersonToken): Set<String> =
-        when (getPersonFromHypersysID(hypersysToken).groupID) {
-            GroupID.Admin.nr -> setOf("ringer", "admin", "godkjenner")
-            GroupID.LokalGodkjenner.nr -> setOf("ringer", "godkjenner")
-            GroupID.GodkjentRinger.nr -> setOf("ringer")
-            else -> setOf("uatorisert")
-        }
+    private fun getGroups(hypersysToken: GyldigPersonToken): Set<String> = GroupID.getRoller(getPersonFromHypersysID(hypersysToken).groupID)
 
     private fun getPersonFromHypersysID(hypersysToken: GyldigPersonToken) =
         personRepository.find("hypersysID", hypersysToken.user_id.toInt()).firstResult<Person>()
