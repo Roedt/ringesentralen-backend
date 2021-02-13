@@ -25,7 +25,8 @@ internal class BrukerinformasjonTest {
             telefonnummer = telefonnummer,
             postnummer = 7021,
             fylke = Fylke(3, "Oslo"),
-            lokallag = null
+            lokallag = null,
+            rolle = setOf()
         ).toTelefonnummer()
     }
 }

@@ -12,7 +12,8 @@ data class Brukerinformasjon(
     val telefonnummer: Telefonnummer?,
     val postnummer: Int,
     val fylke: Fylke,
-    val lokallag: Lokallag?
+    val lokallag: Lokallag?,
+    var rolle: Set<String>
 ) {
         fun toTelefonnummer() : String? {
                 if (telefonnummer == null) {

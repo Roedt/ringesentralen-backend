@@ -41,7 +41,8 @@ class BrukereServiceBean(
                     fylke = fylkeRepository.findById(r.fylke),
                     epost = r.email ?: "",
                     hypersysID = r.hypersysID ?: -1,
-                    lokallag = lokallagRepository.findById(r.lokallag.toLong())
+                    lokallag = lokallagRepository.findById(r.lokallag.toLong()),
+                    rolle = GroupID.getRoller(r.groupID)
                 )
             }
 
