@@ -1,9 +1,10 @@
 package no.roedt.ringesentralen.historikk
 
+import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId
-import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.samtale.Samtale
+import java.math.BigInteger
 import java.sql.Timestamp
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
@@ -38,4 +39,11 @@ class HistorikkService(
                 )
             }
     }
+
+    fun tellMineSamtaler(userId: UserId): Int =
+        entityManager.createNativeQuery(
+            "select count(1) from samtale s inner join ringer r on s.ringer=r.id inner join person p on p.id=r.personId where hypersysID='${userId.userId}'"
+        ).singleResult
+            .let { it as BigInteger }
+            .toInt()
 }

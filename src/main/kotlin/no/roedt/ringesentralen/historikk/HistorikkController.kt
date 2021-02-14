@@ -41,4 +41,13 @@ class HistorikkController(private val historikkService: HistorikkService) : Ring
     @Bulkhead(5)
     @Retry
     fun getLagetsSamtaler(@Context ctx: SecurityContext) = historikkService.getLagetsSamtaler(ctx.userId())
+
+    @RolesAllowed("ringer")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/meg/antall")
+    @Operation(summary = "Antall samtaler jeg har tatt")
+    @Bulkhead(5)
+    @Retry
+    fun tellMineSamtaler(@Context ctx: SecurityContext) = historikkService.tellMineSamtaler(ctx.userId())
 }
