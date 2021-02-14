@@ -10,6 +10,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 import java.time.Duration
 import javax.enterprise.context.RequestScoped
 import javax.json.JsonNumber
+import javax.ws.rs.ForbiddenException
 import kotlin.math.max
 
 
@@ -33,7 +34,7 @@ class TokenGenerator(
 
         val hypersysToken: Token = hypersysService.login(loginRequest)
         if (hypersysToken is UgyldigToken)
-            throw RuntimeException(hypersysToken.error)
+            throw ForbiddenException(hypersysToken.error)
         return generateToken(hypersysToken as GyldigPersonToken)
     }
 
