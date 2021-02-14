@@ -22,7 +22,9 @@ enum class GroupID(val nr: Int, val skildring: String) {
                 Admin.nr -> setOf("ringer", "admin", "godkjenner")
                 LokalGodkjenner.nr -> setOf("ringer", "godkjenner")
                 GodkjentRinger.nr -> setOf("ringer")
-                else -> setOf("uatorisert")
+                UgodkjentRinger.nr -> setOf("ikke_godkjent")
+                AvslaattRinger.nr -> setOf("avslaatt")
+                else -> setOf("ikke_registrert")
             }
     }
 }
