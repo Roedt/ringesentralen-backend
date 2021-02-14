@@ -5642,7 +5642,7 @@ SELECT p.sisteSamtale, p.telefonnummer, concat(p.fornavn,' ',p.etternavn) as nav
   LEFT OUTER JOIN lokallag l on p.lokallag = l.id
   WHERE groupID = '1'
   AND UNIX_TIMESTAMP(now()) - sisteSamtale > 86400 -- 86400 sekund = 1 døgn
-  AND NOT exists (select 1 from oppslag o where o.ringt=p.id and (UNIX_TIMESTAMP(now())-o.datetime) < 120 );
+  AND NOT exists (select 1 from oppslag o where o.ringt=p.id and (now()-o.datetime) < 120 );
 
 -- --------------------------------------------------------
 
