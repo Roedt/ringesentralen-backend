@@ -29,17 +29,13 @@ class RingServiceBean(
 
     override fun hentNestePersonAaRinge(userId: UserId): NestePersonAaRingeResponse? =
         entityManager
-            .createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v " +
-                    "WHERE lokallag = '${getLokallag(userId)}'")
+            .createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${getLokallag(userId)}'")
             .resultList
             .firstOrNull()
             ?.let { it as Int }
             ?.let { personRepository.findById(it.toLong()) }
-            ?.let { NestePersonAaRingeResponse(person = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(
-                it.telefonnummer ?: "-1"))}
-            ?.also {
-                databaseUpdater.update("call sp_lagreOppslag(${it.person.id}, ${userId.userId})")
-            }
+            ?.let { NestePersonAaRingeResponse(person = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1"))}
+            ?.also { databaseUpdater.update("call sp_lagreOppslag(${it.person.id}, ${userId.userId})") }
 
     fun getLokallag(userId: UserId) =
         personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag
