@@ -32,6 +32,7 @@ class PersonController(
     @Bulkhead(5)
     @Retry
     fun slettPerson(@Context ctx: SecurityContext, slettPersonRequest : SlettPersonRequest) {
+        slettPersonRequest.validate()
         val id = personRepository.find("telefonnummer", slettPersonRequest.telefonnummer).firstResult<Person>().id
         databaseUpdater.update("CALL sp_slettPerson($id)")
     }

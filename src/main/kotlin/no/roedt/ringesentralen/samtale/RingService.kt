@@ -83,6 +83,7 @@ class RingServiceBean(
     }
 
     override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): Person {
+        request.validate()
         val ringer = hypersysIDTilRingerId(request.userId)
         val oppringtNummer = request.ringtNummer()
         val personSomRingerTilbake: Person = personRepository.find("telefonnummer", oppringtNummer).firstResult()
