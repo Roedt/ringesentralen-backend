@@ -6,6 +6,7 @@ import javax.ws.rs.BadRequestException
 class TelefonnummerValidator {
 
     companion object {
+        @JvmStatic
         private val pattern: Pattern = Pattern.compile("^\\+[0-9]{10,13}\$\n")
 
         fun validate(telefonnummer: String) {

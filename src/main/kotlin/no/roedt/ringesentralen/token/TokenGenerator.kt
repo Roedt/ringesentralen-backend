@@ -2,6 +2,7 @@ package no.roedt.ringesentralen.token
 
 import io.smallrye.jwt.build.Jwt
 import no.roedt.ringesentralen.hypersys.*
+import no.roedt.ringesentralen.person.EpostValidator
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
@@ -28,6 +29,7 @@ class TokenGenerator(
         if (loginRequest.key != frontendTokenKey) {
             throw IllegalArgumentException("Illegal key")
         }
+        EpostValidator.validate(loginRequest.brukarnamn)
 
         val hypersysToken: Token = hypersysService.login(loginRequest)
         if (hypersysToken is UgyldigToken)
