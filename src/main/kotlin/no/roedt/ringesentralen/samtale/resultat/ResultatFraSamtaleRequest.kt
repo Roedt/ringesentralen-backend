@@ -17,7 +17,13 @@ data class ResultatFraSamtaleRequest(
         fun isGyldigResultat(): Boolean = resultat in modus.gyldigeResultattyper
 
         fun skalRegistrere() = modus == Modus.Korona && resultat == Resultat.Svarte
+
+        fun validate(): Boolean {
+                return true
+        }
 }
 
 @RegisterForReflection
-data class AutentisertResultatFraSamtaleRequest(val userId: UserId, val request: ResultatFraSamtaleRequest)
+data class AutentisertResultatFraSamtaleRequest(val userId: UserId, val request: ResultatFraSamtaleRequest) {
+        fun validate() = request.validate()
+}

@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.hypersys
 
+import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.hypersys.externalModel.Membership
 import no.roedt.ringesentralen.hypersys.externalModel.Profile
 import no.roedt.ringesentralen.hypersys.externalModel.User
@@ -7,7 +8,6 @@ import no.roedt.ringesentralen.lokallag.Lokallag
 import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.Person
 import javax.enterprise.context.Dependent
-import javax.persistence.EntityManager
 
 interface ModelConverter {
     fun convertToSQL(profile: Profile): String
@@ -15,7 +15,7 @@ interface ModelConverter {
 
 @Dependent
 class ModelConverterBean(
-    private val entityManager: EntityManager,
+    private val databaseUpdater: DatabaseUpdater,
     private val lokallagRepository: LokallagRepository
 ) : ModelConverter {
 
@@ -61,12 +61,11 @@ class ModelConverterBean(
     private fun toPostnummer(user: User) : Int = user.addresses.map { it.postalCode }.map{ it[1] }.map{ it.toInt() }.firstOrNull() ?: 1
 
     private fun toFylke(postnummer: Int): Int =
-        entityManager.createNativeQuery(
+        databaseUpdater.getResultList(
             "select fylke.id from `postnummer` p " +
                     "inner join kommune kommune on p.KommuneKode = kommune.nummer " +
                     "inner join `fylker` fylke on fylke.id=kommune.fylke_id where postnummer = $postnummer"
         )
-            .resultList
             .map { it as Int }
             .firstOrNull()
             ?: -1

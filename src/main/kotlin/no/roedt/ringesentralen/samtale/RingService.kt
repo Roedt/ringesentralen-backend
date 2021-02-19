@@ -11,7 +11,6 @@ import no.roedt.ringesentralen.samtale.resultat.Resultat
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
 import java.sql.Timestamp
 import javax.enterprise.context.ApplicationScoped
-import javax.persistence.EntityManager
 
 interface RingService {
     fun hentNestePersonAaRinge(userId: UserId): NestePersonAaRingeResponse?
@@ -23,14 +22,11 @@ interface RingService {
 @ApplicationScoped
 class RingServiceBean(
     val personRepository: PersonRepository,
-    val entityManager: EntityManager,
     val databaseUpdater: DatabaseUpdater,
 ): RingService {
 
     override fun hentNestePersonAaRinge(userId: UserId): NestePersonAaRingeResponse? =
-        entityManager
-            .createNativeQuery("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${getLokallag(userId)}'")
-            .resultList
+        databaseUpdater.getResultList("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${getLokallag(userId)}'")
             .firstOrNull()
             ?.let { it as Int }
             ?.let { personRepository.findById(it.toLong()) }
@@ -41,8 +37,7 @@ class RingServiceBean(
         personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag
 
     private fun getTidlegareSamtalarMedDennePersonen(oppringtNummer: String): List<Samtale> =
-        entityManager.createNativeQuery("SELECT resultat, ringerNavn, datetime, kommentar, ringtNavn FROM `v_samtalerResultat` WHERE oppringtNummer = '$oppringtNummer'")
-            .resultList
+        databaseUpdater.getResultList("SELECT resultat, ringerNavn, datetime, kommentar, ringtNavn FROM `v_samtalerResultat` WHERE oppringtNummer = '$oppringtNummer'")
             .map { it as Array<*> }
             .map { Samtale(
                 resultat = it[0] as String,
@@ -87,7 +82,7 @@ class RingServiceBean(
         val ringer = hypersysIDTilRingerId(request.userId)
         val oppringtNummer = request.ringtNummer()
         val personSomRingerTilbake: Person = personRepository.find("telefonnummer", oppringtNummer).firstResult()
-        if (entityManager.createNativeQuery("SELECT 1 FROM v_noenRingerTilbake WHERE telefonnummer = '$oppringtNummer' AND ringer = '$ringer' LIMIT 1").resultList.isEmpty()) {
+        if (databaseUpdater.getResultList("SELECT 1 FROM v_noenRingerTilbake WHERE telefonnummer = '$oppringtNummer' AND ringer = '$ringer' LIMIT 1").isEmpty()) {
             throw Exception("Du kan berre registrere å bli ringt opp frå folk du har ringt tidlegare.")
         }
         startSamtale(
@@ -112,7 +107,7 @@ class RingServiceBean(
     }
 
     fun hypersysIDTilRingerId(userId: UserId) =
-        entityManager.createNativeQuery(
+        databaseUpdater.getResultList(
             "select ringer.id from ringer inner join person on person.id = ringer.personId and person.hypersysID = ${userId.userId} "
-        ).resultList.first()
+        ).first()
 }

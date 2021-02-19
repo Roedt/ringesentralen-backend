@@ -1,14 +1,14 @@
 package no.roedt.ringesentralen.dashboard
 
-import no.roedt.ringesentralen.person.UserId
 import io.quarkus.panache.common.Sort
+import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.lokallag.Lokallag
 import no.roedt.ringesentralen.lokallag.LokallagRepository
-import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
+import no.roedt.ringesentralen.person.PersonRepository
+import no.roedt.ringesentralen.person.UserId
 import javax.enterprise.context.ApplicationScoped
-import javax.persistence.EntityManager
 
 interface DashboardService {
     fun getDashboard(ringerID: UserId): DashboardResponse
@@ -17,7 +17,7 @@ interface DashboardService {
 @ApplicationScoped
 class DashboardServiceBean(
     val lokallagRepository: LokallagRepository,
-    val entityManager: EntityManager,
+    val databaseUpdater: DatabaseUpdater,
     val personRepository: PersonRepository
 ) : DashboardService {
 
@@ -26,9 +26,9 @@ class DashboardServiceBean(
 
         val statusliste: List<Lokallagsstatus> = mineLokallag
                 .map { lokallag ->
-                    val igjenAaRinge = entityManager.createNativeQuery("SELECT 1 FROM v_igjenAaRinge WHERE lokallag = ${lokallag.id} ").resultList.size
-                    val personerSomKanRinges = entityManager.createNativeQuery("SELECT 1 FROM v_personerSomKanRinges WHERE lokallag = ${lokallag.id}").resultList.size
-                    val totaltInklRingte = entityManager.createNativeQuery("SELECT 1 FROM v_totaltInklRingte WHERE lokallag = ${lokallag.id}").resultList.size
+                    val igjenAaRinge = databaseUpdater.count("SELECT 1 FROM v_igjenAaRinge WHERE lokallag = ${lokallag.id} ")
+                    val personerSomKanRinges = databaseUpdater.count("SELECT 1 FROM v_personerSomKanRinges WHERE lokallag = ${lokallag.id}")
+                    val totaltInklRingte = databaseUpdater.count("SELECT 1 FROM v_totaltInklRingte WHERE lokallag = ${lokallag.id}")
                     Lokallagsstatus(
                             lokallag = lokallag,
                             igjenAaRinge = igjenAaRinge,

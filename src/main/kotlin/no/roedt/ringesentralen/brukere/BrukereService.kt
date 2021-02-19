@@ -7,7 +7,6 @@ import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId
 import javax.enterprise.context.ApplicationScoped
-import javax.persistence.EntityManager
 import javax.ws.rs.NotAuthorizedException
 
 interface BrukereService {
@@ -25,8 +24,7 @@ class BrukereServiceBean(
     val personRepository: PersonRepository,
     val databaseUpdater: DatabaseUpdater,
     val fylkeRepository: FylkeRepository,
-    val lokallagRepository: LokallagRepository,
-    val entityManager: EntityManager
+    val lokallagRepository: LokallagRepository
 ): BrukereService {
 
     override fun getBrukere(): List<Brukerinformasjon> =
@@ -84,7 +82,7 @@ class BrukereServiceBean(
 
 
     private fun hypersysIDTilRingerId(userId: UserId) =
-        entityManager.createNativeQuery(
+        databaseUpdater.getResultList(
             "select ringer.id from ringer inner join person on person.id = ringer.personId and person.hypersysID = ${userId.userId} "
-        ).resultList.first()
+        ).first()
 }

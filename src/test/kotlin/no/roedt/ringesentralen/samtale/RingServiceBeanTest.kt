@@ -1,12 +1,12 @@
 package no.roedt.ringesentralen.samtale
 
-import no.roedt.ringesentralen.person.UserId
 import com.nhaarman.mockitokotlin2.*
 import io.quarkus.hibernate.orm.panache.PanacheQuery
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.Person
+import no.roedt.ringesentralen.person.PersonRepository
+import no.roedt.ringesentralen.person.UserId
 import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.KoronaspesifikkeResultat
 import no.roedt.ringesentralen.samtale.resultat.Resultat
@@ -15,18 +15,13 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import javax.persistence.EntityManager
-import javax.persistence.Query
 
 internal class RingServiceBeanTest {
 
     private val personRepository: PersonRepository = mock()
-    private val entityManager: EntityManager = mock()
     private val databaseUpdater: DatabaseUpdater = mock()
 
-    private var ringService = RingServiceBean(personRepository = personRepository, entityManager = entityManager, databaseUpdater = databaseUpdater )
-
-    private val mockQuery: Query = mock()
+    private var ringService = RingServiceBean(personRepository = personRepository, databaseUpdater = databaseUpdater )
 
     @BeforeEach
     fun setup() {
@@ -36,7 +31,6 @@ internal class RingServiceBeanTest {
 
     @Test
     fun `samtale blir registrert`() {
-        doReturn(mockQuery).whenever(entityManager).createNativeQuery(any())
         ringService = spy(ringService)
         doReturn(1).whenever(ringService).hypersysIDTilRingerId(any())
 

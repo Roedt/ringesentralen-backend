@@ -17,8 +17,15 @@ class DatabaseUpdater(val entityManager: EntityManager) {
     fun updateWithResult(query: String): MutableList<Any?>? {
         val transactionManager = TransactionManager.transactionManager()
         transactionManager.begin()
-        val results = entityManager.createNativeQuery(query).resultList
+        val results = getResultList(query)
         transactionManager.commit()
         return results
     }
+
+    fun count(query: String): Int = entityManager.createNativeQuery(query).resultList.size
+
+    fun getResultList(query: String) = entityManager.createNativeQuery(query).resultList
+
+    fun getSingleResult(query: String) = entityManager.createNativeQuery(query).singleResult
+
 }

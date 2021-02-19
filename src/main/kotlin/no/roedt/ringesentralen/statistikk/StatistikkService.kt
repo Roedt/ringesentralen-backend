@@ -1,11 +1,11 @@
 package no.roedt.ringesentralen.statistikk
 
+import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import javax.enterprise.context.ApplicationScoped
-import javax.persistence.EntityManager
 
 @ApplicationScoped
-class StatistikkService(val entityManager: EntityManager) {
+class StatistikkService(val databaseUpdater: DatabaseUpdater) {
 
     fun getStatistikk(): StatistikkResponse {
         val modus = Modus.Korona
@@ -56,5 +56,5 @@ class StatistikkService(val entityManager: EntityManager) {
         antallLokallagMedPersonerTilknytta = get( "select distinct lokallag FROM person where lokallag is not null").size
     )
 
-    private fun get(query: String) = entityManager.createNativeQuery(query).resultList
+    private fun get(query: String) = databaseUpdater.getResultList(query)
 }
