@@ -4,6 +4,7 @@ import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.hypersys.externalModel.Organisasjonsledd
 import no.roedt.ringesentralen.hypersys.externalModel.SingleOrgan
 import org.eclipse.microprofile.jwt.JsonWebToken
+import org.eclipse.microprofile.metrics.annotation.Counted
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
@@ -30,6 +31,7 @@ class HypersysController(val service: HypersysService) : RingesentralenControlle
     @GET
     @Path("/lokallag")
     @Produces(MediaType.APPLICATION_JSON)
+    @Counted
     fun getAlleLokallag(@Context ctx: SecurityContext) : List<Organisasjonsledd> = service.getAlleLokallag()
 
     @RolesAllowed("admin")
@@ -37,6 +39,7 @@ class HypersysController(val service: HypersysService) : RingesentralenControlle
     @Path("/alleOrgan")
     @Operation(summary = "Hent alle organ på lågaste nivå")
     @Produces(MediaType.APPLICATION_JSON)
+    @Counted
     fun getAlleOrganPaaLaagasteNivaa(@Context ctx: SecurityContext): List<SingleOrgan> = service.getAlleOrganPaaLaagasteNivaa()
 
     @RolesAllowed("admin")
@@ -44,6 +47,7 @@ class HypersysController(val service: HypersysService) : RingesentralenControlle
     @Path("/medlemmer")
     @Operation(summary = "Hent alle medlemmer i lokallaget ditt")
     @Produces(MediaType.APPLICATION_JSON)
+    @Counted
     fun getMedlemmer(@Context ctx: SecurityContext): List<Any> = service.getMedlemmer(ctx.userId(), GyldigPersonToken(
         access_token = jwt.claim<String>("hypersys.access_token").get(),
         expires_in = jwt.claim<Any>("hypersys.expires_in").get().toString().toInt(),

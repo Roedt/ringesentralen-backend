@@ -2,6 +2,7 @@ package no.roedt.ringesentralen.statistikk
 
 import no.roedt.ringesentralen.RingesentralenController
 import org.eclipse.microprofile.jwt.JsonWebToken
+import org.eclipse.microprofile.metrics.annotation.Counted
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.annotation.security.RolesAllowed
@@ -25,5 +26,6 @@ class StatistikkController(val service: StatistikkService) : RingesentralenContr
     @GET
     @Path("/statistikk")
     @Produces(MediaType.APPLICATION_JSON)
+    @Counted
     fun getStatistikk(@Context ctx: SecurityContext) : StatistikkResponse = service.getStatistikk()
 }

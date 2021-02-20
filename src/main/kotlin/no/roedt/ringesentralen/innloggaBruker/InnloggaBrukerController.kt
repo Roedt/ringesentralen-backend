@@ -4,6 +4,7 @@ import no.roedt.ringesentralen.RingesentralenController
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
+import org.eclipse.microprofile.metrics.annotation.Counted
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
@@ -33,5 +34,6 @@ class InnloggaBrukerController(val innloggaBrukerService: InnloggaBrukerService)
     @Operation(summary = "Hent informasjon om innlogga bruker")
     @Bulkhead(5)
     @Retry
+    @Counted
     fun getProfil(@Context ctx: SecurityContext) = innloggaBrukerService.getProfil(ctx.userId())
 }
