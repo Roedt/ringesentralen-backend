@@ -6,7 +6,6 @@ import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleReq
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
-import org.eclipse.microprofile.metrics.annotation.Counted
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
@@ -32,7 +31,6 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Path("/neste")
     @Operation(summary = "Finn neste person å ringe")
     @Retry
-    @Counted
     fun hentNestePersonAaRinge(@Context ctx: SecurityContext): NestePersonAaRingeResponse? = ringService.hentNestePersonAaRinge(ctx.userId())
 
     @RolesAllowed("ringer")
@@ -42,7 +40,6 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Path("/startSamtale")
     @Operation(summary = "Start samtale")
     @Retry
-    @Counted
     fun startSamtale(@Context ctx: SecurityContext, startSamtaleRequest: StartSamtaleRequest) = ringService.startSamtale(AutentisertStartSamtaleRequest(ctx.userId(), startSamtaleRequest))
 
     @RolesAllowed("ringer")
@@ -52,7 +49,6 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Path("/registrerResultatFraSamtale")
     @Operation(summary = "Registrer resultat fra samtale")
     @Retry
-    @Counted
     fun registrerResultatFraSamtale(@Context ctx: SecurityContext, resultatFraSatmtaleRequest: ResultatFraSamtaleRequest) = ringService.registrerResultatFraSamtale(
         AutentisertResultatFraSamtaleRequest(ctx.userId(), resultatFraSatmtaleRequest)
     )
@@ -65,7 +61,6 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Path("/noenRingerTilbake")
     @Operation(summary = "Noen ringer tilbake")
     @Retry
-    @Counted
     fun noenRingerTilbake(@Context ctx: SecurityContext, request: RingerTilbakeRequest): Person = ringService.noenRingerTilbake(AutentisertRingerTilbakeRequest(ctx.userId(), request))
 
 }
