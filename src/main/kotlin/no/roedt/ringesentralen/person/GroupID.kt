@@ -24,9 +24,9 @@ enum class GroupID(val nr: Int, val skildring: String) {
                 Admin.nr -> setOf(Roles.ringer, Roles.godkjenner, Roles.admin)
                 LokalGodkjenner.nr -> setOf(Roles.ringer, Roles.godkjenner)
                 GodkjentRinger.nr -> setOf(Roles.ringer)
-                UgodkjentRinger.nr -> setOf("ikke_godkjent")
-                AvslaattRinger.nr -> setOf("avslaatt")
-                else -> setOf("ikke_registrert")
+                UgodkjentRinger.nr -> setOf(Roles.ikke_godkjent)
+                AvslaattRinger.nr -> setOf(Roles.avslaatt)
+                else -> setOf(Roles.ikke_registrert)
             }
     }
 }
