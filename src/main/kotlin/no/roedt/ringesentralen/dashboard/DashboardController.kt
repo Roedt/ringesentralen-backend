@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.dashboard
 
 import no.roedt.ringesentralen.RingesentralenController
+import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
@@ -27,12 +28,12 @@ class DashboardController(val dashboardService: DashboardService) : Ringesentral
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed("ringer", "godkjenner", "admin")
+    @RolesAllowed(Roles.ringer, Roles.godkjenner, Roles.admin)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.TEXT_PLAIN)
     @Path("/")
-    @Operation(summary = "Dashboard")
+    @Operation(summary = "Dashboard", description = Roles.ringerGodkjennerAdmin)
     @Bulkhead(5)
     @Retry
     fun getDashboard(@Context ctx: SecurityContext): DashboardResponse = dashboardService.getDashboard(ctx.userId())

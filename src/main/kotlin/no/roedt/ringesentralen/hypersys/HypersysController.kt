@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.hypersys
 
 import no.roedt.ringesentralen.RingesentralenController
+import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.hypersys.externalModel.Organisasjonsledd
 import no.roedt.ringesentralen.hypersys.externalModel.SingleOrgan
 import org.eclipse.microprofile.jwt.JsonWebToken
@@ -26,23 +27,24 @@ class HypersysController(val service: HypersysService) : RingesentralenControlle
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed("admin")
+    @RolesAllowed(Roles.admin)
     @GET
     @Path("/lokallag")
+    @Operation(summary = "Hent alle lokallag", description = Roles.admin)
     @Produces(MediaType.APPLICATION_JSON)
     fun getAlleLokallag(@Context ctx: SecurityContext) : List<Organisasjonsledd> = service.getAlleLokallag()
 
-    @RolesAllowed("admin")
+    @RolesAllowed(Roles.admin)
     @GET
     @Path("/alleOrgan")
-    @Operation(summary = "Hent alle organ på lågaste nivå")
+    @Operation(summary = "Hent alle organ på lågaste nivå", description = Roles.admin)
     @Produces(MediaType.APPLICATION_JSON)
     fun getAlleOrganPaaLaagasteNivaa(@Context ctx: SecurityContext): List<SingleOrgan> = service.getAlleOrganPaaLaagasteNivaa()
 
-    @RolesAllowed("admin")
+    @RolesAllowed(Roles.admin)
     @GET
     @Path("/medlemmer")
-    @Operation(summary = "Hent alle medlemmer i lokallaget ditt")
+    @Operation(summary = "Hent alle medlemmer i lokallaget ditt", description = Roles.admin)
     @Produces(MediaType.APPLICATION_JSON)
     fun getMedlemmer(@Context ctx: SecurityContext): List<Any> = service.getMedlemmer(ctx.userId(), GyldigPersonToken(
         access_token = jwt.claim<String>("hypersys.access_token").get(),

@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.innloggaBruker
 
 import no.roedt.ringesentralen.RingesentralenController
+import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
@@ -26,11 +27,11 @@ class InnloggaBrukerController(val innloggaBrukerService: InnloggaBrukerService)
     lateinit var jwt: JsonWebToken
 
 
-    @RolesAllowed("uautorisert", "ringer", "godkjenner", "admin")
+    @RolesAllowed(Roles.uautorisert, Roles.ringer, Roles.godkjenner, Roles.admin)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/")
-    @Operation(summary = "Hent informasjon om innlogga bruker")
+    @Operation(summary = "Hent informasjon om innlogga bruker", description = Roles.uautorisertRingerGodkjennerAdmin)
     @Bulkhead(5)
     @Retry
     fun getProfil(@Context ctx: SecurityContext) = innloggaBrukerService.getProfil(ctx.userId())

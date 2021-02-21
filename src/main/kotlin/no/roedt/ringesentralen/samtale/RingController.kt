@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.samtale
 
 import no.roedt.ringesentralen.RingesentralenController
+import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
@@ -24,42 +25,42 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed("ringer")
+    @RolesAllowed(Roles.ringer)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/neste")
-    @Operation(summary = "Finn neste person å ringe")
+    @Operation(summary = "Finn neste person å ringe", description = Roles.ringer)
     @Retry
     fun hentNestePersonAaRinge(@Context ctx: SecurityContext): NestePersonAaRingeResponse? = ringService.hentNestePersonAaRinge(ctx.userId())
 
-    @RolesAllowed("ringer")
+    @RolesAllowed(Roles.ringer)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/startSamtale")
-    @Operation(summary = "Start samtale")
+    @Operation(summary = "Start samtale", description = Roles.ringer)
     @Retry
     fun startSamtale(@Context ctx: SecurityContext, startSamtaleRequest: StartSamtaleRequest) = ringService.startSamtale(AutentisertStartSamtaleRequest(ctx.userId(), startSamtaleRequest))
 
-    @RolesAllowed("ringer")
+    @RolesAllowed(Roles.ringer)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/registrerResultatFraSamtale")
-    @Operation(summary = "Registrer resultat fra samtale")
+    @Operation(summary = "Registrer resultat fra samtale", description = Roles.ringer)
     @Retry
     fun registrerResultatFraSamtale(@Context ctx: SecurityContext, resultatFraSatmtaleRequest: ResultatFraSamtaleRequest) = ringService.registrerResultatFraSamtale(
         AutentisertResultatFraSamtaleRequest(ctx.userId(), resultatFraSatmtaleRequest)
     )
 
 
-    @RolesAllowed("ringer")
+    @RolesAllowed(Roles.ringer)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/noenRingerTilbake")
-    @Operation(summary = "Noen ringer tilbake")
+    @Operation(summary = "Noen ringer tilbake", description = Roles.ringer)
     @Retry
     fun noenRingerTilbake(@Context ctx: SecurityContext, request: RingerTilbakeRequest): Person = ringService.noenRingerTilbake(AutentisertRingerTilbakeRequest(ctx.userId(), request))
 

@@ -2,6 +2,7 @@ package no.roedt.ringesentralen.person
 
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.RingesentralenController
+import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.openapi.annotations.Operation
@@ -24,11 +25,11 @@ class PersonController(
     private val personRepository: PersonRepository
 ) : RingesentralenController {
 
-    @RolesAllowed("admin")
+    @RolesAllowed(Roles.admin)
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/slett")
-    @Operation(summary = "Slett person fra systemet")
+    @Operation(summary = "Slett person fra systemet", description = Roles.admin)
     @Bulkhead(5)
     @Retry
     fun slettPerson(@Context ctx: SecurityContext, slettPersonRequest : SlettPersonRequest) {

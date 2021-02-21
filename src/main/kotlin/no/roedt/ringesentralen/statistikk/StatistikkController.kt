@@ -1,7 +1,9 @@
 package no.roedt.ringesentralen.statistikk
 
 import no.roedt.ringesentralen.RingesentralenController
+import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.jwt.JsonWebToken
+import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.annotation.security.RolesAllowed
@@ -21,9 +23,10 @@ class StatistikkController(val service: StatistikkService) : RingesentralenContr
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed("admin")
+    @RolesAllowed(Roles.admin)
     @GET
     @Path("/statistikk")
+    @Operation(summary = "Hent statistikk", description = Roles.admin)
     @Produces(MediaType.APPLICATION_JSON)
     fun getStatistikk(@Context ctx: SecurityContext) : StatistikkResponse = service.getStatistikk()
 }

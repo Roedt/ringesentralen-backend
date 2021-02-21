@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.historikk
 
 import no.roedt.ringesentralen.RingesentralenController
+import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
@@ -24,29 +25,29 @@ class HistorikkController(private val historikkService: HistorikkService) : Ring
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed("ringer")
+    @RolesAllowed(Roles.ringer)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/meg")
-    @Operation(summary = "Historikk over mine samtaler")
+    @Operation(summary = "Historikk over mine samtaler", description = Roles.ringer)
     @Bulkhead(5)
     @Retry
     fun getMineSamtaler(@Context ctx: SecurityContext) = historikkService.getMineSamtaler(ctx.userId())
 
-    @RolesAllowed("admin", "godkjenner")
+    @RolesAllowed(Roles.godkjenner, Roles.admin)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/laget")
-    @Operation(summary = "Historikk over lagets samtaler")
+    @Operation(summary = "Historikk over lagets samtaler", description = Roles.godkjennerAdmin)
     @Bulkhead(5)
     @Retry
     fun getLagetsSamtaler(@Context ctx: SecurityContext) = historikkService.getLagetsSamtaler(ctx.userId())
 
-    @RolesAllowed("ringer")
+    @RolesAllowed(Roles.ringer)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/meg/antall")
-    @Operation(summary = "Antall samtaler jeg har tatt")
+    @Operation(summary = "Antall samtaler jeg har tatt", description = Roles.ringer)
     @Bulkhead(5)
     @Retry
     fun tellMineSamtaler(@Context ctx: SecurityContext) = historikkService.tellMineSamtaler(ctx.userId())

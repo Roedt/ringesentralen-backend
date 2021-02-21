@@ -1,5 +1,7 @@
 package no.roedt.ringesentralen.person
 
+import no.roedt.ringesentralen.Roles
+
 enum class GroupID(val nr: Int, val skildring: String) {
     ManglerSmtykke(0, "mangler info/samtykke før ringing"),
     KlarTilAaRinges(1, "klar til å ringes"),
@@ -19,9 +21,9 @@ enum class GroupID(val nr: Int, val skildring: String) {
 
         fun getRoller(groupID: Int) =
             when (groupID) {
-                Admin.nr -> setOf("ringer", "admin", "godkjenner")
-                LokalGodkjenner.nr -> setOf("ringer", "godkjenner")
-                GodkjentRinger.nr -> setOf("ringer")
+                Admin.nr -> setOf(Roles.ringer, Roles.godkjenner, Roles.admin)
+                LokalGodkjenner.nr -> setOf(Roles.ringer, Roles.godkjenner)
+                GodkjentRinger.nr -> setOf(Roles.ringer)
                 UgodkjentRinger.nr -> setOf("ikke_godkjent")
                 AvslaattRinger.nr -> setOf("avslaatt")
                 else -> setOf("ikke_registrert")
