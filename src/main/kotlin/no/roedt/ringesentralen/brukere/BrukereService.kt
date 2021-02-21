@@ -32,6 +32,7 @@ class BrukereServiceBean(
             .list<Person>()
             .map { r ->
                 Brukerinformasjon(
+                    id = r.id,
                     fornavn = r.fornavn,
                     etternavn = r.etternavn,
                     telefonnummer = Telefonnummer(nummer = r.telefonnummer?.toInt() ?: -1),

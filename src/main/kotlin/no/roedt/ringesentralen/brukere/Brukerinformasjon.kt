@@ -5,6 +5,7 @@ import no.roedt.ringesentralen.lokallag.Lokallag
 
 @RegisterForReflection
 data class Brukerinformasjon(
+    val id: Long,
     val hypersysID: Int,
     val fornavn: String,
     val etternavn: String,

@@ -18,6 +18,7 @@ internal class BrukerinformasjonTest {
 
     private fun toTelefonnummer(telefonnummer: Telefonnummer?): String? {
         return Brukerinformasjon(
+            id = 0,
             hypersysID = 0,
             fornavn = "",
             etternavn = "",
