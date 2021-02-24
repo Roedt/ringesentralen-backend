@@ -128,7 +128,7 @@
     <dependency>
       <groupId>io.quarkiverse.googlecloudservices</groupId>
       <artifactId>quarkus-google-cloud-secret-manager</artifactId>
-      <version>0.4.1</version>
+      <version>0.5.0</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/io.quarkus/quarkus-elytron-security -->
     <dependency>
@@ -306,13 +306,4 @@
       </properties>
     </profile>
   </profiles>
-
-  <repositories>
-    <repository>
-      <id>github</id>
-      <name>GitHub Packages Quarkus Google Cloud Services</name>
-      <url>https://maven.pkg.github.com/madsop/quarkus-google-cloud-services</url>
-    </repository>
-  </repositories>
-
 </project>
