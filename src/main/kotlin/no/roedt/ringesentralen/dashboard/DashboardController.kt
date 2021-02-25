@@ -28,12 +28,12 @@ class DashboardController(val dashboardService: DashboardService) : Ringesentral
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(Roles.ringer, Roles.godkjenner, Roles.admin)
+    @RolesAllowed(Roles.bruker)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.TEXT_PLAIN)
     @Path("/")
-    @Operation(summary = "Dashboard", description = Roles.ringerGodkjennerAdmin)
+    @Operation(summary = "Dashboard", description = Roles.bruker)
     @Bulkhead(5)
     @Retry
     fun getDashboard(@Context ctx: SecurityContext): DashboardResponse = dashboardService.getDashboard(ctx.userId())

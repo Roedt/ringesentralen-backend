@@ -20,13 +20,13 @@ enum class GroupID(val nr: Int, val skildring: String) {
         fun from(value: Int): GroupID = values().first { it.nr == value }
 
         fun getRoller(groupID: Int) =
-            when (groupID) {
-                Admin.nr -> setOf(Roles.ringer, Roles.godkjenner, Roles.admin)
-                LokalGodkjenner.nr -> setOf(Roles.ringer, Roles.godkjenner)
-                GodkjentRinger.nr -> setOf(Roles.ringer)
-                UgodkjentRinger.nr -> setOf(Roles.ikke_godkjent)
-                AvslaattRinger.nr -> setOf(Roles.avslaatt)
-                else -> setOf(Roles.ikke_registrert)
+            when (from(groupID)) {
+                Admin -> setOf(Roles.bruker, Roles.ringer, Roles.godkjenner, Roles.admin)
+                LokalGodkjenner -> setOf(Roles.bruker, Roles.ringer, Roles.godkjenner)
+                GodkjentRinger -> setOf(Roles.bruker, Roles.ringer)
+                UgodkjentRinger -> setOf(Roles.venterPaaGodkjenning)
+                AvslaattRinger -> setOf(Roles.sperret)
+                else -> setOf()
             }
     }
 }

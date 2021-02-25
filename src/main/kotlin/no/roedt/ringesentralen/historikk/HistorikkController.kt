@@ -25,11 +25,11 @@ class HistorikkController(private val historikkService: HistorikkService) : Ring
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(Roles.ringer)
+    @RolesAllowed(Roles.bruker)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/meg")
-    @Operation(summary = "Historikk over mine samtaler", description = Roles.ringer)
+    @Operation(summary = "Historikk over mine samtaler", description = Roles.bruker)
     @Bulkhead(5)
     @Retry
     fun getMineSamtaler(@Context ctx: SecurityContext) = historikkService.getMineSamtaler(ctx.userId())

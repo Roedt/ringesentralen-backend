@@ -27,11 +27,11 @@ class InnloggaBrukerController(val innloggaBrukerService: InnloggaBrukerService)
     lateinit var jwt: JsonWebToken
 
 
-    @RolesAllowed(Roles.ikke_godkjent, Roles.ringer, Roles.godkjenner, Roles.admin)
+    @RolesAllowed(Roles.bruker)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/")
-    @Operation(summary = "Hent informasjon om innlogga bruker", description = Roles.ikkeGodkjentRingerGodkjennerAdmin)
+    @Operation(summary = "Hent informasjon om innlogga bruker", description = Roles.bruker)
     @Bulkhead(5)
     @Retry
     fun getProfil(@Context ctx: SecurityContext) = innloggaBrukerService.getProfil(ctx.userId())
