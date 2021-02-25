@@ -17,7 +17,7 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
     }
 
     private fun getSamtalerStatistikkResponse(modus: Modus) : SamtalerStatistikkResponse {
-        val list = get("SELECT id, displaytext FROM v_resultatForModus where modus=${modus.id} ORDER BY id ASC")
+        val list = get("SELECT id, displaytext FROM `resultat` ORDER BY id ASC")
             .map { it as Array<*> }
             .map { Resultattype(id = it[0] as Int, displaytext = it[1].toString()) }
             .map {
@@ -26,6 +26,7 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
                     antal = get("SELECT ringer FROM `samtale` WHERE resultat = ${it.id}").size
                 )
             }
+            .filter { it.antal > 0}
 
         return SamtalerStatistikkResponse(
             resultat = list,
