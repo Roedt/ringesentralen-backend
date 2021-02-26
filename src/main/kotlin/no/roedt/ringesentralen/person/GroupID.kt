@@ -18,7 +18,5 @@ enum class GroupID(val nr: Int, val skildring: String, val roller: Set<String>) 
 
     companion object {
         fun from(value: Int): GroupID = values().first { it.nr == value }
-
-        fun getRoller(groupID: Int) = from(groupID).roller
     }
 }

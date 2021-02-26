@@ -55,7 +55,7 @@ class TokenGenerator(
 
     private fun getTokenExpiresAt() = System.currentTimeMillis() + tokenExpiryPeriod.toSeconds()
 
-    private fun getGroups(hypersysToken: GyldigPersonToken): Set<String> = GroupID.getRoller(getPersonFromHypersysID(hypersysToken).groupID)
+    private fun getGroups(hypersysToken: GyldigPersonToken): Set<String> = GroupID.from(getPersonFromHypersysID(hypersysToken).groupID).roller
 
     private fun getPersonFromHypersysID(hypersysToken: GyldigPersonToken) =
         personRepository.find("hypersysID", hypersysToken.user_id.toInt()).firstResult<Person>()

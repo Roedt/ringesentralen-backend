@@ -25,6 +25,6 @@ private fun Person.toProfil(): Profil = Profil(
     postnummer = postnummer,
     fylke = fylkeRepository.findById(fylke).navn,
     lokallag = lokallagRepository.findById(lokallag.toLong()).navn,
-    rolle = GroupID.getRoller(groupID)
+    rolle = GroupID.from(groupID).roller
 )
 }
