@@ -24,7 +24,8 @@ class BrukereServiceBean(
     val personRepository: PersonRepository,
     val databaseUpdater: DatabaseUpdater,
     val fylkeRepository: FylkeRepository,
-    val lokallagRepository: LokallagRepository
+    val lokallagRepository: LokallagRepository,
+    val epostSender: EpostSender
 ): BrukereService {
 
     override fun getBrukere(): List<Brukerinformasjon> =
@@ -64,7 +65,15 @@ class BrukereServiceBean(
 
         val ringerId = hypersysIDTilRingerId(request.userId)
         databaseUpdater.update("CALL sp_godkjennBruker(${ringerId}, ${personMedEndraTilgang}, ${nyTilgang.nr})")
-        return Brukerendring(personID = personMedEndraTilgang, nyGroupId = nyTilgang)
+        val brukerendring = Brukerendring(personID = personMedEndraTilgang, nyGroupId = nyTilgang, epostSendt = false)
+        try {
+            epostSender.sendEpost(personRepository.findById(personMedEndraTilgang), nyTilgang)
+            brukerendring.epostSendt=true
+        }
+        catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return brukerendring
     }
 
     private fun assertAutorisert(request: AutentisertTilgangsendringRequest) {
