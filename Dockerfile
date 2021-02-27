@@ -2,8 +2,6 @@
 FROM ghcr.io/graalvm/graalvm-ce:java11-21.0.0 as graalvm
 COPY . /home/app
 WORKDIR /home/app
-COPY settings.xml /root/.m2/settings.xml
-#COPY gcp.json /home/app
 
 # Download and install Maven
 ARG MAVEN_VERSION=3.6.3
@@ -29,8 +27,6 @@ RUN $MAVEN_HOME/bin/mvn clean package -Pnative -B -e
 FROM registry.fedoraproject.org/fedora-minimal
 WORKDIR /work/
 COPY --from=graalvm /home/app/target/*-runner /work/application
-#COPY --from=graalvm /home/app/gcp.json gcp.json
-#ENV GOOGLE_APPLICATION_CREDENTIALS=gcp.json
 RUN chmod 775 /work
 EXPOSE 8080
 ENTRYPOINT ["./application", "-Dquarkus.http.host=0.0.0.0"]

@@ -15,7 +15,6 @@ Backend for Ringesentralen v2.
     - hypersysBrukerSecret
     - hypersysClientId
     - hypersysClientSecret
-  - Midlertidig treng du også _github-user_, _github-password_ og _settings_xml_, men det vil snart vera unødvendig.
 - Endre i application.properties så _secretManagerProjectId_ peikar på ditt nye prosjekt
 - Generér matchande private- og publickey, og sørg for at dei ligg i resources\META-INF.resources 
 
