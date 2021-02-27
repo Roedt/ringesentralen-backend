@@ -20,6 +20,3 @@ steps:
           '--platform=managed',
           '--region=europe-north1'
       ]
-
-# Image name
-images: ['gcr.io/$_IMAGE_PROJECT/ringesentralen-backend']
