@@ -14,7 +14,7 @@ steps:
           'beta',
           'run',
           'deploy',
-          'ringesentralen-backend',
+          'ringesentralen-prod-backend',
           '--image', 'gcr.io/$_IMAGE_PROJECT/ringesentralen-backend:latest',
           '--allow-unauthenticated',
           '--platform=managed',
