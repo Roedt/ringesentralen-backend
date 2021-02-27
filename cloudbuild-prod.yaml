@@ -1,4 +1,11 @@
 steps:
+  # Pull docker image
+  - name: gcr.io/cloud-builders/docker
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        docker pull -t gcr.io/$_IMAGE_PROJECT/ringesentralen-backend:latest
 
   # Start up a cloud instance
   - name: 'gcr.io/cloud-builders/gcloud'
