@@ -80,7 +80,7 @@ class RingServiceBean(
     override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): Person {
         request.validate()
         val ringer = hypersysIDTilRingerId(request.userId)
-        val oppringtNummer = request.ringtNummer()
+        val oppringtNummer = request.ringtNummer().replace("+47", "")
         val personSomRingerTilbake: Person = personRepository.find("telefonnummer", oppringtNummer).firstResult()
         if (databaseUpdater.getResultList("SELECT 1 FROM v_noenRingerTilbake WHERE telefonnummer = '$oppringtNummer' AND ringer = '$ringer' LIMIT 1").isEmpty()) {
             throw Exception("Du kan berre registrere å bli ringt opp frå folk du har ringt tidlegare.")

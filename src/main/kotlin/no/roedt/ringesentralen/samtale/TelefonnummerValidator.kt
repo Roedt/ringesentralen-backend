@@ -7,7 +7,7 @@ class TelefonnummerValidator {
 
     companion object {
         @JvmStatic
-        private val pattern: Pattern = Pattern.compile("^\\+[0-9]{10,13}\$\n")
+        private val pattern: Pattern = Pattern.compile("^\\+[0-9]{10,13}\$")
 
         fun validate(telefonnummer: String) {
             if (!pattern.matcher(telefonnummer).matches()) {
