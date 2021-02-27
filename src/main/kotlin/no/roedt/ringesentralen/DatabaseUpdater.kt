@@ -1,6 +1,5 @@
 package no.roedt.ringesentralen
 
-import com.arjuna.ats.jta.TransactionManager
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager
 
@@ -11,20 +10,7 @@ class DatabaseUpdater(val entityManager: EntityManager) {
         query.forEach { entityManager.createNativeQuery(it).executeUpdate() }
     }
 
-    fun update(vararg query: String) {
-        val transactionManager = TransactionManager.transactionManager()
-        transactionManager.begin()
-        query.forEach { entityManager.createNativeQuery(it).executeUpdate() }
-        transactionManager.commit()
-    }
-
-    fun updateWithResult(query: String): MutableList<Any?>? {
-        val transactionManager = TransactionManager.transactionManager()
-        transactionManager.begin()
-        val results = getResultList(query)
-        transactionManager.commit()
-        return results
-    }
+    fun updateWithResult(query: String): MutableList<Any?>? = getResultList(query)
 
     fun count(query: String): Int = entityManager.createNativeQuery(query).resultList.size
 

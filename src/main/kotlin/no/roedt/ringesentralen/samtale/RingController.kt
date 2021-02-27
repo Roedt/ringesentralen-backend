@@ -12,6 +12,7 @@ import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.annotation.security.RolesAllowed
 import javax.inject.Inject
+import javax.transaction.Transactional
 import javax.ws.rs.*
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
@@ -32,6 +33,7 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Path("/neste")
     @Operation(summary = "Finn neste person å ringe", description = Roles.ringer)
     @Retry
+    @Transactional
     fun hentNestePersonAaRinge(@Context ctx: SecurityContext): NestePersonAaRingeResponse? = ringService.hentNestePersonAaRinge(ctx.userId())
 
     @RolesAllowed(Roles.ringer)
@@ -41,6 +43,7 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Path("/startSamtale")
     @Operation(summary = "Start samtale", description = Roles.ringer)
     @Retry
+    @Transactional
     fun startSamtale(@Context ctx: SecurityContext, startSamtaleRequest: StartSamtaleRequest) = ringService.startSamtale(AutentisertStartSamtaleRequest(ctx.userId(), startSamtaleRequest))
 
     @RolesAllowed(Roles.ringer)
@@ -50,6 +53,7 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Path("/registrerResultatFraSamtale")
     @Operation(summary = "Registrer resultat fra samtale", description = Roles.ringer)
     @Retry
+    @Transactional
     fun registrerResultatFraSamtale(@Context ctx: SecurityContext, resultatFraSatmtaleRequest: ResultatFraSamtaleRequest) = ringService.registrerResultatFraSamtale(
         AutentisertResultatFraSamtaleRequest(ctx.userId(), resultatFraSatmtaleRequest)
     )
@@ -62,6 +66,7 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Path("/noenRingerTilbake")
     @Operation(summary = "Noen ringer tilbake", description = Roles.ringer)
     @Retry
+    @Transactional
     fun noenRingerTilbake(@Context ctx: SecurityContext, request: RingerTilbakeRequest): Person = ringService.noenRingerTilbake(AutentisertRingerTilbakeRequest(ctx.userId(), request))
 
 }
