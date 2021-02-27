@@ -3,6 +3,7 @@ package no.roedt.ringesentralen.brukere
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.ringesentralen.person.UserId
+import org.eclipse.microprofile.jwt.JsonWebToken
 
 @RegisterForReflection
 data class TilgangsendringsRequest(
@@ -10,6 +11,10 @@ data class TilgangsendringsRequest(
 )
 
 @RegisterForReflection
-data class AutentisertTilgangsendringRequest(val userId: UserId, val tilgangsendringRequest: TilgangsendringsRequest) {
+data class AutentisertTilgangsendringRequest(
+        val userId: UserId,
+        val tilgangsendringRequest: TilgangsendringsRequest,
+        val jwt: JsonWebToken
+) {
         fun personMedEndraTilgang() = tilgangsendringRequest.personMedEndraTilgang
 }

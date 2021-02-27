@@ -46,14 +46,7 @@ class HypersysController(val service: HypersysService) : RingesentralenControlle
     @Path("/medlemmer")
     @Operation(summary = "Hent alle medlemmer i lokallaget ditt", description = Roles.admin)
     @Produces(MediaType.APPLICATION_JSON)
-    fun getMedlemmer(@Context ctx: SecurityContext): List<Any> = service.getMedlemmer(ctx.userId(), GyldigPersonToken(
-        access_token = jwt.claim<String>("hypersys.access_token").get(),
-        expires_in = jwt.claim<Any>("hypersys.expires_in").get().toString().toInt(),
-        token_type = jwt.claim<String>("hypersys.token_type").get(),
-        scope = jwt.claim<String>("hypersys.scope").get(),
-        refresh_token = jwt.claim<String>("hypersys.refresh_token").get(),
-        user_id = jwt.claim<String>("hypersys.user_id").get()
-    ))
+    fun getMedlemmer(@Context ctx: SecurityContext): List<Any> = service.getMedlemmer(ctx.userId(), jwt)
 
 
 }

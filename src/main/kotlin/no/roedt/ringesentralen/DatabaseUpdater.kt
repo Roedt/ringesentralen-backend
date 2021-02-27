@@ -7,6 +7,10 @@ import javax.persistence.EntityManager
 @ApplicationScoped
 class DatabaseUpdater(val entityManager: EntityManager) {
 
+    fun updateNoTran(vararg query: String) {
+        query.forEach { entityManager.createNativeQuery(it).executeUpdate() }
+    }
+
     fun update(vararg query: String) {
         val transactionManager = TransactionManager.transactionManager()
         transactionManager.begin()

@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.brukere
 
 import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.ringesentralen.hypersys.HypersysService
 import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
@@ -23,7 +24,8 @@ class BrukereServiceBean(
     val databaseUpdater: DatabaseUpdater,
     val fylkeRepository: FylkeRepository,
     val lokallagRepository: LokallagRepository,
-    val epostSender: EpostSender
+    val epostSender: EpostSender,
+    val hypersysService: HypersysService
 ): BrukereService {
 
     override fun getBrukere(): List<Brukerinformasjon> =
@@ -58,16 +60,30 @@ class BrukereServiceBean(
         val personMedEndraTilgang = request.personMedEndraTilgang()
 
         val ringerId = hypersysIDTilRingerId(request.userId)
-        databaseUpdater.update("CALL sp_godkjennBruker(${ringerId}, ${personMedEndraTilgang}, ${nyTilgang.nr})")
+        databaseUpdater.updateNoTran("CALL sp_godkjennBruker(${ringerId}, ${personMedEndraTilgang}, ${nyTilgang.nr})")
         val brukerendring = Brukerendring(personID = personMedEndraTilgang, nyGroupId = nyTilgang, epostSendt = false)
+
+        val person = personRepository.findById(personMedEndraTilgang)
+        oppdaterNavnFraHypersys(request, person.hypersysID)
+
         try {
-            epostSender.sendEpost(personRepository.findById(personMedEndraTilgang), nyTilgang)
+            epostSender.sendEpost(person, nyTilgang)
             brukerendring.epostSendt=true
         }
         catch (e: Exception) {
             e.printStackTrace()
         }
         return brukerendring
+    }
+
+    private fun oppdaterNavnFraHypersys(request: AutentisertTilgangsendringRequest, hypersysID: Int?) {
+        hypersysID
+            ?.let { UserId(userId = it) }
+            ?.let { hypersysService.getMedlemmer(it, request.jwt) }
+            ?.firstOrNull { it["member_id"] == hypersysID }
+            ?.let {
+                personRepository.update("fornavn = ?1, etternavn = ?2 where hypersysID = ?3", it["first_name"], it["last_name"], hypersysID)
+            }
     }
 
     private fun assertAutorisert(request: AutentisertTilgangsendringRequest) {

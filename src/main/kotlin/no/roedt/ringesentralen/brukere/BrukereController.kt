@@ -10,6 +10,7 @@ import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.annotation.security.RolesAllowed
 import javax.inject.Inject
+import javax.transaction.Transactional
 import javax.ws.rs.*
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
@@ -37,9 +38,10 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/aktiver")
     @Operation(summary = "Aktiver ringer", description = Roles.godkjennerAdmin)
-    @Bulkhead(5)
+    @Bulkhead(3)
     @Retry
-    fun aktiverRinger(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.aktiverRinger(AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest))
+    @Transactional
+    fun aktiverRinger(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.aktiverRinger(AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt))
 
     @RolesAllowed(Roles.godkjenner, Roles.admin)
     @PUT
@@ -49,7 +51,8 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Operation(summary = "Deaktiver ringer", description = Roles.godkjennerAdmin)
     @Bulkhead(5)
     @Retry
-    fun deaktiverRinger(@Context ctx: SecurityContext, deaktiverRequest: TilgangsendringsRequest): Brukerendring = brukereService.deaktiverRinger(AutentisertTilgangsendringRequest(ctx.userId(), deaktiverRequest))
+    @Transactional
+    fun deaktiverRinger(@Context ctx: SecurityContext, deaktiverRequest: TilgangsendringsRequest): Brukerendring = brukereService.deaktiverRinger(AutentisertTilgangsendringRequest(ctx.userId(), deaktiverRequest, jwt))
 
     @RolesAllowed(Roles.admin)
     @PUT
@@ -59,7 +62,12 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Operation(summary = "Gjør til lokal godkjenner", description = Roles.admin)
     @Bulkhead(5)
     @Retry
-    fun gjoerRingerTilLokalGodkjenner(@Context ctx: SecurityContext, tilLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = brukereService.gjoerRingerTilLokalGodkjenner(AutentisertTilgangsendringRequest(ctx.userId(), tilLokalGodkjennerRequest))
+    @Transactional
+    fun gjoerRingerTilLokalGodkjenner(@Context ctx: SecurityContext, tilLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = brukereService.gjoerRingerTilLokalGodkjenner(AutentisertTilgangsendringRequest(
+        ctx.userId(),
+        tilLokalGodkjennerRequest,
+        jwt
+    ))
 
     @RolesAllowed(Roles.admin)
     @PUT
@@ -69,6 +77,11 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Operation(summary = "Fjern som lokal godkjenner", description = Roles.admin)
     @Bulkhead(5)
     @Retry
-    fun fjernRingerSomLokalGodkjenner(@Context ctx: SecurityContext, fjernSomLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = brukereService.fjernRingerSomLokalGodkjenner(AutentisertTilgangsendringRequest(ctx.userId(), fjernSomLokalGodkjennerRequest))
+    @Transactional
+    fun fjernRingerSomLokalGodkjenner(@Context ctx: SecurityContext, fjernSomLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = brukereService.fjernRingerSomLokalGodkjenner(AutentisertTilgangsendringRequest(
+        ctx.userId(),
+        fjernSomLokalGodkjennerRequest,
+        jwt
+    ))
 
 }
