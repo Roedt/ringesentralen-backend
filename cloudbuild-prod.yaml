@@ -9,7 +9,7 @@ steps:
 
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/ringesentralen-backend-prod']
+    args: ['push', 'gcr.io/$PROJECT_ID/ringesentralen-prod-backend']
 
   # Start up a cloud instance
   - name: 'gcr.io/cloud-builders/gcloud'
@@ -18,12 +18,12 @@ steps:
           'beta',
           'run',
           'deploy',
-          'ringesentralen-backend-prod',
-          '--image', 'gcr.io/$PROJECT_ID/ringesentralen-backend-prod',
+          'ringesentralen-prod-backend',
+          '--image', 'gcr.io/$PROJECT_ID/ringesentralen-prod-backend',
           '--allow-unauthenticated',
           '--platform=managed',
           '--region=europe-north1'
       ]
 
 # Image name
-images: ['gcr.io/$PROJECT_ID/ringesentralen-backend-prod']
+images: ['gcr.io/$PROJECT_ID/ringesentralen-prod-backend']
