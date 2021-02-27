@@ -6,16 +6,14 @@ import javax.persistence.EntityManager
 @ApplicationScoped
 class DatabaseUpdater(val entityManager: EntityManager) {
 
-    fun updateNoTran(vararg query: String) {
-        query.forEach { entityManager.createNativeQuery(it).executeUpdate() }
-    }
+    fun update(vararg query: String) = query.forEach { toQuery(it).executeUpdate() }
 
-    fun updateWithResult(query: String): MutableList<Any?>? = getResultList(query)
+    fun count(query: String): Int = toQuery(query).resultList.size
 
-    fun count(query: String): Int = entityManager.createNativeQuery(query).resultList.size
+    fun getResultList(query: String) = toQuery(query).resultList
 
-    fun getResultList(query: String) = entityManager.createNativeQuery(query).resultList
+    fun getSingleResult(query: String) = toQuery(query).singleResult
 
-    fun getSingleResult(query: String) = entityManager.createNativeQuery(query).singleResult
+    private fun toQuery(query: String) = entityManager.createNativeQuery(query)
 
 }

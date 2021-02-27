@@ -31,7 +31,7 @@ class RingServiceBean(
             ?.let { it as Int }
             ?.let { personRepository.findById(it.toLong()) }
             ?.let { NestePersonAaRingeResponse(person = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1"))}
-            ?.also { databaseUpdater.updateNoTran("call sp_lagreOppslag(${it.person.id}, ${userId.userId})") }
+            ?.also { databaseUpdater.update("call sp_lagreOppslag(${it.person.id}, ${userId.userId})") }
 
     fun getLokallag(userId: UserId) =
         personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag
@@ -51,13 +51,13 @@ class RingServiceBean(
 
     override fun startSamtale(request: AutentisertStartSamtaleRequest) {
         val ringerId = hypersysIDTilRingerId(request.userId)
-        databaseUpdater.updateNoTran("CALL sp_startSamtale(${request.skalRingesID()}, $ringerId)")
+        databaseUpdater.update("CALL sp_startSamtale(${request.skalRingesID()}, $ringerId)")
     }
 
     override fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest) {
         val request = autentisertRequest.request
         assert(request.isGyldigResultat())
-        databaseUpdater.updateNoTran("CALL sp_registrerSamtale(${request.ringtID}, ${hypersysIDTilRingerId(autentisertRequest.userId)}, ${request.resultat.nr}, '${request.kommentar}')")
+        databaseUpdater.update("CALL sp_registrerSamtale(${request.ringtID}, ${hypersysIDTilRingerId(autentisertRequest.userId)}, ${request.resultat.nr}, '${request.kommentar}')")
 
         lagreResultat(getNesteGroupID(request), request)
     }
@@ -71,7 +71,7 @@ class RingServiceBean(
     }
 
     private fun lagreResultat(nesteGroupID: GroupID?, request: ResultatFraSamtaleRequest) {
-        nesteGroupID?.nr?.let { databaseUpdater.updateNoTran("CALL sp_updateGroupID(${request.ringtID}, $it)") }
+        nesteGroupID?.nr?.let { databaseUpdater.update("CALL sp_updateGroupID(${request.ringtID}, $it)") }
         if (request.skalRegistrere()) {
             registrerKoronaspesifikkeResultat(request)
         }
@@ -95,7 +95,7 @@ class RingServiceBean(
     }
 
     private fun erFleireEnnToIkkeSvar(request: ResultatFraSamtaleRequest): Boolean {
-        val resultat: List<Int>? = databaseUpdater.updateWithResult("select resultat from `samtale` where ringt = ${request.ringtID} and resultat = 0")?.map { it as Int }
+        val resultat: List<Int>? = databaseUpdater.getResultList("select resultat from `samtale` where ringt = ${request.ringtID} and resultat = 0")?.map { it as Int }
         val fleireEnnToIkkeSvar: Boolean = (resultat?.filter { it == 0 }?.count() ?: 0) > 2
         val ingenSvar: Boolean = (resultat?.filter { it != 0 && it != 9 }?.count() ?: 0) == 0
         return ingenSvar && fleireEnnToIkkeSvar && request.resultat == Resultat.Ikke_svar
@@ -103,7 +103,7 @@ class RingServiceBean(
 
     private fun registrerKoronaspesifikkeResultat(request: ResultatFraSamtaleRequest) {
         val resultat = request.modusspesifikkeResultat as KoronaspesifikkeResultat
-        databaseUpdater.updateNoTran("CALL sp_registrerOppfoelgingKorona(${request.ringtID}, ${resultat.vilHaKoronaprogram}, ${resultat.vilBliMerAktiv}, ${resultat.vilHaValgkampsbrev}, ${request.vilIkkeBliRingt})")
+        databaseUpdater.update("CALL sp_registrerOppfoelgingKorona(${request.ringtID}, ${resultat.vilHaKoronaprogram}, ${resultat.vilBliMerAktiv}, ${resultat.vilHaValgkampsbrev}, ${request.vilIkkeBliRingt})")
     }
 
     fun hypersysIDTilRingerId(userId: UserId) =
