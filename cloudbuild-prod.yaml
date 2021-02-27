@@ -1,0 +1,18 @@
+steps:
+
+  # Start up a cloud instance
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      [
+          'beta',
+          'run',
+          'deploy',
+          'ringesentralen-backend-prod',
+          '--image', 'gcr.io/$_IMAGE_PROJECT/ringesentralen-backend',
+          '--allow-unauthenticated',
+          '--platform=managed',
+          '--region=europe-north1'
+      ]
+
+# Image name
+images: ['gcr.io/$PROJECT_ID/ringesentralen-backend-prod']
