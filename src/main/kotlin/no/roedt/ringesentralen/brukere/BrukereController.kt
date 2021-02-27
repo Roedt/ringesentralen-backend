@@ -35,31 +35,11 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/godkjenn")
-    @Operation(summary = "Godkjenn ringer", description = Roles.godkjennerAdmin)
+    @Path("/aktiver")
+    @Operation(summary = "Aktiver ringer", description = Roles.godkjennerAdmin)
     @Bulkhead(5)
     @Retry
-    fun godkjennRinger(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.godkjennRinger(AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest))
-
-    @RolesAllowed(Roles.godkjenner, Roles.admin)
-    @PUT
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/avslaa")
-    @Operation(summary = "Avslå ringer", description = Roles.godkjennerAdmin)
-    @Bulkhead(5)
-    @Retry
-    fun avslaaRinger(@Context ctx: SecurityContext, avslaaRequest: TilgangsendringsRequest): Brukerendring = brukereService.avslaaRinger(AutentisertTilgangsendringRequest(ctx.userId(), avslaaRequest))
-
-    @RolesAllowed(Roles.godkjenner, Roles.admin)
-    @PUT
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/reaktiver")
-    @Operation(summary = "Reaktiver ringer", description = Roles.godkjennerAdmin)
-    @Bulkhead(5)
-    @Retry
-    fun reaktiverRinger(@Context ctx: SecurityContext, reaktiverRequest: TilgangsendringsRequest): Brukerendring = brukereService.reaktiverRinger(AutentisertTilgangsendringRequest(ctx.userId(), reaktiverRequest))
+    fun aktiverRinger(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.aktiverRinger(AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest))
 
     @RolesAllowed(Roles.godkjenner, Roles.admin)
     @PUT

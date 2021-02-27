@@ -10,9 +10,7 @@ import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.NotAuthorizedException
 
 interface BrukereService {
-    fun godkjennRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring
-    fun avslaaRinger(avslaaRequest: AutentisertTilgangsendringRequest): Brukerendring
-    fun reaktiverRinger(reaktiverRequest: AutentisertTilgangsendringRequest): Brukerendring
+    fun aktiverRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring
     fun deaktiverRinger(deaktiverRequest: AutentisertTilgangsendringRequest): Brukerendring
     fun gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring
     fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring
@@ -46,11 +44,7 @@ class BrukereServiceBean(
                 )
             }
 
-    override fun godkjennRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(godkjennRequest, GroupID.GodkjentRinger)
-
-    override fun avslaaRinger(avslaaRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(avslaaRequest, GroupID.AvslaattRinger)
-
-    override fun reaktiverRinger(reaktiverRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(reaktiverRequest, GroupID.GodkjentRinger)
+    override fun aktiverRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(godkjennRequest, GroupID.GodkjentRinger)
 
     override fun deaktiverRinger(deaktiverRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(deaktiverRequest, GroupID.AvslaattRinger)
 
