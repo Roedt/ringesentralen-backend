@@ -16,17 +16,15 @@ import javax.ws.rs.ForbiddenException
 class TokenGenerator(
     private val hypersysService: HypersysService,
     private val personRepository: PersonRepository,
-    private val privateKeyFactory: PrivateKeyFactory
+    private val privateKeyFactory: PrivateKeyFactory,
+    private val gcpSecretManager: GCPSecretManager
 ) {
-
-    @ConfigProperty(name = "frontendTokenKey")
-    lateinit var frontendTokenKey: String
 
     @ConfigProperty(name = "token.expiryPeriod")
     lateinit var tokenExpiryPeriod: Duration
 
     fun login(loginRequest: LoginRequest): String {
-        if (loginRequest.key != frontendTokenKey) {
+        if (loginRequest.key != gcpSecretManager.getFrontendTokenKey()) {
             throw IllegalArgumentException("Illegal key")
         }
         EpostValidator.validate(loginRequest.brukarnamn)

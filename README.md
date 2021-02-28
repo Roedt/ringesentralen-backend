@@ -10,11 +10,13 @@ Backend for Ringesentralen v2.
 ### Alternativ B
 - Sett opp eit eiget prosjekt på Google Cloud Platform
   - Sett opp Secret Manager med følgjande variablar
+    - frontendTokenKey
     - hypersysBaseUrl
     - hypersysBrukerId
     - hypersysBrukerSecret
     - hypersysClientId
     - hypersysClientSecret
+    - privatekey
 - Endre i application.properties så _secretManagerProjectId_ peikar på ditt nye prosjekt
 - Generér matchande private- og publickey, og sørg for at dei ligg i resources\META-INF.resources 
 

@@ -21,6 +21,8 @@ class GCPSecretManager {
         client = SecretManagerServiceClient.create()
     }
 
+    fun getFrontendTokenKey() = getSecretFromSecretManager("frontendTokenKey")
+
     fun getHypersysBrukerId() = getSecretFromSecretManager("hypersysBrukerId")
 
     fun getHypersysBrukerSecret() = getSecretFromSecretManager("hypersysBrukerSecret")
