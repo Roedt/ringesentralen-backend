@@ -13,7 +13,7 @@ internal class BrukerinformasjonTest {
 
     @Test
     fun telefonnummerBlirWrappaIEnkeltfnuttar() {
-        assertEquals(actual = toTelefonnummer(Telefonnummer(landkode = "+47", nummer = 12345678)), expected= "'12345678'")
+        assertEquals(actual = toTelefonnummer(Telefonnummer(landkode = "+47", nummer = "12345678")), expected= "'12345678'")
     }
 
     private fun toTelefonnummer(telefonnummer: Telefonnummer?): String? {
