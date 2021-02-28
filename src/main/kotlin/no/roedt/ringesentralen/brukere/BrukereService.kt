@@ -29,7 +29,7 @@ class BrukereServiceBean(
 ): BrukereService {
 
     override fun getBrukere(): List<Brukerinformasjon> =
-        personRepository.find("groupID >= ${GroupID.GodkjentRinger.nr}")
+        personRepository.find("groupID >= ${GroupID.UgodkjentRinger.nr}")
             .list<Person>()
             .map { r ->
                 Brukerinformasjon(
