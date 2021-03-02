@@ -10,6 +10,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Duration
 import javax.enterprise.context.RequestScoped
 import javax.ws.rs.ForbiddenException
+import javax.ws.rs.ServiceUnavailableException
 
 
 @RequestScoped
@@ -29,7 +30,12 @@ class TokenGenerator(
         }
         EpostValidator.validate(loginRequest.brukarnamn)
 
-        val hypersysToken: Token = hypersysService.login(loginRequest)
+        val hypersysToken: Token = try {
+            hypersysService.login(loginRequest)
+        }
+        catch (e: Exception) {
+            throw ServiceUnavailableException(e.message)
+        }
         if (hypersysToken is UgyldigToken)
             throw ForbiddenException(hypersysToken.error)
         return generateToken(hypersysToken as GyldigPersonToken)
