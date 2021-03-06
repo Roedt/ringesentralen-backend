@@ -54,3 +54,10 @@ Flyten er omtrent sånn:
 1. Backenden lager sitt eiget token, og legg inn alt frå hypersys-tokenet som claims der
 1. Klienten får dette tokenet, og bruker det (som bearer token i authorization i header) på alle resterande kall mot backenden
 1. Backenden transformerer det til hypersys-token on demand ved vidare kall mot hypersys
+
+## GCP-oppsettet
+- Frontenden er sett opp på Cloud Run
+- Backenden er sett opp på Cloud Run
+- Databasen er i Cloud SQL, med MySQL 8.0
+- Kommunikasjonen mellom frontend og backend går via Serverless VPC Connector
+- Løyndommar er sett opp i GCP Secret Manager
