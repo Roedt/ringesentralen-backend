@@ -16,7 +16,7 @@ interface RingService {
     fun hentNestePersonAaRinge(userId: UserId): NestePersonAaRingeResponse?
     fun startSamtale(request: AutentisertStartSamtaleRequest)
     fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest)
-    fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): Person
+    fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): NestePersonAaRingeResponse
 }
 
 @ApplicationScoped
@@ -77,7 +77,7 @@ class RingServiceBean(
         }
     }
 
-    override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): Person {
+    override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): NestePersonAaRingeResponse {
         request.validate()
         val ringer = hypersysIDTilRingerId(request.userId)
         val oppringtNummer = request.ringtNummer().replace("+47", "")
@@ -91,7 +91,7 @@ class RingServiceBean(
                 StartSamtaleRequest(
                 skalRingesID = personSomRingerTilbake.id
         )))
-        return personSomRingerTilbake
+        return personSomRingerTilbake.let { NestePersonAaRingeResponse(person = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1"))}
     }
 
     private fun erFleireEnnToIkkeSvar(request: ResultatFraSamtaleRequest): Boolean {

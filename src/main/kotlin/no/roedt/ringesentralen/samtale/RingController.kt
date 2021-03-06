@@ -2,7 +2,6 @@ package no.roedt.ringesentralen.samtale
 
 import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.Roles
-import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
 import org.eclipse.microprofile.faulttolerance.Retry
@@ -67,6 +66,6 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Operation(summary = "Noen ringer tilbake", description = Roles.ringer)
     @Retry
     @Transactional
-    fun noenRingerTilbake(@Context ctx: SecurityContext, request: RingerTilbakeRequest): Person = ringService.noenRingerTilbake(AutentisertRingerTilbakeRequest(ctx.userId(), request))
+    fun noenRingerTilbake(@Context ctx: SecurityContext, request: RingerTilbakeRequest): NestePersonAaRingeResponse = ringService.noenRingerTilbake(AutentisertRingerTilbakeRequest(ctx.userId(), request))
 
 }
