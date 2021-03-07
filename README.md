@@ -61,3 +61,4 @@ Flyten er omtrent sånn:
 - Databasen er i Cloud SQL, med MySQL 8.0
 - Kommunikasjonen mellom frontend og backend går via Serverless VPC Connector
 - Løyndommar er sett opp i GCP Secret Manager
+- Både frontend og backend byggjast i Cloud Build. Per no er det cloudbuild-test.yaml som brukast for begge to. Denne gjer bygging frå scratch med maven/npm. For backenden har byggejobben fått veldig mykje ressursar på Cloud Build. Backenden køyrer i Quarkus native-modus, som gjer at oppstartstida er minimal og applikasjonen svarer raskt. Ulempa er at byggjing av native-applikasjonar er veldig kraft-krevjande, og tar litt tid, vanlegvis rundt 5-6 minutt. For brukarane er imidlertid forskjellen i responstid stor.
