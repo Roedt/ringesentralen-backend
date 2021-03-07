@@ -34,7 +34,8 @@ class TokenGenerator(
             hypersysService.login(loginRequest)
         }
         catch (e: Exception) {
-            throw ServiceUnavailableException(e.message)
+            e.printStackTrace()
+            throw ServiceUnavailableException("Kunne ikke kontakte Hyperys")
         }
         if (hypersysToken is UgyldigToken)
             throw ForbiddenException(hypersysToken.error)
