@@ -16,8 +16,6 @@
 | **Historikk** | | | | |  |
 | meg | | | X | | |
 | laget | | | | X | X |
-| **Person** | | | | |  |
-| slett | | | | | X |
 | **Profil** | | | | |  |
 | profil | | X | X | X | X |
 | **Ring** | | | | |  |

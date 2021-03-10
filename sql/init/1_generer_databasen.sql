@@ -5987,20 +5987,6 @@ END //
 -- --------------------------------------------------------
 
 DELIMITER //
-  DROP PROCEDURE IF EXISTS sp_slettPerson;
-  CREATE PROCEDURE sp_slettPerson (
-    id_In int(6)
-)
-BEGIN
-DELETE FROM `samtale` where id = id_In;
-DELETE FROM `oppfoelgingKorona` where personId = id_In;
-DELETE FROM `ringer` where personId = id_In;
-DELETE FROM `person` where id = id_In;
-END //
-
--- --------------------------------------------------------
-
-DELIMITER //
   DROP PROCEDURE IF EXISTS sp_recordLoginAttempt;
   CREATE PROCEDURE sp_recordLoginAttempt (
     hypersysIDIn int(6)
