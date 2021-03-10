@@ -89,8 +89,9 @@ class BrukereServiceBean(
     private fun assertAutorisert(request: AutentisertTilgangsendringRequest) {
         val ringersBrukertype = hypersysIdTilPerson(request.userId).groupID
         val groupID = personRepository.findById(request.personMedEndraTilgang()).groupID
-        if (!GroupID.Admin.references(ringersBrukertype) && GroupID.Admin.references(groupID)) {
-            throw NotAuthorizedException("Godkjennere kan ikkje endre admins")
+
+        if (GroupID.Admin.references(groupID)) {
+            throw NotAuthorizedException("Kan ikkje endre admins")
         }
         if (GroupID.LokalGodkjenner.references(ringersBrukertype) && GroupID.LokalGodkjenner.references(groupID)) {
             throw NotAuthorizedException("Godkjennere kan ikkje endre andre godjennere")
