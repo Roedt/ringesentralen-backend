@@ -23,10 +23,10 @@ class StatistikkController(val service: StatistikkService) : RingesentralenContr
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(Roles.admin)
+    @RolesAllowed(Roles.ringer, Roles.godkjenner, Roles.admin)
     @GET
     @Path("/statistikk")
-    @Operation(summary = "Hent statistikk", description = Roles.admin)
+    @Operation(summary = "Hent statistikk", description = Roles.ringerGodkjennerAdmin)
     @Produces(MediaType.APPLICATION_JSON)
-    fun getStatistikk(@Context ctx: SecurityContext) : StatistikkResponse = service.getStatistikk()
+    fun getStatistikk(@Context ctx: SecurityContext) : StatistikkResponse = service.getStatistikk(jwt.groups)
 }

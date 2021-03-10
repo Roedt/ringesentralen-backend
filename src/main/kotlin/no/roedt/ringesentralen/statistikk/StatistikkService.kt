@@ -1,22 +1,26 @@
 package no.roedt.ringesentralen.statistikk
 
 import no.roedt.ringesentralen.DatabaseUpdater
-import no.roedt.ringesentralen.Modus
+import no.roedt.ringesentralen.Roles
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class StatistikkService(val databaseUpdater: DatabaseUpdater) {
 
-    fun getStatistikk(): StatistikkResponse {
-        val modus = Modus.Korona
-        return StatistikkResponse(
-            samtalerStatistikkResponse = getSamtalerStatistikkResponse(modus),
-            ringereStatistikkResponse = getRingereStatistikkResponse(),
-            personerStatistikkResponse = getPersonerStatistikkResponse()
-        )
+    fun getStatistikk(groups: Set<String>): StatistikkResponse {
+        return if (groups.contains(Roles.admin)) {
+            StatistikkResponse(
+                samtalerStatistikkResponse = getSamtalerStatistikkResponse(),
+                ringereStatistikkResponse = getRingereStatistikkResponse(),
+                personerStatistikkResponse = getPersonerStatistikkResponse()
+            )
+        } else StatistikkResponse(
+            samtalerStatistikkResponse = getSamtalerStatistikkResponse(),
+            ringereStatistikkResponse = null,
+            personerStatistikkResponse = null)
     }
 
-    private fun getSamtalerStatistikkResponse(modus: Modus) : SamtalerStatistikkResponse {
+    private fun getSamtalerStatistikkResponse(): SamtalerStatistikkResponse {
         val list = get("SELECT id, displaytext FROM `resultat` ORDER BY id ASC")
             .map { it as Array<*> }
             .map { Resultattype(id = it[0] as Int, displaytext = it[1].toString()) }
