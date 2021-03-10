@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType
 @Path("/token")
 @Tag(name ="Token")
 @SecurityRequirement(name = "jwt")
-class TokenController(val tokenGenerator: TokenGenerator) {
+class TokenController(val tokenService: TokenService) {
 
     @Inject
     lateinit var jwt: JsonWebToken
@@ -25,6 +25,6 @@ class TokenController(val tokenGenerator: TokenGenerator) {
     @Path("/login")
     @Produces(MediaType.TEXT_PLAIN)
     @Transactional
-    fun login(loginRequest: LoginRequest): String = tokenGenerator.login(loginRequest)
+    fun login(loginRequest: LoginRequest): String = tokenService.login(loginRequest)
 
 }

@@ -14,7 +14,7 @@ import javax.ws.rs.ServiceUnavailableException
 
 
 @RequestScoped
-class TokenGenerator(
+class TokenService(
     private val hypersysService: HypersysService,
     private val personRepository: PersonRepository,
     private val privateKeyFactory: PrivateKeyFactory,
