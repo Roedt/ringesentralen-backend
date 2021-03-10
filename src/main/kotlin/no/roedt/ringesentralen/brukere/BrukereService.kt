@@ -8,7 +8,7 @@ import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId
 import javax.enterprise.context.ApplicationScoped
-import javax.ws.rs.NotAuthorizedException
+import javax.ws.rs.ForbiddenException
 
 interface BrukereService {
     fun aktiverRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring
@@ -91,10 +91,10 @@ class BrukereServiceBean(
         val groupID = personRepository.findById(request.personMedEndraTilgang()).groupID
 
         if (GroupID.Admin.references(groupID)) {
-            throw NotAuthorizedException("Kan ikkje endre admins")
+            throw ForbiddenException("Kan ikkje endre admins")
         }
         if (GroupID.LokalGodkjenner.references(ringersBrukertype) && GroupID.LokalGodkjenner.references(groupID)) {
-            throw NotAuthorizedException("Godkjennere kan ikkje endre andre godjennere")
+            throw ForbiddenException("Godkjennere kan ikkje endre andre godjennere")
         }
     }
 
