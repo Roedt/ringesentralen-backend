@@ -5843,8 +5843,8 @@ left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.oppr
 
 -- --------------------------------------------------------
 
-DELIMITER //
   DROP PROCEDURE IF EXISTS sp_updateGroupID;
+DELIMITER //
   CREATE PROCEDURE sp_updateGroupID(
   id_In int(6),
   groupID_In int(2)
@@ -5855,10 +5855,12 @@ set groupID = groupID_In
 where id = id_in;
 END //
 
+DELIMITER ;
+
 -- --------------------------------------------------------
 
-DELIMITER //
   DROP PROCEDURE IF EXISTS sp_lagreOppslag;
+DELIMITER //
   CREATE PROCEDURE sp_lagreOppslag(
     ringtIdIn int(6),
     ringerHypersysIdIn int(6)
@@ -5868,24 +5870,28 @@ INSERT INTO `oppslag` (ringt, ringerHypersysId)
   VALUES (ringtIdIn, ringerHypersysIdIn);
 END //
 
+DELIMITER ;
+
 -- --------------------------------------------------------
 
-DELIMITER //
   DROP PROCEDURE IF EXISTS sp_registrerSamtale;
+DELIMITER //
   CREATE PROCEDURE sp_registrerSamtale(
     ringtIdIn int(6),
     ringerIdIn int(6),
-    resultatIn int(1),
+    resultatIn int,
     kommentarIn longtext
 )
 BEGIN
 INSERT INTO `samtale` (ringt, ringer, resultat, kommentar)
 VALUES (ringtIdIn, ringerIdIn, resultatIn, kommentarIn);
 END //
+
+DELIMITER ;
 -- --------------------------------------------------------
 
-DELIMITER //
   DROP PROCEDURE IF EXISTS sp_godkjennBruker;
+DELIMITER //
   CREATE PROCEDURE sp_godkjennBruker(
     ringerIdIn varchar(15),
     ringtIdIn varchar(15),
@@ -5899,10 +5905,12 @@ UPDATE `person`
   WHERE id = ringtIdIn;
 END //
 
+DELIMITER ;
+
 -- --------------------------------------------------------
 
-DELIMITER //
   DROP PROCEDURE IF EXISTS sp_registrerOppfoelgingKorona;
+DELIMITER //
   CREATE PROCEDURE sp_registrerOppfoelgingKorona(
     ringtIdIn int(6),
     koronaprogramIn tinyint(1),
@@ -5915,10 +5923,12 @@ INSERT INTO `oppfoelgingKorona` (personId, koronaprogram, merAktiv, valgkampsbre
   VALUES (ringtIdIn, koronaprogramIn, merAktivIn, valgkampsbrevIn, vilIkkeBliRingtIn);
 END //
 
+DELIMITER ;
+
 -- --------------------------------------------------------
 
-DELIMITER //
   DROP PROCEDURE IF EXISTS sp_startSamtale;
+DELIMITER //
   CREATE PROCEDURE sp_startSamtale(
     ringtIdIn int(6),
     ringerIdIn int(6)
@@ -5928,10 +5938,12 @@ INSERT INTO `samtale` (ringt, ringer, resultat, kommentar)
 VALUES (ringtIdIn, ringerIdIn, '9', 'Starter samtale');
 END //
 
+DELIMITER ;
+
 -- --------------------------------------------------------
 
-DELIMITER //
   DROP PROCEDURE IF EXISTS sp_registrerNyBruker;
+DELIMITER //
   CREATE PROCEDURE sp_registrerNyBruker(
     hypersysIDIn int(4),
     fornavnIn varchar(60),
@@ -5982,10 +5994,12 @@ BEGIN
 
 END //
 
+DELIMITER ;
+
 -- --------------------------------------------------------
 
-DELIMITER //
   DROP PROCEDURE IF EXISTS sp_recordLoginAttempt;
+DELIMITER //
   CREATE PROCEDURE sp_recordLoginAttempt (
     hypersysIDIn int(6)
   )
@@ -5995,9 +6009,11 @@ VALUES
   (hypersysIDIn);
 END //
 
+DELIMITER ;
+
 -- --------------------------------------------------------
 
-INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `email`, `fylke`, `groupID`, `oppretta`, ``lokallag`) VALUES
+INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `email`, `fylke`, `groupID`, `oppretta`, `lokallag`) VALUES
 ('Donald', ' Duck',	'12345678',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 209),
 ('Hetti', ' Duck',	'12345677',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 209),
 ('Letti', ' Duck',	'12345679',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
