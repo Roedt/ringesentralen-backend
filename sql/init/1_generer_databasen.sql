@@ -5851,23 +5851,7 @@ create or replace view v_personerGodkjenning AS
 SELECT r.oppretta, concat(fornavn, ' ', etternavn) as navn, telefonnummer, l.id as lokallagId, l.navn as lokallag, email, postnummer, p.groupID
 FROM `person` p
 inner join `ringer` r on p.id = r.personId
-left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.oppretta asc;
-
--- --------------------------------------------------------
-
-  DROP PROCEDURE IF EXISTS sp_updateGroupID;
-DELIMITER //
-  CREATE PROCEDURE sp_updateGroupID(
-  id_In int(6),
-  groupID_In int(2)
-)
-BEGIN
-update `person` 
-set groupID = groupID_In
-where id = id_in;
-END //
-
-DELIMITER ;
+left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.oppretta asc
 
 -- --------------------------------------------------------
 

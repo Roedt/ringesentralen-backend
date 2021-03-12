@@ -86,7 +86,7 @@ class RingServiceBean(
     }
 
     private fun lagreResultat(nesteGroupID: GroupID?, request: ResultatFraSamtaleRequest) {
-        nesteGroupID?.nr?.let { databaseUpdater.update("CALL sp_updateGroupID(${request.ringtID}, $it)") }
+        nesteGroupID?.nr?.let { personRepository.update("groupID=?1 where id=?2", it, request.ringtID) }
         if (request.skalRegistrere()) {
             registrerKoronaspesifikkeResultat(request)
         }

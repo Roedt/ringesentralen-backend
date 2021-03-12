@@ -62,7 +62,7 @@ class BrukereServiceBean(
 
         val ringerId = hypersysIDTilRingerId(request.userId)
         godkjenningRepository.persist(Godkjenning(godkjenner = ringerId.toString().toInt(), godkjentPerson = personMedEndraTilgang.toInt(), nyGroupId = nyTilgang.nr))
-        databaseUpdater.update("CALL sp_updateGroupID(${personMedEndraTilgang}, ${nyTilgang.nr})")
+        personRepository.update("groupID=?1 where id=?2", nyTilgang.nr, personMedEndraTilgang)
         val brukerendring = Brukerendring(personID = personMedEndraTilgang, nyGroupId = nyTilgang, epostSendt = false)
 
         val person = personRepository.findById(personMedEndraTilgang)
