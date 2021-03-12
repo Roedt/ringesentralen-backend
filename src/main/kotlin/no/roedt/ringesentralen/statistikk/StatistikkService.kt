@@ -56,8 +56,8 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
         antallPersonerISystemetTotalt = get("SELECT 1 FROM person").size,
         ringere = get("SELECT 1 FROM person WHERE groupID > 3").size,
         ferdigringte = get("select 1 FROM person WHERE groupID=2 or groupID=3").size,
-        ringtUtenSvar = get("select 1 FROM person p inner join samtale s on s.ringt=p.id AND  p.groupID=1").size,
-        ikkeRingt = get("select 1 FROM person p left outer join samtale s on s.ringt=p.id AND s.id is null where p.groupID < 4").size,
+        ringtUtenSvar = get("select 1 FROM person p inner join samtale s on s.ringt=p.id AND p.groupID=1").size,
+        ikkeRingt = get("select p.* FROM person p where p.groupID < 4 and not exists (select 1 from samtale s where s.ringt=p.id)").size,
         antallLokallagMedPersonerTilknytta = get( "select distinct lokallag FROM person where lokallag is not null").size
     )
 
