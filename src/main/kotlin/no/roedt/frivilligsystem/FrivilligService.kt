@@ -42,7 +42,6 @@ class FrivilligService(
         fornavn = fornavn,
         etternavn = etternavn,
         telefonnummer = telefonnummer.nummer,
-        sisteSamtale = 0,
         email = null,
         postnummer = postnummer.getPostnummer(),
         fylke = -1,

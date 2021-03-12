@@ -35,8 +35,7 @@ class ModelConverterBean(
             postnummer = postnummer,
             fylke = toFylke(postnummer),
             lokallag = toLokallag(user.memberships) ?: -1,
-            groupID = 0, //Ubrukt her uansett, blir automatisk satt i stored proc-en
-            sisteSamtale = 0 // Samme her
+            groupID = 0 //Ubrukt her uansett, blir automatisk satt i stored proc-en
         )
     }
 

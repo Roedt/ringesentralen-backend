@@ -5614,7 +5614,6 @@ CREATE TABLE IF NOT EXISTS `person` (
   `fylke` int(2) DEFAULT -1 NOT NULL,
   `groupID` int(2) DEFAULT NULL,
   `oppretta` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `sisteSamtale` int(11) NOT NULL DEFAULT '0',
   `lokallag` int(3) DEFAULT NULL,
   FOREIGN KEY (`groupID`) REFERENCES `brukergruppe` (`id`),
   FOREIGN KEY(`fylke`) REFERENCES `fylker` (`id`),
@@ -5778,11 +5777,14 @@ INNER JOIN `modus` m on mr.modus = m.id;
 -- --------------------------------------------------------
 
 create or replace view v_personerSomKanRinges as
-SELECT p.sisteSamtale, p.telefonnummer, concat(p.fornavn,' ',p.etternavn) as navn, p.postnummer, p.fylke, p.lokallag, l.navn as lokallagNavn, p.id as id
+SELECT p.telefonnummer, concat(p.fornavn,' ',p.etternavn) as navn, p.postnummer, p.fylke, p.lokallag, l.navn as lokallagNavn, p.id as id
   FROM person p
   LEFT OUTER JOIN lokallag l on p.lokallag = l.id
-  WHERE groupID = '1'
-  AND UNIX_TIMESTAMP(now()) - sisteSamtale > 86400 -- 86400 sekund = 1 døgn
+   WHERE p.groupID = '1'
+  AND (UNIX_TIMESTAMP(now()) -
+    coalesce((select UNIX_TIMESTAMP(max(datetime)) from samtale where samtale.ringt = p.id), 0)
+    > 86400)
+    -- 86400 sekund = 1 døgn
   AND NOT exists (select 1 from oppslag o where o.ringt=p.id and (now()-o.datetime) < 120 );
 
 -- --------------------------------------------------------
@@ -5879,9 +5881,6 @@ DELIMITER //
 BEGIN
 INSERT INTO `samtale` (ringt, ringer, resultat, kommentar)
 VALUES (ringtIdIn, ringerIdIn, resultatIn, kommentarIn);
-UPDATE `person` 
-  SET sisteSamtale = UNIX_TIMESTAMP(now())
-  WHERE id = ringtIdIn;
 END //
 -- --------------------------------------------------------
 
@@ -5927,7 +5926,6 @@ DELIMITER //
 BEGIN
 INSERT INTO `samtale` (ringt, ringer, resultat, kommentar)
 VALUES (ringtIdIn, ringerIdIn, '9', 'Starter samtale');
-UPDATE `person` SET sisteSamtale = UNIX_TIMESTAMP(now()) WHERE id = ringtIdIn;
 END //
 
 -- --------------------------------------------------------
@@ -5999,33 +5997,33 @@ END //
 
 -- --------------------------------------------------------
 
-INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `email`, `fylke`, `groupID`, `oppretta`, `sisteSamtale`, `lokallag`) VALUES
-('Donald', ' Duck',	'12345678',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 209),
-('Hetti', ' Duck',	'12345677',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 209),
-('Letti', ' Duck',	'12345679',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
-('Netti', ' Duck',	'12345676',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
-('Klodrik', ' Duck',	'12345675', 1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
-('Anton', ' Duck',	'12345674',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
-('Bestemor', ' Duck',	'12345673',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
-('Skrue', 'McDuck',	'12345672',	3050,	NULL,	6,	1,	'2020-08-22 23:29:09',0, 1),
-('Gulbrand', 'Gråstein',	'12345671',	3050,	NULL,	6,	1,	'2020-08-22 23:29:09',0, 1),
-('Spøkelseskladden', '',	'12345670',	3050,	NULL,	6,	1,	'2020-08-22 23:29:09',	0, 1);
+INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `email`, `fylke`, `groupID`, `oppretta`, ``lokallag`) VALUES
+('Donald', ' Duck',	'12345678',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 209),
+('Hetti', ' Duck',	'12345677',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 209),
+('Letti', ' Duck',	'12345679',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
+('Netti', ' Duck',	'12345676',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
+('Klodrik', ' Duck',	'12345675', 1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
+('Anton', ' Duck',	'12345674',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
+('Bestemor', ' Duck',	'12345673',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
+('Skrue', 'McDuck',	'12345672',	3050,	NULL,	6,	1,	'2020-08-22 23:29:09', 1),
+('Gulbrand', 'Gråstein',	'12345671',	3050,	NULL,	6,	1,	'2020-08-22 23:29:09', 1),
+('Spøkelseskladden', '',	'12345670',	3050,	NULL,	6,	1,	'2020-08-22 23:29:09', 1);
 
-INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `email`, `fylke`, `groupID`, `oppretta`, `sisteSamtale`, `lokallag`) VALUES
-('Aster', 'ix',	'22345678',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
-('Obel', 'ix',	'22345677',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
-('Idef', 'ix',	'22345679',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
-('Majest', 'ix',	'22345676',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
-('Miracul', 'ix',	'22345675',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
-('Hermet', 'ix',	'22345665',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
-('Trubadur', 'ix',	'22346676',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
-('Barometr', 'ix',	'22346677',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
-('Gode', 'mine',	'22346678',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
-('Senil', 'ix',	'22346679',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
-('Armam', 'ix',	'22345680',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
-('Lillef', 'ix',	'22345681',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
-('Remoul', 'adine',	'22345682',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',0, 1),
-('Tragicom', 'ix',	'22345683',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09',	0, 1);
+INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `email`, `fylke`, `groupID`, `oppretta`, `lokallag`) VALUES
+('Aster', 'ix',	'22345678',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
+('Obel', 'ix',	'22345677',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
+('Idef', 'ix',	'22345679',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
+('Majest', 'ix',	'22345676',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
+('Miracul', 'ix',	'22345675',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
+('Hermet', 'ix',	'22345665',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
+('Trubadur', 'ix',	'22346676',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
+('Barometr', 'ix',	'22346677',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
+('Gode', 'mine',	'22346678',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
+('Senil', 'ix',	'22346679',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
+('Armam', 'ix',	'22345680',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
+('Lillef', 'ix',	'22345681',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
+('Remoul', 'adine',	'22345682',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1),
+('Tragicom', 'ix',	'22345683',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1);
 
 -- --------------------------------------------------------
 

@@ -25,6 +25,7 @@ internal class RingTest {
 
     @Test
     fun `hentar neste person aa ringe`() {
+
         doReturn(listOf(1234)).whenever(databaseUpdater).getResultList(any())
 
         ringController.hentNestePersonAaRinge(getContext())
