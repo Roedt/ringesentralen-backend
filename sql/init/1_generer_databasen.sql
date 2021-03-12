@@ -9,6 +9,15 @@ SET NAMES utf8;
 /*!40101 SET NAMES utf8 */;
 
 -- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hibernate_sequence`(
+ sequence_name varchar(255) CHARACTER SET utf8 not null ,
+    next_val bigint,
+    primary key (sequence_name)
+) engine=MyISAM;
+
+insert into `hiberante_sequence` (`next_val`) values(1);
+
+-- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `fylker` (
   `id` int(2) NOT NULL PRIMARY KEY,
