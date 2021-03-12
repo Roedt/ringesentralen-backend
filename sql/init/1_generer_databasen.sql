@@ -264,6 +264,8 @@ insert into `lokallag` (navn) values
 ('Utland'),
 ('Organisasjon1 sentralt');
 
+INSERT INTO `lokallag`(navn) values ('Rødt Trondheim Ila');
+
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `kommune` (
@@ -5567,8 +5569,8 @@ INSERT INTO `postnummerIKommunerMedFleireLag` (postnummerFra, postnummerTil, lok
 (7066,7068,(select id from lokallag where navn ='Trondheim Østbyen')),
 (7019,7019,(select id from lokallag where navn ='Trondheim-Sentrum')),
 (7015,7016,(select id from lokallag where navn ='Trondheim-Sentrum')),
-(7017,7018,(select id from lokallag where navn ='Rødt Trondheim Ila')), -- TODO: følg opp
-(7020,7020,(select id from lokallag where navn ='Rødt Trondheim Ila')), -- TODO: følg opp
+(7017,7018,(select id from lokallag where navn ='Rødt Trondheim Ila')),
+(7020,7020,(select id from lokallag where navn ='Rødt Trondheim Ila')),
 (7021,7039,(select id from lokallag where navn ='Trondheim-Sentrum'));
 
 
