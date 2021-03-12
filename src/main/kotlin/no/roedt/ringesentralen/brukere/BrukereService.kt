@@ -25,7 +25,8 @@ class BrukereServiceBean(
     val fylkeRepository: FylkeRepository,
     val lokallagRepository: LokallagRepository,
     val epostSender: EpostSender,
-    val hypersysService: HypersysService
+    val hypersysService: HypersysService,
+    val godkjenningRepository: GodkjenningRepository
 ): BrukereService {
 
     override fun getBrukere(): List<Brukerinformasjon> =
@@ -60,7 +61,8 @@ class BrukereServiceBean(
         val personMedEndraTilgang = request.personMedEndraTilgang()
 
         val ringerId = hypersysIDTilRingerId(request.userId)
-        databaseUpdater.update("CALL sp_godkjennBruker(${ringerId}, ${personMedEndraTilgang}, ${nyTilgang.nr})")
+        godkjenningRepository.persist(Godkjenning(godkjenner = ringerId.toString().toInt(), godkjentPerson = personMedEndraTilgang.toInt(), nyGroupId = nyTilgang.nr))
+        databaseUpdater.update("CALL sp_updateGroupID(${personMedEndraTilgang}, ${nyTilgang.nr})")
         val brukerendring = Brukerendring(personID = personMedEndraTilgang, nyGroupId = nyTilgang, epostSendt = false)
 
         val person = personRepository.findById(personMedEndraTilgang)

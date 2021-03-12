@@ -24,7 +24,8 @@ class RingServiceBean(
     val personRepository: PersonRepository,
     val databaseUpdater: DatabaseUpdater,
     val oppslagRepository: OppslagRepository,
-    val persistentSamtaleRepository: PersistentSamtaleRepository
+    val persistentSamtaleRepository: PersistentSamtaleRepository,
+    val oppfoelgingKoronaRepository: OppfoelgingKoronaRepository
 ): RingService {
 
     override fun hentNestePersonAaRinge(userId: UserId): NestePersonAaRingeResponse? =
@@ -114,7 +115,14 @@ class RingServiceBean(
 
     private fun registrerKoronaspesifikkeResultat(request: ResultatFraSamtaleRequest) {
         val resultat = request.modusspesifikkeResultat as KoronaspesifikkeResultat
-        databaseUpdater.update("CALL sp_registrerOppfoelgingKorona(${request.ringtID}, ${resultat.vilHaKoronaprogram}, ${resultat.vilBliMerAktiv}, ${resultat.vilHaValgkampsbrev}, ${request.vilIkkeBliRingt})")
+
+        oppfoelgingKoronaRepository.persist(OppfoelgingKorona(
+            personId = request.ringtID.toInt(),
+            koronaprogram = resultat.vilHaKoronaprogram,
+            merAktiv = resultat.vilBliMerAktiv,
+            valgkampsbrev = resultat.vilHaValgkampsbrev,
+            vilIkkeBliRingt = request.vilIkkeBliRingt
+        ))
     }
 
     fun hypersysIDTilRingerId(userId: UserId) =

@@ -5871,43 +5871,6 @@ DELIMITER ;
 
 -- --------------------------------------------------------
 
-  DROP PROCEDURE IF EXISTS sp_godkjennBruker;
-DELIMITER //
-  CREATE PROCEDURE sp_godkjennBruker(
-    ringerIdIn varchar(15),
-    ringtIdIn varchar(15),
-    nyGroupIdIn int(2)
-)
-BEGIN
-INSERT INTO `godkjenning` (godkjenner, godkjentPerson, nyGroupId) 
-VALUES (ringerIdIn, ringtIdIn, nyGroupIdIn);
-UPDATE `person` 
-  SET groupID = nyGroupIdIn
-  WHERE id = ringtIdIn;
-END //
-
-DELIMITER ;
-
--- --------------------------------------------------------
-
-  DROP PROCEDURE IF EXISTS sp_registrerOppfoelgingKorona;
-DELIMITER //
-  CREATE PROCEDURE sp_registrerOppfoelgingKorona(
-    ringtIdIn int(6),
-    koronaprogramIn tinyint(1),
-    merAktivIn tinyint(1),
-    valgkampsbrevIn tinyint(1),
-    vilIkkeBliRingtIn tinyint(1)
-)
-BEGIN
-INSERT INTO `oppfoelgingKorona` (personId, koronaprogram, merAktiv, valgkampsbrev, vilIkkeBliRingt)
-  VALUES (ringtIdIn, koronaprogramIn, merAktivIn, valgkampsbrevIn, vilIkkeBliRingtIn);
-END //
-
-DELIMITER ;
-
--- --------------------------------------------------------
-
   DROP PROCEDURE IF EXISTS sp_registrerNyBruker;
 DELIMITER //
   CREATE PROCEDURE sp_registrerNyBruker(
