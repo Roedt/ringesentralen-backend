@@ -9,13 +9,14 @@ SET NAMES utf8;
 /*!40101 SET NAMES utf8 */;
 
 -- --------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS `hibernate_sequence`(
  sequence_name varchar(255) CHARACTER SET utf8 not null ,
     next_val bigint,
     primary key (sequence_name)
 ) engine=MyISAM;
 
-insert into `hiberante_sequence` (`next_val`) values(1);
+insert into `hibernate_sequence` (`next_val`) values(1);
 
 -- --------------------------------------------------------
 
@@ -5651,7 +5652,8 @@ CREATE TABLE IF NOT EXISTS `ringer` (
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `oppfoelgingKorona` (
-  `personId` int(6) PRIMARY KEY NOT NULL,
+  `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `personId` int(6) unique NOT NULL,
   `koronaprogram` tinyint(1) DEFAULT NULL,
   `merAktiv` tinyint(1) DEFAULT NULL,
   `valgkampsbrev` tinyint(1) DEFAULT NULL,
@@ -5851,7 +5853,7 @@ create or replace view v_personerGodkjenning AS
 SELECT r.oppretta, concat(fornavn, ' ', etternavn) as navn, telefonnummer, l.id as lokallagId, l.navn as lokallag, email, postnummer, p.groupID
 FROM `person` p
 inner join `ringer` r on p.id = r.personId
-left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.oppretta asc
+left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.oppretta asc;
 
 -- --------------------------------------------------------
 

@@ -5,7 +5,7 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 import javax.persistence.Entity
 import javax.persistence.Table
 
-@Table(name = "Godkjenning")
+@Table(name = "godkjenning")
 @Entity
 @RegisterForReflection
 data class Godkjenning(

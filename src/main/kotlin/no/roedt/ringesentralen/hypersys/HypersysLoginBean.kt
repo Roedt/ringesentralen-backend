@@ -29,7 +29,7 @@ class HypersysLoginBean(
     private fun oppdaterRingerFraaHypersys(token: GyldigPersonToken) {
         val profile: Profile = hypersysProxy.get("actor/api/profile/", token, Profile::class.java)
         val brukerinformasjon: String = modelConverter.convertToSQL(profile)
-        loginAttemptRepository.persist(LoginAttempt(hypersysID = profile.user.id))
         databaseUpdater.update(brukerinformasjon)
+        loginAttemptRepository.persist(LoginAttempt(hypersysID = profile.user.id))
     }
 }

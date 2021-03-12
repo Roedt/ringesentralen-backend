@@ -57,8 +57,8 @@ class RingServiceBean(
 
         persistentSamtaleRepository.persist(
             PersistentSamtale(
-                ringtId = request.skalRingesID().toInt(),
-                ringerId = ringerId.toString().toInt(),
+                ringt = request.skalRingesID().toInt(),
+                ringer = ringerId.toString().toInt(),
                 resultat = Resultat.Samtale_startet.nr,
                 kommentar = "Starter samtale"
             ))
@@ -69,8 +69,8 @@ class RingServiceBean(
         assert(request.isGyldigResultat())
         persistentSamtaleRepository.persist(
             PersistentSamtale(
-                ringtId = request.ringtID.toInt(),
-                ringerId = hypersysIDTilRingerId(autentisertRequest.userId).toString().toInt(),
+                ringt = request.ringtID.toInt(),
+                ringer = hypersysIDTilRingerId(autentisertRequest.userId).toString().toInt(),
                 resultat = request.resultat.nr,
                 kommentar = request.kommentar
             ))

@@ -9,8 +9,8 @@ import javax.persistence.Table
 @Entity
 @RegisterForReflection
 data class PersistentSamtale(
-    var ringtId: Int,
-    var ringerId: Int,
+    var ringt: Int,
+    var ringer: Int,
     var resultat: Int,
     var kommentar: String
 ) : PanacheEntity()
