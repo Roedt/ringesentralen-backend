@@ -5871,21 +5871,6 @@ DELIMITER ;
 
 -- --------------------------------------------------------
 
-  DROP PROCEDURE IF EXISTS sp_lagreOppslag;
-DELIMITER //
-  CREATE PROCEDURE sp_lagreOppslag(
-    ringtIdIn int(6),
-    ringerHypersysIdIn int(6)
-)
-BEGIN
-INSERT INTO `oppslag` (ringt, ringerHypersysId)
-  VALUES (ringtIdIn, ringerHypersysIdIn);
-END //
-
-DELIMITER ;
-
--- --------------------------------------------------------
-
   DROP PROCEDURE IF EXISTS sp_registrerSamtale;
 DELIMITER //
   CREATE PROCEDURE sp_registrerSamtale(

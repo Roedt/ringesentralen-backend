@@ -23,6 +23,7 @@ interface RingService {
 class RingServiceBean(
     val personRepository: PersonRepository,
     val databaseUpdater: DatabaseUpdater,
+    val oppslagRepository: OppslagRepository
 ): RingService {
 
     override fun hentNestePersonAaRinge(userId: UserId): NestePersonAaRingeResponse? =
@@ -31,7 +32,7 @@ class RingServiceBean(
             ?.let { it as Int }
             ?.let { personRepository.findById(it.toLong()) }
             ?.let { NestePersonAaRingeResponse(person = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1"))}
-            ?.also { databaseUpdater.update("call sp_lagreOppslag(${it.person.id}, ${userId.userId})") }
+            ?.also { oppslagRepository.persist(Oppslag(ringt = it.person.id.toInt(), ringerHypersysId = userId.userId )) }
 
     fun getLokallag(userId: UserId) =
         personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag

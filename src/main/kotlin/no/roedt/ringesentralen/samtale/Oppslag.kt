@@ -1,13 +1,14 @@
-package no.roedt.ringesentralen.hypersys
+package no.roedt.ringesentralen.samtale
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import io.quarkus.runtime.annotations.RegisterForReflection
 import javax.persistence.Entity
 import javax.persistence.Table
 
-@RegisterForReflection
+@Table(name = "oppslag")
 @Entity
-@Table(name = "login_attempts")
-data class LoginAttempt(
-    var hypersysID: Int
+@RegisterForReflection
+data class Oppslag(
+    var ringt: Int,
+    var ringerHypersysId: Int
 ) : PanacheEntity()
