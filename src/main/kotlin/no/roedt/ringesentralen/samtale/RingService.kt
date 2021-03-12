@@ -23,7 +23,8 @@ interface RingService {
 class RingServiceBean(
     val personRepository: PersonRepository,
     val databaseUpdater: DatabaseUpdater,
-    val oppslagRepository: OppslagRepository
+    val oppslagRepository: OppslagRepository,
+    val persistentSamtaleRepository: PersistentSamtaleRepository
 ): RingService {
 
     override fun hentNestePersonAaRinge(userId: UserId): NestePersonAaRingeResponse? =
@@ -52,14 +53,26 @@ class RingServiceBean(
 
     override fun startSamtale(request: AutentisertStartSamtaleRequest) {
         val ringerId = hypersysIDTilRingerId(request.userId)
-        databaseUpdater.update("CALL sp_startSamtale(${request.skalRingesID()}, $ringerId)")
+
+        persistentSamtaleRepository.persist(
+            PersistentSamtale(
+                ringtId = request.skalRingesID().toInt(),
+                ringerId = ringerId.toString().toInt(),
+                resultat = Resultat.Samtale_startet.nr,
+                kommentar = "Starter samtale"
+            ))
     }
 
     override fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest) {
         val request = autentisertRequest.request
         assert(request.isGyldigResultat())
-        databaseUpdater.update("CALL sp_registrerSamtale(${request.ringtID}, ${hypersysIDTilRingerId(autentisertRequest.userId)}, ${request.resultat.nr}, '${request.kommentar}')")
-
+        persistentSamtaleRepository.persist(
+            PersistentSamtale(
+                ringtId = request.ringtID.toInt(),
+                ringerId = hypersysIDTilRingerId(autentisertRequest.userId).toString().toInt(),
+                resultat = request.resultat.nr,
+                kommentar = request.kommentar
+            ))
         lagreResultat(getNesteGroupID(request), request)
     }
 

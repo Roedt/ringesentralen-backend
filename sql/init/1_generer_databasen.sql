@@ -5871,22 +5871,6 @@ DELIMITER ;
 
 -- --------------------------------------------------------
 
-  DROP PROCEDURE IF EXISTS sp_registrerSamtale;
-DELIMITER //
-  CREATE PROCEDURE sp_registrerSamtale(
-    ringtIdIn int(6),
-    ringerIdIn int(6),
-    resultatIn int,
-    kommentarIn longtext
-)
-BEGIN
-INSERT INTO `samtale` (ringt, ringer, resultat, kommentar)
-VALUES (ringtIdIn, ringerIdIn, resultatIn, kommentarIn);
-END //
-
-DELIMITER ;
--- --------------------------------------------------------
-
   DROP PROCEDURE IF EXISTS sp_godkjennBruker;
 DELIMITER //
   CREATE PROCEDURE sp_godkjennBruker(
@@ -5918,21 +5902,6 @@ DELIMITER //
 BEGIN
 INSERT INTO `oppfoelgingKorona` (personId, koronaprogram, merAktiv, valgkampsbrev, vilIkkeBliRingt)
   VALUES (ringtIdIn, koronaprogramIn, merAktivIn, valgkampsbrevIn, vilIkkeBliRingtIn);
-END //
-
-DELIMITER ;
-
--- --------------------------------------------------------
-
-  DROP PROCEDURE IF EXISTS sp_startSamtale;
-DELIMITER //
-  CREATE PROCEDURE sp_startSamtale(
-    ringtIdIn int(6),
-    ringerIdIn int(6)
-)
-BEGIN
-INSERT INTO `samtale` (ringt, ringer, resultat, kommentar)
-VALUES (ringtIdIn, ringerIdIn, '9', 'Starter samtale');
 END //
 
 DELIMITER ;
