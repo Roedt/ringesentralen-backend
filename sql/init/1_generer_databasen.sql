@@ -5738,6 +5738,7 @@ CREATE TABLE IF NOT EXISTS `samtale` (
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `login_attempts` (
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `hypersysID` int(6) NOT NULL,
   `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (`hypersysID`) REFERENCES `person` (`hypersysID`),
@@ -6003,21 +6004,6 @@ BEGIN
     END;
   END IF;
 
-END //
-
-DELIMITER ;
-
--- --------------------------------------------------------
-
-  DROP PROCEDURE IF EXISTS sp_recordLoginAttempt;
-DELIMITER //
-  CREATE PROCEDURE sp_recordLoginAttempt (
-    hypersysIDIn int(6)
-  )
-BEGIN
-INSERT INTO `login_attempts` (hypersysID)
-VALUES
-  (hypersysIDIn);
 END //
 
 DELIMITER ;

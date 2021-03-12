@@ -3,6 +3,7 @@ package no.roedt.ringesentralen.hypersys
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.hypersys.externalModel.Profile
 import no.roedt.ringesentralen.token.GCPSecretManager
+import java.time.LocalDateTime
 import javax.enterprise.context.Dependent
 
 @Dependent
@@ -10,7 +11,8 @@ class HypersysLoginBean(
     private val hypersysProxy: HypersysProxy,
     private val databaseUpdater: DatabaseUpdater,
     private val modelConverter: ModelConverter,
-    private val gcpSecretManager: GCPSecretManager
+    private val gcpSecretManager: GCPSecretManager,
+    private val loginAttemptRepository: LoginAttemptRepository
 ) {
     fun login(loginRequest: LoginRequest): Token {
         val brukerId = gcpSecretManager.getHypersysBrukerId()
@@ -28,6 +30,7 @@ class HypersysLoginBean(
     private fun oppdaterRingerFraaHypersys(token: GyldigPersonToken) {
         val profile: Profile = hypersysProxy.get("actor/api/profile/", token, Profile::class.java)
         val brukerinformasjon: String = modelConverter.convertToSQL(profile)
-        databaseUpdater.update(brukerinformasjon, "CALL sp_recordLoginAttempt(${profile.user.id})")
+        loginAttemptRepository.persist(LoginAttempt(hypersysID = profile.user.id, datetime = LocalDateTime.now()))
+        databaseUpdater.update(brukerinformasjon)
     }
 }
