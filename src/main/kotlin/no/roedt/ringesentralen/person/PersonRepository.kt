@@ -7,7 +7,7 @@ import javax.enterprise.context.ApplicationScoped
 class PersonRepository : PanacheRepository<Person> {
 
     fun save(person: Person) {
-        if (find("epost", person.email).count() > 0L) {
+        if (find("email", person.email).count() > 0L) {
             update(
                 "fornavn = '${person.fornavn}', " +
                         "etternavn = '${person.etternavn}', " +
@@ -16,7 +16,7 @@ class PersonRepository : PanacheRepository<Person> {
                         "postnummer = ${person.postnummer}," +
 //TODO: ta stilling til denne                        "rolle = '${person.rolle.name}'," +
                         "lokallag = ${person.lokallag} " +
-                        "where epost = '${person.email}'"
+                        "where email = '${person.email}'"
             )
         }
         else {

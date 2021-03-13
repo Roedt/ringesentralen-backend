@@ -20,8 +20,12 @@ internal class RingServiceBeanTest {
 
     private val personRepository: PersonRepository = mock()
     private val databaseUpdater: DatabaseUpdater = mock()
+    private val oppslagRepository: OppslagRepository = mock()
+    private val persistentSamtaleRepository: PersistentSamtaleRepository = mock()
+    private val oppfoelgingKoronaRepository: OppfoelgingKoronaRepository = mock()
 
-    private var ringService = RingServiceBean(personRepository = personRepository, databaseUpdater = databaseUpdater )
+    private var ringService = RingServiceBean(personRepository = personRepository, databaseUpdater = databaseUpdater, oppslagRepository = oppslagRepository,
+        persistentSamtaleRepository = persistentSamtaleRepository, oppfoelgingKoronaRepository = oppfoelgingKoronaRepository)
 
     @BeforeEach
     fun setup() {

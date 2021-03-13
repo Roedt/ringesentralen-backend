@@ -5763,6 +5763,7 @@ CREATE TABLE IF NOT EXISTS `oppslag` (
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `ringerIV1` (
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `telefonnummer` varchar(15) NOT NULL UNIQUE,
   `brukergruppe` int(2) NOT NULL
 );
@@ -5854,62 +5855,6 @@ SELECT r.oppretta, concat(fornavn, ' ', etternavn) as navn, telefonnummer, l.id 
 FROM `person` p
 inner join `ringer` r on p.id = r.personId
 left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.oppretta asc;
-
--- --------------------------------------------------------
-
-  DROP PROCEDURE IF EXISTS sp_registrerNyBruker;
-DELIMITER //
-  CREATE PROCEDURE sp_registrerNyBruker(
-    hypersysIDIn int(4),
-    fornavnIn varchar(60),
-    etternavnIn varchar(60),
-    telefonnummer_In varchar(15),
-    emailIn varchar(100),
-    postnummerIn integer,
-    fylkeIdIn tinyint(2),
-    lokallagIn int(3)
-)
-BEGIN
-
-  SET @inserted = 0;
-  IF (SELECT count(1) FROM `person` where email = emailIn)>0 THEN
-    BEGIN
-      UPDATE `person` SET
-          hypersysID = hypersysIDIn,
-          fornavn = fornavnIn,
-          etternavn = etternavnIn,
-          email = emailIn,
-          postnummer = postnummerIn,
-          groupID = greatest(4, groupID),
-          fylke = fylkeIdIn,
-          lokallag = lokallagIn
-        WHERE email = emailIn;
-    END;
-  ELSE
-    BEGIN
-        INSERT INTO `person` (hypersysID, fornavn, etternavn, telefonnummer, email, postnummer, fylke, groupID, lokallag)
-            VALUES (hypersysIDIn, fornavnIn, etternavnIn, telefonnummer_In, emailIn, postnummerIn, fylkeIdIn, '4', lokallagIn);
-        SET @personId =(SELECT last_insert_id());
-        INSERT INTO `ringer` (`personId`) VALUES(@personId);
-    END;
-  END IF;
-
-  IF (SELECT count(1) FROM `person` p inner join `ringer` r on p.id = r.personId where p.email = emailIn and r.id is not null)=0 THEN
-    BEGIN
-      SET @personId =(select `id` FROM `person` where email = emailIn LIMIT 1);
-      INSERT INTO `ringer` (`personId`) VALUES(@personId);
-    END;
-  END IF;
-
-  IF (SELECT count(1) FROM ringerIV1 where telefonnummer=telefonnummer_In)>0 THEN
-    BEGIN
-        UPDATE person SET groupID=greatest((SELECT brukergruppe FROM ringerIV1 where telefonnummer=telefonnummer_In), groupID) WHERE telefonnummer=telefonnummer_In;
-    END;
-  END IF;
-
-END //
-
-DELIMITER ;
 
 -- --------------------------------------------------------
 
