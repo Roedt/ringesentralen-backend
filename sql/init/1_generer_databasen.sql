@@ -5783,14 +5783,6 @@ inner join resultat r on r.id = samtale.resultat;
 
 -- --------------------------------------------------------
 
-create or replace view v_resultatForModus as
-SELECT r.id, r.navn, m.id as modus, r.displaytext, r.skalSkjules
-FROM `resultat` r
-INNER JOIN `modusTilResultat` mr on mr.resultat = r.id
-INNER JOIN `modus` m on mr.modus = m.id;
-
--- --------------------------------------------------------
-
 create or replace view v_personerSomKanRinges as
 SELECT p.telefonnummer, concat(p.fornavn,' ',p.etternavn) as navn, p.postnummer, p.fylke, p.lokallag, l.navn as lokallagNavn, p.id as id
   FROM person p
@@ -5814,33 +5806,6 @@ INNER JOIN `ringer` ringer on ringer.id = samtale.ringer
 INNER join `person` ringerPerson on ringerPerson.id = ringer.personId
 WHERE samtale.resultat != 9
 ORDER BY samtale.datetime ASC;
-
--- --------------------------------------------------------
-
-create or replace view v_noenRingerTilbake AS
-SELECT concat(ringt.fornavn,' ',ringt.etternavn) as navn, ringt.postnummer, ringt.telefonnummer, l.navn as lokallagNavn, l.id as lokallag, ringer.id as ringer
-FROM person ringt
-inner join `samtale` samtale on ringt.id = samtale.ringt
-inner join `ringer` ringer on ringer.id = samtale.ringer
-left outer join lokallag l on ringt.lokallag = l.id;
-
--- --------------------------------------------------------
-
-create or replace view v_ringtFlest AS
-select count(ringer.id) as max, person.lokallag from
-`samtale` c
-inner join ringer ringer on ringer.id = c.ringer and c.resultat != 9
-inner join `person` person on person.id = ringer.personId
-group by(ringer.id)
-order by count(ringer.id) desc;
-
--- --------------------------------------------------------
-
-create or replace view v_personerGodkjenning AS
-SELECT r.oppretta, concat(fornavn, ' ', etternavn) as navn, telefonnummer, l.id as lokallagId, l.navn as lokallag, email, postnummer, p.groupID
-FROM `person` p
-inner join `ringer` r on p.id = r.personId
-left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.oppretta asc;
 
 -- --------------------------------------------------------
 
