@@ -40,9 +40,10 @@ class HistorikkService(
     }
 
     fun tellMineSamtaler(userId: UserId): Int =
-        databaseUpdater.getSingleResult(
+        databaseUpdater.getResultList(
             "select count(1) from samtale s inner join ringer r on s.ringer=r.id inner join person p on p.id=r.personId where hypersysID='${userId.userId}'"
         )
+            .first()
             .let { it as BigInteger }
             .toInt()
 }

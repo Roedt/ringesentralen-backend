@@ -10,6 +10,16 @@ SET NAMES utf8;
 
 -- --------------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS `hibernate_sequence`(
+ sequence_name varchar(255) CHARACTER SET utf8 not null ,
+    next_val bigint,
+    primary key (sequence_name)
+) engine=MyISAM;
+
+insert into `hibernate_sequence` (`next_val`) values(1);
+
+-- --------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS `fylker` (
   `id` int(2) NOT NULL PRIMARY KEY,
   `navn` varchar(60) NOT NULL
@@ -5642,7 +5652,8 @@ CREATE TABLE IF NOT EXISTS `ringer` (
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `oppfoelgingKorona` (
-  `personId` int(6) PRIMARY KEY NOT NULL,
+  `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `personId` int(6) unique NOT NULL,
   `koronaprogram` tinyint(1) DEFAULT NULL,
   `merAktiv` tinyint(1) DEFAULT NULL,
   `valgkampsbrev` tinyint(1) DEFAULT NULL,
@@ -5729,6 +5740,7 @@ CREATE TABLE IF NOT EXISTS `samtale` (
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `login_attempts` (
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `hypersysID` int(6) NOT NULL,
   `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (`hypersysID`) REFERENCES `person` (`hypersysID`),
@@ -5751,6 +5763,7 @@ CREATE TABLE IF NOT EXISTS `oppslag` (
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `ringerIV1` (
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `telefonnummer` varchar(15) NOT NULL UNIQUE,
   `brukergruppe` int(2) NOT NULL
 );
@@ -5767,14 +5780,6 @@ inner join ringer ringer on ringer.id = samtale.ringer
 inner join person ringerPerson on ringer.personId = ringerPerson.id
 left outer join oppfoelgingKorona ok on ok.personId = ringt.id
 inner join resultat r on r.id = samtale.resultat;
-
--- --------------------------------------------------------
-
-create or replace view v_resultatForModus as
-SELECT r.id, r.navn, m.id as modus, r.displaytext, r.skalSkjules
-FROM `resultat` r
-INNER JOIN `modusTilResultat` mr on mr.resultat = r.id
-INNER JOIN `modus` m on mr.modus = m.id;
 
 -- --------------------------------------------------------
 
@@ -5801,217 +5806,6 @@ INNER JOIN `ringer` ringer on ringer.id = samtale.ringer
 INNER join `person` ringerPerson on ringerPerson.id = ringer.personId
 WHERE samtale.resultat != 9
 ORDER BY samtale.datetime ASC;
-
--- --------------------------------------------------------
-
-create or replace view v_igjenAaRinge AS
-SELECT p.fylke, p.lokallag
-FROM `person` p
-WHERE p.groupID = 1 or p.groupID = 0;
-
--- --------------------------------------------------------
-
-create or replace view v_totaltInklRingte AS
-SELECT p.fylke, p.lokallag
-FROM `person` p
-WHERE p.groupID = 2;
-
--- --------------------------------------------------------
-
-create or replace view v_noenRingerTilbake AS
-SELECT concat(ringt.fornavn,' ',ringt.etternavn) as navn, ringt.postnummer, ringt.telefonnummer, l.navn as lokallagNavn, l.id as lokallag, ringer.id as ringer
-FROM person ringt
-inner join `samtale` samtale on ringt.id = samtale.ringt
-inner join `ringer` ringer on ringer.id = samtale.ringer
-left outer join lokallag l on ringt.lokallag = l.id;
-
--- --------------------------------------------------------
-
-create or replace view v_ringtFlest AS
-select count(ringer.id) as max, person.lokallag from
-`samtale` c
-inner join ringer ringer on ringer.id = c.ringer and c.resultat != 9
-inner join `person` person on person.id = ringer.personId
-group by(ringer.id)
-order by count(ringer.id) desc;
-
--- --------------------------------------------------------
-
-create or replace view v_personerGodkjenning AS
-SELECT r.oppretta, concat(fornavn, ' ', etternavn) as navn, telefonnummer, l.id as lokallagId, l.navn as lokallag, email, postnummer, p.groupID
-FROM `person` p
-inner join `ringer` r on p.id = r.personId
-left outer join `lokallag` l on p.lokallag = l.id order by p.groupID asc, r.oppretta asc;
-
--- --------------------------------------------------------
-
-  DROP PROCEDURE IF EXISTS sp_updateGroupID;
-DELIMITER //
-  CREATE PROCEDURE sp_updateGroupID(
-  id_In int(6),
-  groupID_In int(2)
-)
-BEGIN
-update `person` 
-set groupID = groupID_In
-where id = id_in;
-END //
-
-DELIMITER ;
-
--- --------------------------------------------------------
-
-  DROP PROCEDURE IF EXISTS sp_lagreOppslag;
-DELIMITER //
-  CREATE PROCEDURE sp_lagreOppslag(
-    ringtIdIn int(6),
-    ringerHypersysIdIn int(6)
-)
-BEGIN
-INSERT INTO `oppslag` (ringt, ringerHypersysId)
-  VALUES (ringtIdIn, ringerHypersysIdIn);
-END //
-
-DELIMITER ;
-
--- --------------------------------------------------------
-
-  DROP PROCEDURE IF EXISTS sp_registrerSamtale;
-DELIMITER //
-  CREATE PROCEDURE sp_registrerSamtale(
-    ringtIdIn int(6),
-    ringerIdIn int(6),
-    resultatIn int,
-    kommentarIn longtext
-)
-BEGIN
-INSERT INTO `samtale` (ringt, ringer, resultat, kommentar)
-VALUES (ringtIdIn, ringerIdIn, resultatIn, kommentarIn);
-END //
-
-DELIMITER ;
--- --------------------------------------------------------
-
-  DROP PROCEDURE IF EXISTS sp_godkjennBruker;
-DELIMITER //
-  CREATE PROCEDURE sp_godkjennBruker(
-    ringerIdIn varchar(15),
-    ringtIdIn varchar(15),
-    nyGroupIdIn int(2)
-)
-BEGIN
-INSERT INTO `godkjenning` (godkjenner, godkjentPerson, nyGroupId) 
-VALUES (ringerIdIn, ringtIdIn, nyGroupIdIn);
-UPDATE `person` 
-  SET groupID = nyGroupIdIn
-  WHERE id = ringtIdIn;
-END //
-
-DELIMITER ;
-
--- --------------------------------------------------------
-
-  DROP PROCEDURE IF EXISTS sp_registrerOppfoelgingKorona;
-DELIMITER //
-  CREATE PROCEDURE sp_registrerOppfoelgingKorona(
-    ringtIdIn int(6),
-    koronaprogramIn tinyint(1),
-    merAktivIn tinyint(1),
-    valgkampsbrevIn tinyint(1),
-    vilIkkeBliRingtIn tinyint(1)
-)
-BEGIN
-INSERT INTO `oppfoelgingKorona` (personId, koronaprogram, merAktiv, valgkampsbrev, vilIkkeBliRingt)
-  VALUES (ringtIdIn, koronaprogramIn, merAktivIn, valgkampsbrevIn, vilIkkeBliRingtIn);
-END //
-
-DELIMITER ;
-
--- --------------------------------------------------------
-
-  DROP PROCEDURE IF EXISTS sp_startSamtale;
-DELIMITER //
-  CREATE PROCEDURE sp_startSamtale(
-    ringtIdIn int(6),
-    ringerIdIn int(6)
-)
-BEGIN
-INSERT INTO `samtale` (ringt, ringer, resultat, kommentar)
-VALUES (ringtIdIn, ringerIdIn, '9', 'Starter samtale');
-END //
-
-DELIMITER ;
-
--- --------------------------------------------------------
-
-  DROP PROCEDURE IF EXISTS sp_registrerNyBruker;
-DELIMITER //
-  CREATE PROCEDURE sp_registrerNyBruker(
-    hypersysIDIn int(4),
-    fornavnIn varchar(60),
-    etternavnIn varchar(60),
-    telefonnummer_In varchar(15),
-    emailIn varchar(100),
-    postnummerIn integer,
-    fylkeIdIn tinyint(2),
-    lokallagIn int(3)
-)
-BEGIN
-
-  SET @inserted = 0;
-  IF (SELECT count(1) FROM `person` where email = emailIn)>0 THEN
-    BEGIN
-      UPDATE `person` SET
-          hypersysID = hypersysIDIn,
-          fornavn = fornavnIn,
-          etternavn = etternavnIn,
-          email = emailIn,
-          postnummer = postnummerIn,
-          groupID = greatest(4, groupID),
-          fylke = fylkeIdIn,
-          lokallag = lokallagIn
-        WHERE email = emailIn;
-    END;
-  ELSE
-    BEGIN
-        INSERT INTO `person` (hypersysID, fornavn, etternavn, telefonnummer, email, postnummer, fylke, groupID, lokallag)
-            VALUES (hypersysIDIn, fornavnIn, etternavnIn, telefonnummer_In, emailIn, postnummerIn, fylkeIdIn, '4', lokallagIn);
-        SET @personId =(SELECT last_insert_id());
-        INSERT INTO `ringer` (`personId`) VALUES(@personId);
-    END;
-  END IF;
-
-  IF (SELECT count(1) FROM `person` p inner join `ringer` r on p.id = r.personId where p.email = emailIn and r.id is not null)=0 THEN
-    BEGIN
-      SET @personId =(select `id` FROM `person` where email = emailIn LIMIT 1);
-      INSERT INTO `ringer` (`personId`) VALUES(@personId);
-    END;
-  END IF;
-
-  IF (SELECT count(1) FROM ringerIV1 where telefonnummer=telefonnummer_In)>0 THEN
-    BEGIN
-        UPDATE person SET groupID=greatest((SELECT brukergruppe FROM ringerIV1 where telefonnummer=telefonnummer_In), groupID) WHERE telefonnummer=telefonnummer_In;
-    END;
-  END IF;
-
-END //
-
-DELIMITER ;
-
--- --------------------------------------------------------
-
-  DROP PROCEDURE IF EXISTS sp_recordLoginAttempt;
-DELIMITER //
-  CREATE PROCEDURE sp_recordLoginAttempt (
-    hypersysIDIn int(6)
-  )
-BEGIN
-INSERT INTO `login_attempts` (hypersysID)
-VALUES
-  (hypersysIDIn);
-END //
-
-DELIMITER ;
 
 -- --------------------------------------------------------
 

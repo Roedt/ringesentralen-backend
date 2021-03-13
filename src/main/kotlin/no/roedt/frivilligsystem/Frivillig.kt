@@ -1,9 +1,11 @@
 package no.roedt.frivilligsystem
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity
+import io.quarkus.hibernate.orm.panache.PanacheRepository
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.frivilligsystem.registrer.ErMedlemStatus
 import no.roedt.ringesentralen.person.Person
+import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
 import javax.persistence.Entity
 import javax.persistence.OneToOne
@@ -22,6 +24,17 @@ data class Frivillig(
     var fortellLittOmDegSelv: String?,
 ) : PanacheEntity()
 {
+    constructor() : this(
+        alleredeAktivILokallag = false,
+        medlemIRoedt = ErMedlemStatus.Nei,
+        spesiellKompetanse = null,
+        andreTingDuVilBidraMed = null,
+        fortellLittOmDegSelv = null
+    )
+
     @OneToOne
     lateinit var person: Person
 }
+
+@ApplicationScoped
+class FrivilligRepository : PanacheRepository<Frivillig>

@@ -26,9 +26,9 @@ class DashboardServiceBean(
 
         val statusliste: List<Lokallagsstatus> = mineLokallag
                 .map { lokallag ->
-                    val igjenAaRinge = databaseUpdater.count("SELECT 1 FROM v_igjenAaRinge WHERE lokallag = ${lokallag.id} ")
-                    val personerSomKanRinges = databaseUpdater.count("SELECT 1 FROM v_personerSomKanRinges WHERE lokallag = ${lokallag.id}")
-                    val totaltInklRingte = databaseUpdater.count("SELECT 1 FROM v_totaltInklRingte WHERE lokallag = ${lokallag.id}")
+                    val igjenAaRinge = personRepository.list("groupID<2 and lokallag=?1", lokallag.id.toInt()).size
+                    val personerSomKanRinges = databaseUpdater.getResultList("SELECT 1 FROM v_personerSomKanRinges WHERE lokallag = ${lokallag.id}").size
+                    val totaltInklRingte = personRepository.list("lokallag=?1 and groupID=2", lokallag.id.toInt()).size
                     Lokallagsstatus(
                             lokallag = lokallag,
                             igjenAaRinge = igjenAaRinge,

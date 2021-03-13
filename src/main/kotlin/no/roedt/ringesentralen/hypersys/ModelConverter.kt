@@ -2,7 +2,6 @@ package no.roedt.ringesentralen.hypersys
 
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.hypersys.externalModel.Membership
-import no.roedt.ringesentralen.hypersys.externalModel.Profile
 import no.roedt.ringesentralen.hypersys.externalModel.User
 import no.roedt.ringesentralen.lokallag.Lokallag
 import no.roedt.ringesentralen.lokallag.LokallagRepository
@@ -10,7 +9,7 @@ import no.roedt.ringesentralen.person.Person
 import javax.enterprise.context.Dependent
 
 interface ModelConverter {
-    fun convertToSQL(profile: Profile): String
+    fun convert(user: User) : Person
 }
 
 @Dependent
@@ -19,9 +18,7 @@ class ModelConverterBean(
     private val lokallagRepository: LokallagRepository
 ) : ModelConverter {
 
-    override fun convertToSQL(profile: Profile) = convert(profile.user).toSQL()
-
-    private fun convert(user: User): Person {
+    override fun convert(user: User): Person {
         val sisteMellomrom = user.name.lastIndexOf(" ")
         val fornavn = user.name.substring(0, sisteMellomrom)
         val etternavn = user.name.substring(sisteMellomrom+1)
@@ -35,20 +32,9 @@ class ModelConverterBean(
             postnummer = postnummer,
             fylke = toFylke(postnummer),
             lokallag = toLokallag(user.memberships) ?: -1,
-            groupID = 0 //Ubrukt her uansett, blir automatisk satt i stored proc-en
+            groupID = 4 // Blir potensielt overstyrt seinare
         )
     }
-
-    private fun Person.toSQL(): String = "CALL sp_registrerNyBruker(" +
-            "'${hypersysID}', " +
-            "'${fornavn}', " +
-            "'${etternavn}', " +
-            "${telefonnummer}, " +
-            "'${email}', " +
-            "${postnummer}, " +
-            "${fylke}," +
-            "$lokallag" +
-            ")"
 
     fun toTelefonnummer(telefonnummer: String): String? {
         val splitted = telefonnummer.split(" ")

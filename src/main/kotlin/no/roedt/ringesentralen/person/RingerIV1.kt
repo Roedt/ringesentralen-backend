@@ -1,22 +1,24 @@
-package no.roedt.ringesentralen.lokallag
+package no.roedt.ringesentralen.person
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import io.quarkus.hibernate.orm.panache.PanacheRepository
 import io.quarkus.runtime.annotations.RegisterForReflection
 import javax.enterprise.context.ApplicationScoped
-import javax.persistence.Cacheable
 import javax.persistence.Entity
 import javax.persistence.Table
 
+@Table(name = "ringerIV1")
 @Entity
-@Table(name = "lokallag")
-@Cacheable
 @RegisterForReflection
-data class Lokallag(
-        var navn: String
-): PanacheEntity() {
-    constructor() : this("")
+data class RingerIV1(
+    var telefonnummer: String,
+    var brukergruppe: Int
+) : PanacheEntity() {
+    constructor(): this(
+        telefonnummer = "",
+        brukergruppe = 0
+    )
 }
 
 @ApplicationScoped
-class LokallagRepository : PanacheRepository<Lokallag>
+class RingerIV1Repository : PanacheRepository<RingerIV1>

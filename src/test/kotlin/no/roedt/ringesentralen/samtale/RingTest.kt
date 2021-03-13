@@ -12,13 +12,17 @@ internal class RingTest {
 
     private val personRepository: PersonRepository = mock()
     private val databaseUpdater: DatabaseUpdater = mock()
+    private val oppslagRepository: OppslagRepository = mock()
+    private val persistentSamtaleRepository: PersistentSamtaleRepository = mock()
+    private val oppfoelgingKoronaRepository: OppfoelgingKoronaRepository = mock()
 
     lateinit var ringService: RingServiceBean
     lateinit var ringController: RingController
 
     @BeforeEach
     fun setup() {
-        ringService = spy(RingServiceBean(personRepository = personRepository, databaseUpdater = databaseUpdater))
+        ringService = spy(RingServiceBean(personRepository = personRepository, databaseUpdater = databaseUpdater, oppslagRepository = oppslagRepository,
+            persistentSamtaleRepository = persistentSamtaleRepository, oppfoelgingKoronaRepository = oppfoelgingKoronaRepository))
         ringController = RingController(ringService)
         ringController.jwt = mock()
     }
