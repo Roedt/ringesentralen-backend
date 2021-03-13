@@ -16,7 +16,13 @@ data class Kontakt(
     var frivillig_id: Int,
     var tilbakemelding: String,
     var registrert_av: Long
-) : PanacheEntity()
+) : PanacheEntity() {
+    constructor() : this(
+        frivillig_id = 0,
+        tilbakemelding = "",
+        registrert_av = 0L
+    )
+}
 
 @ApplicationScoped
 class KontaktRepository : PanacheRepository<Kontakt>

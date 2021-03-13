@@ -12,7 +12,11 @@ import javax.persistence.Table
 @Table(name = "login_attempts")
 data class LoginAttempt(
     var hypersysID: Int
-) : PanacheEntity()
+) : PanacheEntity() {
+    constructor() : this(
+        hypersysID = 0
+    )
+}
 
 @ApplicationScoped
 class LoginAttemptRepository : PanacheRepository<LoginAttempt>

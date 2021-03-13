@@ -15,7 +15,14 @@ data class PersistentSamtale(
     var ringer: Int,
     var resultat: Int,
     var kommentar: String
-) : PanacheEntity()
+) : PanacheEntity() {
+    constructor() : this(
+        ringt = 0,
+        ringer = 0,
+        resultat=  0,
+        kommentar = ""
+    )
+}
 
 @ApplicationScoped
 class PersistentSamtaleRepository : PanacheRepository<PersistentSamtale>

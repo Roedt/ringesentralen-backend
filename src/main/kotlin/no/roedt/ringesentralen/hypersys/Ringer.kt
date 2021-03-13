@@ -12,7 +12,11 @@ import javax.persistence.Table
 @RegisterForReflection
 data class Ringer(
     var personId: Int
-) : PanacheEntity()
+) : PanacheEntity() {
+    constructor() : this(
+        personId = 0
+    )
+}
 
 
 @ApplicationScoped

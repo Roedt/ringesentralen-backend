@@ -16,7 +16,15 @@ data class OppfoelgingKorona(
     var merAktiv: Boolean,
     var valgkampsbrev: Boolean,
     var vilIkkeBliRingt: Boolean
-) : PanacheEntity()
+) : PanacheEntity() {
+    constructor() : this(
+        personId = 0,
+        koronaprogram = false,
+        merAktiv = false,
+        valgkampsbrev = false,
+        vilIkkeBliRingt = false
+    )
+}
 
 @ApplicationScoped
 class OppfoelgingKoronaRepository : PanacheRepository<OppfoelgingKorona>

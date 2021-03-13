@@ -14,7 +14,13 @@ data class Godkjenning(
     var godkjenner: Int,
     var godkjentPerson: Int,
     var nyGroupId: Int
-) : PanacheEntity()
+) : PanacheEntity() {
+    constructor(): this(
+        godkjenner = 0,
+        godkjentPerson = 0,
+        nyGroupId = 0
+    )
+}
 
 @ApplicationScoped
 class GodkjenningRepository : PanacheRepository<Godkjenning>

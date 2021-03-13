@@ -13,7 +13,12 @@ import javax.persistence.Table
 data class RingerIV1(
     var telefonnummer: String,
     var brukergruppe: Int
-) : PanacheEntity()
+) : PanacheEntity() {
+    constructor(): this(
+        telefonnummer = "",
+        brukergruppe = 0
+    )
+}
 
 @ApplicationScoped
 class RingerIV1Repository : PanacheRepository<RingerIV1>

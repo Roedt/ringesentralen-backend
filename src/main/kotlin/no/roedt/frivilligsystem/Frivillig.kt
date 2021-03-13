@@ -24,6 +24,14 @@ data class Frivillig(
     var fortellLittOmDegSelv: String?,
 ) : PanacheEntity()
 {
+    constructor() : this(
+        alleredeAktivILokallag = false,
+        medlemIRoedt = ErMedlemStatus.Nei,
+        spesiellKompetanse = null,
+        andreTingDuVilBidraMed = null,
+        fortellLittOmDegSelv = null
+    )
+
     @OneToOne
     lateinit var person: Person
 }
