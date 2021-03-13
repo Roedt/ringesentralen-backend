@@ -36,20 +36,29 @@ class HypersysLoginBean(
         val profile: Profile = hypersysProxy.get("actor/api/profile/", token, Profile::class.java)
         val convertedPerson  = modelConverter.convert(profile.user)
 
-        personRepository.save(convertedPerson)
-        var id = convertedPerson.id
-        if (id == null) personRepository.find("email", convertedPerson.email).firstResult<Person>().id.also { id = it }
+        val id = lagrePerson(convertedPerson)
 
         if (ringerRepository.find("personId", id.toInt()).count() == 0L) {
             ringerRepository.persist(Ringer(personId = id.toInt()))
         }
 
+        oppdaterBrukergruppeFraV1(convertedPerson)
+
+        loginAttemptRepository.persist(LoginAttempt(hypersysID = profile.user.id))
+    }
+
+    private fun lagrePerson(convertedPerson: Person): Long {
+        personRepository.save(convertedPerson)
+        var id = convertedPerson.id
+        if (id == null) personRepository.find("email", convertedPerson.email).firstResult<Person>().id.also { id = it }
+        return id
+    }
+
+    private fun oppdaterBrukergruppeFraV1(convertedPerson: Person) {
         ringerIV1Repository.find("telefonnummer", convertedPerson.telefonnummer)
             .list<RingerIV1>()
             .map { it.brukergruppe }
             .firstOrNull()
             ?.let { convertedPerson.groupID = max(it, convertedPerson.groupID) }
-
-        loginAttemptRepository.persist(LoginAttempt(hypersysID = profile.user.id))
     }
 }
