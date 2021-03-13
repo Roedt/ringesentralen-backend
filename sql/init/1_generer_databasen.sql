@@ -5817,20 +5817,6 @@ ORDER BY samtale.datetime ASC;
 
 -- --------------------------------------------------------
 
-create or replace view v_igjenAaRinge AS
-SELECT p.fylke, p.lokallag
-FROM `person` p
-WHERE p.groupID = 1 or p.groupID = 0;
-
--- --------------------------------------------------------
-
-create or replace view v_totaltInklRingte AS
-SELECT p.fylke, p.lokallag
-FROM `person` p
-WHERE p.groupID = 2;
-
--- --------------------------------------------------------
-
 create or replace view v_noenRingerTilbake AS
 SELECT concat(ringt.fornavn,' ',ringt.etternavn) as navn, ringt.postnummer, ringt.telefonnummer, l.navn as lokallagNavn, l.id as lokallag, ringer.id as ringer
 FROM person ringt
