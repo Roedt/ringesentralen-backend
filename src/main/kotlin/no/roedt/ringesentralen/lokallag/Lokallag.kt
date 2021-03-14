@@ -13,9 +13,13 @@ import javax.persistence.Table
 @Cacheable
 @RegisterForReflection
 data class Lokallag(
-        var navn: String
+        var navn: String,
+        var hypersysID: Int?
 ): PanacheEntity() {
-    constructor() : this("")
+    constructor() : this(
+        navn = "",
+        hypersysID = 0
+    )
 }
 
 @ApplicationScoped

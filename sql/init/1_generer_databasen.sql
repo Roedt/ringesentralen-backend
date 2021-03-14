@@ -58,7 +58,8 @@ INSERT INTO `fylker` (`id`, `navn`) VALUES
 
 CREATE TABLE IF NOT EXISTS `lokallag` (
   `id` int(3) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `navn` varchar(100) NOT NULL UNIQUE
+  `navn` varchar(100) NOT NULL UNIQUE,
+  `hypersysID` int NULL UNIQUE
 );
 
 insert into `lokallag` (`id`, `navn`) values (-1, 'Udefinert');

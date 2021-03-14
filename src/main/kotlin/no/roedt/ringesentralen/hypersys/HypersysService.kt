@@ -3,6 +3,7 @@ package no.roedt.ringesentralen.hypersys
 import no.roedt.ringesentralen.hypersys.externalModel.Organisasjonsledd
 import no.roedt.ringesentralen.hypersys.externalModel.Organs
 import no.roedt.ringesentralen.hypersys.externalModel.SingleOrgan
+import no.roedt.ringesentralen.lokallag.Lokallag
 import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
@@ -50,9 +51,13 @@ class HypersysServiceBean(
 
     private fun getLokallag(userId: UserId) = personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag
         .let { lokallagRepository.findById(it.toLong())}
-        .let { it.navn }
-        .let { mittLag -> getAlleLokallag().first { mittLag == it.name } }
-        .let { it.id }
+        .let { mittLag -> if (mittLag.hypersysID != null) mittLag.hypersysID else getLokallagIdFromHypersys(mittLag) }
+
+    private fun getLokallagIdFromHypersys(mittLag: Lokallag) : Int {
+        val lag = getAlleLokallag().first { mittLag.navn == it.name }
+        lokallagRepository.update("hypersysID=?1 where id=?2", lag.id, mittLag.id)
+        return lag.id
+    }
 
     private fun toSingleOrgans(lokallag: Organisasjonsledd): List<SingleOrgan> {
         // TODO: Denne må forbetrast. Tar berre med under-under, men vil at denne skal ta med alle som ikkje har organ under seg
