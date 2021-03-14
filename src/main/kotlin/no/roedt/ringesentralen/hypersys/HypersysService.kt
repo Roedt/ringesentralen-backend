@@ -34,17 +34,7 @@ class HypersysServiceBean(
 
     override fun login(loginRequest: LoginRequest): Token = hypersysLoginBean.login(loginRequest)
 
-    override fun getMedlemmer(userId: UserId, token: JsonWebToken): List<LinkedHashMap<String, *>> =
-        getMedlemmar(userId,
-            GyldigPersonToken(
-                access_token = token.claim<String>("hypersys.access_token").get(),
-                expires_in = token.claim<Any>("hypersys.expires_in").get().toString().toInt(),
-                token_type = token.claim<String>("hypersys.token_type").get(),
-                scope = token.claim<String>("hypersys.scope").get(),
-                refresh_token = token.claim<String>("hypersys.refresh_token").get(),
-                user_id = token.claim<String>("hypersys.user_id").get()
-            )
-        )
+    override fun getMedlemmer(userId: UserId, token: JsonWebToken): List<LinkedHashMap<String, *>> = getMedlemmar(userId, GyldigPersonToken.from(token))
 
     private fun getMedlemmar(userId: UserId, token: GyldigPersonToken) =
         hypersysProxy.get("/membership/api/membership/${getLokallag(userId)}/2021/", token, List::class.java) as List<LinkedHashMap<String, *>>

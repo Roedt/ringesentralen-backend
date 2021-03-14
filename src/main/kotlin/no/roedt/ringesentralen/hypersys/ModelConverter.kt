@@ -9,7 +9,7 @@ import no.roedt.ringesentralen.person.Person
 import javax.enterprise.context.Dependent
 
 interface ModelConverter {
-    fun convert(user: User) : Person
+    fun convert(user: User, groupID: Int) : Person
 }
 
 @Dependent
@@ -18,7 +18,7 @@ class ModelConverterBean(
     private val lokallagRepository: LokallagRepository
 ) : ModelConverter {
 
-    override fun convert(user: User): Person {
+    override fun convert(user: User, groupID: Int): Person {
         val sisteMellomrom = user.name.lastIndexOf(" ")
         val fornavn = user.name.substring(0, sisteMellomrom)
         val etternavn = user.name.substring(sisteMellomrom+1)
@@ -32,7 +32,7 @@ class ModelConverterBean(
             postnummer = postnummer,
             fylke = toFylke(postnummer),
             lokallag = toLokallag(user.memberships) ?: -1,
-            groupID = 4 // Blir potensielt overstyrt seinare
+            groupID = groupID
         )
     }
 

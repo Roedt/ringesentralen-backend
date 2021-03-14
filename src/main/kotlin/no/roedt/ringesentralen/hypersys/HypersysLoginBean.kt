@@ -1,10 +1,7 @@
 package no.roedt.ringesentralen.hypersys
 
 import no.roedt.ringesentralen.hypersys.externalModel.Profile
-import no.roedt.ringesentralen.person.Person
-import no.roedt.ringesentralen.person.PersonRepository
-import no.roedt.ringesentralen.person.RingerIV1
-import no.roedt.ringesentralen.person.RingerIV1Repository
+import no.roedt.ringesentralen.person.*
 import no.roedt.ringesentralen.token.GCPSecretManager
 import javax.enterprise.context.Dependent
 import kotlin.math.max
@@ -34,7 +31,7 @@ class HypersysLoginBean(
 
     private fun oppdaterRingerFraaHypersys(token: GyldigPersonToken) {
         val profile: Profile = hypersysProxy.get("actor/api/profile/", token, Profile::class.java)
-        val convertedPerson  = modelConverter.convert(profile.user)
+        val convertedPerson  = modelConverter.convert(profile.user, GroupID.UgodkjentRinger.nr)
 
         val id = lagrePerson(convertedPerson)
 
