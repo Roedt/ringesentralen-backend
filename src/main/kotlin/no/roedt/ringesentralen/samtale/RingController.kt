@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.samtale
 
+import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
@@ -33,7 +34,7 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Operation(summary = "Finn neste person å ringe", description = Roles.ringer)
     @Retry
     @Transactional
-    fun hentNestePersonAaRinge(@Context ctx: SecurityContext): NestePersonAaRingeResponse? = ringService.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(ctx.userId(), jwt))
+    fun hentNestePersonAaRinge(@Context ctx: SecurityContext): NestePersonAaRingeResponse? = ringService.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(ctx.userId(), jwt, Modus.Velger))
 
     @RolesAllowed(Roles.ringer)
     @POST

@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.*
 import io.quarkus.hibernate.orm.panache.PanacheQuery
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
+import no.roedt.ringesentralen.hypersys.HypersysService
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId
@@ -23,9 +24,10 @@ internal class RingServiceBeanTest {
     private val oppslagRepository: OppslagRepository = mock()
     private val persistentSamtaleRepository: PersistentSamtaleRepository = mock()
     private val oppfoelgingKoronaRepository: OppfoelgingKoronaRepository = mock()
+    private val hypersysService: HypersysService = mock()
 
     private var ringService = RingServiceBean(personRepository = personRepository, databaseUpdater = databaseUpdater, oppslagRepository = oppslagRepository,
-        persistentSamtaleRepository = persistentSamtaleRepository, oppfoelgingKoronaRepository = oppfoelgingKoronaRepository)
+        persistentSamtaleRepository = persistentSamtaleRepository, oppfoelgingKoronaRepository = oppfoelgingKoronaRepository, hypersysService = hypersysService)
 
     @BeforeEach
     fun setup() {

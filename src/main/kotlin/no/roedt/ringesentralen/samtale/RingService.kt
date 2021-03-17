@@ -1,6 +1,8 @@
 package no.roedt.ringesentralen.samtale
 
 import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.ringesentralen.Modus
+import no.roedt.ringesentralen.hypersys.HypersysService
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
@@ -25,16 +27,24 @@ class RingServiceBean(
     val databaseUpdater: DatabaseUpdater,
     val oppslagRepository: OppslagRepository,
     val persistentSamtaleRepository: PersistentSamtaleRepository,
-    val oppfoelgingKoronaRepository: OppfoelgingKoronaRepository
+    val oppfoelgingKoronaRepository: OppfoelgingKoronaRepository,
+    val hypersysService: HypersysService
 ): RingService {
 
     override fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? =
-        databaseUpdater.getResultList("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${getLokallag(request.userId)}'")
-            .firstOrNull()
+        hentFoerstePerson(request)
             ?.let { it as Int }
             ?.let { personRepository.findById(it.toLong()) }
             ?.let { NestePersonAaRingeResponse(person = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1"))}
             ?.also { oppslagRepository.persist(Oppslag(ringt = it.person.id.toInt(), ringerHypersysId = request.userId() )) }
+
+    private fun hentFoerstePerson(request: AutentisertNestePersonAaRingeRequest): Any? {
+        if (request.modus == Modus.Velger) {
+        return databaseUpdater.getResultList("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${getLokallag(request.userId)}'")
+            .firstOrNull()
+        }
+        return 0
+    }
 
     fun getLokallag(userId: UserId) =
         personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag
