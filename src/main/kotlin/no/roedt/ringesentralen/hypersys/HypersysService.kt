@@ -1,8 +1,6 @@
 package no.roedt.ringesentralen.hypersys
 
-import no.roedt.ringesentralen.hypersys.externalModel.Organisasjonsledd
-import no.roedt.ringesentralen.hypersys.externalModel.Organs
-import no.roedt.ringesentralen.hypersys.externalModel.SingleOrgan
+import no.roedt.ringesentralen.hypersys.externalModel.*
 import no.roedt.ringesentralen.lokallag.Lokallag
 import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.Person
@@ -38,6 +36,32 @@ class HypersysServiceBean(
 
     private fun getMedlemmar(userId: UserId, token: GyldigPersonToken) =
         hypersysProxy.get("/membership/api/membership/${getLokallag(userId)}/2021/", token, List::class.java) as List<LinkedHashMap<String, *>>
+
+    fun Map<*,*>.toProfile() : Profile =
+        Profile(
+            user = User(
+                id = get("member_id").toString().toInt(),
+                name = get("name").toString(),
+                email = get("email").toString(),
+                phone = get("mobile").toString(),
+                phone2 = get("secondary_phone").toString(),
+                roles = listOf(),
+                memberships = listOf(),
+                addresses = listOf(toAddress(get("postal_address")))
+            )
+        )
+
+    private fun toAddress(get: Any?): Address {
+        val address = get as Map<String, String>
+        return Address(
+            id = 1,
+            name = address.get("address1").toString(),
+            address1 = address.get("address1").toString(),
+            address2 = address.get("address2").toString(),
+            subject = "",
+            postalCode = listOf(address.get("postal_code").toString())
+            )
+    }
 
     private fun getLokallag(userId: UserId) = personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag
         .let { lokallagRepository.findById(it.toLong())}
