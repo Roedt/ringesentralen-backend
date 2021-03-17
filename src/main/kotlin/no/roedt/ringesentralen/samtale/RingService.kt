@@ -13,7 +13,7 @@ import java.sql.Timestamp
 import javax.enterprise.context.ApplicationScoped
 
 interface RingService {
-    fun hentNestePersonAaRinge(userId: UserId): NestePersonAaRingeResponse?
+    fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse?
     fun startSamtale(request: AutentisertStartSamtaleRequest)
     fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest)
     fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): NestePersonAaRingeResponse
@@ -28,13 +28,13 @@ class RingServiceBean(
     val oppfoelgingKoronaRepository: OppfoelgingKoronaRepository
 ): RingService {
 
-    override fun hentNestePersonAaRinge(userId: UserId): NestePersonAaRingeResponse? =
-        databaseUpdater.getResultList("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${getLokallag(userId)}'")
+    override fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? =
+        databaseUpdater.getResultList("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${getLokallag(request.userId)}'")
             .firstOrNull()
             ?.let { it as Int }
             ?.let { personRepository.findById(it.toLong()) }
             ?.let { NestePersonAaRingeResponse(person = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1"))}
-            ?.also { oppslagRepository.persist(Oppslag(ringt = it.person.id.toInt(), ringerHypersysId = userId.userId )) }
+            ?.also { oppslagRepository.persist(Oppslag(ringt = it.person.id.toInt(), ringerHypersysId = request.userId() )) }
 
     fun getLokallag(userId: UserId) =
         personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag

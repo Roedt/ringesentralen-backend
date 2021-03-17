@@ -33,7 +33,7 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Operation(summary = "Finn neste person å ringe", description = Roles.ringer)
     @Retry
     @Transactional
-    fun hentNestePersonAaRinge(@Context ctx: SecurityContext): NestePersonAaRingeResponse? = ringService.hentNestePersonAaRinge(ctx.userId())
+    fun hentNestePersonAaRinge(@Context ctx: SecurityContext): NestePersonAaRingeResponse? = ringService.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(ctx.userId(), jwt))
 
     @RolesAllowed(Roles.ringer)
     @POST
