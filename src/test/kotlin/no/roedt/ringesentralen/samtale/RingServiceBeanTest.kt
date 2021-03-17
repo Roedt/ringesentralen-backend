@@ -40,7 +40,7 @@ internal class RingServiceBeanTest {
 
         val request = AutentisertResultatFraSamtaleRequest(
             UserId(1), ResultatFraSamtaleRequest(
-                modus = Modus.Korona,
+                modus = Modus.Medlem,
                 ringtID = 2,
                 resultat = Resultat.Svarte,
                 kommentar = "Hei",
@@ -62,7 +62,7 @@ internal class RingServiceBeanTest {
         val request = AutentisertResultatFraSamtaleRequest(
             userId = UserId(1),
             ResultatFraSamtaleRequest(
-                modus = Modus.Korona,
+                modus = Modus.Medlem,
                 ringtID = 2,
                 resultat = Resultat.Ringes_etter_valget,
                 kommentar = "Hei",

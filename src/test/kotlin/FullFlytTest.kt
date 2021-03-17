@@ -4,7 +4,8 @@ import io.restassured.http.ContentType
 import io.restassured.response.ValidatableResponseOptions
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.hypersys.LoginRequest
-import no.roedt.ringesentralen.samtale.*
+import no.roedt.ringesentralen.samtale.RingerTilbakeRequest
+import no.roedt.ringesentralen.samtale.StartSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.KoronaspesifikkeResultat
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
@@ -27,7 +28,7 @@ class FullFlytTest {
         loginWithToken(token)
             .body(
                 ResultatFraSamtaleRequest(
-                modus = Modus.Korona,
+                modus = Modus.Velger,
                 ringtID = ringtId,
                 resultat = Resultat.Passet_ikke,
                 kommentar = "Frå automatisk test",

@@ -16,7 +16,7 @@ data class ResultatFraSamtaleRequest(
 ) {
         fun isGyldigResultat(): Boolean = resultat in modus.gyldigeResultattyper
 
-        fun skalRegistrere() = modus == Modus.Korona && resultat == Resultat.Svarte
+        fun skalRegistrere() = resultat == Resultat.Svarte
 
         fun validate(): Boolean {
                 return true
