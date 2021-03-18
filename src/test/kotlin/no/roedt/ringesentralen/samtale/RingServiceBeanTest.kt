@@ -52,7 +52,7 @@ internal class RingServiceBeanTest {
                         vilHaValgkampsbrev = false
                 ),
                 vilIkkeBliRingt = false
-        )
+        ), modus
         )
 
         val response = ringService.registrerResultatFraSamtale(request)
@@ -63,18 +63,19 @@ internal class RingServiceBeanTest {
     fun `resultattype som ikkje passar med modusen kastar feilmelding`() {
         val request = AutentisertResultatFraSamtaleRequest(
             userId = UserId(1),
-            ResultatFraSamtaleRequest(
+            request = ResultatFraSamtaleRequest(
                 modus = Modus.Medlem,
                 ringtID = 2,
                 resultat = Resultat.Ringes_etter_valget,
                 kommentar = "Hei",
                 modusspesifikkeResultat = KoronaspesifikkeResultat(
-                        vilHaKoronaprogram = false,
-                        vilBliMerAktiv = false,
-                        vilHaValgkampsbrev = false
+                    vilHaKoronaprogram = false,
+                    vilBliMerAktiv = false,
+                    vilHaValgkampsbrev = false
                 ),
                 vilIkkeBliRingt = false
-        )
+            ),
+            modus = modus
         )
 
         assertThrows(AssertionError::class.java) {

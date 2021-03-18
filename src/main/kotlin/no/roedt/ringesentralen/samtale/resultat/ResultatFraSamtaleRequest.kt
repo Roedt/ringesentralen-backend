@@ -24,6 +24,10 @@ data class ResultatFraSamtaleRequest(
 }
 
 @RegisterForReflection
-data class AutentisertResultatFraSamtaleRequest(val userId: UserId, val request: ResultatFraSamtaleRequest) {
+data class AutentisertResultatFraSamtaleRequest(
+        val userId: UserId,
+        val request: ResultatFraSamtaleRequest,
+        val modus: Modus
+) {
         fun validate() = request.validate()
 }

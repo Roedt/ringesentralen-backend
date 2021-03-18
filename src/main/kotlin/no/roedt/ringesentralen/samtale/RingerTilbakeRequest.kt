@@ -2,6 +2,7 @@ package no.roedt.ringesentralen.samtale
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.quarkus.runtime.annotations.RegisterForReflection
+import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.person.UserId
 
 @RegisterForReflection
@@ -12,7 +13,11 @@ data class RingerTilbakeRequest(
 }
 
 @RegisterForReflection
-data class AutentisertRingerTilbakeRequest(val userId: UserId, val ringerTilbakeRequest: RingerTilbakeRequest) {
+data class AutentisertRingerTilbakeRequest(
+    val userId: UserId,
+    val ringerTilbakeRequest: RingerTilbakeRequest,
+    val modus: Modus
+) {
         fun ringtNummer() = ringerTilbakeRequest.ringtNummer
         fun validate() = ringerTilbakeRequest.validate()
 }

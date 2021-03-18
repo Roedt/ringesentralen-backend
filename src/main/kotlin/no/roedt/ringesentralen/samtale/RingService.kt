@@ -40,10 +40,10 @@ class RingServiceBean(
 
     private fun hentFoerstePerson(request: AutentisertNestePersonAaRingeRequest): Any? {
         if (request.modus == Modus.Velger) {
-        return databaseUpdater.getResultList("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${getLokallag(request.userId)}'")
-            .firstOrNull()
+            return databaseUpdater.getResultList("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${getLokallag(request.userId)}'")
+                .firstOrNull()
         }
-        return 0
+        return -1
     }
 
     fun getLokallag(userId: UserId) =
@@ -110,9 +110,11 @@ class RingServiceBean(
         startSamtale(
             AutentisertStartSamtaleRequest(
                 userId = request.userId,
-                StartSamtaleRequest(
-                skalRingesID = personSomRingerTilbake.id
-        )))
+                startSamtaleRequest = StartSamtaleRequest(
+                    skalRingesID = personSomRingerTilbake.id
+                ),
+                modus = Modus.Velger
+            ))
         return personSomRingerTilbake.let { NestePersonAaRingeResponse(person = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1"))}
     }
 
