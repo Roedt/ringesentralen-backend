@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.brukere
 
 import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.hypersys.HypersysService
 import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.GroupID
@@ -15,7 +16,7 @@ interface BrukereService {
     fun deaktiverRinger(deaktiverRequest: AutentisertTilgangsendringRequest): Brukerendring
     fun gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring
     fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring
-    fun getBrukere(): List<Brukerinformasjon>
+    fun getBrukere(userId: UserId, groups: Set<String>): List<Brukerinformasjon>
 }
 
 @ApplicationScoped
@@ -29,8 +30,10 @@ class BrukereServiceBean(
     val godkjenningRepository: GodkjenningRepository
 ): BrukereService {
 
-    override fun getBrukere(): List<Brukerinformasjon> =
-        personRepository.find("groupID >= ${GroupID.UgodkjentRinger.nr}")
+    override fun getBrukere(userId: UserId, groups: Set<String>): List<Brukerinformasjon> {
+        val brukersFylke = personRepository.find("hypersysID", userId.userId).firstResult<Person>().fylke
+        val filtrerPaaFylke = if (groups.contains(Roles.admin)) "" else "and fylke=$brukersFylke"
+        return personRepository.find("groupID >= ${GroupID.UgodkjentRinger.nr}" + filtrerPaaFylke)
             .list<Person>()
             .map { r ->
                 Brukerinformasjon(
@@ -46,6 +49,7 @@ class BrukereServiceBean(
                     rolle = GroupID.from(r.groupID).roller
                 )
             }
+    }
 
     override fun aktiverRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(godkjennRequest, GroupID.GodkjentRinger)
 
