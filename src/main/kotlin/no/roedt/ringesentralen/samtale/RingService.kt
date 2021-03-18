@@ -40,14 +40,16 @@ class RingServiceBean(
 
     private fun hentFoerstePerson(request: AutentisertNestePersonAaRingeRequest): Any? {
         if (request.modus == Modus.Velger) {
-            return databaseUpdater.getResultList("SELECT v.id FROM v_personerSomKanRinges v WHERE lokallag = '${getLokallag(request.userId)}'")
+            val ringer = getPerson(request.userId)
+            return databaseUpdater.getResultList("SELECT v.id FROM v_personerSomKanRinges v " +
+                    "WHERE fylke = ${ringer.fylke} " +
+                    "ORDER BY ABS(lokallag-'${ringer.lokallag}') ASC")
                 .firstOrNull()
         }
         return -1
     }
 
-    fun getLokallag(userId: UserId) =
-        personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag
+    fun getPerson(userId: UserId) = personRepository.find("hypersysID", userId.userId).firstResult<Person>()
 
     private fun getTidlegareSamtalarMedDennePersonen(oppringtNummer: String): List<Samtale> =
         databaseUpdater.getResultList("SELECT resultat, ringerNavn, datetime, kommentar, ringtNavn FROM `v_samtalerResultat` WHERE oppringtNummer = '$oppringtNummer'")
