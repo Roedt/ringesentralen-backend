@@ -289,6 +289,7 @@ CREATE TABLE IF NOT EXISTS `kommune` (
   FOREIGN KEY (`fylke_id`) REFERENCES `fylker` (`id`),
   INDEX(`fylke_id`)
 );
+    INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Ukjent', -1, -1, -1);
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Aremark',118,1, (select id from lokallag where navn = 'Rødt Indre Østfold'));
     INSERT INTO kommune(navn,nummer,fylke_id, lokallag_id) VALUES ('Askim',124,1, (select id from lokallag where navn = 'Rødt Indre Østfold'));
     INSERT INTO kommune(navn,nummer,fylke_id, lokallag_id) VALUES ('Eidsberg',125,1, (select id from lokallag where navn = 'Rødt Indre Østfold'));
@@ -726,6 +727,8 @@ CREATE TABLE postnummer(
 
 -- --------------------------------------------------------
 
+
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (-1,'UKJENT',-1);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1,'OSLO',301);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (10,'OSLO',301);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (15,'OSLO',301);
@@ -5785,7 +5788,7 @@ inner join resultat r on r.id = samtale.resultat;
 -- --------------------------------------------------------
 
 create or replace view v_personerSomKanRinges as
-SELECT p.telefonnummer, concat(p.fornavn,' ',p.etternavn) as navn, p.postnummer, p.fylke, p.lokallag, l.navn as lokallagNavn, p.id as id
+SELECT p.telefonnummer, concat(p.fornavn,' ',p.etternavn) as navn, p.postnummer, p.fylke, p.lokallag, l.navn as lokallagNavn, p.id as id, p.hypersysID as hypersysID
   FROM person p
   LEFT OUTER JOIN lokallag l on p.lokallag = l.id
    WHERE p.groupID = '1'
