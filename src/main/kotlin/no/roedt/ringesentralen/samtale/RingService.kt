@@ -39,7 +39,7 @@ class RingServiceBean(
             ?.also { oppslagRepository.persist(Oppslag(ringt = it.person.id.toInt(), ringerHypersysId = request.userId() )) }
 
     private fun hentFoerstePerson(request: AutentisertNestePersonAaRingeRequest): Any? {
-        if (request.modus == Modus.Velger) {
+        if (request.modus == Modus.velgere) {
             val ringer = getPerson(request.userId)
             return databaseUpdater.getResultList("SELECT v.id FROM v_personerSomKanRinges v " +
                     "WHERE fylke = ${ringer.fylke} " +
@@ -115,7 +115,7 @@ class RingServiceBean(
                 startSamtaleRequest = StartSamtaleRequest(
                     skalRingesID = personSomRingerTilbake.id
                 ),
-                modus = Modus.Velger
+                modus = Modus.velgere
             ))
         return personSomRingerTilbake.let { NestePersonAaRingeResponse(person = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1"))}
     }

@@ -42,7 +42,7 @@ internal class RingServiceBeanTest {
 
         val request = AutentisertResultatFraSamtaleRequest(
             UserId(1), ResultatFraSamtaleRequest(
-                modus = Modus.Medlem,
+                modus = Modus.medlemmer,
                 ringtID = 2,
                 resultat = Resultat.Svarte,
                 kommentar = "Hei",
@@ -53,7 +53,7 @@ internal class RingServiceBeanTest {
                 ),
                 vilIkkeBliRingt = false
         ),
-            modus = Modus.Velger
+            modus = Modus.velgere
         )
 
         val response = ringService.registrerResultatFraSamtale(request)
@@ -65,7 +65,7 @@ internal class RingServiceBeanTest {
         val request = AutentisertResultatFraSamtaleRequest(
             userId = UserId(1),
             request = ResultatFraSamtaleRequest(
-                modus = Modus.Medlem,
+                modus = Modus.medlemmer,
                 ringtID = 2,
                 resultat = Resultat.Ringes_etter_valget,
                 kommentar = "Hei",
@@ -76,7 +76,7 @@ internal class RingServiceBeanTest {
                 ),
                 vilIkkeBliRingt = false
             ),
-            modus = Modus.Medlem
+            modus = Modus.medlemmer
         )
 
         assertThrows(AssertionError::class.java) {

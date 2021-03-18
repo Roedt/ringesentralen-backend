@@ -28,7 +28,7 @@ class FullFlytTest {
         loginWithToken(token)
             .body(
                 ResultatFraSamtaleRequest(
-                modus = Modus.Velger,
+                modus = Modus.velgere,
                 ringtID = ringtId,
                 resultat = Resultat.Passet_ikke,
                 kommentar = "Frå automatisk test",
