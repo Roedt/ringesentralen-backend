@@ -2,7 +2,9 @@ package no.roedt.ringesentralen.samtale
 
 import com.nhaarman.mockitokotlin2.*
 import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.hypersys.HypersysService
+import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -34,7 +36,7 @@ internal class RingTest {
 
         doReturn(listOf(1234)).whenever(databaseUpdater).getResultList(any())
 
-        ringController.hentNestePersonAaRinge(getContext())
+        ringController.hentNestePersonAaRinge(getContext(), Modus.Velger)
         verify(databaseUpdater).getResultList(any())
         verify(personRepository).findById(1234)
     }
@@ -44,7 +46,7 @@ internal class RingTest {
         val emptyList: List<Long> = listOf()
         doReturn(emptyList).whenever(databaseUpdater).getResultList(any())
 
-        ringController.hentNestePersonAaRinge(getContext())
+        ringController.hentNestePersonAaRinge(getContext(), Modus.Velger)
         verify(databaseUpdater).getResultList(any())
         verifyZeroInteractions(personRepository)
     }
@@ -53,7 +55,7 @@ internal class RingTest {
         val ctx : SecurityContext = mock()
         doReturn(ringController.jwt).whenever(ctx).userPrincipal
         doReturn(Optional.of(1)).whenever(ringController.jwt).claim<Any>(any())
-        doReturn(1).whenever(ringService).getLokallag(any())
+        doReturn(Person()).whenever(ringService).getPerson(any())
         return ctx
     }
 

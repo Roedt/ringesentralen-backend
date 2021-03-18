@@ -52,7 +52,8 @@ internal class RingServiceBeanTest {
                         vilHaValgkampsbrev = false
                 ),
                 vilIkkeBliRingt = false
-        ), modus
+        ),
+            modus = Modus.Velger
         )
 
         val response = ringService.registrerResultatFraSamtale(request)
@@ -75,7 +76,7 @@ internal class RingServiceBeanTest {
                 ),
                 vilIkkeBliRingt = false
             ),
-            modus = modus
+            modus = Modus.Medlem
         )
 
         assertThrows(AssertionError::class.java) {
