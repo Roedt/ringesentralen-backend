@@ -3,7 +3,7 @@ package no.roedt.ringesentralen.samtale
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.hypersys.HypersysService
-import no.roedt.ringesentralen.hypersys.ProfileConverter
+import no.roedt.ringesentralen.hypersys.ModelConverter
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
@@ -31,7 +31,7 @@ class RingServiceBean(
     val persistentSamtaleRepository: PersistentSamtaleRepository,
     val oppfoelgingKoronaRepository: OppfoelgingKoronaRepository,
     val hypersysService: HypersysService,
-    val profileConverter: ProfileConverter
+    val modelConverter: ModelConverter
 ): RingService {
 
     override fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? =
@@ -63,8 +63,7 @@ class RingServiceBean(
 
         hypersysService.getMedlemmer(userId, jwt)
             .filter { medlem -> personRepository.find("hypersysID", medlem["member_id"]).count() == 0L }
-            .map { profileConverter.convertToProfile(it)}
-            .map { profileConverter.convertToPerson(it) }
+            .map { modelConverter.convertMembershipToPerson(it) }
             .forEach() { personRepository.save(it) }
 
         return hentNestePerson(ringer, "AND hypersysID is not null")

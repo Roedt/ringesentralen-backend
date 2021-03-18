@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.*
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.hypersys.HypersysService
-import no.roedt.ringesentralen.hypersys.ProfileConverter
+import no.roedt.ringesentralen.hypersys.ModelConverter
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import org.junit.jupiter.api.BeforeEach
@@ -20,7 +20,7 @@ internal class RingTest {
     private val persistentSamtaleRepository: PersistentSamtaleRepository = mock()
     private val oppfoelgingKoronaRepository: OppfoelgingKoronaRepository = mock()
     private val hypersysService: HypersysService = mock()
-    private val profileConverter: ProfileConverter = mock()
+    private val modelConverter: ModelConverter = mock()
 
     lateinit var ringService: RingServiceBean
     lateinit var ringController: RingController
@@ -28,7 +28,7 @@ internal class RingTest {
     @BeforeEach
     fun setup() {
         ringService = spy(RingServiceBean(personRepository = personRepository, databaseUpdater = databaseUpdater, oppslagRepository = oppslagRepository,
-            persistentSamtaleRepository = persistentSamtaleRepository, oppfoelgingKoronaRepository = oppfoelgingKoronaRepository, hypersysService = hypersysService, profileConverter = profileConverter))
+            persistentSamtaleRepository = persistentSamtaleRepository, oppfoelgingKoronaRepository = oppfoelgingKoronaRepository, hypersysService = hypersysService, modelConverter = modelConverter))
         ringController = RingController(ringService)
         ringController.jwt = mock()
     }

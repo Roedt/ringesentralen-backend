@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.hypersys
 
 import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.ringesentralen.hypersys.externalModel.Address
 import no.roedt.ringesentralen.hypersys.externalModel.Membership
 import no.roedt.ringesentralen.hypersys.externalModel.User
 import no.roedt.ringesentralen.lokallag.Lokallag
@@ -10,6 +11,7 @@ import javax.enterprise.context.Dependent
 
 interface ModelConverter {
     fun convert(user: User, groupID: Int) : Person
+    fun convertMembershipToPerson(map: Map<*, *>): Person
 }
 
 @Dependent
@@ -31,10 +33,44 @@ class ModelConverterBean(
             telefonnummer = toTelefonnummer(user.phone),
             postnummer = postnummer,
             fylke = toFylke(postnummer),
-            lokallag = toLokallag(user.memberships) ?: -1,
+            lokallag =  toLokallag(user.memberships) ?: -1,
             groupID = groupID
         )
     }
+
+
+    override fun convertMembershipToPerson(map: Map<*, *>) : Person {
+        val postnummer = finnPostnummer(map)
+
+        return Person(
+            hypersysID = map["member_id"].toString().toInt(),
+            fornavn = map["first_name"].toString(),
+            etternavn = map["last_name"].toString(),
+            telefonnummer = itOrNull(map["mobile"]),
+            email = itOrNull(map["email"]),
+            postnummer = postnummer,
+            fylke = toFylke(postnummer),
+            groupID = 1,
+            lokallag = toLokallag(map["organisation"].toString())
+        )
+    }
+    private fun finnPostnummer(map: Map<*, *>): Int {
+        val addresses = listOf(toAddress(map["postal_address"]))
+        return addresses.flatMap { it.postalCode }.firstOrNull { i -> i != "null" }?.toString()?.toInt() ?: -1
+    }
+
+    private fun toAddress(get: Any?): Address {
+        val address = get as Map<String, String>
+        return Address(
+            id = 1,
+            name = address["address1"].toString(),
+            address1 = address["address1"].toString(),
+            address2 = address["address2"].toString(),
+            subject = "",
+            postalCode = listOf(address["postal_code"].toString())
+        )
+    }
+
 
     fun toTelefonnummer(telefonnummer: String): String? {
         val splitted = telefonnummer.split(" ")
@@ -56,14 +92,21 @@ class ModelConverterBean(
             ?: -1
 
 
-    fun toLokallag(memberships: List<Membership>): Int? =
+    fun toLokallag(memberships: List<Membership>): Int = toLokallag(getOrganisationName(memberships))
+
+    fun toLokallag(organisationName: String) : Int =
+        organisationName
+            .let { lokallagRepository.find("navn", it) }
+            .firstResult<Lokallag>()
+            .id
+            .toInt()
+
+    private fun getOrganisationName(memberships: List<Membership>) =
         memberships
             .asSequence()
             .sortedByDescending { it.startDate }
             .map { it.organisationName }
-            .map { lokallagRepository.find("navn", it) }
-            .map { it.firstResult<Lokallag>() }
-            .map { it.id }
-            .map { it.toInt() }
-            .firstOrNull()
+            .first()
+
+    private fun itOrNull(any: Any?): String? = if (any.toString() != "") any.toString() else null
 }
