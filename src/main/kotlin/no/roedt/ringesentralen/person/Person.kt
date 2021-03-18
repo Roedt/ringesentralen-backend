@@ -29,7 +29,7 @@ data class Person(
             email = null,
             postnummer = 0,
             fylke = -1,
-            lokallag = 1,
-            groupID = 0
+            groupID = 0,
+            lokallag = 1
     )
 }
