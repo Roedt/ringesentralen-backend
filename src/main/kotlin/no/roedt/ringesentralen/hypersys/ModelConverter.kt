@@ -92,21 +92,23 @@ class ModelConverterBean(
             ?: -1
 
 
-    fun toLokallag(memberships: List<Membership>): Int = toLokallag(getOrganisationName(memberships))
+    fun toLokallag(memberships: List<Membership>): Int = getOrganisationName(memberships)?.let { toLokallag(it) } ?: -1
 
     fun toLokallag(organisationName: String) : Int =
         organisationName
             .let { lokallagRepository.find("navn", it) }
-            .firstResult<Lokallag>()
-            .id
-            .toInt()
+            .firstResultOptional<Lokallag>()
+            ?.map { it.id }
+            ?.map { it.toInt() }
+            ?.orElse(-1)
+            ?: -1
 
     private fun getOrganisationName(memberships: List<Membership>) =
         memberships
             .asSequence()
             .sortedByDescending { it.startDate }
             .map { it.organisationName }
-            .first()
+            .firstOrNull()
 
     private fun itOrNull(any: Any?): String? = if (any.toString() != "") any.toString() else null
 }

@@ -29,6 +29,6 @@ internal class ModelConverterTest {
 
     @Test
     fun `taklar manglande lokallag`() {
-        assertNull(modelConverter.toLokallag(listOf()))
+        assertEquals(actual = -1, expected = modelConverter.toLokallag(listOf()))
     }
 }
