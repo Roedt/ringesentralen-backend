@@ -22,13 +22,15 @@ internal class RingTest {
     private val hypersysService: HypersysService = mock()
     private val modelConverter: ModelConverter = mock()
 
+
     lateinit var ringService: RingServiceBean
     lateinit var ringController: RingController
 
     @BeforeEach
     fun setup() {
         ringService = spy(RingServiceBean(personRepository = personRepository, databaseUpdater = databaseUpdater, oppslagRepository = oppslagRepository,
-            persistentSamtaleRepository = persistentSamtaleRepository, oppfoelgingKoronaRepository = oppfoelgingKoronaRepository, hypersysService = hypersysService, modelConverter = modelConverter))
+            samtaleRepository = persistentSamtaleRepository, oppfoelgingKoronaRepository = oppfoelgingKoronaRepository, hypersysService = hypersysService,
+            modelConverter = modelConverter, ))
         ringController = RingController(ringService)
         ringController.jwt = mock()
     }

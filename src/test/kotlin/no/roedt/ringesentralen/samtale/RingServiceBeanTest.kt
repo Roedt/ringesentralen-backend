@@ -29,7 +29,7 @@ internal class RingServiceBeanTest {
     private val modelConverter: ModelConverter = mock()
 
     private var ringService = RingServiceBean(personRepository = personRepository, databaseUpdater = databaseUpdater, oppslagRepository = oppslagRepository,
-        persistentSamtaleRepository = persistentSamtaleRepository, oppfoelgingKoronaRepository = oppfoelgingKoronaRepository, hypersysService = hypersysService, modelConverter = modelConverter)
+        samtaleRepository = persistentSamtaleRepository, oppfoelgingKoronaRepository = oppfoelgingKoronaRepository, hypersysService = hypersysService, modelConverter = modelConverter)
 
     @BeforeEach
     fun setup() {

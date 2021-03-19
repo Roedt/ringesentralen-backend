@@ -28,11 +28,10 @@ class RingServiceBean(
     val personRepository: PersonRepository,
     val databaseUpdater: DatabaseUpdater,
     val oppslagRepository: OppslagRepository,
-    val persistentSamtaleRepository: PersistentSamtaleRepository,
+    val samtaleRepository: PersistentSamtaleRepository,
     val oppfoelgingKoronaRepository: OppfoelgingKoronaRepository,
     val hypersysService: HypersysService,
-    val modelConverter: ModelConverter,
-    val samtaleRepository: PersistentSamtaleRepository
+    val modelConverter: ModelConverter
 ): RingService {
 
     override fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? =
@@ -89,7 +88,7 @@ class RingServiceBean(
     override fun startSamtale(request: AutentisertStartSamtaleRequest) {
         val ringerId = hypersysIDTilRingerId(request.userId)
 
-        persistentSamtaleRepository.persist(
+        samtaleRepository.persist(
             PersistentSamtale(
                 ringt = request.skalRingesID().toInt(),
                 ringer = ringerId.toString().toInt(),
@@ -101,7 +100,7 @@ class RingServiceBean(
     override fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest) {
         val request = autentisertRequest.request
         assert(request.isGyldigResultat())
-        persistentSamtaleRepository.persist(
+        samtaleRepository.persist(
             PersistentSamtale(
                 ringt = request.ringtID.toInt(),
                 ringer = hypersysIDTilRingerId(autentisertRequest.userId).toString().toInt(),
