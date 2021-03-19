@@ -54,7 +54,7 @@ class RingServiceBean(
             return nestePersonFraDatabasen
         }
 
-        hentMedlemmerFraLokallag(userId, jwt)
+        hentMedlemmerFraLokallag(jwt, hypersysService.getLokallag(userId))
 
         nestePersonFraDatabasen = hentNestePerson(ringer, "AND hypersysID is not null ")
         if (nestePersonFraDatabasen != null) {
@@ -64,8 +64,8 @@ class RingServiceBean(
         return null
     }
 
-    private fun hentMedlemmerFraLokallag(userId: UserId, jwt: JsonWebToken) =
-        hypersysService.getMedlemmer(userId, jwt)
+    private fun hentMedlemmerFraLokallag(jwt: JsonWebToken, lokallag: Int?) =
+        hypersysService.getMedlemmer(lokallag, jwt)
             .filter { medlem -> personRepository.find("hypersysID", medlem["member_id"]).count() == 0L }
             .map { modelConverter.convertMembershipToPerson(it) }
             .forEach { personRepository.save(it) }

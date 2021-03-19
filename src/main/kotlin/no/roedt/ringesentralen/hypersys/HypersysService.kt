@@ -10,8 +10,9 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 import javax.enterprise.context.ApplicationScoped
 
 interface HypersysService {
-    fun getMedlemmer(userId: UserId, token: JsonWebToken): List<LinkedHashMap<String, *>>
-    fun convertToHypersysLokallagId(lokallag: Int) : Int?
+    fun getMedlemmer(hypersysLokallagId: Int?, token: JsonWebToken): List<LinkedHashMap<String, *>>
+    fun convertToHypersysLokallagId(lokallag: Int): Int?
+    fun getLokallag(userId: UserId): Int?
 }
 
 @ApplicationScoped
@@ -22,17 +23,14 @@ class HypersysServiceBean(
     val lokallagRepository: LokallagRepository
 ) : HypersysService {
 
-    override fun getMedlemmer(userId: UserId, token: JsonWebToken): List<LinkedHashMap<String, *>> = getMedlemmer(getLokallag(userId), token)
-
-    private fun getMedlemmer(lokallagHypersysId: Int?, token: JsonWebToken): List<LinkedHashMap<String, *>> =
+    override fun getMedlemmer(lokallagHypersysId: Int?, token: JsonWebToken): List<LinkedHashMap<String, *>> =
         hypersysProxy.get("/membership/api/membership/$lokallagHypersysId/2021/", GyldigPersonToken.from(token), List::class.java)
                 as List<LinkedHashMap<String, *>>
 
     override fun convertToHypersysLokallagId(lokallag: Int) : Int =
         lokallagRepository.findById(lokallag.toLong()).let { mittLag -> if (mittLag.hypersysID != null) mittLag.hypersysID!! else getLokallagIdFromHypersys(mittLag) }
 
-
-    private fun getLokallag(userId: UserId) = personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag.let { convertToHypersysLokallagId(it) }
+    override fun getLokallag(userId: UserId) = personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag.let { convertToHypersysLokallagId(it) }
 
     private fun getLokallagIdFromHypersys(mittLag: Lokallag) : Int {
         val lag = getAlleLokallag().first { mittLag.navn == it.name }

@@ -85,6 +85,7 @@ class BrukereServiceBean(
     private fun oppdaterNavnFraHypersys(request: AutentisertTilgangsendringRequest, hypersysID: Int?) {
         hypersysID
             ?.let { UserId(userId = it) }
+            ?.let { hypersysService.getLokallag(userId = it)}
             ?.let { hypersysService.getMedlemmer(it, request.jwt) }
             ?.firstOrNull { it["member_id"] == hypersysID }
             ?.let {
