@@ -86,6 +86,7 @@ class BrukereServiceBean(
         hypersysID
             ?.let { UserId(userId = it) }
             ?.let { hypersysService.getLokallag(userId = it)}
+            ?.let { hypersysService.convertToHypersysLokallagId(it) }
             ?.let { hypersysService.getMedlemmer(it, request.jwt) }
             ?.firstOrNull { it["member_id"] == hypersysID }
             ?.let {

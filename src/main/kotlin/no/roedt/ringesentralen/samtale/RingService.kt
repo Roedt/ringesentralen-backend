@@ -1,6 +1,8 @@
 package no.roedt.ringesentralen.samtale
 
 import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.ringesentralen.Kommune
+import no.roedt.ringesentralen.KommuneRepository
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.hypersys.HypersysService
 import no.roedt.ringesentralen.hypersys.ModelConverter
@@ -31,7 +33,8 @@ class RingServiceBean(
     val samtaleRepository: PersistentSamtaleRepository,
     val oppfoelgingKoronaRepository: OppfoelgingKoronaRepository,
     val hypersysService: HypersysService,
-    val modelConverter: ModelConverter
+    val modelConverter: ModelConverter,
+    val kommuneRepository: KommuneRepository
 ): RingService {
 
     override fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? =
@@ -49,23 +52,34 @@ class RingServiceBean(
     }
 
     private fun hentIDForNesteMedlemAaRinge(ringer: Person, userId: UserId, jwt: JsonWebToken): Any? {
-        var nestePersonFraDatabasen = hentNestePerson(ringer, "AND hypersysID is not null ")
-        if (nestePersonFraDatabasen != null) {
-            return nestePersonFraDatabasen
-        }
+        val nestePersonIEgetLokallag = hentNestePersonAaRingeIDetteLokallaget(ringer, jwt, hypersysService.getLokallag(userId))
+        if (nestePersonIEgetLokallag != null) return nestePersonIEgetLokallag
 
-        hentMedlemmerFraLokallag(jwt, hypersysService.getLokallag(userId))
+        val lokallagIFylket = kommuneRepository.find("fylke_id=?1", ringer.fylke)
+            .list<Kommune>()
+            .map { it.lokallag_id }
 
-        nestePersonFraDatabasen = hentNestePerson(ringer, "AND hypersysID is not null ")
-        if (nestePersonFraDatabasen != null) {
-            return nestePersonFraDatabasen
+        for (lokallag in lokallagIFylket) {
+            val personAaRinge = hentNestePersonAaRingeIDetteLokallaget(ringer, jwt, lokallag)
+            if (personAaRinge != null) return personAaRinge
         }
 
         return null
     }
 
-    private fun hentMedlemmerFraLokallag(jwt: JsonWebToken, lokallag: Int?) =
-        hypersysService.getMedlemmer(lokallag, jwt)
+    private fun hentNestePersonAaRingeIDetteLokallaget(ringer: Person, jwt: JsonWebToken, lokallag: Int?): Any? {
+        if (lokallag == null) return null
+        val hypersysQuery = "AND lokallag=$lokallag AND hypersysID is not null "
+        val nestePersonFraDatabasen = hentNestePerson(ringer, hypersysQuery)
+        if (nestePersonFraDatabasen != null) return nestePersonFraDatabasen
+
+        hentMedlemmerFraLokallag(jwt, hypersysService.convertToHypersysLokallagId(lokallag))
+
+        return hentNestePerson(ringer, hypersysQuery)
+    }
+
+    private fun hentMedlemmerFraLokallag(jwt: JsonWebToken, hypersysLokallagId: Int?) =
+        hypersysService.getMedlemmer(hypersysLokallagId, jwt)
             .filter { medlem -> personRepository.find("hypersysID", medlem["member_id"]).count() == 0L }
             .map { modelConverter.convertMembershipToPerson(it) }
             .forEach { personRepository.save(it) }
