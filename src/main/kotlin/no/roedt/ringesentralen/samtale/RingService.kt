@@ -48,6 +48,30 @@ class RingServiceBean(
         } else hentIDForNesteMedlemAaRinge(ringer, request.userId, request.jwt)
     }
 
+    private fun hentIDForNesteMedlemAaRinge(ringer: Person, userId: UserId, jwt: JsonWebToken): Any? {
+        var nestePersonFraDatabasen = hentNestePerson(ringer, "AND hypersysID is not null ")
+        if (nestePersonFraDatabasen != null) {
+            return nestePersonFraDatabasen
+        }
+
+        hentMedlemmerFraLokallag(userId, jwt)
+
+        nestePersonFraDatabasen = hentNestePerson(ringer, "AND hypersysID is not null ")
+        if (nestePersonFraDatabasen != null) {
+            return nestePersonFraDatabasen
+        }
+
+        return null
+    }
+
+    private fun hentMedlemmerFraLokallag(userId: UserId, jwt: JsonWebToken) =
+        hypersysService.getMedlemmer(userId, jwt)
+            .filter { medlem -> personRepository.find("hypersysID", medlem["member_id"]).count() == 0L }
+            .map { modelConverter.convertMembershipToPerson(it) }
+            .forEach { personRepository.save(it) }
+
+    fun getPerson(userId: UserId): Person = personRepository.find("hypersysID", userId.userId).firstResult()
+
     private fun hentNestePerson(ringer: Person, hypersysQuery: String) = databaseUpdater.getResultList(
         "SELECT v.id FROM v_personerSomKanRinges v " +
                 "WHERE fylke = ${ringer.fylke} " +
@@ -56,21 +80,11 @@ class RingServiceBean(
                 "v.hypersysID DESC")
         .firstOrNull()
 
-    private fun hentIDForNesteMedlemAaRinge(ringer: Person, userId: UserId, jwt: JsonWebToken): Any? {
-        val nestePersonFraDatabasen = hentNestePerson(ringer, "AND hypersysID is not null ")
-        if (nestePersonFraDatabasen != null) {
-            return nestePersonFraDatabasen
-        }
 
-        hypersysService.getMedlemmer(userId, jwt)
-            .filter { medlem -> personRepository.find("hypersysID", medlem["member_id"]).count() == 0L }
-            .map { modelConverter.convertMembershipToPerson(it) }
-            .forEach { personRepository.save(it) }
 
-        return hentNestePerson(ringer, "AND hypersysID is not null")
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    fun getPerson(userId: UserId): Person = personRepository.find("hypersysID", userId.userId).firstResult()
+
 
     private fun getTidlegareSamtalarMedDennePersonen(oppringtNummer: String): List<Samtale> =
         databaseUpdater.getResultList("SELECT resultat, ringerNavn, datetime, kommentar, ringtNavn FROM `v_samtalerResultat` WHERE oppringtNummer = '$oppringtNummer'")

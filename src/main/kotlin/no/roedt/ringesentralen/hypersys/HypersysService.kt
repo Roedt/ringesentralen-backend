@@ -11,6 +11,7 @@ import javax.enterprise.context.ApplicationScoped
 
 interface HypersysService {
     fun getMedlemmer(userId: UserId, token: JsonWebToken): List<LinkedHashMap<String, *>>
+    fun convertToHypersysLokallagId(lokallag: Int) : Int?
 }
 
 @ApplicationScoped
@@ -27,10 +28,8 @@ class HypersysServiceBean(
         hypersysProxy.get("/membership/api/membership/$lokallagHypersysId/2021/", GyldigPersonToken.from(token), List::class.java)
                 as List<LinkedHashMap<String, *>>
 
-    fun convertToHypersysLokallagId(lokallag: Int) =
-        lokallagRepository.findById(lokallag.toLong()).let { mittLag -> if (mittLag.hypersysID != null) mittLag.hypersysID else getLokallagIdFromHypersys(mittLag) }
-
-
+    override fun convertToHypersysLokallagId(lokallag: Int) : Int =
+        lokallagRepository.findById(lokallag.toLong()).let { mittLag -> if (mittLag.hypersysID != null) mittLag.hypersysID!! else getLokallagIdFromHypersys(mittLag) }
 
 
     private fun getLokallag(userId: UserId) = personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag.let { convertToHypersysLokallagId(it) }
