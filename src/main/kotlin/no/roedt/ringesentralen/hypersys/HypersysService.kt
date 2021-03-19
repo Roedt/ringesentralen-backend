@@ -10,8 +10,6 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 import javax.enterprise.context.ApplicationScoped
 
 interface HypersysService {
-    fun getAlleLokallag(): List<Organisasjonsledd>
-    fun login(loginRequest: LoginRequest): Token
     fun getMedlemmer(userId: UserId, token: JsonWebToken): List<LinkedHashMap<String, *>>
 }
 
@@ -19,15 +17,9 @@ interface HypersysService {
 class HypersysServiceBean(
     val hypersysProxy: HypersysProxy,
     val hypersysSystemTokenVerifier: HypersysSystemTokenVerifier,
-    val hypersysLoginBean: HypersysLoginBean,
     val personRepository: PersonRepository,
     val lokallagRepository: LokallagRepository
 ) : HypersysService {
-
-    override fun getAlleLokallag(): List<Organisasjonsledd> =
-        hypersysProxy.get("/org/api/", hypersysSystemTokenVerifier.assertGyldigSystemToken(), ListOrganisasjonsleddTypeReference())
-
-    override fun login(loginRequest: LoginRequest): Token = hypersysLoginBean.login(loginRequest)
 
     override fun getMedlemmer(userId: UserId, token: JsonWebToken): List<LinkedHashMap<String, *>> =
         hypersysProxy.get(
@@ -45,4 +37,7 @@ class HypersysServiceBean(
         lokallagRepository.update("hypersysID=?1 where id=?2", lag.id, mittLag.id)
         return lag.id
     }
+
+    private fun getAlleLokallag(): List<Organisasjonsledd> =
+        hypersysProxy.get("/org/api/", hypersysSystemTokenVerifier.assertGyldigSystemToken(), ListOrganisasjonsleddTypeReference())
 }

@@ -15,10 +15,10 @@ import javax.ws.rs.ServiceUnavailableException
 
 @RequestScoped
 class TokenService(
-    private val hypersysService: HypersysService,
     private val personRepository: PersonRepository,
     private val privateKeyFactory: PrivateKeyFactory,
-    private val gcpSecretManager: GCPSecretManager
+    private val gcpSecretManager: GCPSecretManager,
+    private val hypersysLoginBean: HypersysLoginBean
 ) {
 
     @ConfigProperty(name = "token.expiryPeriod")
@@ -31,7 +31,7 @@ class TokenService(
         EpostValidator.validate(loginRequest.brukarnamn)
 
         val hypersysToken: Token = try {
-            hypersysService.login(loginRequest)
+            hypersysLoginBean.login(loginRequest)
         }
         catch (e: Exception) {
             e.printStackTrace()
