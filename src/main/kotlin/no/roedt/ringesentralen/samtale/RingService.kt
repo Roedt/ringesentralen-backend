@@ -52,7 +52,8 @@ class RingServiceBean(
         "SELECT v.id FROM v_personerSomKanRinges v " +
                 "WHERE fylke = ${ringer.fylke} " +
                 hypersysQuery +
-                " ORDER BY ABS(lokallag-'${ringer.lokallag}') ASC")
+                " ORDER BY ABS(lokallag-'${ringer.lokallag}') ASC, " +
+                "v.hypersysID DESC")
         .firstOrNull()
 
     private fun hentIDForNesteMedlemAaRinge(ringer: Person, userId: UserId, jwt: JsonWebToken): Any? {
