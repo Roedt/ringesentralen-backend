@@ -3,10 +3,7 @@ package no.roedt.ringesentralen.samtale
 import com.nhaarman.mockitokotlin2.*
 import io.quarkus.hibernate.orm.panache.PanacheQuery
 import no.roedt.ringesentralen.DatabaseUpdater
-import no.roedt.ringesentralen.KommuneRepository
 import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.hypersys.HypersysService
-import no.roedt.ringesentralen.hypersys.ModelConverter
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId
@@ -26,13 +23,10 @@ internal class RingServiceBeanTest {
     private val oppslagRepository: OppslagRepository = mock()
     private val persistentSamtaleRepository: PersistentSamtaleRepository = mock()
     private val oppfoelgingKoronaRepository: OppfoelgingKoronaRepository = mock()
-    private val hypersysService: HypersysService = mock()
-    private val modelConverter: ModelConverter = mock()
-    private val kommuneRepository: KommuneRepository = mock()
+    private val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder = mock()
 
     private var ringService = RingServiceBean(personRepository = personRepository, databaseUpdater = databaseUpdater, oppslagRepository = oppslagRepository,
-        samtaleRepository = persistentSamtaleRepository, oppfoelgingKoronaRepository = oppfoelgingKoronaRepository, hypersysService = hypersysService,
-        modelConverter = modelConverter, kommuneRepository = kommuneRepository)
+        samtaleRepository = persistentSamtaleRepository, oppfoelgingKoronaRepository = oppfoelgingKoronaRepository, nesteMedlemAaRingeFinder = nesteMedlemAaRingeFinder)
 
     @BeforeEach
     fun setup() {

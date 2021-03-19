@@ -1,11 +1,7 @@
 package no.roedt.ringesentralen.samtale
 
 import no.roedt.ringesentralen.DatabaseUpdater
-import no.roedt.ringesentralen.Kommune
-import no.roedt.ringesentralen.KommuneRepository
 import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.hypersys.HypersysService
-import no.roedt.ringesentralen.hypersys.ModelConverter
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
@@ -14,7 +10,6 @@ import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleReq
 import no.roedt.ringesentralen.samtale.resultat.KoronaspesifikkeResultat
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
-import org.eclipse.microprofile.jwt.JsonWebToken
 import java.sql.Timestamp
 import javax.enterprise.context.ApplicationScoped
 
@@ -32,9 +27,7 @@ class RingServiceBean(
     val oppslagRepository: OppslagRepository,
     val samtaleRepository: PersistentSamtaleRepository,
     val oppfoelgingKoronaRepository: OppfoelgingKoronaRepository,
-    val hypersysService: HypersysService,
-    val modelConverter: ModelConverter,
-    val kommuneRepository: KommuneRepository
+    val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder
 ): RingService {
 
     override fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? =
@@ -48,41 +41,8 @@ class RingServiceBean(
         val ringer = getPerson(request.userId)
         return if (request.modus == Modus.velgere) {
             return hentNestePerson(ringer, "AND hypersysID is null ")
-        } else hentIDForNesteMedlemAaRinge(ringer, request.userId, request.jwt)
+        } else nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(ringer, request.userId, request.jwt)
     }
-
-    private fun hentIDForNesteMedlemAaRinge(ringer: Person, userId: UserId, jwt: JsonWebToken): Any? {
-        val nestePersonIEgetLokallag = hentNestePersonAaRingeIDetteLokallaget(ringer, jwt, hypersysService.getLokallag(userId))
-        if (nestePersonIEgetLokallag != null) return nestePersonIEgetLokallag
-
-        val lokallagIFylket = kommuneRepository.find("fylke_id=?1", ringer.fylke)
-            .list<Kommune>()
-            .map { it.lokallag_id }
-
-        for (lokallag in lokallagIFylket) {
-            val personAaRinge = hentNestePersonAaRingeIDetteLokallaget(ringer, jwt, lokallag)
-            if (personAaRinge != null) return personAaRinge
-        }
-
-        return null
-    }
-
-    private fun hentNestePersonAaRingeIDetteLokallaget(ringer: Person, jwt: JsonWebToken, lokallag: Int?): Any? {
-        if (lokallag == null) return null
-        val hypersysQuery = "AND lokallag=$lokallag AND hypersysID is not null "
-        val nestePersonFraDatabasen = hentNestePerson(ringer, hypersysQuery)
-        if (nestePersonFraDatabasen != null) return nestePersonFraDatabasen
-
-        hentMedlemmerFraLokallag(jwt, hypersysService.convertToHypersysLokallagId(lokallag))
-
-        return hentNestePerson(ringer, hypersysQuery)
-    }
-
-    private fun hentMedlemmerFraLokallag(jwt: JsonWebToken, hypersysLokallagId: Int?) =
-        hypersysService.getMedlemmer(hypersysLokallagId, jwt)
-            .filter { medlem -> personRepository.find("hypersysID", medlem["member_id"]).count() == 0L }
-            .map { modelConverter.convertMembershipToPerson(it) }
-            .forEach { personRepository.save(it) }
 
     fun getPerson(userId: UserId): Person = personRepository.find("hypersysID", userId.userId).firstResult()
 
@@ -93,7 +53,6 @@ class RingServiceBean(
                 " ORDER BY ABS(lokallag-'${ringer.lokallag}') ASC, " +
                 "v.hypersysID DESC")
         .firstOrNull()
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
