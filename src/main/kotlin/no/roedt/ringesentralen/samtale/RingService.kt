@@ -31,7 +31,8 @@ class RingServiceBean(
     val persistentSamtaleRepository: PersistentSamtaleRepository,
     val oppfoelgingKoronaRepository: OppfoelgingKoronaRepository,
     val hypersysService: HypersysService,
-    val modelConverter: ModelConverter
+    val modelConverter: ModelConverter,
+    val samtaleRepository: PersistentSamtaleRepository
 ): RingService {
 
     override fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? =
@@ -142,7 +143,7 @@ class RingServiceBean(
     }
 
     private fun erFleireEnnToIkkeSvar(request: ResultatFraSamtaleRequest): Boolean {
-        val resultat: List<Int>? = databaseUpdater.getResultList("select resultat from `samtale` where ringt = ${request.ringtID} and resultat = 0")?.map { it as Int }
+        val resultat: List<Int> = samtaleRepository.find("where ringt=?1 and resultat=0", request.ringtID).list<PersistentSamtale>().map { it.resultat }
         val fleireEnnToIkkeSvar: Boolean = (resultat?.filter { it == 0 }?.count() ?: 0) > 2
         val ingenSvar: Boolean = (resultat?.filter { it != 0 && it != 9 }?.count() ?: 0) == 0
         return ingenSvar && fleireEnnToIkkeSvar && request.resultat == Resultat.Ikke_svar
