@@ -25,14 +25,16 @@ class HypersysServiceBean(
 ) : HypersysService {
 
     override fun getAlleLokallag(): List<Organisasjonsledd> =
-        hypersysProxy.get("/org/api/", getSystemToken(), ListOrganisasjonsleddTypeReference())
+        hypersysProxy.get("/org/api/", hypersysSystemTokenVerifier.assertGyldigSystemToken(), ListOrganisasjonsleddTypeReference())
 
     override fun login(loginRequest: LoginRequest): Token = hypersysLoginBean.login(loginRequest)
 
-    override fun getMedlemmer(userId: UserId, token: JsonWebToken): List<LinkedHashMap<String, *>> = getMedlemmar(userId, GyldigPersonToken.from(token))
-
-    private fun getMedlemmar(userId: UserId, token: GyldigPersonToken) =
-        hypersysProxy.get("/membership/api/membership/${getLokallag(userId)}/2021/", token, List::class.java) as List<LinkedHashMap<String, *>>
+    override fun getMedlemmer(userId: UserId, token: JsonWebToken): List<LinkedHashMap<String, *>> =
+        hypersysProxy.get(
+            "/membership/api/membership/${getLokallag(userId)}/2021/",
+            GyldigPersonToken.from(token),
+            List::class.java)
+                as List<LinkedHashMap<String, *>>
 
     private fun getLokallag(userId: UserId) = personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag
         .let { lokallagRepository.findById(it.toLong())}
@@ -43,6 +45,4 @@ class HypersysServiceBean(
         lokallagRepository.update("hypersysID=?1 where id=?2", lag.id, mittLag.id)
         return lag.id
     }
-
-    private fun getSystemToken() = hypersysSystemTokenVerifier.assertGyldigSystemToken()
 }
