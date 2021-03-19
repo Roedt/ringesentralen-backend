@@ -2,6 +2,7 @@ package no.roedt.ringesentralen.samtale
 
 import com.nhaarman.mockitokotlin2.*
 import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.ringesentralen.KommuneRepository
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.hypersys.HypersysService
 import no.roedt.ringesentralen.hypersys.ModelConverter
@@ -21,6 +22,7 @@ internal class RingTest {
     private val oppfoelgingKoronaRepository: OppfoelgingKoronaRepository = mock()
     private val hypersysService: HypersysService = mock()
     private val modelConverter: ModelConverter = mock()
+    private val kommuneRepository: KommuneRepository = mock()
 
 
     lateinit var ringService: RingServiceBean
@@ -30,7 +32,7 @@ internal class RingTest {
     fun setup() {
         ringService = spy(RingServiceBean(personRepository = personRepository, databaseUpdater = databaseUpdater, oppslagRepository = oppslagRepository,
             samtaleRepository = persistentSamtaleRepository, oppfoelgingKoronaRepository = oppfoelgingKoronaRepository, hypersysService = hypersysService,
-            modelConverter = modelConverter, ))
+            modelConverter = modelConverter, kommuneRepository = kommuneRepository))
         ringController = RingController(ringService)
         ringController.jwt = mock()
     }
