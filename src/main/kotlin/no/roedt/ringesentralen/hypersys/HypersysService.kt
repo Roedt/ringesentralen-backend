@@ -1,8 +1,6 @@
 package no.roedt.ringesentralen.hypersys
 
 import no.roedt.ringesentralen.hypersys.externalModel.Organisasjonsledd
-import no.roedt.ringesentralen.hypersys.externalModel.Organs
-import no.roedt.ringesentralen.hypersys.externalModel.SingleOrgan
 import no.roedt.ringesentralen.lokallag.Lokallag
 import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.Person
@@ -13,7 +11,6 @@ import javax.enterprise.context.ApplicationScoped
 
 interface HypersysService {
     fun getAlleLokallag(): List<Organisasjonsledd>
-    fun getAlleOrganPaaLaagasteNivaa(): List<SingleOrgan>
     fun login(loginRequest: LoginRequest): Token
     fun getMedlemmer(userId: UserId, token: JsonWebToken): List<LinkedHashMap<String, *>>
 }
@@ -30,8 +27,6 @@ class HypersysServiceBean(
     override fun getAlleLokallag(): List<Organisasjonsledd> =
         hypersysProxy.get("/org/api/", getSystemToken(), ListOrganisasjonsleddTypeReference())
 
-    override fun getAlleOrganPaaLaagasteNivaa(): List<SingleOrgan> = getAlleLokallag().map { toSingleOrgans(it) }.flatten()
-
     override fun login(loginRequest: LoginRequest): Token = hypersysLoginBean.login(loginRequest)
 
     override fun getMedlemmer(userId: UserId, token: JsonWebToken): List<LinkedHashMap<String, *>> = getMedlemmar(userId, GyldigPersonToken.from(token))
@@ -47,14 +42,6 @@ class HypersysServiceBean(
         val lag = getAlleLokallag().first { mittLag.navn == it.name }
         lokallagRepository.update("hypersysID=?1 where id=?2", lag.id, mittLag.id)
         return lag.id
-    }
-
-    private fun toSingleOrgans(lokallag: Organisasjonsledd): List<SingleOrgan> {
-        // TODO: Denne må forbetrast. Tar berre med under-under, men vil at denne skal ta med alle som ikkje har organ under seg
-        val organs: Organs = hypersysProxy.get("org/api/${lokallag.id}/organ/", getSystemToken(), Organs::class.java)
-        return organs.organs.map {
-            hypersysProxy.get("org/api/${lokallag.id}/organ/${it.id}/", getSystemToken(), SingleOrgan::class.java)
-        }
     }
 
     private fun getSystemToken() = hypersysSystemTokenVerifier.assertGyldigSystemToken()
