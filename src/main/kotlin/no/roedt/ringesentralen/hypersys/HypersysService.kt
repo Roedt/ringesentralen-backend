@@ -21,16 +21,19 @@ class HypersysServiceBean(
     val lokallagRepository: LokallagRepository
 ) : HypersysService {
 
-    override fun getMedlemmer(userId: UserId, token: JsonWebToken): List<LinkedHashMap<String, *>> =
-        hypersysProxy.get(
-            "/membership/api/membership/${getLokallag(userId)}/2021/",
-            GyldigPersonToken.from(token),
-            List::class.java)
+    override fun getMedlemmer(userId: UserId, token: JsonWebToken): List<LinkedHashMap<String, *>> = getMedlemmer(getLokallag(userId), token)
+
+    private fun getMedlemmer(lokallagHypersysId: Int?, token: JsonWebToken): List<LinkedHashMap<String, *>> =
+        hypersysProxy.get("/membership/api/membership/$lokallagHypersysId/2021/", GyldigPersonToken.from(token), List::class.java)
                 as List<LinkedHashMap<String, *>>
 
-    private fun getLokallag(userId: UserId) = personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag
-        .let { lokallagRepository.findById(it.toLong())}
-        .let { mittLag -> if (mittLag.hypersysID != null) mittLag.hypersysID else getLokallagIdFromHypersys(mittLag) }
+    fun convertToHypersysLokallagId(lokallag: Int) =
+        lokallagRepository.findById(lokallag.toLong()).let { mittLag -> if (mittLag.hypersysID != null) mittLag.hypersysID else getLokallagIdFromHypersys(mittLag) }
+
+
+
+
+    private fun getLokallag(userId: UserId) = personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag.let { convertToHypersysLokallagId(it) }
 
     private fun getLokallagIdFromHypersys(mittLag: Lokallag) : Int {
         val lag = getAlleLokallag().first { mittLag.navn == it.name }

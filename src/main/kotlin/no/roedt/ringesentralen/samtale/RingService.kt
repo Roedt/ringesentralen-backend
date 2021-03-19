@@ -65,12 +65,12 @@ class RingServiceBean(
         hypersysService.getMedlemmer(userId, jwt)
             .filter { medlem -> personRepository.find("hypersysID", medlem["member_id"]).count() == 0L }
             .map { modelConverter.convertMembershipToPerson(it) }
-            .forEach() { personRepository.save(it) }
+            .forEach { personRepository.save(it) }
 
         return hentNestePerson(ringer, "AND hypersysID is not null")
     }
 
-    fun getPerson(userId: UserId) = personRepository.find("hypersysID", userId.userId).firstResult<Person>()
+    fun getPerson(userId: UserId): Person = personRepository.find("hypersysID", userId.userId).firstResult()
 
     private fun getTidlegareSamtalarMedDennePersonen(oppringtNummer: String): List<Samtale> =
         databaseUpdater.getResultList("SELECT resultat, ringerNavn, datetime, kommentar, ringtNavn FROM `v_samtalerResultat` WHERE oppringtNummer = '$oppringtNummer'")
@@ -143,8 +143,8 @@ class RingServiceBean(
 
     private fun erFleireEnnToIkkeSvar(request: ResultatFraSamtaleRequest): Boolean {
         val resultat: List<Int> = samtaleRepository.find("where ringt=?1 and resultat=0", request.ringtID).list<PersistentSamtale>().map { it.resultat }
-        val fleireEnnToIkkeSvar: Boolean = (resultat?.filter { it == 0 }?.count() ?: 0) > 2
-        val ingenSvar: Boolean = (resultat?.filter { it != 0 && it != 9 }?.count() ?: 0) == 0
+        val fleireEnnToIkkeSvar: Boolean = resultat.filter { it == 0 }.count() > 2
+        val ingenSvar: Boolean = resultat.filter { it != 0 && it != 9 }.count() == 0
         return ingenSvar && fleireEnnToIkkeSvar && request.resultat == Resultat.Ikke_svar
     }
 
