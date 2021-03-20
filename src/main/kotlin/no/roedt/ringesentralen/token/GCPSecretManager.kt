@@ -6,16 +6,6 @@ import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.annotation.PostConstruct
 import javax.enterprise.context.RequestScoped
 
-interface SecretFactory {
-    fun getPrivateKey(): String
-    fun getFrontendTokenKey(): String
-    fun getHypersysBrukerId(): String
-    fun getHypersysBrukerSecret(): String
-    fun getHypersysClientId(): String
-    fun getHypersysClientSecret(): String
-    fun getHypersysBaseURL(): String
-}
-
 @RequestScoped
 class GCPSecretManager : SecretFactory {
 
