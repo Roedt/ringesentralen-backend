@@ -9,14 +9,14 @@ import java.time.Duration
 import javax.enterprise.context.RequestScoped
 
 @RequestScoped
-class FakeTokenService(private val gcpSecretManager: GCPSecretManager,
+class FakeTokenService(private val secretFactory: SecretFactory,
                        private val privateKeyFactory: PrivateKeyFactory) {
 
     @ConfigProperty(name = "token.expiryPeriod")
     lateinit var tokenExpiryPeriod: Duration
 
     fun login(loginRequest: LoginRequest): String {
-        if (loginRequest.key != gcpSecretManager.getFrontendTokenKey()) {
+        if (loginRequest.key != secretFactory.getFrontendTokenKey()) {
             throw IllegalArgumentException("Illegal key")
         }
         EpostValidator.validate(loginRequest.brukarnamn)

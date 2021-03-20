@@ -2,6 +2,7 @@ package no.roedt.ringesentralen
 
 class Roles {
     companion object Roles {
+        const val systembrukerFrontend = "systembrukerFrontend"
         const val sperret = "sperret"
         const val venterPaaGodkjenning = "venter_paa_godkjenning"
         const val bruker = "bruker"

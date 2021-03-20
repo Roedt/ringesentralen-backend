@@ -2,7 +2,7 @@ package no.roedt.ringesentralen.hypersys
 
 import no.roedt.ringesentralen.hypersys.externalModel.Profile
 import no.roedt.ringesentralen.person.*
-import no.roedt.ringesentralen.token.GCPSecretManager
+import no.roedt.ringesentralen.token.SecretFactory
 import javax.enterprise.context.Dependent
 import kotlin.math.max
 
@@ -10,15 +10,15 @@ import kotlin.math.max
 class HypersysLoginBean(
     private val hypersysProxy: HypersysProxy,
     private val modelConverter: ModelConverter,
-    private val gcpSecretManager: GCPSecretManager,
+    private val secretFactory: SecretFactory,
     private val loginAttemptRepository: LoginAttemptRepository,
     private val personRepository: PersonRepository,
     private val ringerRepository: RingerRepository,
     private val ringerIV1Repository: RingerIV1Repository
 ) {
     fun login(loginRequest: LoginRequest): Token {
-        val brukerId = gcpSecretManager.getHypersysBrukerId()
-        val brukerSecret = gcpSecretManager.getHypersysBrukerSecret()
+        val brukerId = secretFactory.getHypersysBrukerId()
+        val brukerSecret = secretFactory.getHypersysBrukerSecret()
         val response = hypersysProxy.post(brukerId, brukerSecret, "grant_type=password&username=${loginRequest.brukarnamn}&password=${loginRequest.passord}")
         if (response.statusCode() != 200) {
             return hypersysProxy.readResponse(response, UgyldigToken::class.java)

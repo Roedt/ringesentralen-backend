@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.token
 
 import io.smallrye.jwt.build.Jwt
+import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.hypersys.*
 import no.roedt.ringesentralen.person.EpostValidator
 import no.roedt.ringesentralen.person.GroupID
@@ -17,7 +18,7 @@ import javax.ws.rs.ServiceUnavailableException
 class TokenService(
     private val personRepository: PersonRepository,
     private val privateKeyFactory: PrivateKeyFactory,
-    private val gcpSecretManager: GCPSecretManager,
+    private val secretFactory: SecretFactory,
     private val hypersysLoginBean: HypersysLoginBean
 ) {
 
@@ -25,9 +26,20 @@ class TokenService(
     lateinit var tokenExpiryPeriod: Duration
 
     fun login(loginRequest: LoginRequest): String {
-        if (loginRequest.key != gcpSecretManager.getFrontendTokenKey()) {
+        if (loginRequest.key != secretFactory.getFrontendTokenKey()) {
             throw IllegalArgumentException("Illegal key")
         }
+
+        if (loginRequest.systembruker) {
+            if (loginRequest.brukarnamn != secretFactory.getFrontendSystembruker() || loginRequest.passord != secretFactory.getFrontendSystembrukerPassord()) {
+                throw IllegalArgumentException("Ugyldig brukernavn eller passord")
+            }
+            return generateBaseToken()
+                .groups(Roles.systembrukerFrontend)
+                .claim("hypersys.user_id", personRepository.find("fornavn='Systembruker' and etternavn='Frontend'").firstResult<Person>().hypersysID)
+                .sign(privateKeyFactory.readPrivateKey())
+        }
+
         EpostValidator.validate(loginRequest.brukarnamn)
 
         val hypersysToken: Token = try {
@@ -42,13 +54,7 @@ class TokenService(
         return generateToken(hypersysToken as GyldigPersonToken)
     }
 
-    private fun generateToken(hypersysToken: GyldigPersonToken): String = Jwt
-        .audience("ringer")
-        .issuer("https://ringesentralen.no")
-        .subject("Ringesentralen")
-        .upn("Ringesentralen")
-        .issuedAt(System.currentTimeMillis())
-        .expiresAt(getTokenExpiresAt())
+    private fun generateToken(hypersysToken: GyldigPersonToken): String = generateBaseToken()
         .groups(getGroups(hypersysToken))
         .claim("hypersys.token_type", hypersysToken.token_type)
         .claim("hypersys.scope", hypersysToken.scope)
@@ -57,6 +63,14 @@ class TokenService(
         .claim("hypersys.refresh_token", hypersysToken.refresh_token)
         .claim("hypersys.user_id", hypersysToken.user_id)
         .sign(privateKeyFactory.readPrivateKey())
+
+    private fun generateBaseToken() = Jwt
+            .audience("ringer")
+            .issuer("https://ringesentralen.no")
+            .subject("Ringesentralen")
+            .upn("Ringesentralen")
+            .issuedAt(System.currentTimeMillis())
+            .expiresAt(getTokenExpiresAt())
 
     private fun getTokenExpiresAt() = System.currentTimeMillis() + tokenExpiryPeriod.toSeconds()
 

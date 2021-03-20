@@ -10,7 +10,7 @@ import java.util.*
 import javax.enterprise.context.RequestScoped
 
 @RequestScoped
-class PrivateKeyFactory(private val gcpSecretManager: GCPSecretManager) {
+class PrivateKeyFactory(private val secretFactory: SecretFactory) {
 
     @ConfigProperty(name = "usePrivateKeyFromSecretManager", defaultValue = "false")
     lateinit var usePrivateKeyFromSecretManager: String
@@ -18,7 +18,7 @@ class PrivateKeyFactory(private val gcpSecretManager: GCPSecretManager) {
     fun readPrivateKey(): RSAPrivateKey = readPrivateKey(getPrivateKey())
 
     private fun getPrivateKey(): String =
-        if (usePrivateKeyFromSecretManager.toBoolean()) gcpSecretManager.getPrivateKeyFromSecretManager()
+        if (usePrivateKeyFromSecretManager.toBoolean()) secretFactory.getPrivateKey()
         else Files.readString(Path.of("../src/main/resources/META-INF/resources/privatekey.pem"))
 
     private fun readPrivateKey(key: String): RSAPrivateKey {

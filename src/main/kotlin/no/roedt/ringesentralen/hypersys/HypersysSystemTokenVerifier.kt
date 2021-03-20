@@ -1,13 +1,13 @@
 package no.roedt.ringesentralen.hypersys
 
-import no.roedt.ringesentralen.token.GCPSecretManager
+import no.roedt.ringesentralen.token.SecretFactory
 import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class HypersysSystemTokenVerifier(
         val hypersysProxy: HypersysProxy,
-        val gcpSecretManager: GCPSecretManager
+        val secretFactory: SecretFactory
 ) {
     lateinit var token: Token
 
@@ -17,7 +17,7 @@ class HypersysSystemTokenVerifier(
     }
 
     fun getTokenFromHypersys(): Token {
-        val response = hypersysProxy.post(gcpSecretManager.getHypersysClientId(), gcpSecretManager.getHypersysClientSecret(), "grant_type=client_credentials")
+        val response = hypersysProxy.post(secretFactory.getHypersysClientId(), secretFactory.getHypersysClientSecret(), "grant_type=client_credentials")
         if (response.statusCode() != 200) {
             return hypersysProxy.readResponse(response, UgyldigToken::class.java)
         }

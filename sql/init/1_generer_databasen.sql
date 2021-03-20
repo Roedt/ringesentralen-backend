@@ -5688,6 +5688,8 @@ INSERT INTO resultat (id, navn, displaytext) VALUES (8, 'Vil bli aktiv i et loka
 INSERT INTO resultat (id, navn, displaytext, skalSkjules, svarte) VALUES (9, 'Samtale startet', 'Samtale startet', 1, 0);
 INSERT INTO resultat (id, navn, displaytext, svarte) VALUES (10, 'Flere enn to ikke-svar', 'Flere enn to ikke-svar', 0);
 INSERT INTO resultat (id, navn, displaytext) VALUES (11, 'Svarte', 'Svarte');
+INSERT INTO resultat (id, navn, displaytext) VALUES (12, 'Ring tilbake', 'Ring tilbake');
+INSERT INTO resultat (id, navn, displaytext) VALUES (13, 'Ugyldig svar', 'Ugyldig svar');
 
 -- --------------------------------------------------------
 
@@ -5812,6 +5814,12 @@ WHERE samtale.resultat != 9
 ORDER BY samtale.datetime ASC;
 
 -- --------------------------------------------------------
+INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `email`, `fylke`, `groupID`, `lokallag`, `hypersysID`) VALUES
+('Systembruker', 'Frontend', 11223344, -1, null, -1, 4, -1, -2);
+
+INSERT INTO `ringer` (`personId`) VALUES
+((select id from `person` where fornavn='Systembruker' and etternavn='Frontend'));
+
 
 INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `email`, `fylke`, `groupID`, `oppretta`, `lokallag`) VALUES
 ('Donald', ' Duck',	'12345678',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 209),

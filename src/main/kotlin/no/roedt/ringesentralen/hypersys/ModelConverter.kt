@@ -33,7 +33,7 @@ class ModelConverterBean(
             telefonnummer = toTelefonnummer(user.phone),
             postnummer = postnummer,
             fylke = toFylke(postnummer),
-            lokallag =  toLokallag(user.memberships) ?: -1,
+            lokallag = toLokallag(user.memberships),
             groupID = groupID
         )
     }
