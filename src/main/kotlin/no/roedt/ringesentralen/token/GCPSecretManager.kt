@@ -6,13 +6,23 @@ import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.annotation.PostConstruct
 import javax.enterprise.context.RequestScoped
 
+interface SecretFactory {
+    fun getPrivateKey(): String
+    fun getFrontendTokenKey(): String
+    fun getHypersysBrukerId(): String
+    fun getHypersysBrukerSecret(): String
+    fun getHypersysClientId(): String
+    fun getHypersysClientSecret(): String
+    fun getHypersysBaseURL(): String
+}
+
 @RequestScoped
-class GCPSecretManager {
+class GCPSecretManager : SecretFactory {
 
     @ConfigProperty(name = "secretManagerProjectId", defaultValue = "")
     lateinit var secretManagerProjectId: String
 
-    internal fun getPrivateKeyFromSecretManager() = getSecretFromSecretManager("privatekey")
+    override fun getPrivateKey() = getSecretFromSecretManager("privatekey")
 
     lateinit var client: SecretManagerServiceClient
 
@@ -21,17 +31,17 @@ class GCPSecretManager {
         client = SecretManagerServiceClient.create()
     }
 
-    fun getFrontendTokenKey() = getSecretFromSecretManager("frontendTokenKey")
+    override fun getFrontendTokenKey() = getSecretFromSecretManager("frontendTokenKey")
 
-    fun getHypersysBrukerId() = getSecretFromSecretManager("hypersysBrukerId")
+    override fun getHypersysBrukerId() = getSecretFromSecretManager("hypersysBrukerId")
 
-    fun getHypersysBrukerSecret() = getSecretFromSecretManager("hypersysBrukerSecret")
+    override fun getHypersysBrukerSecret() = getSecretFromSecretManager("hypersysBrukerSecret")
 
-    fun getHypersysClientId() = getSecretFromSecretManager("hypersysClientId")
+    override fun getHypersysClientId() = getSecretFromSecretManager("hypersysClientId")
 
-    fun getHypersysClientSecret() = getSecretFromSecretManager("hypersysClientSecret")
+    override fun getHypersysClientSecret() = getSecretFromSecretManager("hypersysClientSecret")
 
-    fun getHypersysBaseURL() = getSecretFromSecretManager("hypersysBaseUrl")
+    override fun getHypersysBaseURL() = getSecretFromSecretManager("hypersysBaseUrl")
 
     private fun getSecretFromSecretManager(secretName: String): String {
         val secretVersionName = SecretVersionName.of(secretManagerProjectId, secretName, "latest")

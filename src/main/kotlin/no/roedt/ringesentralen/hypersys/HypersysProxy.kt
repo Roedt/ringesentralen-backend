@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import no.roedt.ringesentralen.token.GCPSecretManager
+import no.roedt.ringesentralen.token.SecretFactory
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -16,13 +16,13 @@ import javax.annotation.PostConstruct
 import javax.enterprise.context.Dependent
 
 @Dependent
-class HypersysProxy(private val gcpSecretManager: GCPSecretManager) {
+class HypersysProxy(private val secretFactory: SecretFactory) {
 
     lateinit var baseURL: String
 
     @PostConstruct
     fun hentBaseURL() {
-        baseURL = gcpSecretManager.getHypersysBaseURL()
+        baseURL = secretFactory.getHypersysBaseURL()
     }
 
     val kMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())

@@ -17,7 +17,7 @@ import javax.ws.rs.ServiceUnavailableException
 class TokenService(
     private val personRepository: PersonRepository,
     private val privateKeyFactory: PrivateKeyFactory,
-    private val gcpSecretManager: GCPSecretManager,
+    private val secretFactory: SecretFactory,
     private val hypersysLoginBean: HypersysLoginBean
 ) {
 
@@ -25,7 +25,7 @@ class TokenService(
     lateinit var tokenExpiryPeriod: Duration
 
     fun login(loginRequest: LoginRequest): String {
-        if (loginRequest.key != gcpSecretManager.getFrontendTokenKey()) {
+        if (loginRequest.key != secretFactory.getFrontendTokenKey()) {
             throw IllegalArgumentException("Illegal key")
         }
         EpostValidator.validate(loginRequest.brukarnamn)
