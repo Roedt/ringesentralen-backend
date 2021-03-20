@@ -34,7 +34,10 @@ class TokenService(
             if (loginRequest.brukarnamn != secretFactory.getFrontendSystembruker() || loginRequest.passord != secretFactory.getFrontendSystembrukerPassord()) {
                 throw IllegalArgumentException("Ugyldig brukernavn eller passord")
             }
-            return generateBaseToken().groups(Roles.systembrukerFrontend).sign(privateKeyFactory.readPrivateKey())
+            return generateBaseToken()
+                .groups(Roles.systembrukerFrontend)
+                .claim("hypersys.user_id", personRepository.find("fornavn='Systembruker' and etternavn='Frontend'").firstResult<Person>().hypersysID)
+                .sign(privateKeyFactory.readPrivateKey())
         }
 
         EpostValidator.validate(loginRequest.brukarnamn)

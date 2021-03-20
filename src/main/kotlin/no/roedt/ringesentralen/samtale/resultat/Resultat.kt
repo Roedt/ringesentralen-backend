@@ -14,5 +14,7 @@ enum class Resultat(val nr: Int, val nesteGroupID: GroupID?) {
     Vil_bli_aktiv(8, GroupID.Ferdigringt),
     Samtale_startet(9, null),
     Flere_enn_to_ikke_svar(10, null),
-    Svarte(11, GroupID.Ferdigringt)
+    Svarte(11, GroupID.Ferdigringt),
+    RingTilbake(12, GroupID.KlarTilAaRinges),
+    UgyldigSvar(13, GroupID.KlarTilAaRinges)
 }
