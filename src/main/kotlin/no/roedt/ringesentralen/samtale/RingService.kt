@@ -38,26 +38,20 @@ class RingServiceBean(
             ?.also { oppslagRepository.persist(Oppslag(ringt = it.person.id.toInt(), ringerHypersysId = request.userId() )) }
 
     private fun hentFoerstePerson(request: AutentisertNestePersonAaRingeRequest): Any? {
-        val ringer = getPerson(request.userId)
         return if (request.modus == Modus.velgere) {
-            return hentNestePerson(ringer, "AND hypersysID is null ")
-        } else nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(ringer, request.userId, request.jwt)
+            return hentNestePerson(getPerson(request.userId))
+        } else nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(getPerson(request.userId), request.userId, request.jwt)
     }
 
     fun getPerson(userId: UserId): Person = personRepository.find("hypersysID", userId.userId).firstResult()
 
-    private fun hentNestePerson(ringer: Person, hypersysQuery: String) = databaseUpdater.getResultList(
-        "SELECT v.id FROM v_personerSomKanRinges v " +
-                "WHERE fylke = ${ringer.fylke} " +
-                hypersysQuery +
-                " ORDER BY ABS(lokallag-'${ringer.lokallag}') ASC, " +
-                "v.hypersysID DESC")
+    private fun hentNestePerson(ringer: Person) = databaseUpdater.getResultList(
+        """SELECT v.id FROM v_personerSomKanRinges v 
+                WHERE fylke = ${ringer.fylke} 
+                AND hypersysID is null 
+                ORDER BY ABS(lokallag-'${ringer.lokallag}') ASC, 
+                v.hypersysID DESC""")
         .firstOrNull()
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
     private fun getTidlegareSamtalarMedDennePersonen(oppringtNummer: String): List<Samtale> =
         databaseUpdater.getResultList("SELECT resultat, ringerNavn, datetime, kommentar, ringtNavn FROM `v_samtalerResultat` WHERE oppringtNummer = '$oppringtNummer'")

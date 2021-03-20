@@ -15,36 +15,29 @@ import javax.enterprise.context.Dependent
 open class NesteMedlemAaRingeFinder(
     val personRepository: PersonRepository,
     val databaseUpdater: DatabaseUpdater,
-    val hypersysService: HypersysService,
-    val modelConverter: ModelConverter,
-    val kommuneRepository: KommuneRepository
+    private val hypersysService: HypersysService,
+    private val modelConverter: ModelConverter,
+    private val kommuneRepository: KommuneRepository
 ) {
 
     fun hentIDForNesteMedlemAaRinge(ringer: Person, userId: UserId, jwt: JsonWebToken): Any? {
         val nestePersonIEgetLokallag = hentNestePersonAaRingeIDetteLokallaget(ringer, jwt, hypersysService.getLokallag(userId))
         if (nestePersonIEgetLokallag != null) return nestePersonIEgetLokallag
 
-        val lokallagIFylket = kommuneRepository.find("fylke_id=?1", ringer.fylke)
+        return kommuneRepository.find("fylke_id=?1", ringer.fylke)
             .list<Kommune>()
             .map { it.lokallag_id }
-
-        for (lokallag in lokallagIFylket) {
-            val personAaRinge = hentNestePersonAaRingeIDetteLokallaget(ringer, jwt, lokallag)
-            if (personAaRinge != null) return personAaRinge
-        }
-
-        return null
+            .firstOrNull { hentNestePersonAaRingeIDetteLokallaget(ringer, jwt, it) != null }
     }
 
     private fun hentNestePersonAaRingeIDetteLokallaget(ringer: Person, jwt: JsonWebToken, lokallag: Int?): Any? {
         if (lokallag == null) return null
-        val hypersysQuery = "AND lokallag=$lokallag AND hypersysID is not null "
-        val nestePersonFraDatabasen = hentNestePerson(ringer, hypersysQuery)
+        val nestePersonFraDatabasen = hentNestePerson(ringer, lokallag)
         if (nestePersonFraDatabasen != null) return nestePersonFraDatabasen
 
         hentMedlemmerFraLokallag(jwt, hypersysService.convertToHypersysLokallagId(lokallag))
 
-        return hentNestePerson(ringer, hypersysQuery)
+        return hentNestePerson(ringer, lokallag)
     }
 
     private fun hentMedlemmerFraLokallag(jwt: JsonWebToken, hypersysLokallagId: Int?) =
@@ -54,12 +47,12 @@ open class NesteMedlemAaRingeFinder(
             .forEach { personRepository.save(it) }
 
 
-    private fun hentNestePerson(ringer: Person, hypersysQuery: String) = databaseUpdater.getResultList(
-        "SELECT v.id FROM v_personerSomKanRinges v " +
-                "WHERE fylke = ${ringer.fylke} " +
-                hypersysQuery +
-                " ORDER BY ABS(lokallag-'${ringer.lokallag}') ASC, " +
-                "v.hypersysID DESC")
+    private fun hentNestePerson(ringer: Person, lokallag: Int) = databaseUpdater.getResultList(
+        """SELECT v.id FROM v_personerSomKanRinges v
+                WHERE fylke = ${ringer.fylke} 
+                AND lokallag=$lokallag AND hypersysID is not null 
+                ORDER BY ABS(lokallag-'${ringer.lokallag}') ASC,
+                v.hypersysID DESC""")
         .firstOrNull()
 
 
