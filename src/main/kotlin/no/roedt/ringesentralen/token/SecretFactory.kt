@@ -8,4 +8,6 @@ interface SecretFactory {
     fun getHypersysClientId(): String
     fun getHypersysClientSecret(): String
     fun getHypersysBaseURL(): String
+    fun getFrontendSystembruker(): String
+    fun getFrontendSystembrukerPassord(): String
 }
