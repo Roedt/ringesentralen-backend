@@ -12,7 +12,7 @@ class PersonRepository : PanacheRepository<Person> {
                 "fornavn = '${person.fornavn}', " +
                         "etternavn = '${person.etternavn}', " +
                         "hypersysID = ${person.hypersysID}," +
-                        "telefonnummer = ${person.telefonnummer}," +
+                        "telefonnummer = '${person.telefonnummer}'," +
                         "postnummer = ${person.postnummer}," +
 //TODO: ta stilling til denne                        "rolle = '${person.rolle.name}'," +
                         "lokallag = ${person.lokallag} " +
