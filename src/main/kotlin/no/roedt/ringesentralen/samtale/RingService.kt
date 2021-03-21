@@ -108,7 +108,7 @@ class RingServiceBean(
 
     override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): NestePersonAaRingeResponse {
         request.validate()
-        val oppringtNummer = request.ringtNummer().replace("+47", "")
+        val oppringtNummer = request.ringtNummer()
         val personSomRingerTilbake: Person = personRepository.find("telefonnummer", oppringtNummer).firstResult()
 
         startSamtale(
@@ -125,7 +125,7 @@ class RingServiceBean(
     private fun erFleireEnnToIkkeSvar(request: ResultatFraSamtaleRequest): Boolean {
         val resultat: List<Int> = samtaleRepository.find("where ringt=?1 and resultat=0", request.ringtID).list<PersistentSamtale>().map { it.resultat }
         val fleireEnnToIkkeSvar: Boolean = resultat.filter { it == 0 }.count() > 2
-        val ingenSvar: Boolean = resultat.filter { it != 0 && it != 9 }.count() == 0
+        val ingenSvar: Boolean = resultat.filter { it != Resultat.Ikke_svar.nr && it != Resultat.Samtale_startet.nr }.count() == 0
         return ingenSvar && fleireEnnToIkkeSvar && request.resultat == Resultat.Ikke_svar
     }
 
