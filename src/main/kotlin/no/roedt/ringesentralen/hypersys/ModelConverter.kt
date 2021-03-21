@@ -61,7 +61,7 @@ class ModelConverterBean(
     }
 
     private fun toAddress(get: Any?): Address {
-        val address = get as Map<String, String>
+        val address = get as Map<*, *>
         return Address(
             id = 1,
             name = address["address1"].toString(),
@@ -91,7 +91,7 @@ class ModelConverterBean(
 
     fun toLokallag(memberships: List<Membership>): Int = getOrganisationName(memberships)?.let { toLokallag(it) } ?: -1
 
-    fun toLokallag(organisationName: String) : Int =
+    private fun toLokallag(organisationName: String) : Int =
         organisationName
             .let { lokallagRepository.find("navn", it) }
             .firstResultOptional<Lokallag>()
