@@ -30,7 +30,7 @@ class ModelConverterBean(
             fornavn = fornavn,
             etternavn = etternavn,
             email = user.email,
-            telefonnummer = toTelefonnummer(user.phone),
+            telefonnummer = toTelefonnummer(if (user.phone != "") user.phone else user.phone2),
             postnummer = postnummer,
             fylke = toFylke(postnummer),
             lokallag = toLokallag(user.memberships),
