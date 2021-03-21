@@ -52,7 +52,7 @@ class HypersysLoginBean(
     }
 
     private fun oppdaterBrukergruppeFraV1(convertedPerson: Person) {
-        ringerIV1Repository.find("telefonnummer", convertedPerson.telefonnummer)
+        ringerIV1Repository.find("telefonnummer", convertedPerson.telefonnummer?.replace("+47", ""))
             .list<RingerIV1>()
             .map { it.brukergruppe }
             .firstOrNull()

@@ -6,6 +6,7 @@ import no.roedt.ringesentralen.hypersys.externalModel.Membership
 import no.roedt.ringesentralen.hypersys.externalModel.User
 import no.roedt.ringesentralen.lokallag.Lokallag
 import no.roedt.ringesentralen.lokallag.LokallagRepository
+import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import javax.enterprise.context.Dependent
 
@@ -50,7 +51,7 @@ class ModelConverterBean(
             email = itOrNull(map["email"]),
             postnummer = postnummer,
             fylke = toFylke(postnummer),
-            groupID = 1,
+            groupID = GroupID.KlarTilAaRinges.nr,
             lokallag = toLokallag(map["organisation"].toString())
         )
     }
@@ -72,13 +73,9 @@ class ModelConverterBean(
     }
 
 
-    fun toTelefonnummer(telefonnummer: String): String? {
-        val splitted = telefonnummer.split(" ")
-        return when {
-            splitted.size >= 2 -> splitted[1]
-            else -> null
-        }
-    }
+    fun toTelefonnummer(telefonnummer: String): String? =
+        telefonnummer.replace(" ", "").takeIf { it != "" }
+
     private fun toPostnummer(user: User) : Int = user.addresses.map { it.postalCode }.map{ it[1] }.map{ it.toInt() }.firstOrNull() ?: 1
 
     private fun toFylke(postnummer: Int): Int =
