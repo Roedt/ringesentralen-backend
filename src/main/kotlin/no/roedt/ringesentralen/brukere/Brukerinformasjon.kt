@@ -10,16 +10,9 @@ data class Brukerinformasjon(
     val fornavn: String,
     val etternavn: String,
     val epost: String,
-    val telefonnummer: Telefonnummer?,
+    val telefonnummer: String?,
     val postnummer: Int,
     val fylke: Fylke,
     val lokallag: Lokallag?,
     var rolle: Set<String>
-) {
-        fun toTelefonnummer() : String? {
-                if (telefonnummer == null) {
-                        return null
-                }
-                return "'${telefonnummer.nummer}'"
-        }
-}
+)

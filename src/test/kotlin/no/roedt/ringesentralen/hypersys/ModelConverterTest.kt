@@ -24,7 +24,7 @@ internal class ModelConverterTest {
 
     @Test
     fun `parsar vanleg telefonnumer ok`() {
-        assertEquals(actual = modelConverter.toTelefonnummer("+47 81549300"), expected = "81549300")
+        assertEquals(actual = modelConverter.toTelefonnummer("+47 81549300"), expected = "+47_81549300")
     }
 
     @Test

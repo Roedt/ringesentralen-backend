@@ -41,7 +41,7 @@ class FrivilligService(
         hypersysID = null,
         fornavn = fornavn,
         etternavn = etternavn,
-        telefonnummer = telefonnummer.nummer,
+        telefonnummer = telefonnummer,
         email = null,
         postnummer = postnummer.getPostnummer(),
         fylke = -1,
