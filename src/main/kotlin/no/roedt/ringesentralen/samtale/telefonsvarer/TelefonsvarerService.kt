@@ -15,8 +15,10 @@ class TelefonsvarerService(
     private val ringerRepository: RingerRepository
 ) {
     fun postSvarFraTelefonsvarer(request: AutentisertTelefonsvarerRequest) {
-        val person = personRepository.find("telefonnummer", request.request.telefonnummer).firstResult<Person>()
+        val person = personRepository.find("telefonnummer", request.request.telefonnummer).firstResult<Person>() ?: return
+
         val systembruker = personRepository.find("fornavn='Systembruker' and etternavn='Frontend'").firstResult<Person>()
+
         samtaleRepository.persist(PersistentSamtale(
             ringt = person.id.toInt(),
             ringer = ringerRepository.find("personId", systembruker.id.toInt()).firstResult<Ringer>().id.toInt(),
