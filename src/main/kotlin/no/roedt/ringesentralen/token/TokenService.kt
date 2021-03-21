@@ -32,6 +32,7 @@ class TokenService(
 
         if (loginRequest.systembruker) {
             if (loginRequest.brukarnamn != secretFactory.getFrontendSystembruker() || loginRequest.passord != secretFactory.getFrontendSystembrukerPassord()) {
+                System.err.println(loginRequest)
                 throw IllegalArgumentException("Ugyldig brukernavn eller passord")
             }
             return generateBaseToken()
