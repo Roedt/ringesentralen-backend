@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import no.roedt.ringesentralen.token.SecretFactory
+import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -12,18 +13,14 @@ import java.net.http.HttpRequest.BodyPublishers
 import java.net.http.HttpResponse
 import java.net.http.HttpResponse.BodyHandlers
 import java.util.*
-import javax.annotation.PostConstruct
 import javax.enterprise.context.Dependent
 
 @Dependent
 class HypersysProxy(private val secretFactory: SecretFactory) {
 
-    lateinit var baseURL: String
 
-    @PostConstruct
-    fun hentBaseURL() {
-        baseURL = secretFactory.getHypersysBaseURL()
-    }
+    @ConfigProperty(name = "hypersysBaseUrl", defaultValue = "")
+    lateinit var baseURL: String
 
     val kMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

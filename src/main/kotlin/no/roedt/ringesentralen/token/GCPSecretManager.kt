@@ -13,7 +13,6 @@ private enum class GCPSecretManagerKey {
     hypersysBrukerSecret,
     hypersysClientId,
     hypersysClientSecret,
-    hypersysBaseUrl,
     frontendSystembruker,
     frontendSystembrukerPassord
 }
@@ -42,8 +41,6 @@ class GCPSecretManager : SecretFactory {
     override fun getHypersysClientId() = getSecretFromSecretManager(GCPSecretManagerKey.hypersysClientId)
 
     override fun getHypersysClientSecret() = getSecretFromSecretManager(GCPSecretManagerKey.hypersysClientSecret)
-
-    override fun getHypersysBaseURL() = getSecretFromSecretManager(GCPSecretManagerKey.hypersysBaseUrl)
 
     override fun getFrontendSystembruker() = getSecretFromSecretManager(GCPSecretManagerKey.frontendSystembruker)
 
