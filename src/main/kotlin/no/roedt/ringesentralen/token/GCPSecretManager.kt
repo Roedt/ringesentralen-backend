@@ -14,7 +14,8 @@ private enum class GCPSecretManagerKey {
     hypersysClientId,
     hypersysClientSecret,
     frontendSystembruker,
-    frontendSystembrukerPassord
+    frontendSystembrukerPassord,
+    encryptionKey
 }
 
 @RequestScoped
@@ -45,6 +46,8 @@ class GCPSecretManager : SecretFactory {
     override fun getFrontendSystembruker() = getSecretFromSecretManager(GCPSecretManagerKey.frontendSystembruker)
 
     override fun getFrontendSystembrukerPassord() = getSecretFromSecretManager(GCPSecretManagerKey.frontendSystembrukerPassord)
+
+    override fun getEncryptionKey() = getSecretFromSecretManager(GCPSecretManagerKey.encryptionKey)
 
     private fun getSecretFromSecretManager(secretName: GCPSecretManagerKey): String {
         val secretVersionName = SecretVersionName.of(secretManagerProjectId, secretName.name, "latest")
