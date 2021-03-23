@@ -9,7 +9,12 @@ import javax.crypto.Cipher
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
+import javax.enterprise.context.Dependent
 
+
+
+
+@Dependent
 class AESUtil(val secretFactory: SecretFactory) {
 
     private val algorithm: String = "AES/CBC/PKCS5Padding"
