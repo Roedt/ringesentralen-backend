@@ -20,8 +20,7 @@ class HypersysLoginBean(
     fun login(loginRequest: LoginRequest): Token {
         val brukerId = secretFactory.getHypersysBrukerId()
         val brukerSecret = secretFactory.getHypersysBrukerSecret()
-        val brukarnamn = aesUtil.decrypt(loginRequest.brukarnamn)
-        EpostValidator.validate(loginRequest.brukarnamn)
+        val brukarnamn = aesUtil.decrypt(loginRequest.brukarnamn).also { EpostValidator.validate(it) }
         val passord = aesUtil.decrypt(loginRequest.passord)
         val response = hypersysProxy.post(brukerId, brukerSecret, "grant_type=password&username=$brukarnamn&password=$passord")
         if (response.statusCode() != 200) {
