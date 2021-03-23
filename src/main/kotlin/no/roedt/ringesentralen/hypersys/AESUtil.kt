@@ -23,21 +23,26 @@ class AESUtil(val secretFactory: SecretFactory) {
         )), "AES")
     }
 
-    fun encrypt(input: String, iv: IvParameterSpec?): String {
+    fun encrypt(input: String): String {
         val cipher = Cipher.getInstance(algorithm)
+        val iv = generateIv()
         cipher.init(Cipher.ENCRYPT_MODE, key, iv)
         val cipherText = cipher.doFinal(input.toByteArray(charset))
-        return Base64.getEncoder().encodeToString(cipherText)
+        val encoder = Base64.getEncoder()
+        return encoder.encodeToString(iv.iv)  +":" + encoder.encodeToString(cipherText)
     }
 
-    fun decrypt(cipherText: String, iv: IvParameterSpec?): String {
+    fun decrypt(cipherText: String): String {
+        val splitted = cipherText.split(":")
+        val decoder = Base64.getDecoder()
+
         val cipher = Cipher.getInstance(algorithm)
-        cipher.init(Cipher.DECRYPT_MODE, key, iv)
-        val plainText = cipher.doFinal(Base64.getDecoder().decode(cipherText))
+        cipher.init(Cipher.DECRYPT_MODE, key, IvParameterSpec(decoder.decode(splitted[0])))
+        val plainText = cipher.doFinal(decoder.decode(splitted[1]))
         return String(plainText)
     }
 
-    fun generateIv(): IvParameterSpec {
+    private fun generateIv(): IvParameterSpec {
         val iv = ByteArray(16)
         SecureRandom().nextBytes(iv)
         return IvParameterSpec(iv)
