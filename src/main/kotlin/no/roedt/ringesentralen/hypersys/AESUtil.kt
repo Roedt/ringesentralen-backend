@@ -27,7 +27,7 @@ class AESUtil(val secretFactory: SecretFactory) {
     }
 
     fun encrypt(input: String): String {
-        val iv = generateIv()
+        val iv = IvParameterSpec(ByteArray(16).also { SecureRandom().nextBytes(it) })
         val encoder = Base64.getEncoder()
 
         return Cipher.getInstance(algorithm)
@@ -47,6 +47,4 @@ class AESUtil(val secretFactory: SecretFactory) {
             .doFinal(decoder.decode(splitted[1]))
             .let { String(it) }
     }
-
-    private fun generateIv(): IvParameterSpec = IvParameterSpec(ByteArray(16).also { SecureRandom().nextBytes(it) })
 }
