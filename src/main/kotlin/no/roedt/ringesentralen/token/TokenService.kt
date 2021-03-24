@@ -11,6 +11,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Duration
 import javax.enterprise.context.RequestScoped
 import javax.ws.rs.ForbiddenException
+import javax.ws.rs.NotAuthorizedException
 import javax.ws.rs.ServiceUnavailableException
 
 
@@ -75,8 +76,13 @@ class TokenService(
 
     private fun getTokenExpiresAt() = System.currentTimeMillis() + tokenExpiryPeriod.toSeconds()
 
-    private fun getGroups(hypersysToken: GyldigPersonToken): Set<String> = GroupID.from(getPersonFromHypersysID(hypersysToken).groupID).roller
-        .also { i -> if (i.isEmpty()) println("Fann ingen roller for ${hypersysToken.user_id}") }
+    private fun getGroups(hypersysToken: GyldigPersonToken): Set<String> {
+        val groupID = GroupID.from(getPersonFromHypersysID(hypersysToken).groupID)
+        if (groupID.nr < GroupID.UgodkjentRinger.nr) throw NotAuthorizedException("${hypersysToken.user_id} har ikkje gyldig rolle for å bruke systemet.")
+        return groupID
+            .roller
+            .also { i -> if (i.isEmpty()) println("Fann ingen roller for ${hypersysToken.user_id}") }
+    }
 
     private fun getPersonFromHypersysID(hypersysToken: GyldigPersonToken) =
         personRepository.find("hypersysID", hypersysToken.user_id.toInt()).firstResult<Person>()
