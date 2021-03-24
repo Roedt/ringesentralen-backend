@@ -19,7 +19,7 @@ class HypersysLoginBean(
     fun login(loginRequest: LoginRequest): Token {
         val brukerId = secretFactory.getHypersysBrukerId()
         val brukerSecret = secretFactory.getHypersysBrukerSecret()
-        val response = hypersysProxy.post(brukerId, brukerSecret, "grant_type=password&username=${loginRequest.brukarnamn}&password=${loginRequest.passord}")
+        val response = hypersysProxy.post(brukerId, brukerSecret, "grant_type=password&username=${loginRequest.brukarnamn}&password=${loginRequest.passord}", loggingtekst = "brukarinnlogging")
         if (response.statusCode() != 200) {
             return hypersysProxy.readResponse(response, UgyldigToken::class.java)
         }

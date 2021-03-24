@@ -17,7 +17,7 @@ class HypersysSystemTokenVerifier(
     }
 
     fun getTokenFromHypersys(): Token {
-        val response = hypersysProxy.post(secretFactory.getHypersysClientId(), secretFactory.getHypersysClientSecret(), "grant_type=client_credentials")
+        val response = hypersysProxy.post(secretFactory.getHypersysClientId(), secretFactory.getHypersysClientSecret(), "grant_type=client_credentials", loggingtekst = "systeminnlogging")
         if (response.statusCode() != 200) {
             return hypersysProxy.readResponse(response, UgyldigToken::class.java)
         }
