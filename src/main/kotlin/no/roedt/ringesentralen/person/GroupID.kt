@@ -9,7 +9,7 @@ enum class GroupID(val nr: Int, val skildring: String, val roller: Set<String>) 
     Slett(3, "slett", setOf()),
     UgodkjentRinger(4, "ugodkjent ringer", setOf(Roles.venterPaaGodkjenning)),
     AvslaattRinger(5, "ringer som aktivt ikke er godkjent", setOf(Roles.sperret)),
-    GodkjentRinger(6, "godkjent ringer og relay-bruker", setOf(Roles.bruker, Roles.ringer)),
+    GodkjentRinger(6, "godkjent ringer", setOf(Roles.bruker, Roles.ringer)),
     TrengerOppfoelging(7, "trenger oppfølging", setOf()),
     LokalGodkjenner(8, "ringer som kan godkjenne ringere i sitt lokallag", setOf(Roles.bruker, Roles.ringer, Roles.godkjenner)),
     Admin(9, "admin", setOf(Roles.bruker, Roles.ringer, Roles.godkjenner, Roles.admin));
