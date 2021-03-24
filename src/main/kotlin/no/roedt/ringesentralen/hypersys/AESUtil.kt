@@ -1,7 +1,6 @@
 package no.roedt.ringesentralen.hypersys
 
 import no.roedt.ringesentralen.token.SecretFactory
-import java.security.MessageDigest
 import java.security.SecureRandom
 import java.util.*
 import javax.annotation.PostConstruct
@@ -20,7 +19,7 @@ class AESUtil(val secretFactory: SecretFactory) {
 
     @PostConstruct
     fun setKey() {
-        key = SecretKeySpec(MessageDigest.getInstance("SHA-256").digest(secretFactory.getEncryptionKey().encodeToByteArray()), "AES")
+        key = SecretKeySpec(secretFactory.getEncryptionKey().encodeToByteArray(), "AES")
     }
 
     fun encrypt(input: String): String {
@@ -33,16 +32,12 @@ class AESUtil(val secretFactory: SecretFactory) {
             .let { encoder.encodeToString(iv.iv)  +":" + encoder.encodeToString(it) }
     }
 
-    fun decrypt(cipherText: String): String {
-        val splitted = cipherText.split(":")
-        val ivString = splitted[0]
-        val secretString = splitted[1]
-
-        val iv = IvParameterSpec(decoder.decode(ivString))
-
-        return Cipher.getInstance(algorithm)
-            .also { it.init(Cipher.DECRYPT_MODE, key, iv) }
-            .doFinal(decoder.decode(secretString))
+    fun decrypt(cipherText: String): String = Cipher.getInstance(algorithm)
+            .also { it.init(Cipher.DECRYPT_MODE, key, getIV(cipherText)) }
+            .doFinal(decode(cipherText))
             .let { String(it) }
-    }
+
+    private fun getIV(cipherText: String) = IvParameterSpec(decoder.decode(cipherText.split(":")[0]))
+
+    private fun decode(cipherText: String) = decoder.decode(cipherText.split(":")[1])
 }
