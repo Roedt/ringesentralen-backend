@@ -76,6 +76,7 @@ class TokenService(
     private fun getTokenExpiresAt() = System.currentTimeMillis() + tokenExpiryPeriod.toSeconds()
 
     private fun getGroups(hypersysToken: GyldigPersonToken): Set<String> = GroupID.from(getPersonFromHypersysID(hypersysToken).groupID).roller
+        .also { i -> if (i.isEmpty()) println("Fann ingen roller for ${hypersysToken.user_id}") }
 
     private fun getPersonFromHypersysID(hypersysToken: GyldigPersonToken) =
         personRepository.find("hypersysID", hypersysToken.user_id.toInt()).firstResult<Person>()
