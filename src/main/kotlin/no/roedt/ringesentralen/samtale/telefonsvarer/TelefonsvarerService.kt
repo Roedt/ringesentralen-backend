@@ -2,6 +2,7 @@ package no.roedt.ringesentralen.samtale.telefonsvarer
 
 import no.roedt.ringesentralen.hypersys.Ringer
 import no.roedt.ringesentralen.hypersys.RingerRepository
+import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.samtale.PersistentSamtale
@@ -26,6 +27,7 @@ class TelefonsvarerService(
             resultat = request.resultat().nr
         ))
 
+        if (GroupID.referencesOneOf(person.groupID, GroupID.Admin, GroupID.LokalGodkjenner, GroupID.GodkjentRinger, GroupID.UgodkjentRinger)) return
         request.resultat().nesteGroupID?.nr?.let { personRepository.update("groupID=?1 where id=?2", it, person.id) }
     }
 
