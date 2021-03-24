@@ -25,9 +25,11 @@ class HypersysProxy(private val secretFactory: SecretFactory) {
     val kMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-    fun post(id: String, secret: String, entity: String): HttpResponse<String> {
+    fun post(id: String, secret: String, entity: String, loggingtekst: String): HttpResponse<String> {
         val base64Credentials: String = Base64.getEncoder().encodeToString(("${id}:${secret}").toByteArray())
-        val request = HttpRequest.newBuilder().POST(BodyPublishers.ofString(entity)).uri(URI.create("$baseURL/api/o/token/"))
+        val request = HttpRequest.newBuilder()
+            .POST(BodyPublishers.ofString(entity))
+            .uri(URI.create("$baseURL/api/o/token/").also { log(it, loggingtekst) })
             .headers("Authorization", "Basic $base64Credentials", "Content-Type", "application/x-www-form-urlencoded")
             .build()
         return httpCall(request)
@@ -50,5 +52,12 @@ class HypersysProxy(private val secretFactory: SecretFactory) {
         return response
     }
 
-    private fun get(uri: String, token: GyldigToken): HttpRequest = HttpRequest.newBuilder().GET().header("Authorization", "Bearer ${token.access_token()}").uri(URI.create(uri)).build()
+    private fun get(uri: String, token: GyldigToken): HttpRequest =
+        HttpRequest.newBuilder()
+            .GET()
+            .header("Authorization", "Bearer ${token.access_token()}")
+            .uri(URI.create(uri).also { log(it, "GET") })
+            .build()
+
+    private fun log(uri: URI, tekst: String) { println("URI: $uri, tekst: $tekst") }
 }
