@@ -1,7 +1,6 @@
 package no.roedt.ringesentralen.hypersys
 
 import no.roedt.ringesentralen.token.SecretFactory
-import java.security.SecureRandom
 import java.util.*
 import javax.annotation.PostConstruct
 import javax.crypto.Cipher
@@ -13,8 +12,7 @@ import javax.enterprise.context.Dependent
 @Dependent
 class AESUtil(val secretFactory: SecretFactory) {
 
-    private val algorithm: String = "AES/CBC/PKCS5Padding"
-    private val decoder = Base64.getDecoder()
+    val algorithm: String = "AES/CBC/PKCS5Padding"
     lateinit var key: SecretKey
 
     @PostConstruct
@@ -22,22 +20,12 @@ class AESUtil(val secretFactory: SecretFactory) {
         key = SecretKeySpec(secretFactory.getEncryptionKey().encodeToByteArray(), "AES")
     }
 
-    fun encrypt(input: String): String {
-        val iv = IvParameterSpec(ByteArray(16).also { SecureRandom().nextBytes(it) })
-        val encoder = Base64.getEncoder()
-
-        return Cipher.getInstance(algorithm)
-            .also { it.init(Cipher.ENCRYPT_MODE, key, iv) }
-            .doFinal(input.encodeToByteArray())
-            .let { encoder.encodeToString(iv.iv)  +":" + encoder.encodeToString(it) }
-    }
-
     fun decrypt(cipherText: String): String = Cipher.getInstance(algorithm)
             .also { it.init(Cipher.DECRYPT_MODE, key, getIV(cipherText)) }
             .doFinal(decode(cipherText))
             .let { String(it) }
 
-    private fun getIV(cipherText: String) = IvParameterSpec(decoder.decode(cipherText.split(":")[0]))
+    private fun getIV(cipherText: String) = IvParameterSpec(Base64.getDecoder().decode(cipherText.split(":")[0]))
 
-    private fun decode(cipherText: String) = decoder.decode(cipherText.split(":")[1])
+    private fun decode(cipherText: String) = Base64.getDecoder().decode(cipherText.split(":")[1])
 }
