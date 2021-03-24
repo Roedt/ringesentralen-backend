@@ -14,12 +14,15 @@ class HypersysLoginBean(
     private val loginAttemptRepository: LoginAttemptRepository,
     private val personRepository: PersonRepository,
     private val ringerRepository: RingerRepository,
-    private val ringerIV1Repository: RingerIV1Repository
+    private val ringerIV1Repository: RingerIV1Repository,
+    private val aesUtil: AESUtil
 ) {
     fun login(loginRequest: LoginRequest): Token {
         val brukerId = secretFactory.getHypersysBrukerId()
         val brukerSecret = secretFactory.getHypersysBrukerSecret()
-        val response = hypersysProxy.post(brukerId, brukerSecret, "grant_type=password&username=${loginRequest.brukarnamn}&password=${loginRequest.passord}", loggingtekst = "brukarinnlogging")
+        val brukarnamn = aesUtil.decrypt(loginRequest.brukarnamn).also { EpostValidator.validate(it) }
+        val passord = aesUtil.decrypt(loginRequest.passord)
+        val response = hypersysProxy.post(brukerId, brukerSecret, "grant_type=password&username=$brukarnamn&password=$passord", loggingtekst = "brukarinnlogging")
         if (response.statusCode() != 200) {
             return hypersysProxy.readResponse(response, UgyldigToken::class.java)
         }

@@ -20,7 +20,6 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
   && rm -f /tmp/apache-maven.tar.gz \
   && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
 
-ENV GOOGLE_APPLICATION_CREDENTIALS=gcp.json
 ENV MAVEN_HOME /usr/share/maven
 ENV GRAALVM_HOME $JAVA_HOME
 RUN ${GRAALVM_HOME}/bin/gu install native-image
