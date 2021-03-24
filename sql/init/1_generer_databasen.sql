@@ -5657,7 +5657,7 @@ CREATE TABLE IF NOT EXISTS `ringer` (
 
 CREATE TABLE IF NOT EXISTS `oppfoelgingKorona` (
   `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `personId` int(6) unique NOT NULL,
+  `personId` int(6) NOT NULL,
   `koronaprogram` tinyint(1) DEFAULT NULL,
   `merAktiv` tinyint(1) DEFAULT NULL,
   `valgkampsbrev` tinyint(1) DEFAULT NULL,
