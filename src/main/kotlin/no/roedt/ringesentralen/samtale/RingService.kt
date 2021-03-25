@@ -40,7 +40,7 @@ class RingServiceBean(
     private fun hentFoerstePerson(request: AutentisertNestePersonAaRingeRequest): Any? {
         return if (request.modus == Modus.velgere) {
             return hentNestePerson(getPerson(request.userId))
-        } else nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(getPerson(request.userId), request.userId, request.jwt)
+        } else nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(getPerson(request.userId), request.userId)
     }
 
     fun getPerson(userId: UserId): Person = personRepository.find("hypersysID", userId.userId).firstResult()

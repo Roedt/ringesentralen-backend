@@ -70,7 +70,7 @@ class BrukereServiceBean(
         val brukerendring = Brukerendring(personID = personMedEndraTilgang, nyGroupId = nyTilgang, epostSendt = false)
 
         val person = personRepository.findById(personMedEndraTilgang)
-        oppdaterNavnFraHypersys(request, person.hypersysID)
+        oppdaterNavnFraHypersys(person.hypersysID)
 
         try {
             epostSender.sendEpost(person, nyTilgang)
@@ -82,12 +82,12 @@ class BrukereServiceBean(
         return brukerendring
     }
 
-    private fun oppdaterNavnFraHypersys(request: AutentisertTilgangsendringRequest, hypersysID: Int?) {
+    private fun oppdaterNavnFraHypersys(hypersysID: Int?) {
         hypersysID
             ?.let { UserId(userId = it) }
             ?.let { hypersysService.getLokallag(userId = it)}
             ?.let { hypersysService.convertToHypersysLokallagId(it) }
-            ?.let { hypersysService.getMedlemmer(it, request.jwt) }
+            ?.let { hypersysService.getMedlemmer(it) }
             ?.firstOrNull { it["member_id"] == hypersysID }
             ?.let {
                 personRepository.update("fornavn = ?1, etternavn = ?2 where hypersysID = ?3", it["first_name"], it["last_name"], hypersysID)

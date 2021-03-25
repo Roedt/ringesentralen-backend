@@ -35,7 +35,7 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Retry
     @Transactional
     fun hentNestePersonAaRinge(@Context ctx: SecurityContext, @QueryParam("modus") @DefaultValue("Velger") modus: Modus): NestePersonAaRingeResponse?
-            = ringService.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(ctx.userId(), jwt, modus))
+            = ringService.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(ctx.userId(), modus))
 
     @RolesAllowed(Roles.ringer)
     @POST

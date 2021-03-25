@@ -8,7 +8,6 @@ import no.roedt.ringesentralen.hypersys.ModelConverter
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId
-import org.eclipse.microprofile.jwt.JsonWebToken
 import javax.enterprise.context.Dependent
 
 @Dependent
@@ -20,28 +19,31 @@ open class NesteMedlemAaRingeFinder(
     private val kommuneRepository: KommuneRepository
 ) {
 
-    fun hentIDForNesteMedlemAaRinge(ringer: Person, userId: UserId, jwt: JsonWebToken): Any? {
-        val nestePersonIEgetLokallag = hentNestePersonAaRingeIDetteLokallaget(ringer, jwt, hypersysService.getLokallag(userId))
+    fun hentIDForNesteMedlemAaRinge(ringer: Person, userId: UserId): Any? {
+        val nestePersonIEgetLokallag = hentNestePersonAaRingeIDetteLokallaget(
+            ringer,
+            hypersysService.getLokallag(userId)
+        )
         if (nestePersonIEgetLokallag != null) return nestePersonIEgetLokallag
 
         return kommuneRepository.find("fylke_id=?1", ringer.fylke)
             .list<Kommune>()
             .map { it.lokallag_id }
-            .firstOrNull { hentNestePersonAaRingeIDetteLokallaget(ringer, jwt, it) != null }
+            .firstOrNull { hentNestePersonAaRingeIDetteLokallaget(ringer, it) != null }
     }
 
-    private fun hentNestePersonAaRingeIDetteLokallaget(ringer: Person, jwt: JsonWebToken, lokallag: Int?): Any? {
+    private fun hentNestePersonAaRingeIDetteLokallaget(ringer: Person, lokallag: Int?): Any? {
         if (lokallag == null) return null
         val nestePersonFraDatabasen = hentNestePerson(ringer, lokallag)
         if (nestePersonFraDatabasen != null) return nestePersonFraDatabasen
 
-        hentMedlemmerFraLokallag(jwt, hypersysService.convertToHypersysLokallagId(lokallag))
+        hentMedlemmerFraLokallag(hypersysService.convertToHypersysLokallagId(lokallag))
 
         return hentNestePerson(ringer, lokallag)
     }
 
-    private fun hentMedlemmerFraLokallag(jwt: JsonWebToken, hypersysLokallagId: Int?) =
-        hypersysService.getMedlemmer(hypersysLokallagId, jwt)
+    private fun hentMedlemmerFraLokallag(hypersysLokallagId: Int?) =
+        hypersysService.getMedlemmer(hypersysLokallagId)
             .filter { medlem -> personRepository.find("hypersysID", medlem["member_id"]).count() == 0L }
             .map { modelConverter.convertMembershipToPerson(it) }
             .forEach { personRepository.save(it) }
