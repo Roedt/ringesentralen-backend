@@ -19,7 +19,8 @@ class TokenService(
     private val personRepository: PersonRepository,
     private val privateKeyFactory: PrivateKeyFactory,
     private val secretFactory: SecretFactory,
-    private val hypersysLoginBean: HypersysLoginBean
+    private val hypersysLoginBean: HypersysLoginBean,
+    private val aesUtil: AESUtil
 ) {
 
     @ConfigProperty(name = "token.expiryPeriod")
@@ -31,7 +32,7 @@ class TokenService(
         }
 
         if (loginRequest.systembruker) {
-            if (loginRequest.brukarnamn != secretFactory.getFrontendSystembruker() || loginRequest.passord != secretFactory.getFrontendSystembrukerPassord()) {
+            if (aesUtil.decrypt(loginRequest.brukarnamn) != secretFactory.getFrontendSystembruker() || aesUtil.decrypt(loginRequest.passord) != secretFactory.getFrontendSystembrukerPassord()) {
                 System.err.println(loginRequest)
                 throw IllegalArgumentException("Ugyldig brukernavn eller passord")
             }
