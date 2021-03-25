@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `hibernate_sequence`(
     primary key (sequence_name)
 ) engine=MyISAM;
 
-insert into `hibernate_sequence` (`next_val`) values(25);
+insert into `hibernate_sequence` (`next_val`) values(26);
 
 -- --------------------------------------------------------
 
