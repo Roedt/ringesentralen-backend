@@ -26,6 +26,14 @@ class HypersysProxy(private val secretFactory: SecretFactory) {
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     fun post(id: String, secret: String, entity: String, loggingtekst: String): HttpResponse<String> {
+        val build = HttpRequest.newBuilder()
+            .GET()
+            .uri(URI.create("http://curlmyip.org/"))
+            .build()
+        val response = httpCall(build)
+        val body = response.body()
+        println("Min IP: $body")
+
         val base64Credentials: String = Base64.getEncoder().encodeToString(("${id}:${secret}").toByteArray())
         val request = HttpRequest.newBuilder()
             .POST(BodyPublishers.ofString(entity))
