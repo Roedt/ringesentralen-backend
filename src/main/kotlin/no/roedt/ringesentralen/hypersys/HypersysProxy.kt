@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import no.roedt.ringesentralen.token.SecretFactory
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.net.URI
 import java.net.http.HttpClient
@@ -16,7 +15,7 @@ import java.util.*
 import javax.enterprise.context.Dependent
 
 @Dependent
-class HypersysProxy(private val secretFactory: SecretFactory) {
+class HypersysProxy {
 
 
     @ConfigProperty(name = "hypersysBaseUrl", defaultValue = "")
