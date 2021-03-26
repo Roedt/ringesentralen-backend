@@ -35,6 +35,7 @@ class BrukereServiceBean(
         val filtrerPaaFylke = if (groups.contains(Roles.admin)) "" else "and fylke=$brukersFylke"
         return personRepository.find("groupID >= ${GroupID.UgodkjentRinger.nr}" + filtrerPaaFylke)
             .list<Person>()
+            .filter { !it.isSystembruker() }
             .map { r ->
                 Brukerinformasjon(
                     id = r.id,
@@ -96,8 +97,12 @@ class BrukereServiceBean(
 
     private fun assertAutorisert(request: AutentisertTilgangsendringRequest) {
         val ringersBrukertype = hypersysIdTilPerson(request.userId).groupID
-        val groupID = personRepository.findById(request.personMedEndraTilgang()).groupID
+        val personMedEndraTilgang = personRepository.findById(request.personMedEndraTilgang())
+        val groupID = personMedEndraTilgang.groupID
 
+        if (personMedEndraTilgang.isSystembruker()) {
+            throw ForbiddenException("Kan ikkje endre systembruker")
+        }
         if (GroupID.Admin.references(groupID)) {
             throw ForbiddenException("Kan ikkje endre admins")
         }

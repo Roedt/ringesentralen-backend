@@ -21,7 +21,9 @@ data class Person(
         var lokallag: Int,
         var groupID: Int,
 ) : PanacheEntity() {
-    constructor() : this(
+        fun isSystembruker(): Boolean = fornavn == "Systembruker" && etternavn == "Frontend"
+
+        constructor() : this(
             hypersysID = null,
             fornavn = "",
             etternavn = "",
