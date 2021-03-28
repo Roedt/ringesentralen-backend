@@ -5,7 +5,6 @@ import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.hypersys.RingerRepository
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.PersonRepository
-import no.roedt.ringesentralen.samtale.PersistentSamtale
 import no.roedt.ringesentralen.samtale.PersistentSamtaleRepository
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import javax.enterprise.context.ApplicationScoped
@@ -38,7 +37,7 @@ class StatistikkService(
             .map {
                 SamtaleResultat(
                     displaytext = it.displaytext,
-                    antal = samtaleRepository.find("resultat=?1", it.id).list<PersistentSamtale>().map { samtale -> samtale.ringer }.count()
+                    antal = samtaleRepository.list("resultat=?1", it.id).map { samtale -> samtale.ringer }.count()
                 )
             }
             .filter { it.antal > 0}

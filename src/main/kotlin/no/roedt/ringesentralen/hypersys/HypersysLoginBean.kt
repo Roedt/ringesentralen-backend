@@ -55,8 +55,7 @@ class HypersysLoginBean(
     }
 
     private fun oppdaterBrukergruppeFraV1(convertedPerson: Person) {
-        ringerIV1Repository.find("telefonnummer", convertedPerson.telefonnummer?.replace("+47", ""))
-            .list<RingerIV1>()
+        ringerIV1Repository.list("telefonnummer", convertedPerson.telefonnummer?.replace("+47", ""))
             .map { it.brukergruppe }
             .firstOrNull()
             ?.let { convertedPerson.groupID = max(it, convertedPerson.groupID) }

@@ -1,7 +1,6 @@
 package no.roedt.ringesentralen.samtale
 
 import no.roedt.ringesentralen.DatabaseUpdater
-import no.roedt.ringesentralen.Kommune
 import no.roedt.ringesentralen.KommuneRepository
 import no.roedt.ringesentralen.hypersys.HypersysService
 import no.roedt.ringesentralen.hypersys.ModelConverter
@@ -26,8 +25,7 @@ open class NesteMedlemAaRingeFinder(
         )
         if (nestePersonIEgetLokallag != null) return nestePersonIEgetLokallag
 
-        return kommuneRepository.find("fylke_id=?1", ringer.fylke)
-            .list<Kommune>()
+        return kommuneRepository.list("fylke_id=?1", ringer.fylke)
             .map { it.lokallag_id }
             .firstOrNull { hentNestePersonAaRingeIDetteLokallaget(ringer, it) != null }
     }

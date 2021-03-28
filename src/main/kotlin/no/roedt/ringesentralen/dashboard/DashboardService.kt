@@ -45,7 +45,7 @@ class DashboardServiceBean(
         return if (GroupID.Admin.references(ringer.groupID)) {
             lokallagRepository.findAll(Sort.ascending("navn")).list()
         } else {
-            lokallagRepository.find("id", ringer.lokallag.toLong()).list()
+            lokallagRepository.list("id", ringer.lokallag.toLong())
         }
     }
 
