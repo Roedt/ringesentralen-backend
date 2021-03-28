@@ -28,7 +28,7 @@ class VervingService(
     }
 
     fun mottaSvar(request: AutentisertMottaSvarRequest) {
-        val nextValue = if (request.request.svar) GroupID.KlarTilAaRinges else GroupID.Slett
+        val nextValue = if (request.request.svar) GroupID.PrioritertAaRinge else GroupID.Slett
         personRepository.update("groupID=?1 where telefonnummer=?2", nextValue.nr, request.request.telefonnummer)
     }
 }

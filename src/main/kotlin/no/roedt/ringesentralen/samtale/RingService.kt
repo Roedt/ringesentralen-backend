@@ -50,6 +50,7 @@ class RingServiceBean(
                 WHERE fylke = ${ringer.fylke} 
                 AND hypersysID is null 
                 ORDER BY ABS(lokallag-'${ringer.lokallag}') ASC, 
+                brukergruppe = ${GroupID.PrioritertAaRinge.nr} DESC,
                 v.hypersysID DESC""")
         .firstOrNull()
 
