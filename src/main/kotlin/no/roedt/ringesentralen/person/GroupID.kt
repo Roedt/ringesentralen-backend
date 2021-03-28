@@ -3,7 +3,7 @@ package no.roedt.ringesentralen.person
 import no.roedt.ringesentralen.Roles
 
 enum class GroupID(val nr: Int, val skildring: String, val roller: Set<String>) {
-    ManglerSmtykke(0, "mangler info/samtykke før ringing", setOf()),
+    ManglerSamtykke(0, "mangler info/samtykke før ringing", setOf()),
     KlarTilAaRinges(1, "klar til å ringes", setOf()),
     Ferdigringt(2, "ferdigringt", setOf()),
     Slett(3, "slett", setOf()),
@@ -12,7 +12,8 @@ enum class GroupID(val nr: Int, val skildring: String, val roller: Set<String>) 
     GodkjentRinger(6, "godkjent ringer", setOf(Roles.bruker, Roles.ringer)),
     TrengerOppfoelging(7, "trenger oppfølging", setOf()),
     LokalGodkjenner(8, "ringer som kan godkjenne ringere i sitt lokallag", setOf(Roles.bruker, Roles.ringer, Roles.godkjenner)),
-    Admin(9, "admin", setOf(Roles.bruker, Roles.ringer, Roles.godkjenner, Roles.admin));
+    Admin(9, "admin", setOf(Roles.bruker, Roles.ringer, Roles.godkjenner, Roles.admin)),
+    PrioritertAaRinge(10, "prioritert å ringe", setOf());
 
     fun references(value: Int): Boolean = nr == value
 

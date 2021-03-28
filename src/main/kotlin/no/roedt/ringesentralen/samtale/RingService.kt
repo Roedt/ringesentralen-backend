@@ -50,6 +50,7 @@ class RingServiceBean(
                 WHERE fylke = ${ringer.fylke} 
                 AND hypersysID is null 
                 ORDER BY ABS(lokallag-'${ringer.lokallag}') ASC, 
+                brukergruppe = ${GroupID.PrioritertAaRinge.nr} DESC,
                 v.hypersysID DESC""")
         .firstOrNull()
 
@@ -123,7 +124,7 @@ class RingServiceBean(
     }
 
     private fun erFleireEnnToIkkeSvar(request: ResultatFraSamtaleRequest): Boolean {
-        val resultat: List<Int> = samtaleRepository.find("where ringt=?1 and resultat=0", request.ringtID).list<PersistentSamtale>().map { it.resultat }
+        val resultat: List<Int> = samtaleRepository.find("where ringt=?1 and resultat=${Resultat.Ikke_svar.nr}", request.ringtID).list<PersistentSamtale>().map { it.resultat }
         val fleireEnnToIkkeSvar: Boolean = resultat.filter { it == 0 }.count() > 2
         val ingenSvar: Boolean = resultat.filter { it != Resultat.Ikke_svar.nr && it != Resultat.Samtale_startet.nr }.count() == 0
         return ingenSvar && fleireEnnToIkkeSvar && request.resultat == Resultat.Ikke_svar

@@ -5612,10 +5612,11 @@ INSERT INTO brukergruppe VALUES (2, 'ferdigringt');
 INSERT INTO brukergruppe VALUES (3, 'slett');
 INSERT INTO brukergruppe VALUES (4, 'ugodkjent ringer');
 INSERT INTO brukergruppe VALUES (5, 'ringer som aktivt ikke er godkjent');
-INSERT INTO brukergruppe VALUES (6, 'godkjent ringer og relay-bruker');
+INSERT INTO brukergruppe VALUES (6, 'godkjent ringer');
 INSERT INTO brukergruppe VALUES (7, 'trenger oppfølging');
-INSERT INTO brukergruppe VALUES (8, 'ringer som kan godkjenne ringere i sitt lokallag');
+INSERT INTO brukergruppe VALUES (8, 'ringer som kan godkjenne ringere i sitt fylke');
 INSERT INTO brukergruppe VALUES (9, 'admin');
+INSERT INTO brukergruppe VALUES (10, 'prioritert å ringe');
 
 -- --------------------------------------------------------
 
@@ -5790,10 +5791,10 @@ inner join resultat r on r.id = samtale.resultat;
 -- --------------------------------------------------------
 
 create or replace view v_personerSomKanRinges as
-SELECT p.telefonnummer, concat(p.fornavn,' ',p.etternavn) as navn, p.postnummer, p.fylke, p.lokallag, l.navn as lokallagNavn, p.id as id, p.hypersysID as hypersysID
+SELECT p.telefonnummer, concat(p.fornavn,' ',p.etternavn) as navn, p.postnummer, p.fylke, p.lokallag, l.navn as lokallagNavn, p.id as id, p.hypersysID as hypersysID, p.groupID as brukergruppe
   FROM person p
   LEFT OUTER JOIN lokallag l on p.lokallag = l.id
-   WHERE p.groupID = '1'
+   WHERE p.groupID in (select id from brukergruppe where navn = 'klar til å ringes' or navn = 'prioritert å ringe')
   AND (UNIX_TIMESTAMP(now()) -
     coalesce((select UNIX_TIMESTAMP(max(datetime)) from samtale where samtale.ringt = p.id), 0)
     > 86400)
