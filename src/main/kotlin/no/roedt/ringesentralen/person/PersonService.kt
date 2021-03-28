@@ -1,11 +1,11 @@
 package no.roedt.ringesentralen.person
 
-import no.roedt.ringesentralen.hypersys.ModelConverterBean
+import no.roedt.ringesentralen.hypersys.ModelConverter
 import javax.enterprise.context.Dependent
 
 @Dependent
 class PersonService(
-    private val modelConverter: ModelConverterBean,
+    private val modelConverter: ModelConverter,
     private val personRepository: PersonRepository
 ) {
 
@@ -19,7 +19,7 @@ class PersonService(
             email = null,
             postnummer = postnummer,
             fylke = modelConverter.toFylke(postnummer),
-            lokallag = modelConverter.toLokallag(postnummer) ?: -1,
+            lokallag = modelConverter.toLokallag(postnummer),
             groupID = GroupID.ManglerSamtykke.nr
         )
     }

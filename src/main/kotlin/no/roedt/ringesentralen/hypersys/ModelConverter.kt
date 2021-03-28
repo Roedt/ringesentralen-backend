@@ -13,6 +13,8 @@ import javax.enterprise.context.Dependent
 interface ModelConverter {
     fun convert(user: User, groupID: Int) : Person
     fun convertMembershipToPerson(map: Map<*, *>): Person
+    fun toFylke(postnummer: Int): Int
+    fun toLokallag(postnummer: Int): Int
 }
 
 @Dependent
@@ -78,7 +80,7 @@ class ModelConverterBean(
 
     private fun toPostnummer(user: User) : Int = user.addresses.map { it.postalCode }.map{ it[1] }.map{ it.toInt() }.firstOrNull() ?: 1
 
-    fun toFylke(postnummer: Int): Int =
+    override fun toFylke(postnummer: Int): Int =
         databaseUpdater.getResultList(
             "select fylke.id from `postnummer` p " +
                     "inner join kommune kommune on p.KommuneKode = kommune.nummer " +
@@ -109,9 +111,10 @@ class ModelConverterBean(
 
     private fun itOrNull(any: Any?): String? = if (any.toString() != "") any.toString() else null
 
-    fun toLokallag(postnummer: Int): Int? =
-        toLokallagId("select lokallag from postnummerIKommunerMedFleireLag where postnummerFra =< $postnummer and postnummerTil >= $postnummer")
+    override fun toLokallag(postnummer: Int): Int =
+        toLokallagId("select lokallag from postnummerIKommunerMedFleireLag where postnummerFra <= $postnummer and postnummerTil >= $postnummer")
             ?: toLokallagId("select l.id from lokallag l inner join kommune k on k.lokallag_id = l.id inner join postnummer  p on p.kommunekode = k.nummer where p.postnummer = $postnummer")
+            ?: -1
 
     private fun toLokallagId(query: String) = databaseUpdater.getResultList(query)
         .map { it as Array<*> }
