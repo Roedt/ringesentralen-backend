@@ -1,15 +1,18 @@
-package no.roedt.ringesentralen.person
+package no.roedt.ringesentralen.verving
 
 import no.roedt.ringesentralen.hypersys.ModelConverter
+import no.roedt.ringesentralen.person.GroupID
+import no.roedt.ringesentralen.person.Person
+import no.roedt.ringesentralen.person.PersonRepository
 import javax.enterprise.context.Dependent
 
 @Dependent
-class PersonService(
+class VervingService(
     private val modelConverter: ModelConverter,
     private val personRepository: PersonRepository
 ) {
 
-    fun postPersonSomSkalRinges(request: AutentisertPersonSomSkalRingesRequest) : Any {
+    fun postPersonSomSkalRinges(request: AutentisertVervingRequest) : Any {
         val postnummer = request.request.postnummer
         return Person(
             hypersysID = null,

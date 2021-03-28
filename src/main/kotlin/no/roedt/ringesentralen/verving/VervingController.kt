@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.person
+package no.roedt.ringesentralen.verving
 
 import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.Roles
@@ -18,10 +18,10 @@ import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.SecurityContext
 
-@Path("/person")
-@Tag(name ="Person")
+@Path("/verving")
+@Tag(name ="Verving")
 @SecurityRequirement(name = "jwt")
-class PersonController(val service: PersonService) : RingesentralenController {
+class VervingController(val service: VervingService) : RingesentralenController {
 
     @Inject
     lateinit var jwt: JsonWebToken
@@ -30,20 +30,24 @@ class PersonController(val service: PersonService) : RingesentralenController {
     @POST
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/")
+    @Path("/verv")
     @Operation(summary = "Legg til person som skal ringes", description = Roles.systembrukerFrontend)
     @Bulkhead(3)
     @Retry
-    fun postPersonSomSkalRinges(@Context ctx: SecurityContext, request: PersonSomSkalRingesRequest) = service.postPersonSomSkalRinges(AutentisertPersonSomSkalRingesRequest(request = request, userId = ctx.userId()))
+    fun postPersonSomSkalRinges(@Context ctx: SecurityContext, request: VervingRequest) = service.postPersonSomSkalRinges(
+        AutentisertVervingRequest(request = request, userId = ctx.userId())
+    )
 
     @RolesAllowed(Roles.systembrukerFrontend)
     @POST
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/")
-    @Operation(summary = "Legg til person som skal ringes", description = Roles.systembrukerFrontend)
+    @Path("/svar")
+    @Operation(summary = "Registrer svar fra personen på om hen vil ringes", description = Roles.systembrukerFrontend)
     @Bulkhead(3)
     @Retry
-    fun mottaSvar(@Context ctx: SecurityContext, request: MottaSvarRequest) = service.mottaSvar(AutentisertMottaSvarRequest(request = request, userId = ctx.userId()))
+    fun mottaSvar(@Context ctx: SecurityContext, request: MottaSvarRequest) = service.mottaSvar(
+        AutentisertMottaSvarRequest(request = request, userId = ctx.userId())
+    )
 
 }

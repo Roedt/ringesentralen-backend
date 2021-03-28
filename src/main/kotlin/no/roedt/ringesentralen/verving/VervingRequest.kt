@@ -1,10 +1,11 @@
-package no.roedt.ringesentralen.person
+package no.roedt.ringesentralen.verving
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.quarkus.runtime.annotations.RegisterForReflection
+import no.roedt.ringesentralen.person.UserId
 
 @RegisterForReflection
-data class PersonSomSkalRingesRequest(
+data class VervingRequest(
     @JsonProperty("telefonnummer") val telefonnummer: String,
     @JsonProperty("fornavn") val fornavn: String,
     @JsonProperty("etternavn") val etternavn: String,
@@ -12,4 +13,4 @@ data class PersonSomSkalRingesRequest(
 )
 
 @RegisterForReflection
-data class AutentisertPersonSomSkalRingesRequest(val request: PersonSomSkalRingesRequest, val userId: UserId )
+data class AutentisertVervingRequest(val request: VervingRequest, val userId: UserId)
