@@ -78,7 +78,7 @@ class ModelConverterBean(
 
     private fun toPostnummer(user: User) : Int = user.addresses.map { it.postalCode }.map{ it[1] }.map{ it.toInt() }.firstOrNull() ?: 1
 
-    private fun toFylke(postnummer: Int): Int =
+    fun toFylke(postnummer: Int): Int =
         databaseUpdater.getResultList(
             "select fylke.id from `postnummer` p " +
                     "inner join kommune kommune on p.KommuneKode = kommune.nummer " +
@@ -108,4 +108,15 @@ class ModelConverterBean(
             .firstOrNull()
 
     private fun itOrNull(any: Any?): String? = if (any.toString() != "") any.toString() else null
+
+    fun toLokallag(postnummer: Int): Int? =
+        toLokallagId("select lokallag from postnummerIKommunerMedFleireLag where postnummerFra =< $postnummer and postnummerTil >= $postnummer")
+            ?: toLokallagId("select l.id from lokallag l inner join kommune k on k.lokallag_id = l.id inner join postnummer  p on p.kommunekode = k.nummer where p.postnummer = $postnummer")
+
+    private fun toLokallagId(query: String) = databaseUpdater.getResultList(query)
+        .map { it as Array<*> }
+        .map { it[0] as Long }
+        .map { it.toInt() }
+        .firstOrNull()
+
 }

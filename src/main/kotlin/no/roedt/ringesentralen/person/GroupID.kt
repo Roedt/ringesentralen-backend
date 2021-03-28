@@ -3,7 +3,7 @@ package no.roedt.ringesentralen.person
 import no.roedt.ringesentralen.Roles
 
 enum class GroupID(val nr: Int, val skildring: String, val roller: Set<String>) {
-    ManglerSmtykke(0, "mangler info/samtykke før ringing", setOf()),
+    ManglerSamtykke(0, "mangler info/samtykke før ringing", setOf()),
     KlarTilAaRinges(1, "klar til å ringes", setOf()),
     Ferdigringt(2, "ferdigringt", setOf()),
     Slett(3, "slett", setOf()),
