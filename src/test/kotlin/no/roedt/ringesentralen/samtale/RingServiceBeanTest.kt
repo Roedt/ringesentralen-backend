@@ -8,9 +8,9 @@ import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId
 import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
-import no.roedt.ringesentralen.samtale.resultat.KoronaspesifikkeResultat
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
+import no.roedt.ringesentralen.samtale.resultat.Valg21SpesifikkeResultat
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
@@ -22,11 +22,11 @@ internal class RingServiceBeanTest {
     private val databaseUpdater: DatabaseUpdater = mock()
     private val oppslagRepository: OppslagRepository = mock()
     private val persistentSamtaleRepository: PersistentSamtaleRepository = mock()
-    private val oppfoelgingKoronaRepository: OppfoelgingKoronaRepository = mock()
+    private val oppfoelgingValg21Repository: OppfoelgingValg21Repository = mock()
     private val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder = mock()
 
     private var ringService = RingServiceBean(personRepository = personRepository, databaseUpdater = databaseUpdater, oppslagRepository = oppslagRepository,
-        samtaleRepository = persistentSamtaleRepository, oppfoelgingKoronaRepository = oppfoelgingKoronaRepository, nesteMedlemAaRingeFinder = nesteMedlemAaRingeFinder)
+        samtaleRepository = persistentSamtaleRepository, oppfoelgingValg21Repository = oppfoelgingValg21Repository, nesteMedlemAaRingeFinder = nesteMedlemAaRingeFinder)
 
     @BeforeEach
     fun setup() {
@@ -45,10 +45,12 @@ internal class RingServiceBeanTest {
                 ringtID = 2,
                 resultat = Resultat.Svarte,
                 kommentar = "Hei",
-                modusspesifikkeResultat = KoronaspesifikkeResultat(
-                        vilHaKoronaprogram = false,
-                        vilBliMerAktiv = false,
-                        vilHaValgkampsbrev = false
+                modusspesifikkeResultat = Valg21SpesifikkeResultat(
+                    vilHaKoronaprogram = false,
+                    vilBliMerAktiv = false,
+                    vilHaValgkampsbrev = false,
+                    vilHaMedlemsLink = false,
+                    vilHaNyhetsbrevLink = false
                 ),
                 vilIkkeBliRingt = false
         ),
@@ -68,10 +70,12 @@ internal class RingServiceBeanTest {
                 ringtID = 2,
                 resultat = Resultat.Ringes_etter_valget,
                 kommentar = "Hei",
-                modusspesifikkeResultat = KoronaspesifikkeResultat(
+                modusspesifikkeResultat = Valg21SpesifikkeResultat(
                     vilHaKoronaprogram = false,
                     vilBliMerAktiv = false,
-                    vilHaValgkampsbrev = false
+                    vilHaValgkampsbrev = false,
+                    vilHaMedlemsLink = false,
+                    vilHaNyhetsbrevLink = false
                 ),
                 vilIkkeBliRingt = false
             ),

@@ -7,24 +7,28 @@ import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Entity
 import javax.persistence.Table
 
-@Table(name = "oppfoelgingKorona")
+@Table(name = "oppfoelgingValg21")
 @Entity
 @RegisterForReflection
-data class OppfoelgingKorona(
+data class OppfoelgingValg21(
     var personId: Int,
     var koronaprogram: Boolean,
     var merAktiv: Boolean,
     var valgkampsbrev: Boolean,
-    var vilIkkeBliRingt: Boolean
+    var vilIkkeBliRingt: Boolean,
+    var vilHaMedlemsLink: Boolean,
+    var vilHaNyhetsbrevLink: Boolean,
 ) : PanacheEntity() {
     constructor() : this(
         personId = 0,
         koronaprogram = false,
         merAktiv = false,
         valgkampsbrev = false,
-        vilIkkeBliRingt = false
+        vilIkkeBliRingt = false,
+        vilHaMedlemsLink = false,
+        vilHaNyhetsbrevLink = false
     )
 }
 
 @ApplicationScoped
-class OppfoelgingKoronaRepository : PanacheRepository<OppfoelgingKorona>
+class OppfoelgingValg21Repository : PanacheRepository<OppfoelgingValg21>

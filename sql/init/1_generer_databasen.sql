@@ -5590,16 +5590,6 @@ INSERT INTO `postnummerIKommunerMedFleireLag` (postnummerFra, postnummerTil, lok
 
 
 -- --------------------------------------------------------
--- --------------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS `modus` (
-  `id` int(2) PRIMARY KEY AUTO_INCREMENT,
-  `navn` varchar(60) NOT NULL
-);
-
-INSERT INTO modus(navn) VALUES ('korona');
-
--- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `brukergruppe` (
   `id` int(2) NOT NULL PRIMARY KEY,
@@ -5656,13 +5646,15 @@ CREATE TABLE IF NOT EXISTS `ringer` (
 
 -- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `oppfoelgingKorona` (
+CREATE TABLE IF NOT EXISTS `oppfoelgingValg21` (
   `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `personId` int(6) NOT NULL,
   `koronaprogram` tinyint(1) DEFAULT NULL,
   `merAktiv` tinyint(1) DEFAULT NULL,
   `valgkampsbrev` tinyint(1) DEFAULT NULL,
   `vilIkkeBliRingt` tinyint(1) DEFAULT NULL,
+  `vilHaMedlemsLink` tinyint(1) DEFAULT NULL,
+  `vilHaNyhetsbrevLink` tinyint(1) DEFAULT NULL,
   FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
   INDEX (`personId`)
 );
@@ -5691,25 +5683,6 @@ INSERT INTO resultat (id, navn, displaytext, svarte) VALUES (10, 'Flere enn to i
 INSERT INTO resultat (id, navn, displaytext) VALUES (11, 'Svarte', 'Svarte');
 INSERT INTO resultat (id, navn, displaytext) VALUES (12, 'Ring tilbake', 'Ring tilbake');
 INSERT INTO resultat (id, navn, displaytext) VALUES (13, 'Ugyldig svar', 'Ugyldig svar');
-
--- --------------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS `modusTilResultat` (
-  `modus` int(2) NOT NULL,
-  `resultat` int(2) NOT NULL,
-  PRIMARY KEY (`modus`, `resultat`),
-  INDEX (`resultat`),
-  FOREIGN KEY (`resultat`) REFERENCES `resultat` (`id`),
-  INDEX(`modus`),
-  FOREIGN KEY (`modus`) REFERENCES `modus` (`id`)
-);
-
-
--- Korona
-INSERT INTO modusTilResultat VALUES ((select id from modus where navn = 'korona'), 0);
-INSERT INTO modusTilResultat VALUES ((select id from modus where navn = 'korona'), 4);
-INSERT INTO modusTilResultat VALUES ((select id from modus where navn = 'korona'), 9);
-INSERT INTO modusTilResultat VALUES ((select id from modus where navn = 'korona'), 11);
 
 -- --------------------------------------------------------
 
@@ -5779,13 +5752,13 @@ CREATE TABLE IF NOT EXISTS `ringerIV1` (
 
 create or replace view v_mineSamtaler as
 select samtale.datetime as tidspunkt, ringt.telefonnummer as oppringtNummer, concat(ringt.fornavn, ' ', ringt.etternavn) as ringtNavn, r.displaytext as resultat,
-samtale.kommentar, ok.merAktiv, ok.valgkampsbrev,
+samtale.kommentar, oppfoelging.merAktiv, oppfoelging.valgkampsbrev, oppfoelging.vilHaMedlemsLink, oppfoelging.vilHaNyhetsbrevLink,
 ringerPerson.telefonnummer as ringersTelefonnummer, ringerPerson.hypersysID, concat(ringerPerson.fornavn, ' ', ringerPerson.etternavn) as ringerNavn, ringerPerson.lokallag
 from `samtale` samtale
 inner join person ringt on samtale.ringt = ringt.id
 inner join ringer ringer on ringer.id = samtale.ringer
 inner join person ringerPerson on ringer.personId = ringerPerson.id
-left outer join oppfoelgingKorona ok on ok.personId = ringt.id
+left outer join oppfoelgingValg21 oppfoelging on oppfoelging.personId = ringt.id
 inner join resultat r on r.id = samtale.resultat;
 
 -- --------------------------------------------------------

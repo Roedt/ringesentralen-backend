@@ -17,10 +17,6 @@ data class ResultatFraSamtaleRequest(
         fun isGyldigResultat(): Boolean = resultat in modus.gyldigeResultattyper
 
         fun skalRegistrere() = resultat == Resultat.Svarte
-
-        fun validate(): Boolean {
-                return true
-        }
 }
 
 @RegisterForReflection
@@ -28,6 +24,4 @@ data class AutentisertResultatFraSamtaleRequest(
         val userId: UserId,
         val request: ResultatFraSamtaleRequest,
         val modus: Modus
-) {
-        fun validate() = request.validate()
-}
+)

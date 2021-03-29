@@ -7,9 +7,9 @@ import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId
 import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
-import no.roedt.ringesentralen.samtale.resultat.KoronaspesifikkeResultat
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
+import no.roedt.ringesentralen.samtale.resultat.Valg21SpesifikkeResultat
 import java.sql.Timestamp
 import javax.enterprise.context.ApplicationScoped
 
@@ -26,7 +26,7 @@ class RingServiceBean(
     val databaseUpdater: DatabaseUpdater,
     val oppslagRepository: OppslagRepository,
     val samtaleRepository: PersistentSamtaleRepository,
-    val oppfoelgingKoronaRepository: OppfoelgingKoronaRepository,
+    val oppfoelgingValg21Repository: OppfoelgingValg21Repository,
     val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder
 ): RingService {
 
@@ -103,7 +103,7 @@ class RingServiceBean(
     private fun lagreResultat(nesteGroupID: GroupID?, request: ResultatFraSamtaleRequest) {
         nesteGroupID?.nr?.let { personRepository.update("groupID=?1 where id=?2", it, request.ringtID) }
         if (request.skalRegistrere()) {
-            registrerKoronaspesifikkeResultat(request)
+            registrerValg21SpesifikkeResultat(request)
         }
     }
 
@@ -130,16 +130,20 @@ class RingServiceBean(
         return ingenSvar && fleireEnnToIkkeSvar && request.resultat == Resultat.Ikke_svar
     }
 
-    private fun registrerKoronaspesifikkeResultat(request: ResultatFraSamtaleRequest) {
-        val resultat = request.modusspesifikkeResultat as KoronaspesifikkeResultat
+    private fun registrerValg21SpesifikkeResultat(request: ResultatFraSamtaleRequest) {
+        val resultat = request.modusspesifikkeResultat as Valg21SpesifikkeResultat
 
-        oppfoelgingKoronaRepository.persist(OppfoelgingKorona(
-            personId = request.ringtID.toInt(),
-            koronaprogram = resultat.vilHaKoronaprogram,
-            merAktiv = resultat.vilBliMerAktiv,
-            valgkampsbrev = resultat.vilHaValgkampsbrev,
-            vilIkkeBliRingt = request.vilIkkeBliRingt
-        ))
+        oppfoelgingValg21Repository.persist(
+            OppfoelgingValg21(
+                personId = request.ringtID.toInt(),
+                koronaprogram = resultat.vilHaKoronaprogram,
+                merAktiv = resultat.vilBliMerAktiv,
+                valgkampsbrev = resultat.vilHaValgkampsbrev,
+                vilIkkeBliRingt = request.vilIkkeBliRingt,
+                vilHaMedlemsLink = resultat.vilHaMedlemsLink,
+                vilHaNyhetsbrevLink = resultat.vilHaNyhetsbrevLink
+            )
+        )
     }
 
     fun hypersysIDTilRingerId(userId: UserId) =
