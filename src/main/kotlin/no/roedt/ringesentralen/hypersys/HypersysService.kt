@@ -22,13 +22,22 @@ class HypersysServiceBean(
     val lokallagRepository: LokallagRepository
 ) : HypersysService {
 
-    override fun getMedlemmer(lokallagHypersysId: Int?): List<LinkedHashMap<String, *>> {
-        return hypersysProxy.get("/membership/api/membership/$lokallagHypersysId/2021/", hypersysSystemTokenVerifier.assertGyldigSystemToken(), List::class.java)
+    override fun getMedlemmer(hypersysLokallagId: Int?): List<LinkedHashMap<String, *>> {
+        return if (hypersysLokallagId == null) listOf()
+        else hypersysProxy.get("/membership/api/membership/$hypersysLokallagId/2021/", hypersysSystemTokenVerifier.assertGyldigSystemToken(), List::class.java)
                 as List<LinkedHashMap<String, *>>
     }
 
-    override fun convertToHypersysLokallagId(lokallag: Int) : Int =
-        lokallagRepository.findById(lokallag.toLong()).let { mittLag -> if (mittLag.hypersysID != null) mittLag.hypersysID!! else getLokallagIdFromHypersys(mittLag) }
+    override fun convertToHypersysLokallagId(lokallag: Int) : Int? {
+        val hypersysId = lokallagRepository.findById(lokallag.toLong())
+            ?.let { mittLag ->
+                if (mittLag.hypersysID != null) mittLag.hypersysID!! else getLokallagIdFromHypersys(
+                    mittLag
+                )
+            }
+        if (hypersysId == null) println("Fann ikkje lokallag i hypersys for $lokallag")
+        return hypersysId
+    }
 
     override fun getLokallag(userId: UserId) = personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag
 
