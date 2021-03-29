@@ -5590,16 +5590,6 @@ INSERT INTO `postnummerIKommunerMedFleireLag` (postnummerFra, postnummerTil, lok
 
 
 -- --------------------------------------------------------
--- --------------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS `modus` (
-  `id` int(2) PRIMARY KEY AUTO_INCREMENT,
-  `navn` varchar(60) NOT NULL
-);
-
-INSERT INTO modus(navn) VALUES ('korona');
-
--- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `brukergruppe` (
   `id` int(2) NOT NULL PRIMARY KEY,
@@ -5693,25 +5683,6 @@ INSERT INTO resultat (id, navn, displaytext, svarte) VALUES (10, 'Flere enn to i
 INSERT INTO resultat (id, navn, displaytext) VALUES (11, 'Svarte', 'Svarte');
 INSERT INTO resultat (id, navn, displaytext) VALUES (12, 'Ring tilbake', 'Ring tilbake');
 INSERT INTO resultat (id, navn, displaytext) VALUES (13, 'Ugyldig svar', 'Ugyldig svar');
-
--- --------------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS `modusTilResultat` (
-  `modus` int(2) NOT NULL,
-  `resultat` int(2) NOT NULL,
-  PRIMARY KEY (`modus`, `resultat`),
-  INDEX (`resultat`),
-  FOREIGN KEY (`resultat`) REFERENCES `resultat` (`id`),
-  INDEX(`modus`),
-  FOREIGN KEY (`modus`) REFERENCES `modus` (`id`)
-);
-
-
--- Korona
-INSERT INTO modusTilResultat VALUES ((select id from modus where navn = 'korona'), 0);
-INSERT INTO modusTilResultat VALUES ((select id from modus where navn = 'korona'), 4);
-INSERT INTO modusTilResultat VALUES ((select id from modus where navn = 'korona'), 9);
-INSERT INTO modusTilResultat VALUES ((select id from modus where navn = 'korona'), 11);
 
 -- --------------------------------------------------------
 
