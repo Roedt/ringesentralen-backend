@@ -5656,13 +5656,15 @@ CREATE TABLE IF NOT EXISTS `ringer` (
 
 -- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `oppfoelgingKorona` (
+CREATE TABLE IF NOT EXISTS `oppfoelgingValg21` (
   `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `personId` int(6) NOT NULL,
   `koronaprogram` tinyint(1) DEFAULT NULL,
   `merAktiv` tinyint(1) DEFAULT NULL,
   `valgkampsbrev` tinyint(1) DEFAULT NULL,
   `vilIkkeBliRingt` tinyint(1) DEFAULT NULL,
+  `vilHaMedlemsLink` tinyint(1) DEFAULT NULL,
+  `vilHaNyhetsbrevLink` tinyint(1) DEFAULT NULL,
   FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
   INDEX (`personId`)
 );
@@ -5779,13 +5781,13 @@ CREATE TABLE IF NOT EXISTS `ringerIV1` (
 
 create or replace view v_mineSamtaler as
 select samtale.datetime as tidspunkt, ringt.telefonnummer as oppringtNummer, concat(ringt.fornavn, ' ', ringt.etternavn) as ringtNavn, r.displaytext as resultat,
-samtale.kommentar, ok.merAktiv, ok.valgkampsbrev,
+samtale.kommentar, oppfoelging.merAktiv, oppfoelng.valgkampsbrev, oppfoelging.vilHaMedlemsLink, oppfoelging.vilHaNyhetsbrevLink
 ringerPerson.telefonnummer as ringersTelefonnummer, ringerPerson.hypersysID, concat(ringerPerson.fornavn, ' ', ringerPerson.etternavn) as ringerNavn, ringerPerson.lokallag
 from `samtale` samtale
 inner join person ringt on samtale.ringt = ringt.id
 inner join ringer ringer on ringer.id = samtale.ringer
 inner join person ringerPerson on ringer.personId = ringerPerson.id
-left outer join oppfoelgingKorona ok on ok.personId = ringt.id
+left outer join oppfoelgingValg21 oppfoelging on oppfoelging.personId = ringt.id
 inner join resultat r on r.id = samtale.resultat;
 
 -- --------------------------------------------------------
