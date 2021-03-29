@@ -33,7 +33,7 @@ class HistorikkService(
                     ringer = it[1] as String,
                     tidspunkt = (it[2] as Timestamp).toString(),
                     kommentar = it[3] as String,
-                    ringtNummer = it[4] as String,
+                    ringtNummer = (it[4] ?: "Ukjent") as String,
                     ringtNavn = it[5] as String
                 )
             }
