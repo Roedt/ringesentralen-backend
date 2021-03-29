@@ -103,7 +103,7 @@ class RingServiceBean(
     private fun lagreResultat(nesteGroupID: GroupID?, request: ResultatFraSamtaleRequest) {
         nesteGroupID?.nr?.let { personRepository.update("groupID=?1 where id=?2", it, request.ringtID) }
         if (request.skalRegistrere()) {
-            registrerKoronaspesifikkeResultat(request)
+            registrerValg21SpesifikkeResultat(request)
         }
     }
 
@@ -130,7 +130,7 @@ class RingServiceBean(
         return ingenSvar && fleireEnnToIkkeSvar && request.resultat == Resultat.Ikke_svar
     }
 
-    private fun registrerKoronaspesifikkeResultat(request: ResultatFraSamtaleRequest) {
+    private fun registrerValg21SpesifikkeResultat(request: ResultatFraSamtaleRequest) {
         val resultat = request.modusspesifikkeResultat as Valg21SpesifikkeResultat
 
         oppfoelgingValg21Repository.persist(
