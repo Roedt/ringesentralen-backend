@@ -6,9 +6,9 @@ import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.hypersys.LoginRequest
 import no.roedt.ringesentralen.samtale.RingerTilbakeRequest
 import no.roedt.ringesentralen.samtale.StartSamtaleRequest
-import no.roedt.ringesentralen.samtale.resultat.KoronaspesifikkeResultat
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
+import no.roedt.ringesentralen.samtale.resultat.Valg21SpesifikkeResultat
 import org.hamcrest.CoreMatchers.equalTo
 
 class FullFlytTest {
@@ -32,10 +32,12 @@ class FullFlytTest {
                 ringtID = ringtId,
                 resultat = Resultat.Passet_ikke,
                 kommentar = "Frå automatisk test",
-                modusspesifikkeResultat = KoronaspesifikkeResultat(
+                modusspesifikkeResultat = Valg21SpesifikkeResultat(
                     vilBliMerAktiv = true,
                     vilHaKoronaprogram = true,
-                    vilHaValgkampsbrev = false
+                    vilHaValgkampsbrev = false,
+                    vilHaMedlemsLink = true,
+                    vilHaNyhetsbrevLink = true
                 ),
                 vilIkkeBliRingt = false)
             )

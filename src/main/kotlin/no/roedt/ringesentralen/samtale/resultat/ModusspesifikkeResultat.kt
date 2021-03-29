@@ -9,6 +9,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
         include = JsonTypeInfo.As.PROPERTY,
         property = "type")
 @JsonSubTypes(
-        Type(value = KoronaspesifikkeResultat::class, name = "KoronaspesifikkeResultat")
+        Type(value = Valg21SpesifikkeResultat::class, name = "Valg21SpesifikkeResultat")
 )
 interface ModusspesifikkeResultat
