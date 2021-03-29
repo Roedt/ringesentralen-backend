@@ -5752,7 +5752,7 @@ CREATE TABLE IF NOT EXISTS `ringerIV1` (
 
 create or replace view v_mineSamtaler as
 select samtale.datetime as tidspunkt, ringt.telefonnummer as oppringtNummer, concat(ringt.fornavn, ' ', ringt.etternavn) as ringtNavn, r.displaytext as resultat,
-samtale.kommentar, oppfoelging.merAktiv, oppfoelng.valgkampsbrev, oppfoelging.vilHaMedlemsLink, oppfoelging.vilHaNyhetsbrevLink
+samtale.kommentar, oppfoelging.merAktiv, oppfoelging.valgkampsbrev, oppfoelging.vilHaMedlemsLink, oppfoelging.vilHaNyhetsbrevLink,
 ringerPerson.telefonnummer as ringersTelefonnummer, ringerPerson.hypersysID, concat(ringerPerson.fornavn, ' ', ringerPerson.etternavn) as ringerNavn, ringerPerson.lokallag
 from `samtale` samtale
 inner join person ringt on samtale.ringt = ringt.id
