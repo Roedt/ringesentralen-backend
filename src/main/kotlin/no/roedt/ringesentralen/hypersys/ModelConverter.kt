@@ -116,10 +116,6 @@ class ModelConverterBean(
             ?: toLokallagId("select l.id from lokallag l inner join kommune k on k.lokallag_id = l.id inner join postnummer  p on p.kommunekode = k.nummer where p.postnummer = $postnummer")
             ?: -1
 
-    private fun toLokallagId(query: String) = databaseUpdater.getResultList(query)
-        .map { it as Array<*> }
-        .map { it[0] as Long }
-        .map { it.toInt() }
-        .firstOrNull()
+    private fun toLokallagId(query: String) = databaseUpdater.getResultList(query).map { it as Int }.firstOrNull()
 
 }
