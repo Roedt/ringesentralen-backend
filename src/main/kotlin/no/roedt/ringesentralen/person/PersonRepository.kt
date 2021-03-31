@@ -15,7 +15,8 @@ class PersonRepository : PanacheRepository<Person> {
                         hypersysID = ${person.hypersysID}, 
                         telefonnummer = $telefonnummer, 
                         postnummer = ${person.postnummer}, 
-                        lokallag = ${person.lokallag} 
+                        lokallag = ${person.lokallag},
+                        groupID = ${person.groupID}
                         where email = '${person.email}'
                         """
             )

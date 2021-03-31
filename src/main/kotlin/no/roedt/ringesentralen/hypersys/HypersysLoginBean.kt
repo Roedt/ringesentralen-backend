@@ -34,7 +34,11 @@ class HypersysLoginBean(
 
     private fun oppdaterRingerFraaHypersys(token: GyldigPersonToken) {
         val profile: Profile = hypersysProxy.get("actor/api/profile/", token, Profile::class.java)
-        val convertedPerson  = modelConverter.convert(profile.user, GroupID.UgodkjentRinger.nr)
+        val groupID: Int = personRepository.find("hypersysID=?1", profile.user.id)
+            .singleResultOptional<Person>()
+            .map { it.groupID }
+            .orElse( GroupID.UgodkjentRinger.nr)
+        val convertedPerson  = modelConverter.convert(profile.user, groupID)
 
         val id = lagrePerson(convertedPerson)
 

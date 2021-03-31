@@ -8,6 +8,7 @@ import no.roedt.ringesentralen.lokallag.Lokallag
 import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
+import no.roedt.ringesentralen.person.PersonRepository
 import javax.enterprise.context.Dependent
 
 interface ModelConverter {
@@ -20,7 +21,8 @@ interface ModelConverter {
 @Dependent
 class ModelConverterBean(
     private val databaseUpdater: DatabaseUpdater,
-    private val lokallagRepository: LokallagRepository
+    private val lokallagRepository: LokallagRepository,
+    private val personRepository: PersonRepository
 ) : ModelConverter {
 
     override fun convert(user: User, groupID: Int): Person {
@@ -45,15 +47,22 @@ class ModelConverterBean(
     override fun convertMembershipToPerson(map: Map<*, *>) : Person {
         val postnummer = finnPostnummer(map)
 
+        val telefonnummer = itOrNull(map["mobile"])
+        val groupID = personRepository.find("telefonnummer", telefonnummer)
+            .singleResultOptional<Person>()
+            .map { it.groupID }
+            .orElse(GroupID.KlarTilAaRinges.nr)
+
+
         return Person(
             hypersysID = map["member_id"].toString().toInt(),
             fornavn = map["first_name"].toString(),
             etternavn = map["last_name"].toString(),
-            telefonnummer = itOrNull(map["mobile"]),
+            telefonnummer = telefonnummer,
             email = itOrNull(map["email"]),
             postnummer = postnummer,
             fylke = toFylke(postnummer),
-            groupID = GroupID.KlarTilAaRinges.nr,
+            groupID = groupID,
             lokallag = toLokallag(map["organisation"].toString())
         )
     }
