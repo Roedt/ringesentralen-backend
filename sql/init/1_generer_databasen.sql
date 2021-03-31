@@ -1751,6 +1751,7 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1832,'ASKIM',124
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1833,'ASKIM',124);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1850,'MYSEN',125);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1851,'MYSEN',125);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1852,'MYSEN',125);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1859,'SLITU',125);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1860,'TRØGSTAD',122);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1861,'TRØGSTAD',122);
@@ -1765,6 +1766,7 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1890,'RAKKESTAD'
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1891,'RAKKESTAD',128);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1892,'DEGERNES',128);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1893,'DEGERNES',128);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1894,'RAKKESTAD',128);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1900,'FETSUND',227);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1901,'FETSUND',227);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1903,'GAN',227);
@@ -1777,8 +1779,11 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1917,'YTRE ENEBA
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1920,'SØRUMSAND',226);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1921,'SØRUMSAND',226);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1923,'SØRUM',226);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1924,'SØRUM',226);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1925,'BLAKER',226);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1926,'BLAKER',226);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1927,'RÅNÅSFOSS',226);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1928,'AULI',236);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1929,'AULI',236);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1930,'AURSKOG',221);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1931,'AURSKOG',221);
@@ -1790,6 +1795,7 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1960,'LØKEN',22
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1961,'LØKEN',221);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1963,'FOSSER',221);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1970,'HEMNES',221);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1971,'HEMNES',221);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2000,'LILLESTRØM',231);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2001,'LILLESTRØM',231);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2003,'LILLESTRØM',231);
@@ -4347,7 +4353,11 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7056,'RANHEIM',5
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7057,'JONSVATNET',5001);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7058,'JAKOBSLI',5001);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7059,'JAKOBSLI',5001);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7066,'TRONDHEIM',5001);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7067,'TRONDHEIM',5001);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7068,'TRONDHEIM',5001);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7070,'BOSBERG',5001);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7071,'TRONDHEIM',5001);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7072,'HEIMDAL',5001);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7074,'SPONGDAL',5001);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7075,'TILLER',5001);
