@@ -29,7 +29,7 @@ class RingServiceBean(
     val samtaleRepository: PersistentSamtaleRepository,
     val oppfoelgingValg21Repository: OppfoelgingValg21Repository,
     val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder,
-    val lokallagRepository: LokallagRepository
+    val lokallagRepository: LokallagRepository,
 ): RingService {
 
     override fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? =
@@ -84,14 +84,15 @@ class RingServiceBean(
     override fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest) {
         val request = autentisertRequest.request
         assert(request.isGyldigResultat())
+        val ringer = hypersysIDTilRingerId(autentisertRequest.userId).toString().toInt()
         samtaleRepository.persist(
             PersistentSamtale(
                 ringt = request.ringtID.toInt(),
-                ringer = hypersysIDTilRingerId(autentisertRequest.userId).toString().toInt(),
+                ringer = ringer,
                 resultat = request.resultat.nr,
                 kommentar = request.kommentar
             ))
-        lagreResultat(getNesteGroupID(request), request)
+        lagreResultat(getNesteGroupID(request), request, ringer)
     }
 
     private fun getNesteGroupID(request: ResultatFraSamtaleRequest): GroupID? {
@@ -102,11 +103,12 @@ class RingServiceBean(
         }
     }
 
-    private fun lagreResultat(nesteGroupID: GroupID?, request: ResultatFraSamtaleRequest) {
-        nesteGroupID?.nr?.let { personRepository.update("groupID=?1 where id=?2", it, request.ringtID) }
+    private fun lagreResultat(nesteGroupID: GroupID?, request: ResultatFraSamtaleRequest, ringer: Int) {
         if (request.skalRegistrere()) {
             registrerValg21SpesifikkeResultat(request)
         }
+        if (personRepository.find("ringer=?1", ringer).singleResult<Person>().id == request.ringtID) return
+        nesteGroupID?.nr?.let { personRepository.update("groupID=?1 where id=?2", it, request.ringtID) }
     }
 
     override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): NestePersonAaRingeResponse {
