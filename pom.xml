@@ -15,6 +15,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.version>1.13.0.Final</quarkus.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
+    <poi.version>5.0.0</poi.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -137,6 +138,16 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-elytron-security</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <version>${poi.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>${poi.version}</version>
     </dependency>
 
   </dependencies>
