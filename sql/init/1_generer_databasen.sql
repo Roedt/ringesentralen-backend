@@ -514,7 +514,7 @@ CREATE TABLE IF NOT EXISTS `kommune` (
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Tysnes',1223,12, (select id from lokallag where navn = 'Uten lag Hordaland'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Ullensvang',1231,12, (select id from lokallag where navn = 'Rødt Ullensvang'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Ulvik',1233,12, (select id from lokallag where navn = 'Rødt Ullensvang'));
-    INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Vaksdal',1251,12, (select id from lokallag where navn = 'Uten lag Hordaland'));
+    INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Vaksdal',1251,12, (select id from lokallag where navn = 'Raudt Vaksdal'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Voss',1235,12, (select id from lokallag where navn = 'Raudt Voss'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Årdal',1424,14, (select id from lokallag where navn = 'Raudt Årdal'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Askvoll',1428,14, (select id from lokallag where navn = 'Raudt Dalsfjorden'));
@@ -657,7 +657,7 @@ CREATE TABLE IF NOT EXISTS `kommune` (
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Kvalsund',2017,20, (select id from lokallag where navn = 'Uten lag Finnmark'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Lebesby',2022,20, (select id from lokallag where navn = 'Uten lag Finnmark'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Loppa',2014,20, (select id from lokallag where navn = 'Uten lag Finnmark'));
-    INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Måsøy',2018,20, (select id from lokallag where navn = 'Rødt Hammerfest'));
+    INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Måsøy',2018,20, (select id from lokallag where navn = 'Rødt Måsøy'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Nordkapp',2019,20, (select id from lokallag where navn = 'Uten lag Finnmark'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Porsanger – Porsángu – Porsanki',2020,20, (select id from lokallag where navn = 'Uten lag Finnmark'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Sør-Varanger',2030,20, (select id from lokallag where navn = 'Rødt Sør-Varanger'));
@@ -702,7 +702,7 @@ CREATE TABLE IF NOT EXISTS `kommune` (
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Rennebu',5022,50, (select id from lokallag where navn = 'Uten lag Trøndelag'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Rindal',5061,50, (select id from lokallag where navn = 'Uten lag Trøndelag'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Roan',5019,50, (select id from lokallag where navn = 'Uten lag Trøndelag'));
-    INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Røros',5025,50, (select id from lokallag where navn = 'Uten lag Trøndelag'));
+    INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Røros',5025,50, (select id from lokallag where navn = 'Røros'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Selbu',5032,50, (select id from lokallag where navn = 'Uten lag Trøndelag'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Skaun',5029,50, (select id from lokallag where navn = 'Rødt Skaun'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Snåase – Snåsa',5041,50, (select id from lokallag where navn = 'Uten lag Trøndelag'));
