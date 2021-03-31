@@ -1483,6 +1483,7 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1431,'ÅS',214);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1432,'ÅS',214);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1433,'ÅS',214);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1434,'ÅS',214);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1435,'ÅS',214);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1440,'DRØBAK',215);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1441,'DRØBAK',215);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1442,'DRØBAK',215);
@@ -1495,9 +1496,11 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1448,'DRØBAK',2
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1449,'DRØBAK',215);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1450,'NESODDTANGEN',216);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1451,'NESODDTANGEN',216);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1452,'NESODDTANGEN',216);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1453,'BJØRNEMYR',216);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1454,'FAGERSTRAND',216);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1455,'NORDRE FROGN',215);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1456,'NESODDTANGEN',216);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1457,'FAGERSTRAND',216);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1458,'FJELLSTRAND',216);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1459,'NESODDEN',216);
@@ -1607,6 +1610,8 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1618,'FREDRIKSTA
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1619,'FREDRIKSTAD',106);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1620,'GRESSVIK',106);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1621,'GRESSVIK',106);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1622,'GRESSVIK',106);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1623,'GRESSVIK',106);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1624,'GRESSVIK',106);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1625,'MANSTAD',106);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1626,'MANSTAD',106);
@@ -1623,6 +1628,7 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1639,'GAMLE FRED
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1640,'RÅDE',135);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1641,'RÅDE',135);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1642,'SALTNES',135);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1643,'RÅDE',135);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1650,'SELLEBAKK',106);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1651,'SELLEBAKK',106);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1653,'SELLEBAKK',106);
@@ -1742,6 +1748,7 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1814,'ASKIM',124
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1815,'ASKIM',124);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1816,'SKIPTVET',127);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1820,'SPYDEBERG',123);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1821,'SPYDEBERG',123);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1823,'KNAPSTAD',138);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1825,'TOMTER',138);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (1827,'HOBØL',138);
@@ -1843,6 +1850,8 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2057,'JESSHEIM',
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2058,'SESSVOLLMOEN',235);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2060,'GARDERMOEN',235);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2061,'GARDERMOEN',235);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2062,'JESSHEIM',235);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2063,'JESSHEIM',235);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2066,'JESSHEIM',235);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2067,'JESSHEIM',235);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2068,'JESSHEIM',235);
@@ -1977,6 +1986,8 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2409,'ELVERUM',4
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2410,'HERNES',427);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2411,'ELVERUM',427);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2412,'SØRSKOGBYGDA',427);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2413,'ELVERUM',427);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2414,'ELVERUM',427);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2415,'HERADSBYGD',427);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2416,'JØMNA',427);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2418,'ELVERUM',427);
@@ -2007,7 +2018,11 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2477,'SOLLIA',43
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2478,'HANESTAD',432);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2480,'KOPPANG',430);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2481,'KOPPANG',430);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2484,'RENDALEN',432);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2485,'RENDALEN',432);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2486,'RENDALEN',432);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2487,'RENDALEN',432);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2488,'RENDALEN',432);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2500,'TYNSET',437);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2501,'TYNSET',437);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2510,'TYLLDALEN',437);
@@ -2140,6 +2155,9 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2827,'HUNNDALEN'
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2830,'RAUFOSS',529);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2831,'RAUFOSS',529);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2832,'BIRI',502);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2833,'RAUFOSS',529);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2834,'RAUFOSS',529);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2835,'RAUFOSS',529);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2836,'BIRI',502);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2837,'BIRISTRAND',502);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (2838,'SNERTINGDAL',502);
@@ -2255,7 +2273,12 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3060,'SVELVIK',7
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3061,'SVELVIK',711);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3070,'SANDE I VESTFOLD',713);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3071,'SANDE I VESTFOLD',713);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3072,'SANDE I VESTFOLD',713);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3073,'SANDE I VESTFOLD',713);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3074,'SANDE I VESTFOLD',713);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3075,'BERGER',711);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3076,'SANDE I VESTFOLD',713);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3077,'SANDE I VESTFOLD',713);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3080,'HOLMESTRAND',715);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3081,'HOLMESTRAND',715);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3082,'HOLMESTRAND',715);
@@ -2440,6 +2463,8 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3296,'NEVLUNGHAM
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3297,'HELGEROA',712);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3300,'HOKKSUND',624);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3301,'HOKKSUND',624);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3302,'HOKKSUND',624);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3303,'HOKKSUND',624);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3320,'VESTFOSSEN',624);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3321,'VESTFOSSEN',624);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3322,'FISKUM',624);
@@ -2657,6 +2682,7 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3753,'TØRDAL',8
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3760,'NESLANDSVATN',817);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3766,'SANNIDAL',815);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3770,'KRAGERØ',815);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3772,'KRAGERØ',815);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3780,'SKÅTØY',815);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3781,'JOMFRULAND',815);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3783,'KRAGERØ SKJÆRGÅRD',815);
@@ -2753,6 +2779,8 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3948,'PORSGRUNN'
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3949,'PORSGRUNN',805);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3950,'BREVIK',805);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3960,'STATHELLE',814);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3961,'STATHELLE',814);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3962,'STATHELLE',814);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3965,'HERRE',814);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3966,'STATHELLE',814);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (3967,'BAMBLE SOMMERRUTE',814);
@@ -2826,6 +2854,9 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4067,'STAVANGER'
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4068,'STAVANGER',1103);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4069,'STAVANGER',1103);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4070,'RANDABERG',1127);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4071,'RANDABERG',1127);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4072,'RANDABERG',1127);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4073,'RANDABERG',1127);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4076,'VASSØY',1103);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4077,'HUNDVÅG',1103);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4078,'STAVANGER',1103);
@@ -2851,9 +2882,13 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4098,'TANANGER',
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4099,'STAVANGER',1103);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4100,'JØRPELAND',1130);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4102,'IDSE',1130);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4103,'JØRPELAND',1130);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4104,'JØRPELAND',1130);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4105,'JØRPELAND',1130);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4110,'FORSAND',1129);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4119,'FORSAND',1129);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4120,'TAU',1130);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4121,'TAU',1130);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4123,'SØR-HIDLE',1130);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4124,'TAU',1130);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4126,'JØRPELAND',1130);
@@ -2936,6 +2971,7 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4316,'SANDNES',1
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4317,'SANDNES',1102);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4318,'SANDNES',1102);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4319,'SANDNES',1102);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4320,'SANDNES',1102);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4321,'SANDNES',1102);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4322,'SANDNES',1102);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4323,'SANDNES',1102);
@@ -2946,9 +2982,13 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4327,'SANDNES',1
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4328,'SANDNES',1102);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4329,'SANDNES',1102);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4330,'ÅLGÅRD',1122);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4331,'ÅLGÅRD',1122);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4332,'FIGGJO',1102);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4333,'OLTEDAL',1122);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4335,'DIRDAL',1122);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4336,'SANDNES',1122);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4337,'SANDNES',1122);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4338,'SANDNES',1122);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4339,'ÅLGÅRD',1122);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4340,'BRYNE',1121);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4341,'BRYNE',1120);
@@ -2960,6 +3000,8 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4346,'BRYNE',112
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4347,'LYE',1121);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4348,'LYE',1121);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4349,'BRYNE',1121);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4350,'KLEPPE',1120);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4351,'KLEPPE',1120);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4352,'KLEPPE',1120);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4353,'KLEPP STASJON',1120);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (4354,'VOLL',1120);
