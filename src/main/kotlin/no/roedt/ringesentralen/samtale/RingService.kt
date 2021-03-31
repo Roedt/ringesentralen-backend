@@ -124,7 +124,7 @@ class RingServiceBean(
     }
 
     private fun erFleireEnnToIkkeSvar(request: ResultatFraSamtaleRequest): Boolean {
-        val resultat: List<Int> = samtaleRepository.list("where ringt=?1 and resultat=${Resultat.Ikke_svar.nr}", request.ringtID).map { it.resultat }
+        val resultat: List<Int> = samtaleRepository.list("ringt=?1 and resultat=${Resultat.Ikke_svar.nr}", request.ringtID).map { it.resultat }
         val fleireEnnToIkkeSvar: Boolean = resultat.filter { it == 0 }.count() > 2
         val ingenSvar: Boolean = resultat.filter { it != Resultat.Ikke_svar.nr && it != Resultat.Samtale_startet.nr }.count() == 0
         return ingenSvar && fleireEnnToIkkeSvar && request.resultat == Resultat.Ikke_svar
