@@ -3,6 +3,7 @@ package no.roedt.ringesentralen.samtale
 import com.nhaarman.mockitokotlin2.*
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
+import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import org.junit.jupiter.api.BeforeEach
@@ -18,6 +19,7 @@ internal class RingTest {
     private val persistentSamtaleRepository: PersistentSamtaleRepository = mock()
     private val oppfoelgingValg21Repository: OppfoelgingValg21Repository = mock()
     private val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder = mock()
+    private val lokallagRepository: LokallagRepository = mock()
 
 
     lateinit var ringService: RingServiceBean
@@ -26,7 +28,8 @@ internal class RingTest {
     @BeforeEach
     fun setup() {
         ringService = spy(RingServiceBean(personRepository = personRepository, databaseUpdater = databaseUpdater, oppslagRepository = oppslagRepository,
-            samtaleRepository = persistentSamtaleRepository, oppfoelgingValg21Repository = oppfoelgingValg21Repository, nesteMedlemAaRingeFinder = nesteMedlemAaRingeFinder))
+            samtaleRepository = persistentSamtaleRepository, oppfoelgingValg21Repository = oppfoelgingValg21Repository, nesteMedlemAaRingeFinder = nesteMedlemAaRingeFinder,
+            lokallagRepository = lokallagRepository))
         ringController = RingController(ringService)
         ringController.jwt = mock()
     }

@@ -6,5 +6,6 @@ import no.roedt.ringesentralen.person.Person
 @RegisterForReflection
 data class NestePersonAaRingeResponse(
     val person: Person,
+    val lokallagNavn: String,
     val tidlegareSamtalar: List<Samtale>
 )

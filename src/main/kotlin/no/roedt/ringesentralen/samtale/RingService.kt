@@ -2,6 +2,7 @@ package no.roedt.ringesentralen.samtale
 
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
+import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
@@ -27,14 +28,15 @@ class RingServiceBean(
     val oppslagRepository: OppslagRepository,
     val samtaleRepository: PersistentSamtaleRepository,
     val oppfoelgingValg21Repository: OppfoelgingValg21Repository,
-    val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder
+    val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder,
+    val lokallagRepository: LokallagRepository
 ): RingService {
 
     override fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? =
         hentFoerstePerson(request)
             ?.let { it as Int }
             ?.let { personRepository.findById(it.toLong()) }
-            ?.let { NestePersonAaRingeResponse(person = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1"))}
+            ?.let { toResponse(it) }
             ?.also { oppslagRepository.persist(Oppslag(ringt = it.person.id.toInt(), ringerHypersysId = request.userId() )) }
 
     private fun hentFoerstePerson(request: AutentisertNestePersonAaRingeRequest): Any? {
@@ -120,8 +122,15 @@ class RingServiceBean(
                 ),
                 modus = Modus.velgere
             ))
-        return personSomRingerTilbake.let { NestePersonAaRingeResponse(person = it, tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1"))}
+        return toResponse(personSomRingerTilbake)
     }
+
+    private fun toResponse(it: Person) =
+        NestePersonAaRingeResponse(
+            person = it,
+            lokallagNavn = lokallagRepository.findById(it.lokallag.toLong()).navn,
+            tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1")
+        )
 
     private fun erFleireEnnToIkkeSvar(request: ResultatFraSamtaleRequest): Boolean {
         val resultat: List<Int> = samtaleRepository.list("ringt=?1 and resultat=${Resultat.Ikke_svar.nr}", request.ringtID).map { it.resultat }
