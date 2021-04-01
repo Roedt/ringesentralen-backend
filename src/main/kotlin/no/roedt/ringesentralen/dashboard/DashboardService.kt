@@ -23,20 +23,22 @@ class DashboardServiceBean(
 
     override fun getDashboard(ringerID: UserId): DashboardResponse {
         val mineLokallag = getMineLokallag(ringerID)
+        val lokallagIDar = mineLokallag.map { it.id.toInt() }
+
+        val igjenAaRingePerLokallag = databaseUpdater.getResultList("SELECT lokallag from person where groupID=${GroupID.KlarTilAaRinges.nr}").filter { lokallagIDar.contains(it) }.groupBy { it }
+        val personerSomKanRingesPerLokallag = databaseUpdater.getResultList("SELECT lokallag FROM v_personerSomKanRinges").filter { lokallagIDar.contains(it) }.groupBy { it }
+        val totaltInklRingtePerLokallag = databaseUpdater.getResultList("SELECT lokallag from person where groupID=${GroupID.Ferdigringt.nr}").filter { lokallagIDar.contains(it) }.groupBy { it }
 
         val statusliste: List<Lokallagsstatus> = mineLokallag
-                .map { lokallag ->
-                    val igjenAaRinge = personRepository.list("groupID=?1 and lokallag=?2", GroupID.KlarTilAaRinges.nr, lokallag.id.toInt()).size
-                    val personerSomKanRinges = databaseUpdater.getResultList("SELECT 1 FROM v_personerSomKanRinges WHERE lokallag = ${lokallag.id}").size
-                    val totaltInklRingte = personRepository.list("lokallag=?1 and groupID=?2", lokallag.id.toInt(), GroupID.Ferdigringt.nr).size
-                    Lokallagsstatus(
-                            lokallag = lokallag,
-                            igjenAaRinge = igjenAaRinge,
-                            personerSomKanRinges = personerSomKanRinges,
-                            totaltInklRingte = totaltInklRingte + igjenAaRinge
-                    )
-                }
-                .toList()
+            .map { lokallag ->
+                Lokallagsstatus(
+                    lokallag = lokallag,
+                    igjenAaRinge = (igjenAaRingePerLokallag.getOrDefault(lokallag.id.toInt(), listOf()) as List<*>).size,
+                    personerSomKanRinges = (personerSomKanRingesPerLokallag.getOrDefault(lokallag.id.toInt(), listOf()) as List<*>).size,
+                    totaltInklRingte = (totaltInklRingtePerLokallag.getOrDefault(lokallag.id.toInt(), listOf()) as List<*>).size
+                )
+            }
+            .toList()
         return DashboardResponse(statusliste = statusliste)
     }
 
