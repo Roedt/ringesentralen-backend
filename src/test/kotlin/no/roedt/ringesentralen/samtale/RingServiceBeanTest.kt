@@ -41,6 +41,7 @@ internal class RingServiceBeanTest {
     fun `samtale blir registrert`() {
         ringService = spy(ringService)
         doReturn(1).whenever(ringService).hypersysIDTilRingerId(any())
+        doReturn(false).whenever(ringService).isBrukerEllerVenterPaaGodkjenning(any())
 
         val request = AutentisertResultatFraSamtaleRequest(
             UserId(1), ResultatFraSamtaleRequest(

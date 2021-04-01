@@ -107,9 +107,12 @@ class RingServiceBean(
         if (request.skalRegistrere()) {
             registrerValg21SpesifikkeResultat(request)
         }
-        if (GroupID.isBrukerEllerVenter(personRepository.find("ringer=?1", ringer).singleResult<Person>().groupID)) return
+        if (isBrukerEllerVenterPaaGodkjenning(ringer)) return
         nesteGroupID?.nr?.let { personRepository.update("groupID=?1 where id=?2", it, request.ringtID) }
     }
+
+    fun isBrukerEllerVenterPaaGodkjenning(ringer: Int) =
+        GroupID.isBrukerEllerVenter(personRepository.find("ringer=?1", ringer).singleResult<Person>().groupID)
 
     override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): NestePersonAaRingeResponse {
         request.validate()

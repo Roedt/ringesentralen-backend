@@ -3,6 +3,7 @@ package no.roedt.ringesentralen.hypersys
 import com.nhaarman.mockitokotlin2.mock
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.lokallag.LokallagRepository
+import no.roedt.ringesentralen.person.PersonRepository
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -11,10 +12,12 @@ internal class ModelConverterTest {
 
     private val databaseUpdater: DatabaseUpdater = mock()
     private val lokallagRepository: LokallagRepository = mock()
+    private val personRepository: PersonRepository = mock()
 
     private val modelConverter: ModelConverterBean = ModelConverterBean(
         databaseUpdater = databaseUpdater,
-        lokallagRepository = lokallagRepository
+        lokallagRepository = lokallagRepository,
+        personRepository = personRepository
     )
 
     @Test
