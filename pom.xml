@@ -139,7 +139,7 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-elytron-security</artifactId>
     </dependency>
-    <dependency>
+<!--    <dependency>
       <groupId>org.apache.poi</groupId>
       <artifactId>poi</artifactId>
       <version>${poi.version}</version>
@@ -149,7 +149,7 @@
       <artifactId>poi-ooxml</artifactId>
       <version>${poi.version}</version>
     </dependency>
-
+-->
   </dependencies>
   <build>
     <sourceDirectory>src/main/kotlin</sourceDirectory>

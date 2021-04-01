@@ -3,20 +3,11 @@ package no.roedt.ringesentralen.verving
 import io.quarkus.narayana.jta.runtime.TransactionConfiguration
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.hypersys.ModelConverter
-import no.roedt.ringesentralen.person.GroupID
-import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
-import org.apache.poi.poifs.crypt.Decryptor
-import org.apache.poi.poifs.crypt.EncryptionInfo
-import org.apache.poi.poifs.filesystem.POIFSFileSystem
-import org.apache.poi.ss.usermodel.Row
-import org.apache.poi.ss.usermodel.Workbook
-import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
-import java.io.File
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.RequestScoped
 import javax.inject.Inject
@@ -46,7 +37,8 @@ class NumreImporter(
     @RolesAllowed(Roles.admin)
     @Operation(summary = "Importer fleire numre frå fil. Dette endepunktet er i utgangspunktet kun tenkt for lokal bruk.", description = Roles.admin)
     fun import(@Context ctx: SecurityContext, @QueryParam("fileLocation") fileLocation: String, @QueryParam("passord") passord: String) =
-        readFile(fileLocation, passord)
+        println("Deaktivert")
+/*        readFile(fileLocation, passord)
         .getSheetAt(0)
         .mapNotNull { toPerson(it) }
         .forEach { personRepository.persist(it) }
@@ -82,5 +74,5 @@ class NumreImporter(
             groupID = GroupID.KlarTilAaRinges.nr,
             lokallag = modelConverter.toLokallag(postnummer)
         )
-    }
+    }*/
 }
