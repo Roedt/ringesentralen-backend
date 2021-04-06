@@ -1,6 +1,8 @@
 package no.roedt.ringesentralen.hypersys
 
 import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.ringesentralen.Kommune
+import no.roedt.ringesentralen.KommuneRepository
 import no.roedt.ringesentralen.hypersys.externalModel.Address
 import no.roedt.ringesentralen.hypersys.externalModel.Membership
 import no.roedt.ringesentralen.hypersys.externalModel.User
@@ -22,7 +24,8 @@ interface ModelConverter {
 class ModelConverterBean(
     private val databaseUpdater: DatabaseUpdater,
     private val lokallagRepository: LokallagRepository,
-    private val personRepository: PersonRepository
+    private val personRepository: PersonRepository,
+    private val kommuneRepository: KommuneRepository
 ) : ModelConverter {
 
     override fun convert(user: User, groupID: Int): Person {
@@ -30,6 +33,10 @@ class ModelConverterBean(
         val fornavn = user.name.substring(0, sisteMellomrom)
         val etternavn = user.name.substring(sisteMellomrom+1)
         val postnummer = toPostnummer(user)
+        val lokallag = toLokallag(user.memberships)
+        val fylke =
+            if (postnummer == -1 && lokallag != -1) kommuneRepository.find("lokallag_id=?1", lokallag).firstResultOptional<Kommune>().map { it.fylke_id }.orElse(-1)
+            else toFylke(postnummer)
         return Person(
             hypersysID = user.id,
             fornavn = fornavn,
@@ -37,8 +44,8 @@ class ModelConverterBean(
             email = user.email,
             telefonnummer = toTelefonnummer(if (user.phone != "") user.phone else user.phone2),
             postnummer = postnummer,
-            fylke = toFylke(postnummer),
-            lokallag = toLokallag(user.memberships),
+            fylke = fylke,
+            lokallag = lokallag,
             groupID = groupID
         )
     }
