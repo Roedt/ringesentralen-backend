@@ -13,11 +13,11 @@ import javax.persistence.Table
 @Cacheable
 @RegisterForReflection
 data class Verving(
-    val telefonnummer: String,
-    val fornavn: String,
-    val etternavn: String,
-    val postnummer: Int,
-    val ververID: String?
+    var telefonnummer: String,
+    var fornavn: String,
+    var etternavn: String,
+    var postnummer: Int,
+    var ververID: String?
 ) : PanacheEntity() {
     constructor(): this(
         telefonnummer = "",
