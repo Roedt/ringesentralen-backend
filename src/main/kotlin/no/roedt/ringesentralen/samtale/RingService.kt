@@ -2,6 +2,8 @@ package no.roedt.ringesentralen.samtale
 
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
+import no.roedt.ringesentralen.hypersys.Ringer
+import no.roedt.ringesentralen.hypersys.RingerRepository
 import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
@@ -30,6 +32,7 @@ class RingServiceBean(
     val oppfoelgingValg21Repository: OppfoelgingValg21Repository,
     val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder,
     val lokallagRepository: LokallagRepository,
+    val ringerRepository: RingerRepository
 ): RingService {
 
     override fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? =
@@ -112,7 +115,10 @@ class RingServiceBean(
     }
 
     fun isBrukerEllerVenterPaaGodkjenning(ringer: Int) =
-        GroupID.isBrukerEllerVenter(personRepository.find("ringer=?1", ringer).singleResult<Person>().groupID)
+        GroupID.isBrukerEllerVenter(
+            ringerRepository.find("id=?1", ringer).singleResult<Ringer>().personId
+                .let { personRepository.findById(it.toLong()) }
+                .groupID)
 
     override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): NestePersonAaRingeResponse {
         request.validate()
