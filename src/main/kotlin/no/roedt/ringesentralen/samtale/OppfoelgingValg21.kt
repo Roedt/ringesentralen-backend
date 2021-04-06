@@ -17,6 +17,7 @@ data class OppfoelgingValg21(
     var valgkampsbrev: Boolean,
     var vilIkkeBliRingt: Boolean,
     var vilHaMedlemsLink: Boolean,
+    var vilHaFellesskapLink: Boolean,
     var vilHaNyhetsbrevLink: Boolean,
 ) : PanacheEntity() {
     constructor() : this(
@@ -26,6 +27,7 @@ data class OppfoelgingValg21(
         valgkampsbrev = false,
         vilIkkeBliRingt = false,
         vilHaMedlemsLink = false,
+        vilHaFellesskapLink = false,
         vilHaNyhetsbrevLink = false
     )
 }

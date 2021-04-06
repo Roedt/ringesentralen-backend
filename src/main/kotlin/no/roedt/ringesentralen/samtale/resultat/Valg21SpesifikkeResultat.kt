@@ -9,5 +9,6 @@ data class Valg21SpesifikkeResultat (
     @JsonProperty("vilBliMerAktiv") val vilBliMerAktiv: Boolean,
     @JsonProperty("vilHaValgkampsbrev") val vilHaValgkampsbrev: Boolean,
     @JsonProperty("vilHaMedlemsLink") val vilHaMedlemsLink: Boolean,
+    @JsonProperty("vilHaFellesskapLink") val vilHaFellesskapLink: Boolean,
     @JsonProperty("vilHaNyhetsbrevLink") val vilHaNyhetsbrevLink: Boolean,
 ) : ModusspesifikkeResultat

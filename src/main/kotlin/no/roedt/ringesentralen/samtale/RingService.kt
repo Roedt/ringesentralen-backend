@@ -161,6 +161,7 @@ class RingServiceBean(
                 valgkampsbrev = resultat.vilHaValgkampsbrev,
                 vilIkkeBliRingt = request.vilIkkeBliRingt,
                 vilHaMedlemsLink = resultat.vilHaMedlemsLink,
+                vilHaFellesskapLink = resultat.vilHaFellesskapLink,
                 vilHaNyhetsbrevLink = resultat.vilHaNyhetsbrevLink
             )
         )

@@ -56,6 +56,7 @@ internal class RingServiceBeanTest {
                     vilBliMerAktiv = false,
                     vilHaValgkampsbrev = false,
                     vilHaMedlemsLink = false,
+                    vilHaFellesskapLink = true,
                     vilHaNyhetsbrevLink = false
                 ),
                 vilIkkeBliRingt = false
@@ -81,6 +82,7 @@ internal class RingServiceBeanTest {
                     vilBliMerAktiv = false,
                     vilHaValgkampsbrev = false,
                     vilHaMedlemsLink = false,
+                    vilHaFellesskapLink = true,
                     vilHaNyhetsbrevLink = false
                 ),
                 vilIkkeBliRingt = false

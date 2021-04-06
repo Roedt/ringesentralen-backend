@@ -37,6 +37,7 @@ class FullFlytTest {
                     vilHaKoronaprogram = true,
                     vilHaValgkampsbrev = false,
                     vilHaMedlemsLink = true,
+                    vilHaFellesskapLink = true,
                     vilHaNyhetsbrevLink = true
                 ),
                 vilIkkeBliRingt = false)
