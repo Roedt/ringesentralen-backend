@@ -87,7 +87,7 @@ class ModelConverterBean(
     fun toTelefonnummer(telefonnummer: String): String? =
         telefonnummer.replace(" ", "").takeIf { it != "" }
 
-    private fun toPostnummer(user: User) : Int = user.addresses.map { it.postalCode }.map { it[1] }.map { it.toInt() }.maxByOrNull { it != 1 } ?: 1
+    private fun toPostnummer(user: User) : Int = user.addresses.map { it.postalCode }.map { it[1] }.map { it.toInt() }.maxByOrNull { it != 1 } ?: -1
 
     override fun toFylke(postnummer: Int): Int =
         databaseUpdater.getResultList(
