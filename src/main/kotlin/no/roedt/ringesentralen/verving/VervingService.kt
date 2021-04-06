@@ -13,7 +13,7 @@ class VervingService(
     private val vervingRepository: VervingRepository
 ) {
 
-    fun postPersonSomSkalRinges(request: AutentisertVervingRequest) : Any {
+    fun postPersonSomSkalRinges(request: AutentisertVervingRequest) : Person? {
         val postnummer = request.request.postnummer
         vervingRepository.persist(Verving(
             telefonnummer = request.request.telefonnummer,
@@ -22,6 +22,9 @@ class VervingService(
             postnummer = request.request.postnummer,
             ververID = request.request.verversNavn
         ))
+
+        val vervaFraFoer = personRepository.find("telefonnummer=?1", request.request.telefonnummer).count() > 0L
+        if (vervaFraFoer) return null
 
         return Person(
             hypersysID = null,

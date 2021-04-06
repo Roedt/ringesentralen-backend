@@ -8,6 +8,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
+import java.net.URI
 import javax.annotation.security.RolesAllowed
 import javax.inject.Inject
 import javax.transaction.Transactional
@@ -16,6 +17,7 @@ import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.Response
 import javax.ws.rs.core.SecurityContext
 
 @Path("/verving")
@@ -34,9 +36,11 @@ class VervingController(val service: VervingService) : RingesentralenController 
     @Operation(summary = "Legg til person som skal ringes", description = Roles.systembrukerFrontend)
     @Bulkhead(3)
     @Retry
-    fun postPersonSomSkalRinges(@Context ctx: SecurityContext, request: VervingRequest) = service.postPersonSomSkalRinges(
-        AutentisertVervingRequest(request = request, userId = ctx.userId())
-    )
+    fun postPersonSomSkalRinges(@Context ctx: SecurityContext, request: VervingRequest): Response {
+        val person = service.postPersonSomSkalRinges(AutentisertVervingRequest(request = request, userId = ctx.userId()))
+        return if (person == null) Response.noContent().build()
+        else Response.created(URI.create(person.id.toString())).build()
+    }
 
     @RolesAllowed(Roles.systembrukerFrontend)
     @POST
