@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.verving
 
+import io.quarkus.hibernate.orm.panache.PanacheEntity
 import io.quarkus.hibernate.orm.panache.PanacheRepository
 import io.quarkus.runtime.annotations.RegisterForReflection
 import javax.enterprise.context.Dependent
@@ -17,7 +18,15 @@ data class Verving(
     val etternavn: String,
     val postnummer: Int,
     val ververID: String?
-)
+) : PanacheEntity() {
+    constructor(): this(
+        telefonnummer = "",
+        fornavn = "",
+        etternavn = "",
+        postnummer = 0,
+        ververID = null
+    )
+}
 
 @Dependent
 class VervingRepository: PanacheRepository<Verving>
