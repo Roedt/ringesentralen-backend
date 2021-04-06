@@ -9,11 +9,20 @@ import javax.enterprise.context.Dependent
 @Dependent
 class VervingService(
     private val modelConverter: ModelConverter,
-    private val personRepository: PersonRepository
+    private val personRepository: PersonRepository,
+    private val vervingRepository: VervingRepository
 ) {
 
     fun postPersonSomSkalRinges(request: AutentisertVervingRequest) : Any {
         val postnummer = request.request.postnummer
+        vervingRepository.persist(Verving(
+            telefonnummer = request.request.telefonnummer,
+            fornavn = request.request.fornavn,
+            etternavn = request.request.etternavn,
+            postnummer = request.request.postnummer,
+            ververID = request.request.verversNavn
+        ))
+
         return Person(
             hypersysID = null,
             fornavn = request.request.fornavn,

@@ -1,0 +1,23 @@
+package no.roedt.ringesentralen.verving
+
+import io.quarkus.hibernate.orm.panache.PanacheRepository
+import io.quarkus.runtime.annotations.RegisterForReflection
+import javax.enterprise.context.Dependent
+import javax.persistence.Cacheable
+import javax.persistence.Entity
+import javax.persistence.Table
+
+@Entity
+@Table(name = "verving")
+@Cacheable
+@RegisterForReflection
+data class Verving(
+    val telefonnummer: String,
+    val fornavn: String,
+    val etternavn: String,
+    val postnummer: Int,
+    val ververID: String?
+)
+
+@Dependent
+class VervingRepository: PanacheRepository<Verving>

@@ -5909,6 +5909,17 @@ CREATE TABLE IF NOT EXISTS `oppslag` (
 
 -- --------------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS `verving` (
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `telefonnummer` varchar(15) NOT NULL,
+  `fornavn` varchar(60) NOT NULL,
+  `etternavn` varchar(60) NOT NULL,
+  `verversNavn` varchar(120) DEFAULT NULL,
+  `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- --------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS `ringerIV1` (
   `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `telefonnummer` varchar(15) NOT NULL UNIQUE,
