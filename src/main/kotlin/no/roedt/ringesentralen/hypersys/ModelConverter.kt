@@ -54,7 +54,7 @@ class ModelConverterBean(
     override fun convertMembershipToPerson(map: Map<*, *>) : Person {
         val postnummer = finnPostnummer(map)
 
-        val telefonnummer = itOrNull(map["mobile"])
+        val telefonnummer = itOrNull(map["mobile"])?.let { toTelefonnummer(it) }
         val groupID = personRepository.find("telefonnummer", telefonnummer)
             .singleResultOptional<Person>()
             .map { it.groupID }
