@@ -116,7 +116,7 @@ class RingServiceBean(
 
     fun isBrukerEllerVenterPaaGodkjenning(ringer: Int) =
         GroupID.isBrukerEllerVenter(
-            ringerRepository.find("id=?1", ringer).singleResult<Ringer>().personId
+            ringerRepository.find("id=?1", ringer.toLong()).singleResult<Ringer>().personId
                 .let { personRepository.findById(it.toLong()) }
                 .groupID)
 
@@ -144,7 +144,7 @@ class RingServiceBean(
         )
 
     private fun erFleireEnnToIkkeSvar(request: ResultatFraSamtaleRequest): Boolean {
-        val resultat: List<Int> = samtaleRepository.list("ringt=?1 and resultat=${Resultat.Ikke_svar.nr}", request.ringtID).map { it.resultat }
+        val resultat: List<Int> = samtaleRepository.list("ringt=?1 and resultat=${Resultat.Ikke_svar.nr}", request.ringtID.toInt()).map { it.resultat }.map { it }
         val fleireEnnToIkkeSvar: Boolean = resultat.filter { it == 0 }.count() > 2
         val ingenSvar: Boolean = resultat.filter { it != Resultat.Ikke_svar.nr && it != Resultat.Samtale_startet.nr }.count() == 0
         return ingenSvar && fleireEnnToIkkeSvar && request.resultat == Resultat.Ikke_svar
