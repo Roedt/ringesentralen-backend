@@ -44,6 +44,7 @@ open class NesteMedlemAaRingeFinder(
         hypersysService.getMedlemmer(hypersysLokallagId)
             .filter { medlem -> personRepository.find("hypersysID", medlem["member_id"]).count() == 0L }
             .map { modelConverter.convertMembershipToPerson(it) }
+            .filter { it.telefonnummer != null }
             .forEach { personRepository.save(it) }
 
 
