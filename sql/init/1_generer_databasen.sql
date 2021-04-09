@@ -5789,6 +5789,7 @@ CREATE TABLE IF NOT EXISTS `person` (
   `groupID` int(2) DEFAULT NULL,
   `oppretta` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lokallag` int(3) DEFAULT NULL,
+  `kilde` varchar(20) DEFAULT NULL,
   FOREIGN KEY (`groupID`) REFERENCES `brukergruppe` (`id`),
   FOREIGN KEY(`fylke`) REFERENCES `fylker` (`id`),
   FOREIGN KEY(`lokallag`) REFERENCES `lokallag` (`id`),
