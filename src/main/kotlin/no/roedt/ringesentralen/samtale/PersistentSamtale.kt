@@ -14,13 +14,13 @@ data class PersistentSamtale(
     var ringt: Int,
     var ringer: Int,
     var resultat: Int,
-    var kommentar: String
+    var kommentar: String?
 ) : PanacheEntity() {
     constructor() : this(
         ringt = 0,
         ringer = 0,
         resultat=  0,
-        kommentar = ""
+        kommentar = null
     )
 }
 

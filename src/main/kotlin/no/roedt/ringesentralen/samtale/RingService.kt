@@ -66,7 +66,7 @@ class RingServiceBean(
                 resultat = it[0] as String,
                 ringer = it[1] as String,
                 tidspunkt = (it[2] as Timestamp).toString(),
-                kommentar = it[3] as String,
+                kommentar = (it[3] ?: "") as String,
                 ringtNummer = oppringtNummer,
                 ringtNavn = it[4] as String
             ) }
