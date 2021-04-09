@@ -3,9 +3,7 @@ package no.roedt.ringesentralen.person
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.ringesentralen.Kilde
-import javax.persistence.Cacheable
-import javax.persistence.Entity
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "person")
@@ -21,7 +19,7 @@ data class Person(
         var fylke: Int,
         var lokallag: Int,
         var groupID: Int,
-        var kilde: Kilde
+        @Enumerated(EnumType.STRING) var kilde: Kilde
 ) : PanacheEntity() {
         fun isSystembruker(): Boolean = fornavn == "Systembruker" && etternavn == "Frontend"
 
