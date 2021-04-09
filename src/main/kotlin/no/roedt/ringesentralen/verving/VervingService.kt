@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.verving
 
+import no.roedt.ringesentralen.Kilde
 import no.roedt.ringesentralen.hypersys.ModelConverter
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
@@ -35,7 +36,8 @@ class VervingService(
             postnummer = postnummer,
             fylke = modelConverter.toFylke(postnummer),
             lokallag = modelConverter.toLokallag(postnummer),
-            groupID = GroupID.ManglerSamtykke.nr
+            groupID = GroupID.ManglerSamtykke.nr,
+            kilde = Kilde.Verva
         )
     }
 

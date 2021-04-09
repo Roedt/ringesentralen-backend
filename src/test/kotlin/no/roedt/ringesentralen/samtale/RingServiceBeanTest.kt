@@ -3,6 +3,7 @@ package no.roedt.ringesentralen.samtale
 import com.nhaarman.mockitokotlin2.*
 import io.quarkus.hibernate.orm.panache.PanacheQuery
 import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.ringesentralen.Kilde
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.hypersys.RingerRepository
 import no.roedt.ringesentralen.lokallag.LokallagRepository
@@ -98,7 +99,7 @@ internal class RingServiceBeanTest {
     private fun createRingbarPerson(fornavn: String, etternavn: String, telefonnummer: String, id: Long, hypersysID: Int) {
         val person = Person(hypersysID = hypersysID, fornavn = fornavn, etternavn = etternavn,
             telefonnummer = telefonnummer, email = "",
-            postnummer = 1234, fylke = 0, lokallag = 0, groupID = 0)
+            postnummer = 1234, fylke = 0, lokallag = 0, groupID = 0, kilde = Kilde.Mosaic)
         doReturn(person).whenever(personRepository).findById(id)
         val query : PanacheQuery<Person> = mock()
         doReturn(person).whenever(query).firstResult<Person>()

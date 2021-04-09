@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.hypersys
 
 import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.ringesentralen.Kilde
 import no.roedt.ringesentralen.Kommune
 import no.roedt.ringesentralen.KommuneRepository
 import no.roedt.ringesentralen.hypersys.externalModel.Address
@@ -46,7 +47,8 @@ class ModelConverterBean(
             postnummer = postnummer,
             fylke = fylke,
             lokallag = lokallag,
-            groupID = groupID
+            groupID = groupID,
+            kilde = Kilde.Hypersys
         )
     }
 
@@ -70,7 +72,8 @@ class ModelConverterBean(
             postnummer = postnummer,
             fylke = toFylke(postnummer),
             groupID = groupID,
-            lokallag = toLokallag(map["organisation"].toString())
+            lokallag = toLokallag(map["organisation"].toString()),
+            kilde = Kilde.Hypersys
         )
     }
     private fun finnPostnummer(map: Map<*, *>): Int {

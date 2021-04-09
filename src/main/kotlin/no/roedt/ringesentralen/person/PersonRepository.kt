@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.person
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository
+import no.roedt.ringesentralen.Kilde
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -9,6 +10,7 @@ class PersonRepository : PanacheRepository<Person> {
     fun save(person: Person) {
         if (find("email", person.email).count() > 0L || telefonnummerFinsAlt(person)) {
             val telefonnummer = person.telefonnummer?.let { "'$it'"  }
+            val kilde = if (person.kilde == Kilde.Hypersys) ", kilde='${person.kilde}'" else ""
             update(
                 """fornavn = '${person.fornavn}', 
                         etternavn = '${person.etternavn}', 
@@ -18,6 +20,7 @@ class PersonRepository : PanacheRepository<Person> {
                         lokallag = ${person.lokallag},
                         groupID = ${person.groupID},
                         email = '${person.email}'
+                        $kilde
                         where ((email = '${person.email}') or (telefonnummer != null and telefonnummer = $telefonnummer)) 
                         """
             )
