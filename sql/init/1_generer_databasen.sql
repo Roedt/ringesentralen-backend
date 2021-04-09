@@ -4481,7 +4481,7 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7200,'KYRKSÆTER
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7201,'KYRKSÆTERØRA',5011);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7203,'VINJEØRA',5011);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7206,'HELLANDSJØEN',5011);
-INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7207,'YTRE SNILLFJORD',5055);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7207,'YTRE SNILLFJORD',5012);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7211,'KORSVEGEN',5028);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7212,'KORSVEGEN',5028);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7213,'GÅSBAKKEN',5028);
@@ -5823,6 +5823,7 @@ CREATE TABLE IF NOT EXISTS `oppfoelgingValg21` (
   `vilIkkeBliRingt` tinyint(1) DEFAULT NULL,
   `vilHaMedlemsLink` tinyint(1) DEFAULT NULL,
   `vilHaNyhetsbrevLink` tinyint(1) DEFAULT NULL,
+  `vilHaFellesskapLink` tinyint(1) DEFAULT NULL,
   FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
   INDEX (`personId`)
 );
