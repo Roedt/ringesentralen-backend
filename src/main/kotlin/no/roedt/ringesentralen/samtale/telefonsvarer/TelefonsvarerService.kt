@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.samtale.telefonsvarer
 
+import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.hypersys.Ringer
 import no.roedt.ringesentralen.hypersys.RingerRepository
 import no.roedt.ringesentralen.person.GroupID
@@ -24,7 +25,8 @@ class TelefonsvarerService(
             ringt = person.id.toInt(),
             ringer = ringerRepository.find("personId", systembruker.id.toInt()).firstResult<Ringer>().id.toInt(),
             kommentar = "Resultat frå telefonsvar",
-            resultat = request.resultat().nr
+            resultat = request.resultat().nr,
+            modus = if (person.hypersysID != null) Modus.medlemmer else Modus.velgere
         ))
 
         if (GroupID.referencesOneOf(person.groupID, GroupID.Admin, GroupID.LokalGodkjenner, GroupID.GodkjentRinger, GroupID.UgodkjentRinger)) return

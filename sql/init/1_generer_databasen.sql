@@ -5877,7 +5877,8 @@ CREATE TABLE IF NOT EXISTS `samtale` (
   `ringer` int(6) NOT NULL,
   `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `resultat` int(1) NOT NULL DEFAULT '0',
-  `kommentar` longtext,
+  `kommentar` longtext NULL,
+  `modus` varchar(20) NOT NULL,
   INDEX (`resultat`),
   FOREIGN KEY (`resultat`) REFERENCES `resultat` (`id`),
   INDEX(`ringt`),
@@ -5933,7 +5934,8 @@ CREATE TABLE IF NOT EXISTS `ringerIV1` (
 create or replace view v_mineSamtaler as
 select samtale.datetime as tidspunkt, ringt.telefonnummer as oppringtNummer, concat(ringt.fornavn, ' ', ringt.etternavn) as ringtNavn, r.displaytext as resultat,
 samtale.kommentar, oppfoelging.merAktiv, oppfoelging.valgkampsbrev, oppfoelging.vilHaMedlemsLink, oppfoelging.vilHaNyhetsbrevLink,
-ringerPerson.telefonnummer as ringersTelefonnummer, ringerPerson.hypersysID, concat(ringerPerson.fornavn, ' ', ringerPerson.etternavn) as ringerNavn, ringerPerson.lokallag
+ringerPerson.telefonnummer as ringersTelefonnummer, ringerPerson.hypersysID, concat(ringerPerson.fornavn, ' ', ringerPerson.etternavn) as ringerNavn, ringerPerson.lokallag,
+samtale.modus as modus
 from `samtale` samtale
 inner join person ringt on samtale.ringt = ringt.id
 inner join ringer ringer on ringer.id = samtale.ringer
