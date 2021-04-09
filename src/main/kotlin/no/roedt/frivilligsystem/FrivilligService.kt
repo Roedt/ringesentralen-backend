@@ -5,6 +5,7 @@ import no.roedt.frivilligsystem.kontakt.Kontakt
 import no.roedt.frivilligsystem.kontakt.KontaktRepository
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.ringesentralen.Kilde
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId
@@ -46,7 +47,8 @@ class FrivilligService(
         postnummer = postnummer.getPostnummer(),
         fylke = -1,
         lokallag = getLokallagFraPostnummer(postnummer) ?: 0,
-        groupID = 0
+        groupID = 0,
+        kilde = Kilde.Verva
 //        rolle = Rolle.frivillig
     )
 

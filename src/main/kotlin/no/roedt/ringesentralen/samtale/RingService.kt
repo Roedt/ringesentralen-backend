@@ -66,7 +66,7 @@ class RingServiceBean(
                 resultat = it[0] as String,
                 ringer = it[1] as String,
                 tidspunkt = (it[2] as Timestamp).toString(),
-                kommentar = it[3] as String,
+                kommentar = (it[3] ?: "") as String,
                 ringtNummer = oppringtNummer,
                 ringtNavn = it[4] as String
             ) }
@@ -80,7 +80,8 @@ class RingServiceBean(
                 ringt = request.skalRingesID().toInt(),
                 ringer = ringerId.toString().toInt(),
                 resultat = Resultat.Samtale_startet.nr,
-                kommentar = "Starter samtale"
+                kommentar = "Starter samtale",
+                modus = request.modus
             ))
     }
 
@@ -93,7 +94,8 @@ class RingServiceBean(
                 ringt = request.ringtID.toInt(),
                 ringer = ringer,
                 resultat = request.resultat.nr,
-                kommentar = request.kommentar
+                kommentar = request.kommentar,
+                modus = autentisertRequest.modus
             ))
         lagreResultat(getNesteGroupID(request), request, ringer)
     }
@@ -131,7 +133,7 @@ class RingServiceBean(
                 startSamtaleRequest = StartSamtaleRequest(
                     skalRingesID = personSomRingerTilbake.id
                 ),
-                modus = Modus.velgere
+                modus = if (personSomRingerTilbake.hypersysID != null) Modus.medlemmer else Modus.velgere
             ))
         return toResponse(personSomRingerTilbake)
     }

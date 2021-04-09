@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.historikk
 
 import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId
@@ -15,16 +16,16 @@ class HistorikkService(
     private val personRepository: PersonRepository
 ) {
 
-    fun getMineSamtaler(userId: UserId): List<Samtale> = getSamtaler("where hypersysID='${userId.userId}'")
+    fun getMineSamtaler(userId: UserId, modus: Modus): List<Samtale> = getSamtaler(modus, "where hypersysID='${userId.userId}'")
 
-    fun getLagetsSamtaler(userId: UserId): List<Samtale> = getSamtaler(
+    fun getLagetsSamtaler(userId: UserId, modus: Modus): List<Samtale> = getSamtaler(modus,
         "where lokallag = ${personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag}"
     )
 
-    private fun getSamtaler(whereklausul: String): List<Samtale> {
+    private fun getSamtaler(modus: Modus, whereklausul: String): List<Samtale> {
         val sql =
             "select resultat, ringerNavn, tidspunkt, kommentar, oppringtNummer, ringtNavn, merAktiv, valgkampsbrev " +
-                    "from v_mineSamtaler $whereklausul"
+                    "from v_mineSamtaler $whereklausul and modus='${modus.name}'"
         return databaseUpdater.getResultList(sql)
             .map { it as Array<*> }
             .map {
@@ -32,7 +33,7 @@ class HistorikkService(
                     resultat = it[0] as String,
                     ringer = it[1] as String,
                     tidspunkt = (it[2] as Timestamp).toString(),
-                    kommentar = it[3] as String,
+                    kommentar = (it[3] ?: "") as String,
                     ringtNummer = (it[4] ?: "Ukjent") as String,
                     ringtNavn = it[5] as String
                 )

@@ -4481,7 +4481,7 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7200,'KYRKSÆTER
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7201,'KYRKSÆTERØRA',5011);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7203,'VINJEØRA',5011);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7206,'HELLANDSJØEN',5011);
-INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7207,'YTRE SNILLFJORD',5055);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7207,'YTRE SNILLFJORD',5012);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7211,'KORSVEGEN',5028);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7212,'KORSVEGEN',5028);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (7213,'GÅSBAKKEN',5028);
@@ -5789,6 +5789,7 @@ CREATE TABLE IF NOT EXISTS `person` (
   `groupID` int(2) DEFAULT NULL,
   `oppretta` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lokallag` int(3) DEFAULT NULL,
+  `kilde` varchar(20) DEFAULT NULL,
   FOREIGN KEY (`groupID`) REFERENCES `brukergruppe` (`id`),
   FOREIGN KEY(`fylke`) REFERENCES `fylker` (`id`),
   FOREIGN KEY(`lokallag`) REFERENCES `lokallag` (`id`),
@@ -5822,6 +5823,7 @@ CREATE TABLE IF NOT EXISTS `oppfoelgingValg21` (
   `vilIkkeBliRingt` tinyint(1) DEFAULT NULL,
   `vilHaMedlemsLink` tinyint(1) DEFAULT NULL,
   `vilHaNyhetsbrevLink` tinyint(1) DEFAULT NULL,
+  `vilHaFellesskapLink` tinyint(1) DEFAULT NULL,
   FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
   INDEX (`personId`)
 );
@@ -5875,7 +5877,8 @@ CREATE TABLE IF NOT EXISTS `samtale` (
   `ringer` int(6) NOT NULL,
   `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `resultat` int(1) NOT NULL DEFAULT '0',
-  `kommentar` longtext,
+  `kommentar` longtext NULL,
+  `modus` varchar(20) NOT NULL,
   INDEX (`resultat`),
   FOREIGN KEY (`resultat`) REFERENCES `resultat` (`id`),
   INDEX(`ringt`),
@@ -5931,7 +5934,8 @@ CREATE TABLE IF NOT EXISTS `ringerIV1` (
 create or replace view v_mineSamtaler as
 select samtale.datetime as tidspunkt, ringt.telefonnummer as oppringtNummer, concat(ringt.fornavn, ' ', ringt.etternavn) as ringtNavn, r.displaytext as resultat,
 samtale.kommentar, oppfoelging.merAktiv, oppfoelging.valgkampsbrev, oppfoelging.vilHaMedlemsLink, oppfoelging.vilHaNyhetsbrevLink,
-ringerPerson.telefonnummer as ringersTelefonnummer, ringerPerson.hypersysID, concat(ringerPerson.fornavn, ' ', ringerPerson.etternavn) as ringerNavn, ringerPerson.lokallag
+ringerPerson.telefonnummer as ringersTelefonnummer, ringerPerson.hypersysID, concat(ringerPerson.fornavn, ' ', ringerPerson.etternavn) as ringerNavn, ringerPerson.lokallag,
+samtale.modus as modus
 from `samtale` samtale
 inner join person ringt on samtale.ringt = ringt.id
 inner join ringer ringer on ringer.id = samtale.ringer
