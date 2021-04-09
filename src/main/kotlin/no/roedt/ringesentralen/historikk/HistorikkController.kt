@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.historikk
 
+import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.faulttolerance.Bulkhead
@@ -13,6 +14,7 @@ import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
+import javax.ws.rs.QueryParam
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.SecurityContext
@@ -32,7 +34,7 @@ class HistorikkController(private val historikkService: HistorikkService) : Ring
     @Operation(summary = "Historikk over mine samtaler", description = Roles.bruker)
     @Bulkhead(5)
     @Retry
-    fun getMineSamtaler(@Context ctx: SecurityContext) = historikkService.getMineSamtaler(ctx.userId())
+    fun getMineSamtaler(@Context ctx: SecurityContext, @QueryParam("modus") modus: Modus) = historikkService.getMineSamtaler(ctx.userId(), modus)
 
     @RolesAllowed(Roles.godkjenner, Roles.admin)
     @GET
@@ -41,7 +43,7 @@ class HistorikkController(private val historikkService: HistorikkService) : Ring
     @Operation(summary = "Historikk over lagets samtaler", description = Roles.godkjennerAdmin)
     @Bulkhead(5)
     @Retry
-    fun getLagetsSamtaler(@Context ctx: SecurityContext) = historikkService.getLagetsSamtaler(ctx.userId())
+    fun getLagetsSamtaler(@Context ctx: SecurityContext, @QueryParam("modus") modus: Modus) = historikkService.getLagetsSamtaler(ctx.userId(), modus)
 
     @RolesAllowed(Roles.ringer)
     @GET

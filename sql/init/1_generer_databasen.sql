@@ -5935,7 +5935,7 @@ create or replace view v_mineSamtaler as
 select samtale.datetime as tidspunkt, ringt.telefonnummer as oppringtNummer, concat(ringt.fornavn, ' ', ringt.etternavn) as ringtNavn, r.displaytext as resultat,
 samtale.kommentar, oppfoelging.merAktiv, oppfoelging.valgkampsbrev, oppfoelging.vilHaMedlemsLink, oppfoelging.vilHaNyhetsbrevLink,
 ringerPerson.telefonnummer as ringersTelefonnummer, ringerPerson.hypersysID, concat(ringerPerson.fornavn, ' ', ringerPerson.etternavn) as ringerNavn, ringerPerson.lokallag,
-samtale.modus as modus
+samtale.modus as samtalemodus
 from `samtale` samtale
 inner join person ringt on samtale.ringt = ringt.id
 inner join ringer ringer on ringer.id = samtale.ringer
