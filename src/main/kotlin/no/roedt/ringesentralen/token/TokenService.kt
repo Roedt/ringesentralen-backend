@@ -42,20 +42,20 @@ class TokenService(
                 .sign(privateKeyFactory.readPrivateKey())
         }
 
-        val hypersysToken: Token = try {
+        val hypersysToken: Pair<Token, Person?> = try {
             hypersysLoginBean.login(loginRequest)
         }
         catch (e: Exception) {
             e.printStackTrace()
             throw ServiceUnavailableException("Kunne ikke kontakte Hyperys")
         }
-        if (hypersysToken is UgyldigToken)
-            throw ForbiddenException(hypersysToken.error)
-        return generateToken(hypersysToken as GyldigPersonToken)
+        if (hypersysToken.first is UgyldigToken)
+            throw ForbiddenException((hypersysToken.first as UgyldigToken).error)
+        return generateToken(hypersysToken.first as GyldigPersonToken, hypersysToken.second!!)
     }
 
-    private fun generateToken(hypersysToken: GyldigPersonToken): String = generateBaseToken()
-        .groups(getGroups(hypersysToken))
+    private fun generateToken(hypersysToken: GyldigPersonToken, person: Person): String = generateBaseToken()
+        .groups(getGroups(hypersysToken, person))
         .claim("hypersys.token_type", hypersysToken.token_type)
         .claim("hypersys.scope", hypersysToken.scope)
         .claim("hypersys.access_token", hypersysToken.access_token)
@@ -74,12 +74,18 @@ class TokenService(
 
     private fun getTokenExpiresAt() = System.currentTimeMillis() + tokenExpiryPeriod.toSeconds()
 
-    private fun getGroups(hypersysToken: GyldigPersonToken): Set<String> {
-        val groupID = GroupID.from(getPersonFromHypersysID(hypersysToken).groupID)
-        if (groupID.nr < GroupID.UgodkjentRinger.nr) throw NotAuthorizedException("${hypersysToken.user_id} har ikkje gyldig rolle for å bruke systemet.")
-        return groupID
+    private fun getGroups(hypersysToken: GyldigPersonToken, person: Person): Set<String> =
+        getRolle(hypersysToken, person)
             .roller
             .also { i -> if (i.isEmpty()) println("Fann ingen roller for ${hypersysToken.user_id}") }
+
+    private fun getRolle(hypersysToken: GyldigPersonToken,person: Person): GroupID {
+        var groupID = GroupID.from(getPersonFromHypersysID(hypersysToken).groupID)
+        if (GroupID.isIkkeRegistrertRinger(groupID.nr)) {
+            groupID = GroupID.from(person.groupID)
+        }
+        if (groupID.nr < GroupID.UgodkjentRinger.nr) throw NotAuthorizedException("${hypersysToken.user_id} har ikkje gyldig rolle for å bruke systemet.")
+        return groupID
     }
 
     private fun getPersonFromHypersysID(hypersysToken: GyldigPersonToken) =
