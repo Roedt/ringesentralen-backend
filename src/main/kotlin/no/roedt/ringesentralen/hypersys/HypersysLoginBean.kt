@@ -3,6 +3,7 @@ package no.roedt.ringesentralen.hypersys
 import no.roedt.ringesentralen.hypersys.externalModel.Profile
 import no.roedt.ringesentralen.person.*
 import no.roedt.ringesentralen.token.SecretFactory
+import java.net.http.HttpResponse
 import java.util.*
 import javax.enterprise.context.Dependent
 import kotlin.math.max
@@ -19,11 +20,7 @@ class HypersysLoginBean(
     private val aesUtil: AESUtil
 ) {
     fun login(loginRequest: LoginRequest): Pair<Token, Person?> {
-        val brukerId = secretFactory.getHypersysBrukerId()
-        val brukerSecret = secretFactory.getHypersysBrukerSecret()
-        val brukarnamn = aesUtil.decrypt(loginRequest.brukarnamn).also { EpostValidator.validate(it) }
-        val passord = aesUtil.decrypt(loginRequest.passord)
-        val response = hypersysProxy.post(brukerId, brukerSecret, "grant_type=password&username=$brukarnamn&password=$passord", loggingtekst = "brukarinnlogging")
+        val response = postLogin(loginRequest)
         if (response.statusCode() != 200) {
             return Pair(hypersysProxy.readResponse(response, UgyldigToken::class.java), null)
         }
@@ -33,18 +30,20 @@ class HypersysLoginBean(
         return Pair(gyldigToken, person)
     }
 
+    private fun postLogin(loginRequest: LoginRequest): HttpResponse<String> {
+        val brukerId = secretFactory.getHypersysBrukerId()
+        val brukerSecret = secretFactory.getHypersysBrukerSecret()
+        val brukarnamn = aesUtil.decrypt(loginRequest.brukarnamn).also { EpostValidator.validate(it) }
+        val passord = aesUtil.decrypt(loginRequest.passord)
+        return hypersysProxy.post(brukerId, brukerSecret, "grant_type=password&username=$brukarnamn&password=$passord", loggingtekst = "brukarinnlogging")
+    }
+
     private fun oppdaterRingerFraaHypersys(token: GyldigPersonToken): Person {
         val profile: Profile = hypersysProxy.get("actor/api/profile/", token, Profile::class.java)
         val convertedPerson  = modelConverter.convert(profile.user, getRolle(profile))
 
-        val id = lagrePerson(convertedPerson)
-
-        if (ringerRepository.find("personId", id.toInt()).count() == 0L) {
-            ringerRepository.persist(Ringer(personId = id.toInt()))
-        }
-
+        lagreSomRinger(convertedPerson)
         oppdaterBrukergruppeFraV1(convertedPerson)
-
         loginAttemptRepository.persist(LoginAttempt(hypersysID = profile.user.id))
         return convertedPerson
     }
@@ -57,6 +56,14 @@ class HypersysLoginBean(
             return GroupID.UgodkjentRinger.nr
         }
         return groupID.get()
+    }
+
+    private fun lagreSomRinger(convertedPerson: Person) {
+        val id = lagrePerson(convertedPerson)
+
+        if (ringerRepository.find("personId", id.toInt()).count() == 0L) {
+            ringerRepository.persist(Ringer(personId = id.toInt()))
+        }
     }
 
     private fun lagrePerson(convertedPerson: Person): Long {
