@@ -32,26 +32,33 @@ class TokenService(
         }
 
         if (loginRequest.systembruker) {
-            if (aesUtil.decrypt(loginRequest.brukarnamn) != secretFactory.getFrontendSystembruker() || aesUtil.decrypt(loginRequest.passord) != secretFactory.getFrontendSystembrukerPassord()) {
-                System.err.println(loginRequest)
-                throw IllegalArgumentException("Ugyldig brukernavn eller passord")
-            }
-            return generateBaseToken()
-                .groups(Roles.systembrukerFrontend)
-                .claim("hypersys.user_id", personRepository.find("fornavn='Systembruker' and etternavn='Frontend'").firstResult<Person>().hypersysID)
-                .sign(privateKeyFactory.readPrivateKey())
+            return loginSomSystembruker(loginRequest)
         }
 
+        val hypersysToken: Pair<Token, Person?> = loginMotHypersys(loginRequest)
+        return generateToken(hypersysToken.first as GyldigPersonToken, hypersysToken.second!!)
+    }
+
+    private fun loginSomSystembruker(loginRequest: LoginRequest): String {
+        if (aesUtil.decrypt(loginRequest.brukarnamn) != secretFactory.getFrontendSystembruker() || aesUtil.decrypt(loginRequest.passord) != secretFactory.getFrontendSystembrukerPassord()) {
+            System.err.println(loginRequest)
+            throw IllegalArgumentException("Ugyldig brukernavn eller passord")
+        }
+        return generateBaseToken()
+            .groups(Roles.systembrukerFrontend)
+            .claim("hypersys.user_id", personRepository.find("fornavn='Systembruker' and etternavn='Frontend'").firstResult<Person>().hypersysID)
+            .sign(privateKeyFactory.readPrivateKey())
+    }
+
+    private fun loginMotHypersys(loginRequest: LoginRequest): Pair<Token, Person?> {
         val hypersysToken: Pair<Token, Person?> = try {
             hypersysLoginBean.login(loginRequest)
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             e.printStackTrace()
             throw ServiceUnavailableException("Kunne ikke kontakte Hyperys")
         }
-        if (hypersysToken.first is UgyldigToken)
-            throw ForbiddenException((hypersysToken.first as UgyldigToken).error)
-        return generateToken(hypersysToken.first as GyldigPersonToken, hypersysToken.second!!)
+        if (hypersysToken.first is UgyldigToken) throw ForbiddenException((hypersysToken.first as UgyldigToken).error)
+        return hypersysToken
     }
 
     private fun generateToken(hypersysToken: GyldigPersonToken, person: Person): String = generateBaseToken()
@@ -70,9 +77,7 @@ class TokenService(
             .subject("Ringesentralen")
             .upn("Ringesentralen")
             .issuedAt(System.currentTimeMillis())
-            .expiresAt(getTokenExpiresAt())
-
-    private fun getTokenExpiresAt() = System.currentTimeMillis() + tokenExpiryPeriod.toSeconds()
+            .expiresAt(System.currentTimeMillis() + tokenExpiryPeriod.toSeconds())
 
     private fun getGroups(hypersysToken: GyldigPersonToken, person: Person): Set<String> =
         getRolle(hypersysToken, person)
