@@ -1,9 +1,6 @@
 package no.roedt.ringesentralen.hypersys
 
-import no.roedt.ringesentralen.DatabaseUpdater
-import no.roedt.ringesentralen.Kilde
-import no.roedt.ringesentralen.Kommune
-import no.roedt.ringesentralen.KommuneRepository
+import no.roedt.ringesentralen.*
 import no.roedt.ringesentralen.hypersys.externalModel.Address
 import no.roedt.ringesentralen.hypersys.externalModel.Membership
 import no.roedt.ringesentralen.hypersys.externalModel.User
@@ -26,7 +23,8 @@ class ModelConverterBean(
     private val databaseUpdater: DatabaseUpdater,
     private val lokallagRepository: LokallagRepository,
     private val personRepository: PersonRepository,
-    private val kommuneRepository: KommuneRepository
+    private val kommuneRepository: KommuneRepository,
+    private val postnummerIKommunerMedFleireLagRepository: PostnummerIKommunerMedFleireLagRepository
 ) : ModelConverter {
 
     override fun convert(user: User, groupID: Int): Person {
@@ -35,9 +33,7 @@ class ModelConverterBean(
         val etternavn = user.name.substring(sisteMellomrom+1)
         val postnummer = toPostnummer(user)
         val lokallag = toLokallag(user.memberships)
-        val fylke =
-            if (postnummer == -1 && lokallag != -1) kommuneRepository.find("lokallag_id=?1", lokallag).firstResultOptional<Kommune>().map { it.fylke_id }.orElse(-1)
-            else toFylke(postnummer)
+        val fylke = if (postnummer == -1 && lokallag != -1) getFylkeFraLokallag(lokallag) else toFylke(postnummer)
         return Person(
             hypersysID = user.id,
             fornavn = fornavn,
@@ -51,7 +47,6 @@ class ModelConverterBean(
             kilde = Kilde.Hypersys
         )
     }
-
 
     override fun convertMembershipToPerson(map: Map<*, *>) : Person {
         val postnummer = finnPostnummer(map)
@@ -76,11 +71,12 @@ class ModelConverterBean(
             kilde = Kilde.Hypersys
         )
     }
+
+
     private fun finnPostnummer(map: Map<*, *>): Int {
         val addresses = listOf(toAddress(map["postal_address"]))
         return addresses.flatMap { it.postalCode }.firstOrNull { i -> i != "null" }?.toString()?.toInt() ?: -1
     }
-
     private fun toAddress(get: Any?): Address {
         val address = get as Map<*, *>
         return Address(
@@ -93,9 +89,9 @@ class ModelConverterBean(
         )
     }
 
-
     fun toTelefonnummer(telefonnummer: String): String? =
         telefonnummer.replace(" ", "").takeIf { it != "" }
+
 
     private fun toPostnummer(user: User) : Int = user.addresses.map { it.postalCode }.map { it[1] }.map { it.toInt() }.maxByOrNull { it != 1 } ?: -1
 
@@ -108,6 +104,16 @@ class ModelConverterBean(
             .map { it as Int }
             .firstOrNull()
             ?: -1
+
+    private fun getFylkeFraLokallag(lokallag: Int) =
+        kommuneRepository.find("lokallag_id=?1", lokallag).firstResultOptional<Kommune>()
+            .map { it.fylke_id }
+            .orElseGet {
+                postnummerIKommunerMedFleireLagRepository.find("lokallag=?1", lokallag)
+                    .firstResultOptional<PostnummerIKommunerMedFleireLag>()
+                    .map { it.fylke }
+                    .orElse(-1)
+            }
 
 
     fun toLokallag(memberships: List<Membership>): Int = getOrganisationName(memberships)?.let { toLokallag(it) } ?: -1
