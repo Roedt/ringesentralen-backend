@@ -3,7 +3,7 @@ package no.roedt.ringesentralen
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import io.quarkus.hibernate.orm.panache.PanacheRepository
 import io.quarkus.runtime.annotations.RegisterForReflection
-import javax.enterprise.context.Dependent
+import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
 import javax.persistence.Entity
 import javax.persistence.Table
@@ -26,5 +26,5 @@ data class PostnummerIKommunerMedFleireLag(
     )
 }
 
-@Dependent
+@ApplicationScoped
 class PostnummerIKommunerMedFleireLagRepository : PanacheRepository<PostnummerIKommunerMedFleireLag>
