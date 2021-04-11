@@ -28,7 +28,7 @@ class InnloggaBrukerService(
         telefonnummer = telefonnummer,
         email = email,
         postnummer = postnummer,
-        fylke = fylkeRepository.findById(fylke).navn,
+        fylke = fylke,
         lokallag = lokallag,
         rolle = GroupID.from(groupID).roller
     )
