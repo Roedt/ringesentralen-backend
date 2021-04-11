@@ -41,7 +41,7 @@ internal class RingTest {
 
         doReturn(listOf(1234)).whenever(databaseUpdater).getResultList(any())
 
-        ringController.hentNestePersonAaRinge(getContext(), Modus.velgere)
+        ringController.hentNestePersonAaRinge(getContext(), Modus.velgere, 1)
         verify(databaseUpdater).getResultList(any())
         verify(personRepository).findById(1234)
     }
@@ -51,7 +51,7 @@ internal class RingTest {
         val emptyList: List<Long> = listOf()
         doReturn(emptyList).whenever(databaseUpdater).getResultList(any())
 
-        ringController.hentNestePersonAaRinge(getContext(), Modus.velgere)
+        ringController.hentNestePersonAaRinge(getContext(), Modus.velgere, 1)
         verify(databaseUpdater).getResultList(any())
         verifyZeroInteractions(personRepository)
     }

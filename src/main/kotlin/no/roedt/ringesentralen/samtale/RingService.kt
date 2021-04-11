@@ -15,6 +15,7 @@ import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.Valg21SpesifikkeResultat
 import java.sql.Timestamp
 import javax.enterprise.context.ApplicationScoped
+import javax.ws.rs.NotAuthorizedException
 
 interface RingService {
     fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse?
@@ -44,7 +45,11 @@ class RingServiceBean(
 
     private fun hentFoerstePerson(request: AutentisertNestePersonAaRingeRequest): Any? {
         return if (request.modus == Modus.velgere) {
-            return hentNestePerson(getPerson(request.userId), request.lokallag)
+            val ringer = getPerson(request.userId)
+            if (ringer.lokallag != request.lokallag && !GroupID.referencesOneOf(ringer.groupID, GroupID.LokalGodkjenner, GroupID.Admin)) {
+                throw NotAuthorizedException("Kun godkjennarar og admins kan ringe utanfor eiget lokallag", "")
+            }
+            return hentNestePerson(ringer, request.lokallag)
         } else nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(getPerson(request.userId), request.userId, request.lokallag)
     }
 
