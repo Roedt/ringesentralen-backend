@@ -1,6 +1,8 @@
 package no.roedt.ringesentralen.innloggaBruker
 
+import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.brukere.FylkeRepository
+import no.roedt.ringesentralen.lokallag.Lokallag
 import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
@@ -14,17 +16,32 @@ class InnloggaBrukerService(
     private val fylkeRepository: FylkeRepository,
     private val lokallagRepository: LokallagRepository
 ) {
-    fun getProfil(userId: UserId): Profil = personRepository.find("hypersysID", userId.userId).firstResult<Person>().toProfil()
+    fun getProfil(userId: UserId): Profil = getPerson(userId).toProfil()
 
-private fun Person.toProfil(): Profil = Profil(
-    hypersysID = hypersysID,
-    fornavn = fornavn,
-    etternavn = etternavn,
-    telefonnummer = telefonnummer,
-    email = email,
-    postnummer = postnummer,
-    fylke = fylkeRepository.findById(fylke).navn,
-    lokallag = lokallagRepository.findById(lokallag.toLong()).navn,
-    rolle = GroupID.from(groupID).roller
-)
+    private fun getPerson(userId: UserId) =
+        personRepository.find("hypersysID", userId.userId).firstResult<Person>()
+
+    private fun Person.toProfil(): Profil = Profil(
+        hypersysID = hypersysID,
+        fornavn = fornavn,
+        etternavn = etternavn,
+        telefonnummer = telefonnummer,
+        email = email,
+        postnummer = postnummer,
+        fylke = fylkeRepository.findById(fylke).navn,
+        lokallag = lokallagRepository.findById(lokallag.toLong()).navn,
+        rolle = GroupID.from(groupID).roller
+    )
+
+    fun getLokallag(userId: UserId, groups: Set<String>): List<Lokallag> {
+        val person = getPerson(userId)
+        if (groups.contains(Roles.admin)) {
+            return lokallagRepository.findAll().list()
+        }
+        else if (groups.contains(Roles.godkjenner)) {
+            val fylkeFraLokallag = fylkeRepository.getFylkeFraLokallag(person.lokallag)
+            return lokallagRepository.fromFylke(fylkeFraLokallag)
+        }
+        return listOf(lokallagRepository.findById(person.lokallag.toLong()))
+    }
 }

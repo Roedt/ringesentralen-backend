@@ -3,7 +3,7 @@ package no.roedt.ringesentralen.lokallag
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import io.quarkus.hibernate.orm.panache.PanacheRepository
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.ringesentralen.*
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
 import javax.persistence.Entity
@@ -25,7 +25,9 @@ data class Lokallag(
 
 @ApplicationScoped
 class LokallagRepository(
-    private val databaseUpdater: DatabaseUpdater
+    private val databaseUpdater: DatabaseUpdater,
+    private val kommuneRepository: KommuneRepository,
+    private val postnummerIKommunerMedFleireLagRepository: PostnummerIKommunerMedFleireLagRepository
 ) : PanacheRepository<Lokallag> {
 
     fun fromPostnummer(postnummer: Int): Int =
@@ -42,4 +44,14 @@ class LokallagRepository(
             ?.map { it.toInt() }
             ?.orElse(-1)
             ?: -1
+
+    fun fromFylke(fylkeId: Int) : List<Lokallag> {
+        val fraKommune = kommuneRepository.find("fylke_id=?1", fylkeId).list<Kommune>()
+            .map { it.lokallag_id }
+            .map { findById(it.toLong()) }
+        val kommuneMedFleireLag = postnummerIKommunerMedFleireLagRepository.find("fylke=?1", fylkeId).list<PostnummerIKommunerMedFleireLag>()
+            .map { it.lokallag }
+            .map { findById(it.toLong()) }
+        return fraKommune + kommuneMedFleireLag
+    }
 }

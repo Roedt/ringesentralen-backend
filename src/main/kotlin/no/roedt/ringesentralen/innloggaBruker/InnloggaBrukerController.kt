@@ -35,4 +35,14 @@ class InnloggaBrukerController(val innloggaBrukerService: InnloggaBrukerService)
     @Bulkhead(5)
     @Retry
     fun getProfil(@Context ctx: SecurityContext) = innloggaBrukerService.getProfil(ctx.userId())
+
+
+    @RolesAllowed(Roles.bruker)
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/lokallag")
+    @Operation(summary = "Hent mine tilgjengelege lokallag", description = Roles.bruker)
+    @Bulkhead(3)
+    @Retry
+    fun getLokallag(@Context ctx: SecurityContext) = innloggaBrukerService.getLokallag(ctx.userId(), jwt.groups)
 }

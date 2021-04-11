@@ -71,11 +71,11 @@ class ModelConverterBean(
         )
     }
 
-
     private fun finnPostnummer(map: Map<*, *>): Int {
         val addresses = listOf(toAddress(map["postal_address"]))
         return addresses.flatMap { it.postalCode }.firstOrNull { i -> i != "null" }?.toString()?.toInt() ?: -1
     }
+
     private fun toAddress(get: Any?): Address {
         val address = get as Map<*, *>
         return Address(
