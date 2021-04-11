@@ -44,17 +44,17 @@ class RingServiceBean(
 
     private fun hentFoerstePerson(request: AutentisertNestePersonAaRingeRequest): Any? {
         return if (request.modus == Modus.velgere) {
-            return hentNestePerson(getPerson(request.userId))
-        } else nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(getPerson(request.userId), request.userId)
+            return hentNestePerson(getPerson(request.userId), request.lokallag)
+        } else nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(getPerson(request.userId), request.userId, request.lokallag)
     }
 
     fun getPerson(userId: UserId): Person = personRepository.find("hypersysID", userId.userId).firstResult()
 
-    private fun hentNestePerson(ringer: Person) = databaseUpdater.getResultList(
+    private fun hentNestePerson(ringer: Person, lokallag: Int) = databaseUpdater.getResultList(
         """SELECT v.id FROM v_personerSomKanRinges v 
                 WHERE fylke = ${ringer.fylke} 
                 AND hypersysID is null 
-                ORDER BY ABS(lokallag-'${ringer.lokallag}') ASC, 
+                ORDER BY ABS(lokallag-'${lokallag}') ASC, 
                 brukergruppe = ${GroupID.PrioritertAaRinge.nr} DESC,
                 v.hypersysID DESC""")
         .firstOrNull()

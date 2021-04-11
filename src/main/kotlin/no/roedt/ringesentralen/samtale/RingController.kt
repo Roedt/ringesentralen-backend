@@ -34,8 +34,12 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Operation(summary = "Finn neste person å ringe", description = Roles.ringer)
     @Retry
     @Transactional
-    fun hentNestePersonAaRinge(@Context ctx: SecurityContext, @QueryParam("modus") @DefaultValue("Velger") modus: Modus): NestePersonAaRingeResponse?
-            = ringService.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(ctx.userId(), modus))
+    fun hentNestePersonAaRinge(
+        @Context ctx: SecurityContext,
+        @QueryParam("modus") @DefaultValue("Velger") modus: Modus,
+        @QueryParam("lokallag") @DefaultValue("-1") lokallag: Int
+    ): NestePersonAaRingeResponse?
+            = ringService.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(ctx.userId(), modus, lokallag))
 
     @RolesAllowed(Roles.ringer)
     @POST

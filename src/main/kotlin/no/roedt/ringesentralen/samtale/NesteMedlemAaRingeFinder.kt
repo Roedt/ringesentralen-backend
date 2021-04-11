@@ -18,7 +18,7 @@ open class NesteMedlemAaRingeFinder(
     private val kommuneRepository: KommuneRepository
 ) {
 
-    fun hentIDForNesteMedlemAaRinge(ringer: Person, userId: UserId): Any? {
+    fun hentIDForNesteMedlemAaRinge(ringer: Person, userId: UserId, lokallag: Int): Any? {
         val nestePersonIEgetLokallag = hentNestePersonAaRingeIDetteLokallaget(
             ringer,
             hypersysService.getLokallag(userId)
