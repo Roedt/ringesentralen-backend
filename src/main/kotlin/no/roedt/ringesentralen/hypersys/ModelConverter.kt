@@ -17,7 +17,6 @@ interface ModelConverter {
     fun convert(user: User, groupID: Int) : Person
     fun convertMembershipToPerson(map: Map<*, *>): Person
     fun toFylke(postnummer: Int): Int
-    fun toLokallag(postnummer: Int): Int
 }
 
 @Dependent
@@ -125,12 +124,4 @@ class ModelConverterBean(
             .firstOrNull()
 
     private fun itOrNull(any: Any?): String? = if (any.toString() != "") any.toString() else null
-
-    override fun toLokallag(postnummer: Int): Int =
-        toLokallagId("select lokallag from postnummerIKommunerMedFleireLag where postnummerFra <= $postnummer and postnummerTil >= $postnummer")
-            ?: toLokallagId("select l.id from lokallag l inner join kommune k on k.lokallag_id = l.id inner join postnummer  p on p.kommunekode = k.nummer where p.postnummer = $postnummer")
-            ?: -1
-
-    private fun toLokallagId(query: String) = databaseUpdater.getResultList(query).map { it as Int }.firstOrNull()
-
 }
