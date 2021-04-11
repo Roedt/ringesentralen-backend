@@ -11,6 +11,6 @@ data class Profil(
     var email: String?,
     var postnummer: Int,
     var fylke: String,
-    var lokallag: String,
+    var lokallag: Int,
     var rolle: Set<String>
 )

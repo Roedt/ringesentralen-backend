@@ -29,7 +29,7 @@ class InnloggaBrukerService(
         email = email,
         postnummer = postnummer,
         fylke = fylkeRepository.findById(fylke).navn,
-        lokallag = lokallagRepository.findById(lokallag.toLong()).navn,
+        lokallag = lokallag,
         rolle = GroupID.from(groupID).roller
     )
 
