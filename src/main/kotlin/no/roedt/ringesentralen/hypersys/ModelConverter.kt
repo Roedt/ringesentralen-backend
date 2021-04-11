@@ -6,7 +6,6 @@ import no.roedt.ringesentralen.brukere.FylkeRepository
 import no.roedt.ringesentralen.hypersys.externalModel.Address
 import no.roedt.ringesentralen.hypersys.externalModel.Membership
 import no.roedt.ringesentralen.hypersys.externalModel.User
-import no.roedt.ringesentralen.lokallag.Lokallag
 import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
@@ -67,7 +66,7 @@ class ModelConverterBean(
             postnummer = postnummer,
             fylke = toFylke(postnummer),
             groupID = groupID,
-            lokallag = toLokallag(map["organisation"].toString()),
+            lokallag = lokallagRepository.fromOrganisationName(map["organisation"].toString()),
             kilde = Kilde.Hypersys
         )
     }
@@ -105,16 +104,7 @@ class ModelConverterBean(
             .firstOrNull()
             ?: -1
 
-    fun toLokallag(memberships: List<Membership>): Int = getOrganisationName(memberships)?.let { toLokallag(it) } ?: -1
-
-    private fun toLokallag(organisationName: String) : Int =
-        organisationName
-            .let { lokallagRepository.find("navn", it) }
-            .firstResultOptional<Lokallag>()
-            ?.map { it.id }
-            ?.map { it.toInt() }
-            ?.orElse(-1)
-            ?: -1
+    fun toLokallag(memberships: List<Membership>): Int = getOrganisationName(memberships)?.let { lokallagRepository.fromOrganisationName(it) } ?: -1
 
     private fun getOrganisationName(memberships: List<Membership>) =
         memberships

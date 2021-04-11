@@ -34,4 +34,12 @@ class LokallagRepository(
             ?: -1
 
     private fun toLokallagId(query: String) = databaseUpdater.getResultList(query).map { it as Int }.firstOrNull()
+
+    fun fromOrganisationName(organisationName: String) : Int =
+        find("navn", organisationName)
+            .firstResultOptional<Lokallag>()
+            ?.map { it.id }
+            ?.map { it.toInt() }
+            ?.orElse(-1)
+            ?: -1
 }
