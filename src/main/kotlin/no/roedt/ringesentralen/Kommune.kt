@@ -17,7 +17,7 @@ data class Kommune(
     var navn: String,
     @Id
     var nummer: Int,
-    var lokallag_id: Int,
+    var lokallag_id: Int?,
     var fylke_id: Int
 ) : PanacheEntityBase() {
     constructor() : this(

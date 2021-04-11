@@ -46,12 +46,13 @@ class LokallagRepository(
             ?: -1
 
     fun fromFylke(fylkeId: Int) : List<Lokallag> {
-        val fraKommune = kommuneRepository.find("fylke_id=?1", fylkeId).list<Kommune>()
-            .map { it.lokallag_id }
+        val fraKommune = kommuneRepository.find("fylke_id=?1", fylkeId)
+            .list<Kommune>()
+            .mapNotNull { it.lokallag_id }
             .map { findById(it.toLong()) }
         val kommuneMedFleireLag = postnummerIKommunerMedFleireLagRepository.find("fylke=?1", fylkeId).list<PostnummerIKommunerMedFleireLag>()
             .map { it.lokallag }
             .map { findById(it.toLong()) }
-        return fraKommune + kommuneMedFleireLag
+        return (fraKommune + kommuneMedFleireLag).distinct()
     }
 }
