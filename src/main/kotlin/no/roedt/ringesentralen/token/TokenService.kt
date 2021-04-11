@@ -55,7 +55,7 @@ class TokenService(
             hypersysLoginBean.login(loginRequest)
         } catch (e: Exception) {
             e.printStackTrace()
-            throw ServiceUnavailableException("Kunne ikke kontakte Hyperys")
+            throw ServiceUnavailableException("Kunne ikke kontakte Hypersys")
         }
         if (hypersysToken.first is UgyldigToken) throw ForbiddenException((hypersysToken.first as UgyldigToken).error)
         return hypersysToken
@@ -89,7 +89,8 @@ class TokenService(
         if (GroupID.isIkkeRegistrertRinger(groupID.nr)) {
             groupID = GroupID.from(person.groupID)
         }
-        if (groupID.nr < GroupID.UgodkjentRinger.nr) throw NotAuthorizedException("${hypersysToken.user_id} har ikkje gyldig rolle for å bruke systemet.")
+        if (groupID.nr < GroupID.UgodkjentRinger.nr)
+            throw NotAuthorizedException("${hypersysToken.user_id} har ikkje gyldig rolle for å bruke systemet.", "")
         return groupID
     }
 
