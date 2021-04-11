@@ -1,6 +1,8 @@
 package no.roedt.ringesentralen.hypersys
 
-import no.roedt.ringesentralen.*
+import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.ringesentralen.Kilde
+import no.roedt.ringesentralen.brukere.FylkeRepository
 import no.roedt.ringesentralen.hypersys.externalModel.Address
 import no.roedt.ringesentralen.hypersys.externalModel.Membership
 import no.roedt.ringesentralen.hypersys.externalModel.User
@@ -23,8 +25,7 @@ class ModelConverterBean(
     private val databaseUpdater: DatabaseUpdater,
     private val lokallagRepository: LokallagRepository,
     private val personRepository: PersonRepository,
-    private val kommuneRepository: KommuneRepository,
-    private val postnummerIKommunerMedFleireLagRepository: PostnummerIKommunerMedFleireLagRepository
+    private val fylkeRepository: FylkeRepository
 ) : ModelConverter {
 
     override fun convert(user: User, groupID: Int): Person {
@@ -33,7 +34,7 @@ class ModelConverterBean(
         val etternavn = user.name.substring(sisteMellomrom+1)
         val postnummer = toPostnummer(user)
         val lokallag = toLokallag(user.memberships)
-        val fylke = if (postnummer == -1 && lokallag != -1) getFylkeFraLokallag(lokallag) else toFylke(postnummer)
+        val fylke = if (postnummer == -1 && lokallag != -1) fylkeRepository.getFylkeFraLokallag(lokallag) else toFylke(postnummer)
         return Person(
             hypersysID = user.id,
             fornavn = fornavn,
@@ -104,17 +105,6 @@ class ModelConverterBean(
             .map { it as Int }
             .firstOrNull()
             ?: -1
-
-    private fun getFylkeFraLokallag(lokallag: Int) =
-        kommuneRepository.find("lokallag_id=?1", lokallag).firstResultOptional<Kommune>()
-            .map { it.fylke_id }
-            .orElseGet {
-                postnummerIKommunerMedFleireLagRepository.find("lokallag=?1", lokallag)
-                    .firstResultOptional<PostnummerIKommunerMedFleireLag>()
-                    .map { it.fylke }
-                    .orElse(-1)
-            }
-
 
     fun toLokallag(memberships: List<Membership>): Int = getOrganisationName(memberships)?.let { toLokallag(it) } ?: -1
 
