@@ -229,6 +229,7 @@ insert into `lokallag` (navn) values
 ('Rødt Sortland'),
 ('Rødt Stange'),
 ('Rødt Stavanger'),
+('Rødt Stavanger Studentlag'),
 ('Rødt Steigen'),
 ('Rødt Steinkjer'),
 ('Rødt Stjørdal'),
