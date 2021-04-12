@@ -9,5 +9,6 @@ data class Samtale(
     val kommentar: String?,
     val resultat: String,
     val ringtNummer: String,
-    val ringtNavn: String
+    val ringtNavn: String,
+    val oppfoelging: OppfoelgingValg21?
 )

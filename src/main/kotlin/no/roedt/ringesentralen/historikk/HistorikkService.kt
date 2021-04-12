@@ -5,6 +5,7 @@ import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId
+import no.roedt.ringesentralen.samtale.OppfoelgingValg21Repository
 import no.roedt.ringesentralen.samtale.Samtale
 import java.math.BigInteger
 import java.sql.Timestamp
@@ -13,7 +14,8 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class HistorikkService(
     private val databaseUpdater: DatabaseUpdater,
-    private val personRepository: PersonRepository
+    private val personRepository: PersonRepository,
+    private val oppfoelgingValg21Repository: OppfoelgingValg21Repository
 ) {
 
     fun getMineSamtaler(userId: UserId, modus: Modus): List<Samtale> = getSamtaler(modus, "where hypersysID='${userId.userId}'")
@@ -24,7 +26,7 @@ class HistorikkService(
 
     private fun getSamtaler(modus: Modus, whereklausul: String): List<Samtale> {
         val sql =
-            "select resultat, ringerNavn, tidspunkt, kommentar, oppringtNummer, ringtNavn, merAktiv, valgkampsbrev " +
+            "select resultat, ringerNavn, tidspunkt, kommentar, oppringtNummer, ringtNavn, oppfoelgingId " +
                     "from v_mineSamtaler $whereklausul and modus='${modus.name}'"
         return databaseUpdater.getResultList(sql)
             .map { it as Array<*> }
@@ -35,7 +37,8 @@ class HistorikkService(
                     tidspunkt = (it[2] as Timestamp).toString(),
                     kommentar = (it[3] ?: "") as String,
                     ringtNummer = (it[4] ?: "Ukjent") as String,
-                    ringtNavn = it[5] as String
+                    ringtNavn = it[5] as String,
+                    oppfoelging = it[6]?.toString()?.let { i -> if (i != "null") oppfoelgingValg21Repository.findById(i.toLong()) else null }
                 )
             }
     }

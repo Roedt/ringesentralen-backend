@@ -65,7 +65,7 @@ class RingServiceBean(
         .firstOrNull()
 
     private fun getTidlegareSamtalarMedDennePersonen(oppringtNummer: String): List<Samtale> =
-        databaseUpdater.getResultList("SELECT resultat, ringerNavn, datetime, kommentar, ringtNavn FROM `v_samtalerResultat` WHERE oppringtNummer = '$oppringtNummer'")
+        databaseUpdater.getResultList("SELECT resultat, ringerNavn, datetime, kommentar, ringtNavn, oppfoelgingId FROM `v_samtalerResultat` WHERE oppringtNummer = '$oppringtNummer'")
             .map { it as Array<*> }
             .map { Samtale(
                 resultat = it[0] as String,
@@ -73,7 +73,8 @@ class RingServiceBean(
                 tidspunkt = (it[2] as Timestamp).toString(),
                 kommentar = (it[3] ?: "") as String,
                 ringtNummer = oppringtNummer,
-                ringtNavn = it[4] as String
+                ringtNavn = it[4] as String,
+                oppfoelging = it[5]?.toString()?.let { i -> if (i != "null") oppfoelgingValg21Repository.findById(i.toLong()) else null }
             ) }
             .toList()
 

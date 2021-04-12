@@ -5936,7 +5936,7 @@ CREATE TABLE IF NOT EXISTS `ringerIV1` (
 
 create or replace view v_mineSamtaler as
 select samtale.datetime as tidspunkt, ringt.telefonnummer as oppringtNummer, concat(ringt.fornavn, ' ', ringt.etternavn) as ringtNavn, r.displaytext as resultat,
-samtale.kommentar, oppfoelging.merAktiv, oppfoelging.valgkampsbrev, oppfoelging.vilHaMedlemsLink, oppfoelging.vilHaNyhetsbrevLink,
+samtale.kommentar, oppfoelging.id as oppfoelgingId,
 ringerPerson.telefonnummer as ringersTelefonnummer, ringerPerson.hypersysID, concat(ringerPerson.fornavn, ' ', ringerPerson.etternavn) as ringerNavn, ringerPerson.lokallag,
 samtale.modus as modus
 from `samtale` samtale
@@ -5962,13 +5962,20 @@ SELECT p.telefonnummer, concat(p.fornavn,' ',p.etternavn) as navn, p.postnummer,
 -- --------------------------------------------------------
 
 create or replace view v_samtalerResultat AS
-SELECT distinct concat(ringerPerson.fornavn,' ',ringerPerson.etternavn) as ringerNavn, samtale.datetime as `datetime`, samtale.kommentar, r.displaytext as resultat,
-concat(ringt.fornavn,' ',ringt.etternavn) as ringtNavn, ringt.telefonnummer as oppringtNummer
+SELECT distinct
+concat(ringerPerson.fornavn,' ',ringerPerson.etternavn) as ringerNavn,
+samtale.datetime as `datetime`,
+samtale.kommentar,
+r.displaytext as resultat,
+concat(ringt.fornavn,' ',ringt.etternavn) as ringtNavn,
+ringt.telefonnummer as oppringtNummer,
+oppfoelging.id as oppfoelgingId
 FROM `samtale` samtale
 INNER JOIN `person` ringt on ringt.id = samtale.ringt
 INNER JOIN `resultat` r on r.id = samtale.resultat
 INNER JOIN `ringer` ringer on ringer.id = samtale.ringer
 INNER join `person` ringerPerson on ringerPerson.id = ringer.personId
+left outer join oppfoelgingValg21 oppfoelging on oppfoelging.personId = ringt.id
 WHERE samtale.resultat != 9
 ORDER BY samtale.datetime ASC;
 
