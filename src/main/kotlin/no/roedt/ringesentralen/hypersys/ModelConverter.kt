@@ -92,7 +92,13 @@ class ModelConverterBean(
         telefonnummer.replace(" ", "").takeIf { it != "" }
 
 
-    private fun toPostnummer(user: User) : Int = user.addresses.map { it.postalCode }.map { it[1] }.map { it.toInt() }.maxByOrNull { it != 1 } ?: -1
+    private fun toPostnummer(user: User) : Int {
+        val postnummer = user.addresses.map { it.postalCode }.map { it[1] }.map { it.toInt() }.maxByOrNull { it != 1 } ?: -1
+        if (postnummer == -1) {
+            println("Fekk postnummer -1, dette var adressene: ${user.addresses}")
+        }
+        return postnummer
+    }
 
     override fun toFylke(postnummer: Int): Int =
         databaseUpdater.getResultList(
