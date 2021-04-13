@@ -5832,22 +5832,6 @@ CREATE TABLE IF NOT EXISTS `ringer` (
 
 -- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `oppfoelgingValg21` (
-  `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `personId` int(6) NOT NULL,
-  `koronaprogram` tinyint(1) DEFAULT NULL,
-  `merAktiv` tinyint(1) DEFAULT NULL,
-  `valgkampsbrev` tinyint(1) DEFAULT NULL,
-  `vilIkkeBliRingt` tinyint(1) DEFAULT NULL,
-  `vilHaMedlemsLink` tinyint(1) DEFAULT NULL,
-  `vilHaNyhetsbrevLink` tinyint(1) DEFAULT NULL,
-  `vilHaFellesskapLink` tinyint(1) DEFAULT NULL,
-  FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
-  INDEX (`personId`)
-);
-
--- --------------------------------------------------------
-
 CREATE TABLE IF NOT EXISTS `resultat` (
   `id` int(1) NOT NULL PRIMARY KEY,
   `navn` varchar(200) NOT NULL,
@@ -5907,6 +5891,22 @@ CREATE TABLE IF NOT EXISTS `samtale` (
 
 -- --------------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS `oppfoelgingValg21` (
+  `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `samtaleId` int(6) NOT NULL,
+  `koronaprogram` tinyint(1) DEFAULT NULL,
+  `merAktiv` tinyint(1) DEFAULT NULL,
+  `valgkampsbrev` tinyint(1) DEFAULT NULL,
+  `vilIkkeBliRingt` tinyint(1) DEFAULT NULL,
+  `vilHaMedlemsLink` tinyint(1) DEFAULT NULL,
+  `vilHaNyhetsbrevLink` tinyint(1) DEFAULT NULL,
+  `vilHaFellesskapLink` tinyint(1) DEFAULT NULL,
+  FOREIGN KEY (`samtaleId`) REFERENCES `samtale` (`id`),
+  INDEX (`samtaleId`)
+);
+
+-- --------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS `login_attempts` (
   `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `hypersysID` int(6) NOT NULL,
@@ -5958,7 +5958,7 @@ from `samtale` samtale
 inner join person ringt on samtale.ringt = ringt.id
 inner join ringer ringer on ringer.id = samtale.ringer
 inner join person ringerPerson on ringer.personId = ringerPerson.id
-left outer join oppfoelgingValg21 oppfoelging on oppfoelging.personId = ringt.id
+left outer join oppfoelgingValg21 oppfoelging on oppfoelging.samtaleId = samtale.id
 inner join resultat r on r.id = samtale.resultat;
 
 -- --------------------------------------------------------
@@ -5990,7 +5990,7 @@ INNER JOIN `person` ringt on ringt.id = samtale.ringt
 INNER JOIN `resultat` r on r.id = samtale.resultat
 INNER JOIN `ringer` ringer on ringer.id = samtale.ringer
 INNER join `person` ringerPerson on ringerPerson.id = ringer.personId
-left outer join oppfoelgingValg21 oppfoelging on oppfoelging.personId = ringt.id
+left outer join oppfoelgingValg21 oppfoelging on oppfoelging.samtaleId = samtale.id
 WHERE samtale.resultat != 9
 ORDER BY samtale.datetime ASC;
 

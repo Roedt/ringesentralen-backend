@@ -95,15 +95,15 @@ class RingServiceBean(
         val request = autentisertRequest.request
         assert(request.isGyldigResultat())
         val ringer = hypersysIDTilRingerId(autentisertRequest.userId).toString().toInt()
-        samtaleRepository.persist(
-            PersistentSamtale(
-                ringt = request.ringtID.toInt(),
-                ringer = ringer,
-                resultat = request.resultat.nr,
-                kommentar = request.kommentar,
-                modus = autentisertRequest.modus
-            ))
-        lagreResultat(getNesteGroupID(request), request, ringer)
+        val persistentSamtale = PersistentSamtale(
+            ringt = request.ringtID.toInt(),
+            ringer = ringer,
+            resultat = request.resultat.nr,
+            kommentar = request.kommentar,
+            modus = autentisertRequest.modus
+        )
+        samtaleRepository.persist(persistentSamtale)
+        lagreResultat(persistentSamtale.id, getNesteGroupID(request), request, ringer)
     }
 
     private fun getNesteGroupID(request: ResultatFraSamtaleRequest): GroupID? {
@@ -114,9 +114,9 @@ class RingServiceBean(
         }
     }
 
-    private fun lagreResultat(nesteGroupID: GroupID?, request: ResultatFraSamtaleRequest, ringer: Int) {
+    private fun lagreResultat(samtaleId: Long, nesteGroupID: GroupID?, request: ResultatFraSamtaleRequest, ringer: Int) {
         if (request.skalRegistrere()) {
-            registrerValg21SpesifikkeResultat(request)
+            registrerValg21SpesifikkeResultat(samtaleId, request)
         }
         if (isBrukerEllerVenterPaaGodkjenning(ringer)) return
         nesteGroupID?.nr?.let { personRepository.update("groupID=?1 where id=?2", it, request.ringtID) }
@@ -158,12 +158,11 @@ class RingServiceBean(
         return ingenSvar && fleireEnnToIkkeSvar && request.resultat == Resultat.Ikke_svar
     }
 
-    private fun registrerValg21SpesifikkeResultat(request: ResultatFraSamtaleRequest) {
+    private fun registrerValg21SpesifikkeResultat(samtaleId: Long, request: ResultatFraSamtaleRequest) {
         val resultat = request.modusspesifikkeResultat as Valg21SpesifikkeResultat
-
         oppfoelgingValg21Repository.persist(
             OppfoelgingValg21(
-                personId = request.ringtID.toInt(),
+                samtaleId = samtaleId.toInt(),
                 koronaprogram = resultat.vilHaKoronaprogram,
                 merAktiv = resultat.vilBliMerAktiv,
                 valgkampsbrev = resultat.vilHaValgkampsbrev,

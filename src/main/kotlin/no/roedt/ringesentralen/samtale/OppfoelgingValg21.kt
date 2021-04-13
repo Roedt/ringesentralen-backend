@@ -11,7 +11,7 @@ import javax.persistence.Table
 @Entity
 @RegisterForReflection
 data class OppfoelgingValg21(
-    var personId: Int,
+    var samtaleId: Int,
     var koronaprogram: Boolean,
     var merAktiv: Boolean,
     var valgkampsbrev: Boolean,
@@ -21,7 +21,7 @@ data class OppfoelgingValg21(
     var vilHaNyhetsbrevLink: Boolean,
 ) : PanacheEntity() {
     constructor() : this(
-        personId = 0,
+        samtaleId = 0,
         koronaprogram = false,
         merAktiv = false,
         valgkampsbrev = false,
