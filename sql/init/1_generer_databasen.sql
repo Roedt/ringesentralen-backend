@@ -278,6 +278,12 @@ insert into `lokallag` (navn) values
 
 INSERT INTO `lokallag`(navn) values ('Rødt Trondheim Ila');
 
+UPDATE `lokallag` SET navn = 'Rødt Time og Klepp' WHERE navn = 'Raudt Time og Klepp';
+UPDATE `lokallag` SET navn = 'Rødt Trondheim Fagliglag' WHERE navn = 'Trondheim-Fagliglag';
+UPDATE `lokallag` SET navn = 'Rødt Trondheim Sentrum' WHERE navn = 'Trondheim-Sentrum';
+UPDATE `lokallag` SET navn = 'Rødt Trondheim Østbyen' WHERE navn = 'Trondheim Østbyen';
+UPDATE `lokallag` SET navn = 'Vaksdal' WHERE navn = 'Raudt Vaksdal';
+
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `kommune` (
