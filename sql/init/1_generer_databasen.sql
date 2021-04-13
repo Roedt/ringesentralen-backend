@@ -284,6 +284,14 @@ UPDATE `lokallag` SET navn = 'Rødt Trondheim Sentrum' WHERE navn = 'Trondheim-S
 UPDATE `lokallag` SET navn = 'Rødt Trondheim Østbyen' WHERE navn = 'Trondheim Østbyen';
 UPDATE `lokallag` SET navn = 'Vaksdal' WHERE navn = 'Raudt Vaksdal';
 
+
+INSERT INTO `lokallag`(navn) values
+('Uten Lag Agder'),
+('Uten lag Akershus'),
+('Uten lag Buskerud'),
+('Uten lag Oslo'),
+('Uten lag Østfold');
+
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `kommune` (
@@ -5751,18 +5759,18 @@ INSERT INTO `postnummerIKommunerMedFleireLag` (postnummerFra, postnummerTil, lok
 (5099	,5099	, (select id from lokallag where navn = 'Rødt Bergen Sør'), 12),
 (7069,7069,(select id from lokallag where navn ='Trondheim Strinda'), 50),
 (7046,7059,(select id from lokallag where navn ='Trondheim Strinda'), 50),
-(7070,7093,(select id from lokallag where navn ='Trondheim-Sentrum'), 50),
-(7097,7099,(select id from lokallag where navn ='Trondheim-Sentrum'), 50),
-(7400,7499,(select id from lokallag where navn ='Trondheim-Sentrum'), 50),
-(7014,7014,(select id from lokallag where navn ='Trondheim Østbyen'), 50),
-(7000,7013,(select id from lokallag where navn ='Trondheim-Sentrum'), 50),
-(7040,7045,(select id from lokallag where navn ='Trondheim Østbyen'), 50),
-(7066,7068,(select id from lokallag where navn ='Trondheim Østbyen'), 50),
-(7019,7019,(select id from lokallag where navn ='Trondheim-Sentrum'), 50),
-(7015,7016,(select id from lokallag where navn ='Trondheim-Sentrum'), 50),
+(7070,7093,(select id from lokallag where navn ='Rødt Trondheim Sentrum'), 50),
+(7097,7099,(select id from lokallag where navn ='Rødt Trondheim Sentrum'), 50),
+(7400,7499,(select id from lokallag where navn ='Rødt Trondheim Sentrum'), 50),
+(7014,7014,(select id from lokallag where navn ='Rødt Trondheim Østbyen'), 50),
+(7000,7013,(select id from lokallag where navn ='Rødt Trondheim Sentrum'), 50),
+(7040,7045,(select id from lokallag where navn ='Rødt Trondheim Østbyen'), 50),
+(7066,7068,(select id from lokallag where navn ='Rødt Trondheim Østbyen'), 50),
+(7019,7019,(select id from lokallag where navn ='Rødt Trondheim Sentrum'), 50),
+(7015,7016,(select id from lokallag where navn ='Rødt Trondheim Sentrum'), 50),
 (7017,7018,(select id from lokallag where navn ='Rødt Trondheim Ila'), 50),
 (7020,7020,(select id from lokallag where navn ='Rødt Trondheim Ila'), 50),
-(7021,7039,(select id from lokallag where navn ='Trondheim-Sentrum'), 50);
+(7021,7039,(select id from lokallag where navn ='Rødt Trondheim Sentrum'), 50);
 
 
 
