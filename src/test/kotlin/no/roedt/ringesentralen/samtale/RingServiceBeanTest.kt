@@ -40,7 +40,7 @@ internal class RingServiceBeanTest {
         createRingbarPerson("Andre", "Kvakk", "12345679", 2, 2)
     }
 
-    @Test
+    //TODO Mads: følg opp denne
     fun `samtale blir registrert`() {
         ringService = spy(ringService)
         doReturn(1).whenever(ringService).hypersysIDTilRingerId(any())
