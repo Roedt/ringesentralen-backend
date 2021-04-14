@@ -292,6 +292,23 @@ INSERT INTO `lokallag`(navn) values
 ('Uten lag Oslo'),
 ('Uten lag Østfold');
 
+INSERT INTO `lokallag`(`navn`) values
+('GAMVIK'),
+('Giske'),
+('Gjøvik'),
+('Indre Fosen'),
+('Karasjok'),
+('Land'),
+('Nannestad'),
+('PORSANGER PORSÁNGU PORSANKI'),
+('Raudt Kinn'),
+('Raudt Volda'),
+('Rødt Flatanger'),
+('Tana'),
+('Trysil'),
+('Tynset'),
+('Ullensaker');
+
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `kommune` (
