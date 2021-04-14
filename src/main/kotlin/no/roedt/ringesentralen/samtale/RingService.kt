@@ -163,13 +163,12 @@ class RingServiceBean(
         oppfoelgingValg21Repository.persist(
             OppfoelgingValg21(
                 samtaleId = samtaleId.toInt(),
-                koronaprogram = resultat.vilHaKoronaprogram,
                 merAktiv = resultat.vilBliMerAktiv,
-                valgkampsbrev = resultat.vilHaValgkampsbrev,
+                vilPolitikkLink = resultat.vilPolitikkLink,
                 vilIkkeBliRingt = request.vilIkkeBliRingt,
                 vilHaMedlemsLink = resultat.vilHaMedlemsLink,
                 vilHaFellesskapLink = resultat.vilHaFellesskapLink,
-                vilHaNyhetsbrevLink = resultat.vilHaNyhetsbrevLink
+                vilBliRingtAugust = resultat.vilBliRingtAugust
             )
         )
     }

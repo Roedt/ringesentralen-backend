@@ -5897,12 +5897,11 @@ CREATE TABLE IF NOT EXISTS `samtale` (
 CREATE TABLE IF NOT EXISTS `oppfoelgingValg21` (
   `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `samtaleId` int(6) NOT NULL,
-  `koronaprogram` tinyint(1) DEFAULT NULL,
   `merAktiv` tinyint(1) DEFAULT NULL,
-  `valgkampsbrev` tinyint(1) DEFAULT NULL,
+  `vilPolitikkLink` tinyint(1) DEFAULT NULL,
   `vilIkkeBliRingt` tinyint(1) DEFAULT NULL,
   `vilHaMedlemsLink` tinyint(1) DEFAULT NULL,
-  `vilHaNyhetsbrevLink` tinyint(1) DEFAULT NULL,
+  `vilBliRingtAugust` tinyint(1) DEFAULT NULL,
   `vilHaFellesskapLink` tinyint(1) DEFAULT NULL,
   FOREIGN KEY (`samtaleId`) REFERENCES `samtale` (`id`),
   INDEX (`samtaleId`)

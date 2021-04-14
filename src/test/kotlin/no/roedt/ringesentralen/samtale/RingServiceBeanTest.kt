@@ -53,12 +53,11 @@ internal class RingServiceBeanTest {
                 resultat = Resultat.Svarte,
                 kommentar = "Hei",
                 modusspesifikkeResultat = Valg21SpesifikkeResultat(
-                    vilHaKoronaprogram = false,
+                    vilPolitikkLink = false,
                     vilBliMerAktiv = false,
-                    vilHaValgkampsbrev = false,
+                    vilBliRingtAugust = false,
                     vilHaMedlemsLink = false,
-                    vilHaFellesskapLink = true,
-                    vilHaNyhetsbrevLink = false
+                    vilHaFellesskapLink = true
                 ),
                 vilIkkeBliRingt = false
         ),
@@ -79,12 +78,11 @@ internal class RingServiceBeanTest {
                 resultat = Resultat.Ringes_etter_valget,
                 kommentar = "Hei",
                 modusspesifikkeResultat = Valg21SpesifikkeResultat(
-                    vilHaKoronaprogram = false,
+                    vilPolitikkLink = false,
                     vilBliMerAktiv = false,
-                    vilHaValgkampsbrev = false,
+                    vilBliRingtAugust = false,
                     vilHaMedlemsLink = false,
-                    vilHaFellesskapLink = true,
-                    vilHaNyhetsbrevLink = false
+                    vilHaFellesskapLink = true
                 ),
                 vilIkkeBliRingt = false
             ),

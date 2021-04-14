@@ -34,11 +34,10 @@ class FullFlytTest {
                 kommentar = "Frå automatisk test",
                 modusspesifikkeResultat = Valg21SpesifikkeResultat(
                     vilBliMerAktiv = true,
-                    vilHaKoronaprogram = true,
-                    vilHaValgkampsbrev = false,
+                    vilPolitikkLink = true,
+                    vilBliRingtAugust = false,
                     vilHaMedlemsLink = true,
-                    vilHaFellesskapLink = true,
-                    vilHaNyhetsbrevLink = true
+                    vilHaFellesskapLink = true
                 ),
                 vilIkkeBliRingt = false)
             )

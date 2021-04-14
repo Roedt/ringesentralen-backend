@@ -12,23 +12,21 @@ import javax.persistence.Table
 @RegisterForReflection
 data class OppfoelgingValg21(
     var samtaleId: Int,
-    var koronaprogram: Boolean,
     var merAktiv: Boolean,
-    var valgkampsbrev: Boolean,
+    var vilPolitikkLink: Boolean,
     var vilIkkeBliRingt: Boolean,
     var vilHaMedlemsLink: Boolean,
     var vilHaFellesskapLink: Boolean,
-    var vilHaNyhetsbrevLink: Boolean,
+    var vilBliRingtAugust: Boolean,
 ) : PanacheEntity() {
     constructor() : this(
         samtaleId = 0,
-        koronaprogram = false,
         merAktiv = false,
-        valgkampsbrev = false,
+        vilPolitikkLink = false,
         vilIkkeBliRingt = false,
         vilHaMedlemsLink = false,
         vilHaFellesskapLink = false,
-        vilHaNyhetsbrevLink = false
+        vilBliRingtAugust = false
     )
 }
 
