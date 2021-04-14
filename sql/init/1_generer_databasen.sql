@@ -5897,7 +5897,7 @@ CREATE TABLE IF NOT EXISTS `samtale` (
 CREATE TABLE IF NOT EXISTS `oppfoelgingValg21` (
   `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `samtaleId` int(6) NOT NULL,
-  `merAktiv` tinyint(1) DEFAULT NULL,
+  `vilBliMerAktiv` tinyint(1) DEFAULT NULL,
   `vilPolitikkLink` tinyint(1) DEFAULT NULL,
   `vilIkkeBliRingt` tinyint(1) DEFAULT NULL,
   `vilHaMedlemsLink` tinyint(1) DEFAULT NULL,

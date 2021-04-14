@@ -163,7 +163,7 @@ class RingServiceBean(
         oppfoelgingValg21Repository.persist(
             OppfoelgingValg21(
                 samtaleId = samtaleId.toInt(),
-                merAktiv = resultat.vilBliMerAktiv,
+                vilBliMerAktiv = resultat.vilBliMerAktiv,
                 vilPolitikkLink = resultat.vilPolitikkLink,
                 vilIkkeBliRingt = request.vilIkkeBliRingt,
                 vilHaMedlemsLink = resultat.vilHaMedlemsLink,
