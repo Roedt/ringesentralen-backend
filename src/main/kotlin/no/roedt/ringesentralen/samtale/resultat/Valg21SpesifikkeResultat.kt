@@ -5,10 +5,9 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 
 @RegisterForReflection
 data class Valg21SpesifikkeResultat (
-    @JsonProperty("vilHaKoronaprogram") val vilHaKoronaprogram: Boolean,
+    @JsonProperty("vilPolitikkLink") val vilPolitikkLink: Boolean,
     @JsonProperty("vilBliMerAktiv") val vilBliMerAktiv: Boolean,
-    @JsonProperty("vilHaValgkampsbrev") val vilHaValgkampsbrev: Boolean,
+    @JsonProperty("vilBliRingtAugust") val vilBliRingtAugust: Boolean,
     @JsonProperty("vilHaMedlemsLink") val vilHaMedlemsLink: Boolean,
-    @JsonProperty("vilHaFellesskapLink") val vilHaFellesskapLink: Boolean,
-    @JsonProperty("vilHaNyhetsbrevLink") val vilHaNyhetsbrevLink: Boolean,
+    @JsonProperty("vilHaFellesskapLink") val vilHaFellesskapLink: Boolean
 ) : ModusspesifikkeResultat
