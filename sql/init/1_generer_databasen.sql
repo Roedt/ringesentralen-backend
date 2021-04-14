@@ -5631,6 +5631,9 @@ INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (9982,'KONGSFJORD
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (9990,'BÅTSFJORD',2028);
 INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (9991,'BÅTSFJORD',2028);
 
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (6773,'NORDFJORDEID',1443);
+INSERT INTO postnummer(Postnummer,Poststed,KommuneKode) VALUES (6774,'NORDFJORDEID',1443);
+
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `postnummerIKommunerMedFleireLag` (
