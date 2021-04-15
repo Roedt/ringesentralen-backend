@@ -4,19 +4,13 @@
 Backend for Ringesentralen v2.
 
 ## Føresetnadar
-### Alternativ A (å føretrekkje)
+### Alternativ A (enklast å setje opp)
 - Tilgang til Ringesentralen-prosjektet på Google Cloud Platform
 
 ### Alternativ B
 - Sett opp eit eiget prosjekt på Google Cloud Platform
-  - Sett opp Secret Manager med følgjande variablar
-    - frontendTokenKey
-    - hypersysBaseUrl
-    - hypersysBrukerId
-    - hypersysBrukerSecret
-    - hypersysClientId
-    - hypersysClientSecret
-    - privatekey
+  - Sett opp Secret Manager med variablane som er lista opp i GCPSecretManagerKey-enumen
+  - Merk at både frontendTokenKey, frontendSystembruker, frontendSystembrukerPassord og encryptionKey korresponderer med verdiar i frontenden.
 - Endre i application.properties så _secretManagerProjectId_ peikar på ditt nye prosjekt
 - Generér matchande private- og publickey, og sørg for at dei ligg i resources\META-INF.resources 
 
@@ -59,6 +53,6 @@ Flyten er omtrent sånn:
 - Frontenden er sett opp på Cloud Run
 - Backenden er sett opp på Cloud Run
 - Databasen er i Cloud SQL, med MySQL 8.0
-- Kommunikasjonen mellom frontend og backend går via Serverless VPC Connector
+- Kommunikasjonen mellom frontend og backend går via Serverless VPC Connector, kor vi stort sett har følgd guiden i GCP-dokumentasjonen
 - Løyndommar er sett opp i GCP Secret Manager
 - Både frontend og backend byggjast i Cloud Build. Per no er det cloudbuild-test.yaml som brukast for begge to. Denne gjer bygging frå scratch med maven/npm. For backenden har byggejobben fått veldig mykje ressursar på Cloud Build. Backenden køyrer i Quarkus native-modus, som gjer at oppstartstida er minimal og applikasjonen svarer raskt. Ulempa er at byggjing av native-applikasjonar er veldig kraft-krevjande, og tar litt tid, vanlegvis rundt 5-6 minutt. For brukarane er imidlertid forskjellen i responstid stor.
