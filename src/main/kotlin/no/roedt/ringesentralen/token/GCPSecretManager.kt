@@ -4,6 +4,7 @@ import com.google.cloud.secretmanager.v1.SecretManagerServiceClient
 import com.google.cloud.secretmanager.v1.SecretVersionName
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.annotation.PostConstruct
+import javax.annotation.PreDestroy
 import javax.enterprise.context.RequestScoped
 
 private enum class GCPSecretManagerKey {
@@ -29,6 +30,11 @@ class GCPSecretManager : SecretFactory {
     @PostConstruct
     fun setup() {
         client = SecretManagerServiceClient.create()
+    }
+
+    @PreDestroy
+    fun tearDown() {
+        client.close()
     }
 
     override fun getPrivateKey() = getSecretFromSecretManager(GCPSecretManagerKey.privatekey)
