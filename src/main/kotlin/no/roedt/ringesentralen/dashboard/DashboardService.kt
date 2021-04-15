@@ -49,7 +49,11 @@ class DashboardServiceBean(
         val ringer = hypersysIdTilPerson(ringerID)
         return if (GroupID.Admin.references(ringer.groupID)) {
             lokallagRepository.findAll(Sort.ascending("navn")).list()
-        } else {
+        }
+        else if (GroupID.LokalGodkjenner.references(ringer.groupID)) {
+            lokallagRepository.fromFylke(ringer.fylke)
+        }
+        else {
             lokallagRepository.list("id", ringer.lokallag.toLong())
         }
     }
