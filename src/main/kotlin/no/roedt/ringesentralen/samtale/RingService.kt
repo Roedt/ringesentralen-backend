@@ -50,7 +50,7 @@ class RingServiceBean(
                 throw NotAuthorizedException("Kun godkjennarar og admins kan ringe utanfor eiget lokallag", "")
             }
             return hentNestePerson(ringer, request.lokallag)
-        } else nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(getPerson(request.userId), request.userId, request.lokallag)
+        } else nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(getPerson(request.userId), request.lokallag)
     }
 
     fun getPerson(userId: UserId): Person = personRepository.find("hypersysID", userId.userId).firstResult()

@@ -6,7 +6,6 @@ import no.roedt.ringesentralen.hypersys.HypersysService
 import no.roedt.ringesentralen.hypersys.ModelConverter
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
-import no.roedt.ringesentralen.person.UserId
 import javax.enterprise.context.Dependent
 
 @Dependent
@@ -18,10 +17,10 @@ open class NesteMedlemAaRingeFinder(
     private val kommuneRepository: KommuneRepository
 ) {
 
-    fun hentIDForNesteMedlemAaRinge(ringer: Person, userId: UserId, lokallag: Int): Any? {
+    fun hentIDForNesteMedlemAaRinge(ringer: Person, lokallag: Int): Any? {
         val nestePersonIEgetLokallag = hentNestePersonAaRingeIDetteLokallaget(
             ringer,
-            hypersysService.getLokallag(userId)
+            lokallag
         )
         if (nestePersonIEgetLokallag != null) return nestePersonIEgetLokallag
 
