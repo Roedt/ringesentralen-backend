@@ -6302,11 +6302,15 @@ WHERE samtale.resultat != 9
 ORDER BY samtale.datetime ASC;
 
 -- --------------------------------------------------------
-INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `email`, `fylke`, `groupID`, `lokallag`, `hypersysID`) VALUES
-('Systembruker', 'Frontend', '+4711223344', -1, null, -1, 4, -1, -2);
+INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `email`, `fylke`, `groupID`, `lokallag`, `hypersysID`, `kilde`) VALUES
+('Systembruker', 'Frontend', '+4711223344', -1, null, -1, 4, -1, -2, 'Systembruker');
 
 INSERT INTO `ringer` (`personId`) VALUES
 ((select id from `person` where fornavn='Systembruker' and etternavn='Frontend'));
+
+
+INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `email`, `fylke`, `groupID`, `oppretta`, `lokallag`, `kilde`) VALUES
+('Telefonnummer som ikke', 'Er inne i systemet', '-1',	-1,	NULL,	-1,	1,	'2020-08-22 23:29:09', -1, 'Systembruker'),
 
 
 INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `email`, `fylke`, `groupID`, `oppretta`, `lokallag`) VALUES

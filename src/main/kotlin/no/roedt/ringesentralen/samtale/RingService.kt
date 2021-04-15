@@ -131,7 +131,8 @@ class RingServiceBean(
     override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): NestePersonAaRingeResponse {
         request.validate()
         val oppringtNummer = request.ringtNummer()
-        val personSomRingerTilbake: Person = personRepository.find("telefonnummer", oppringtNummer).firstResult()
+        val personSomRingerTilbake = personRepository.find("telefonnummer", oppringtNummer).firstResultOptional<Person>()
+            .orElseGet { personRepository.find("telefonnummer", "-1").firstResult() }
 
         startSamtale(
             AutentisertStartSamtaleRequest(
