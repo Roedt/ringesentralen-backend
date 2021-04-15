@@ -2,8 +2,6 @@ package no.roedt.ringesentralen.historikk
 
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.person.Person
-import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId
 import no.roedt.ringesentralen.samtale.OppfoelgingValg21Repository
 import no.roedt.ringesentralen.samtale.Samtale
@@ -14,15 +12,12 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class HistorikkService(
     private val databaseUpdater: DatabaseUpdater,
-    private val personRepository: PersonRepository,
     private val oppfoelgingValg21Repository: OppfoelgingValg21Repository
 ) {
 
     fun getMineSamtaler(userId: UserId, modus: Modus): List<Samtale> = getSamtaler(modus, "where hypersysID='${userId.userId}'")
 
-    fun getLagetsSamtaler(userId: UserId, modus: Modus): List<Samtale> = getSamtaler(modus,
-        "where lokallag = ${personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag}"
-    )
+    fun getLagetsSamtaler(userId: UserId, modus: Modus, lokallag: Int): List<Samtale> = getSamtaler(modus,"where lokallag = $lokallag")
 
     private fun getSamtaler(modus: Modus, whereklausul: String): List<Samtale> {
         val sql =
