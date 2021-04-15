@@ -10,7 +10,7 @@ data class VervingRequest(
     @JsonProperty("fornavn") val fornavn: String,
     @JsonProperty("etternavn") val etternavn: String,
     @JsonProperty("postnummer") val postnummer: Int,
-    @JsonProperty("verversNavn") val verversNavn: String,
+    @JsonProperty("verversNavn") val verversNavn: String?,
 )
 
 @RegisterForReflection
