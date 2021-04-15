@@ -23,7 +23,7 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
     }
 
     private fun getSamtalerStatistikkResponse(): SamtalerStatistikkResponse {
-        val list = get("SELECT id, displaytext FROM `resultat` ORDER BY id ASC")
+        val list = get("SELECT id, displaytext FROM `resultat` ")
             .map { it as Array<*> }
             .map { Resultattype(id = it[0] as Int, displaytext = it[1].toString()) }
             .map {
@@ -59,7 +59,7 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
         ringere = get("SELECT 1 FROM person WHERE groupID in (${GroupID.GodkjentRinger.nr}, ${GroupID.LokalGodkjenner.nr}, ${GroupID.Admin.nr} )").size,
         ferdigringte = get("select 1 FROM person WHERE groupID=${GroupID.Ferdigringt.nr} or groupID=${GroupID.Slett.nr}").size,
         ringtUtenSvar = get("select 1 FROM person p inner join samtale s on s.ringt=p.id AND p.groupID=${GroupID.KlarTilAaRinges.nr}").size,
-        ikkeRingt = get("select p.* FROM person p where p.groupID < ${GroupID.UgodkjentRinger.nr} and not exists (select 1 from samtale s where s.ringt=p.id)").size,
+        ikkeRingt = get("select 1 FROM person p where p.groupID < ${GroupID.UgodkjentRinger.nr} and not exists (select 1 from samtale s where s.ringt=p.id)").size,
         antallLokallagMedPersonerTilknytta = get( "select distinct lokallag FROM person where lokallag is not null").size
     )
 
