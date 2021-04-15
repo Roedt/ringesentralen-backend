@@ -41,6 +41,7 @@ class DashboardServiceBean(
                     totaltInklRingte = (totaltInklRingtePerLokallag.getOrDefault(lokallag.id.toInt(), listOf()) as List<*>).size
                 )
             }
+            .sortedBy { it.lokallag.navn }
             .toList()
         return DashboardResponse(statusliste = statusliste)
     }
