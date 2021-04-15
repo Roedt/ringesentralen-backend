@@ -17,7 +17,8 @@ Backend for Ringesentralen v2.
 ## Utvikling
 1. `docker-compose -f mysql.yaml down -v && docker-compose -f mysql.yaml up` (startar databasen frå tom tilstand, køyrer alle databaseskript og legg inn eksempelpersonar)
 1. Autentiser deg mot [Google Cloud Platform](https://cloud.google.com/docs/authentication/getting-started)[1], ringesentralen-prosjektet[2].
-   - Dette inneber typisk at du må køyre `export GOOGLE_APPLICATION_CREDENTIALS="/sti/til/jsonfil/frå/gcp"`
+   - Dette inneber typisk at du må køyre `export GOOGLE_APPLICATION_CREDENTIALS="/sti/til/jsonfil/frå/gcp"
+1. Sørg for å ha _hypersysBaseUrl_ som mijøvariabel, f.eks. i ~/.bash_profile
 1. mvn compile quarkus:dev
 1. No køyrer applikasjonen på port 8080. 
    - Swagger UI er tilgjengeleg på http://localhost:8080/swagger-ui, 
