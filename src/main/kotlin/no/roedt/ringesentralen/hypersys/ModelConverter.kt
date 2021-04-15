@@ -16,6 +16,7 @@ interface ModelConverter {
     fun convert(user: User, groupID: Int) : Person
     fun convertMembershipToPerson(map: Map<*, *>): Person
     fun toFylke(postnummer: Int): Int
+    fun finnPostnummer(map: Map<*, *>): Int
 }
 
 @Dependent
@@ -71,7 +72,7 @@ class ModelConverterBean(
         )
     }
 
-    private fun finnPostnummer(map: Map<*, *>): Int {
+    override fun finnPostnummer(map: Map<*, *>): Int {
         val addresses = listOf(toAddress(map["postal_address"]))
         return addresses.flatMap { it.postalCode }.firstOrNull { i -> i != "null" }?.toString()?.toInt() ?: -1
     }

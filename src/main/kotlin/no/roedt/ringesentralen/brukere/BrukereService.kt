@@ -3,6 +3,7 @@ package no.roedt.ringesentralen.brukere
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.hypersys.HypersysService
+import no.roedt.ringesentralen.hypersys.ModelConverter
 import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
@@ -27,7 +28,8 @@ class BrukereServiceBean(
     val lokallagRepository: LokallagRepository,
     val epostSender: EpostSender,
     val hypersysService: HypersysService,
-    val godkjenningRepository: GodkjenningRepository
+    val godkjenningRepository: GodkjenningRepository,
+    val modelConverter: ModelConverter
 ): BrukereService {
 
     override fun getBrukere(userId: UserId, groups: Set<String>): List<Brukerinformasjon> {
@@ -73,7 +75,7 @@ class BrukereServiceBean(
         val brukerendring = Brukerendring(personID = personMedEndraTilgang, nyGroupId = nyTilgang, epostSendt = false)
 
         val person = personRepository.findById(personMedEndraTilgang)
-        oppdaterNavnFraHypersys(person.hypersysID)
+        oppdaterNavnFraHypersys(person.postnummer, person.hypersysID)
 
         try {
             epostSender.sendEpost(person, nyTilgang)
@@ -85,7 +87,7 @@ class BrukereServiceBean(
         return brukerendring
     }
 
-    private fun oppdaterNavnFraHypersys(hypersysID: Int?) {
+    private fun oppdaterNavnFraHypersys(naavaerendePostnummer: Int, hypersysID: Int?) {
         hypersysID
             ?.let { UserId(userId = it) }
             ?.let { hypersysService.getLokallag(userId = it)}
@@ -93,7 +95,8 @@ class BrukereServiceBean(
             ?.let { hypersysService.getMedlemmer(it) }
             ?.firstOrNull { it["member_id"] == hypersysID }
             ?.let {
-                personRepository.update("fornavn = ?1, etternavn = ?2 where hypersysID = ?3", it["first_name"], it["last_name"], hypersysID)
+                val nyttPostnr = if (naavaerendePostnummer == -1) modelConverter.finnPostnummer(it) else naavaerendePostnummer
+                personRepository.update("fornavn = ?1, etternavn = ?2, postnummer = ?3 where hypersysID = ?4", it["first_name"], it["last_name"], nyttPostnr, hypersysID)
             }
     }
 
