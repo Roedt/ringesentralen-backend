@@ -95,7 +95,7 @@ class BrukereServiceBean(
             ?.let { hypersysService.getMedlemmer(it) }
             ?.firstOrNull { it["member_id"] == hypersysID }
             ?.let {
-                val nyttPostnr = if (naavaerendePostnummer == -1) modelConverter.finnPostnummer(it) else naavaerendePostnummer
+                val nyttPostnr = modelConverter.finnPostnummer(it).takeIf { i -> i > -1 } ?: naavaerendePostnummer
                 personRepository.update("fornavn = ?1, etternavn = ?2, postnummer = ?3 where hypersysID = ?4", it["first_name"], it["last_name"], nyttPostnr, hypersysID)
             }
     }
