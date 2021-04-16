@@ -16,7 +16,8 @@ data class RingerTilbakeRequest(
 data class AutentisertRingerTilbakeRequest(
     val userId: UserId,
     val ringerTilbakeRequest: RingerTilbakeRequest,
-    val modus: Modus
+    val modus: Modus,
+    val groups: Set<String>
 ) {
         fun ringtNummer() = ringerTilbakeRequest.ringtNummer
         fun validate() = ringerTilbakeRequest.validate()

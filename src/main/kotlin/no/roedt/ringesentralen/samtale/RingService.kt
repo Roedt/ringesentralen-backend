@@ -2,6 +2,7 @@ package no.roedt.ringesentralen.samtale
 
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
+import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.hypersys.Ringer
 import no.roedt.ringesentralen.hypersys.RingerRepository
 import no.roedt.ringesentralen.lokallag.LokallagRepository
@@ -15,6 +16,7 @@ import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.Valg21SpesifikkeResultat
 import java.sql.Timestamp
 import javax.enterprise.context.ApplicationScoped
+import javax.ws.rs.ForbiddenException
 import javax.ws.rs.NotAuthorizedException
 
 interface RingService {
@@ -50,7 +52,11 @@ class RingServiceBean(
                 throw NotAuthorizedException("Kun godkjennarar og admins kan ringe utanfor eiget lokallag", "")
             }
             return hentNestePerson(ringer, request.lokallag)
-        } else nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(getPerson(request.userId), request.lokallag)
+        } else {
+            if (!request.roller.contains(Roles.ringerGodkjennerAdmin))
+                throw ForbiddenException("Kun dei godkjente for det kan ringe medlemmar")
+            nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(getPerson(request.userId), request.lokallag)
+        }
     }
 
     fun getPerson(userId: UserId): Person = personRepository.find("hypersysID", userId.userId).firstResult()
