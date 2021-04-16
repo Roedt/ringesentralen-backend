@@ -137,8 +137,12 @@ class RingServiceBean(
     override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): NestePersonAaRingeResponse {
         request.validate()
         val oppringtNummer = request.ringtNummer()
-        val personSomRingerTilbake = personRepository.find("telefonnummer", oppringtNummer).firstResultOptional<Person>()
+        var personSomRingerTilbake = personRepository.find("telefonnummer", oppringtNummer).firstResultOptional<Person>()
             .orElseGet { personRepository.find("telefonnummer", "-1").firstResult() }
+        val modus = if (personSomRingerTilbake.hypersysID != null) Modus.medlemmer else Modus.velgere
+        if (modus == Modus.medlemmer && !request.groups.contains(Roles.ringerMedlemmer)) {
+            personSomRingerTilbake = personRepository.find("telefonnummer", "-1").firstResult()
+        }
 
         startSamtale(
             AutentisertStartSamtaleRequest(
@@ -146,7 +150,7 @@ class RingServiceBean(
                 startSamtaleRequest = StartSamtaleRequest(
                     skalRingesID = personSomRingerTilbake.id
                 ),
-                modus = if (personSomRingerTilbake.hypersysID != null) Modus.medlemmer else Modus.velgere
+                modus = modus
             ))
         return toResponse(personSomRingerTilbake)
     }
