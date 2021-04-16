@@ -6095,11 +6095,12 @@ INSERT INTO brukergruppe VALUES (2, 'ferdigringt');
 INSERT INTO brukergruppe VALUES (3, 'slett');
 INSERT INTO brukergruppe VALUES (4, 'ugodkjent ringer');
 INSERT INTO brukergruppe VALUES (5, 'ringer som aktivt ikke er godkjent');
-INSERT INTO brukergruppe VALUES (6, 'godkjent ringer');
+INSERT INTO brukergruppe VALUES (6, 'godkjent ringer for velgere');
 INSERT INTO brukergruppe VALUES (7, 'trenger oppfølging');
 INSERT INTO brukergruppe VALUES (8, 'ringer som kan godkjenne ringere i sitt fylke');
 INSERT INTO brukergruppe VALUES (9, 'admin');
 INSERT INTO brukergruppe VALUES (10, 'prioritert å ringe');
+INSERT INTO brukergruppe VALUES (11, 'godkjent ringer for velgere og medlemmer');
 
 -- --------------------------------------------------------
 

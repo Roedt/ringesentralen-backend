@@ -14,6 +14,7 @@ import javax.ws.rs.ForbiddenException
 
 interface BrukereService {
     fun aktiverRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring
+    fun aktiverRingerForAaRingeMedlemmer(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring
     fun deaktiverRinger(deaktiverRequest: AutentisertTilgangsendringRequest): Brukerendring
     fun gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring
     fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring
@@ -37,7 +38,7 @@ class BrukereServiceBean(
         val filtrerPaaFylke = if (groups.contains(Roles.admin)) "" else "and fylke=$brukersFylke"
         return personRepository.list(
             "(groupID=?1 or groupID=?2 or groupID=?3 or groupID=?4 or groupID=?5) $filtrerPaaFylke",
-            GroupID.UgodkjentRinger.nr, GroupID.AvslaattRinger.nr, GroupID.GodkjentRinger.nr, GroupID.LokalGodkjenner.nr, GroupID.Admin.nr
+            GroupID.UgodkjentRinger.nr, GroupID.AvslaattRinger.nr, GroupID.GodkjentRinger.nr, GroupID.GodkjentRingerMedlemmer.nr, GroupID.LokalGodkjenner.nr, GroupID.Admin.nr
             )
             .filter { !it.isSystembruker() }
             .map { r ->
@@ -58,11 +59,13 @@ class BrukereServiceBean(
 
     override fun aktiverRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(godkjennRequest, GroupID.GodkjentRinger)
 
+    override fun aktiverRingerForAaRingeMedlemmer(godkjennRequest: AutentisertTilgangsendringRequest) = endreTilgang(godkjennRequest, GroupID.GodkjentRingerMedlemmer)
+
     override fun deaktiverRinger(deaktiverRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(deaktiverRequest, GroupID.AvslaattRinger)
 
     override fun gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(tilLokalGodkjennerRequest, GroupID.LokalGodkjenner)
 
-    override fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(fjernSomLokalGodkjennerRequest, GroupID.GodkjentRinger)
+    override fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(fjernSomLokalGodkjennerRequest, GroupID.GodkjentRingerMedlemmer)
 
     private fun endreTilgang(request: AutentisertTilgangsendringRequest, nyTilgang: GroupID): Brukerendring {
         assertAutorisert(request)

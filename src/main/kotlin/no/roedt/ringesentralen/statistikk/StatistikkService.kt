@@ -56,7 +56,7 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
 
     private fun getPersonerStatistikkResponse(): PersonerStatistikkResponse = PersonerStatistikkResponse(
         antallPersonerISystemetTotalt = get("SELECT 1 FROM person").size,
-        ringere = get("SELECT 1 FROM person WHERE groupID in (${GroupID.GodkjentRinger.nr}, ${GroupID.LokalGodkjenner.nr}, ${GroupID.Admin.nr} )").size,
+        ringere = get("SELECT 1 FROM person WHERE groupID in (${GroupID.GodkjentRinger.nr}, ${GroupID.GodkjentRingerMedlemmer.nr}, ${GroupID.LokalGodkjenner.nr}, ${GroupID.Admin.nr} )").size,
         ferdigringte = get("select 1 FROM person WHERE groupID=${GroupID.Ferdigringt.nr} or groupID=${GroupID.Slett.nr}").size,
         ringtUtenSvar = get("select 1 FROM person p inner join samtale s on s.ringt=p.id AND p.groupID=${GroupID.KlarTilAaRinges.nr}").size,
         ikkeRingt = get("select 1 FROM person p where p.groupID < ${GroupID.UgodkjentRinger.nr} and not exists (select 1 from samtale s where s.ringt=p.id)").size,

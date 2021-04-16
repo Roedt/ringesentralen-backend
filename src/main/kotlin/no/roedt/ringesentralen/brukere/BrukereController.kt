@@ -47,6 +47,17 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/tilgangTilAaRingeMedlemmer")
+    @Operation(summary = "Gi tilgang til å ringe medlemmer", description = Roles.godkjennerAdmin)
+    @Bulkhead(3)
+    @Retry
+    @Transactional
+    fun aktiverRingerForAaRingeMedlemmer(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.aktiverRingerForAaRingeMedlemmer(AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt))
+
+    @RolesAllowed(Roles.godkjenner, Roles.admin)
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/deaktiver")
     @Operation(summary = "Deaktiver ringer", description = Roles.godkjennerAdmin)
     @Bulkhead(5)
