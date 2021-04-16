@@ -14,7 +14,7 @@ enum class GroupID(val nr: Int, val skildring: String, val roller: Set<String>) 
     LokalGodkjenner(8, "ringer som kan godkjenne ringere i sitt lokallag", setOf(Roles.bruker, Roles.ringer, Roles.ringerMedlemmer, Roles.godkjenner)),
     Admin(9, "admin", setOf(Roles.bruker, Roles.ringer, Roles.ringerMedlemmer, Roles.godkjenner, Roles.admin)),
     PrioritertAaRinge(10, "prioritert å ringe", setOf()),
-    GodkjentRingerMedlemmer(6, "godkjent ringer for velgere og medlemmer", setOf(Roles.bruker, Roles.ringer, Roles.ringerMedlemmer));
+    GodkjentRingerMedlemmer(11, "godkjent ringer for velgere og medlemmer", setOf(Roles.bruker, Roles.ringer, Roles.ringerMedlemmer));
 
     fun references(value: Int): Boolean = nr == value
 

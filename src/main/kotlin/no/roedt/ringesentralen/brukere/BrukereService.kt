@@ -37,7 +37,7 @@ class BrukereServiceBean(
         val brukersFylke = personRepository.find("hypersysID", userId.userId).firstResult<Person>().fylke
         val filtrerPaaFylke = if (groups.contains(Roles.admin)) "" else "and fylke=$brukersFylke"
         return personRepository.list(
-            "(groupID=?1 or groupID=?2 or groupID=?3 or groupID=?4 or groupID=?5) $filtrerPaaFylke",
+            "(groupID=?1 or groupID=?2 or groupID=?3 or groupID=?4 or groupID=?5 or groupID=?6) $filtrerPaaFylke",
             GroupID.UgodkjentRinger.nr, GroupID.AvslaattRinger.nr, GroupID.GodkjentRinger.nr, GroupID.GodkjentRingerMedlemmer.nr, GroupID.LokalGodkjenner.nr, GroupID.Admin.nr
             )
             .filter { !it.isSystembruker() }
