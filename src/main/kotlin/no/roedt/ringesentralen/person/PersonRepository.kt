@@ -11,12 +11,13 @@ class PersonRepository : PanacheRepository<Person> {
         if (find("email", person.email).count() > 0L || telefonnummerFinsAlt(person)) {
             val telefonnummer = person.telefonnummer?.let { "'$it'"  }
             val kilde = if (person.kilde == Kilde.Hypersys) ", kilde='${person.kilde}'" else ""
+            val postnummer = if (person.postnummer != -1) "postnummer = ${person.postnummer}," else ""
             update(
                 """fornavn = '${person.fornavn}', 
                         etternavn = '${person.etternavn}', 
                         hypersysID = ${person.hypersysID}, 
-                        telefonnummer = $telefonnummer, 
-                        postnummer = ${person.postnummer}, 
+                        telefonnummer = $telefonnummer,
+                        $postnummer
                         lokallag = ${person.lokallag},
                         groupID = ${person.groupID},
                         email = '${person.email}'
