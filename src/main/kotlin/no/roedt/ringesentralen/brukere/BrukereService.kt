@@ -97,16 +97,10 @@ class BrukereServiceBean(
     }
 
     private fun oppdaterNavnFraHypersys(naavaerendePostnummer: Int, hypersysID: Int?) =
-        hypersysID
-            ?.let { UserId(userId = it) }
-            ?.let { hypersysService.getLokallag(userId = it)}
-            ?.let { hypersysService.convertToHypersysLokallagId(it) }
-            ?.let { hypersysService.getMedlemmer(it) }
-            ?.firstOrNull { it["member_id"] == hypersysID }
-            ?.let {
-                val nyttPostnr = modelConverter.finnPostnummer(it).takeIf { i -> i > -1 } ?: naavaerendePostnummer
-                personRepository.update("fornavn = ?1, etternavn = ?2, postnummer = ?3 where hypersysID = ?4", it["first_name"], it["last_name"], nyttPostnr, hypersysID)
-            }
+        hypersysService.hentFraMedlemslista(hypersysID)?.let {
+            val nyttPostnr = modelConverter.finnPostnummer(it).takeIf { i -> i > -1 } ?: naavaerendePostnummer
+            personRepository.update("fornavn = ?1, etternavn = ?2, postnummer = ?3 where hypersysID = ?4", it["first_name"], it["last_name"], nyttPostnr, hypersysID)
+        }
 
     private fun assertAutorisert(request: AutentisertTilgangsendringRequest) {
         val ringersBrukertype = hypersysIdTilPerson(request.userId).groupID

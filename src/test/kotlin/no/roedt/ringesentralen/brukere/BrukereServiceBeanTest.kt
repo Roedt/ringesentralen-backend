@@ -11,8 +11,11 @@ import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.doReturn
+import javax.ws.rs.ForbiddenException
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 internal class BrukereServiceBeanTest {
 
@@ -55,9 +58,32 @@ internal class BrukereServiceBeanTest {
         )
         assertEquals(2L, brukerendring.personID)
         assertEquals(GroupID.GodkjentRinger, brukerendring.nyGroupId)
+        assertTrue { brukerendring.epostSendt }
         verify(personRepository).update(any(), eq(GroupID.GodkjentRinger.nr), eq(2L))
-        verify(hypersysService).getLokallag(UserId(userId = 3))
+        verify(hypersysService).hentFraMedlemslista(3)
         verify(epostSender).sendEpost(person = eq(ringt), nyTilgang = eq(GroupID.GodkjentRinger))
+    }
+
+    @Test
+    fun `godkjenner kan ikkje endre admin`() {
+        val userId = setupRinger()
+
+        val ringt = Person()
+        ringt.hypersysID = 3
+        ringt.groupID = GroupID.Admin.nr
+        doReturn(ringt).whenever(personRepository).findById(2L)
+
+        doReturn(listOf(1L)).whenever(databaseUpdater).getResultList(any())
+
+        assertThrows<ForbiddenException> {
+            brukereService.aktiverRinger(
+                AutentisertTilgangsendringRequest(
+                    userId = userId,
+                    tilgangsendringRequest = TilgangsendringsRequest(personMedEndraTilgang = 2L),
+                    jwt = mock()
+                )
+            )
+        }
     }
 
     private fun setupRinger(): UserId {

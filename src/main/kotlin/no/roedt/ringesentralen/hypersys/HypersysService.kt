@@ -12,6 +12,7 @@ interface HypersysService {
     fun getMedlemmer(hypersysLokallagId: Int?): List<LinkedHashMap<String, *>>
     fun convertToHypersysLokallagId(lokallag: Int): Int?
     fun getLokallag(userId: UserId): Int?
+    fun hentFraMedlemslista(hypersysID: Int?): LinkedHashMap<*,*>?
 }
 
 @ApplicationScoped
@@ -49,4 +50,12 @@ class HypersysServiceBean(
 
     private fun getAlleLokallag(): List<Organisasjonsledd> =
         hypersysProxy.get("/org/api/", hypersysSystemTokenVerifier.assertGyldigSystemToken(), ListOrganisasjonsleddTypeReference())
+
+    override fun hentFraMedlemslista(hypersysID: Int?): LinkedHashMap<*, *>? =
+        hypersysID
+            ?.let { UserId(userId = it) }
+            ?.let { getLokallag(userId = it)}
+            ?.let { convertToHypersysLokallagId(it) }
+            ?.let { getMedlemmer(it) }
+            ?.firstOrNull { it["member_id"] == hypersysID }
 }
