@@ -14,11 +14,12 @@ import javax.ws.rs.ForbiddenException
 
 interface BrukereService {
     fun aktiverRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring
-    fun aktiverRingerForAaRingeMedlemmer(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring
+    fun giTilgangTilAaRingeMedlemmer(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring
     fun deaktiverRinger(deaktiverRequest: AutentisertTilgangsendringRequest): Brukerendring
     fun gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring
     fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring
     fun getBrukere(userId: UserId, groups: Set<String>): List<Brukerinformasjon>
+    fun fjernTilgangTilAaRingeMedlemmer(request: AutentisertTilgangsendringRequest): Brukerendring
 }
 
 @ApplicationScoped
@@ -59,7 +60,9 @@ class BrukereServiceBean(
 
     override fun aktiverRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(godkjennRequest, GroupID.GodkjentRinger)
 
-    override fun aktiverRingerForAaRingeMedlemmer(godkjennRequest: AutentisertTilgangsendringRequest) = endreTilgang(godkjennRequest, GroupID.GodkjentRingerMedlemmer)
+    override fun giTilgangTilAaRingeMedlemmer(godkjennRequest: AutentisertTilgangsendringRequest) = endreTilgang(godkjennRequest, GroupID.GodkjentRingerMedlemmer)
+
+    override fun fjernTilgangTilAaRingeMedlemmer(request: AutentisertTilgangsendringRequest) = endreTilgang(request, GroupID.GodkjentRinger)
 
     override fun deaktiverRinger(deaktiverRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(deaktiverRequest, GroupID.AvslaattRinger)
 
