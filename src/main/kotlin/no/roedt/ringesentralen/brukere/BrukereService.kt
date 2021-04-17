@@ -107,23 +107,15 @@ class BrukereServiceBean(
         val personMedEndraTilgang = personRepository.findById(request.personMedEndraTilgang())
         val groupID = personMedEndraTilgang.groupID
 
-        if (personMedEndraTilgang.isSystembruker()) {
-            throw ForbiddenException("Kan ikkje endre systembruker")
-        }
-        if (GroupID.Admin.references(groupID)) {
-            throw ForbiddenException("Kan ikkje endre admins")
-        }
-        if (GroupID.LokalGodkjenner.references(ringersBrukertype) && GroupID.LokalGodkjenner.references(groupID)) {
-            throw ForbiddenException("Godkjennere kan ikkje endre andre godjennere")
-        }
+        if (personMedEndraTilgang.isSystembruker()) throw ForbiddenException("Kan ikkje endre systembruker")
+        if (GroupID.Admin.references(groupID)) throw ForbiddenException("Kan ikkje endre admins")
+        if (GroupID.LokalGodkjenner.references(ringersBrukertype) && GroupID.LokalGodkjenner.references(groupID)) throw ForbiddenException("Godkjennere kan ikkje endre andre godjennere")
     }
 
-    private fun hypersysIdTilPerson(hypersysId: UserId) =
-        personRepository.find("hypersysID", hypersysId.userId).firstResult<Person>()
+    private fun hypersysIdTilPerson(hypersysId: UserId) = personRepository.find("hypersysID", hypersysId.userId).firstResult<Person>()
 
 
-    private fun hypersysIDTilRingerId(userId: UserId) =
-        databaseUpdater.getResultList(
+    private fun hypersysIDTilRingerId(userId: UserId) = databaseUpdater.getResultList(
             "select ringer.id from ringer inner join person on person.id = ringer.personId and person.hypersysID = ${userId.userId} "
         ).first()
 }
