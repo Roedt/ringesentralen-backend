@@ -3,7 +3,11 @@ package no.roedt.ringesentralen.lokallag
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import io.quarkus.hibernate.orm.panache.PanacheRepository
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.ringesentralen.*
+import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.ringesentralen.Kommune
+import no.roedt.ringesentralen.KommuneRepository
+import no.roedt.ringesentralen.PostnummerIKommunerMedFleireLag
+import no.roedt.ringesentralen.PostnummerIKommunerMedFleireLagRepository
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
 import javax.persistence.Entity

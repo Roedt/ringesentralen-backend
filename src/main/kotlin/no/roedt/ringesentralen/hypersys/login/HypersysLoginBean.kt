@@ -1,11 +1,21 @@
 package no.roedt.ringesentralen.hypersys.login
 
-import no.roedt.ringesentralen.hypersys.*
+import no.roedt.ringesentralen.hypersys.GyldigPersonToken
+import no.roedt.ringesentralen.hypersys.HypersysProxy
+import no.roedt.ringesentralen.hypersys.ModelConverter
+import no.roedt.ringesentralen.hypersys.Token
+import no.roedt.ringesentralen.hypersys.UgyldigToken
 import no.roedt.ringesentralen.hypersys.externalModel.Profile
-import no.roedt.ringesentralen.person.*
+import no.roedt.ringesentralen.person.EpostValidator
+import no.roedt.ringesentralen.person.GroupID
+import no.roedt.ringesentralen.person.Person
+import no.roedt.ringesentralen.person.PersonRepository
+import no.roedt.ringesentralen.person.Ringer
+import no.roedt.ringesentralen.person.RingerIV1Repository
+import no.roedt.ringesentralen.person.RingerRepository
 import no.roedt.ringesentralen.token.SecretFactory
 import java.net.http.HttpResponse
-import java.util.*
+import java.util.Optional
 import javax.enterprise.context.Dependent
 import kotlin.math.max
 

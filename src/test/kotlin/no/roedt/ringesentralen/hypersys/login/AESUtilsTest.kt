@@ -8,7 +8,7 @@ import no.roedt.ringesentralen.token.SecretFactory
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.security.SecureRandom
-import java.util.*
+import java.util.Base64
 import javax.crypto.Cipher
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec

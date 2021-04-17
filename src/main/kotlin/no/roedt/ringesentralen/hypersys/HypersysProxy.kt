@@ -11,7 +11,7 @@ import java.net.http.HttpRequest
 import java.net.http.HttpRequest.BodyPublishers
 import java.net.http.HttpResponse
 import java.net.http.HttpResponse.BodyHandlers
-import java.util.*
+import java.util.Base64
 import javax.enterprise.context.Dependent
 
 @Dependent
