@@ -17,7 +17,12 @@ class TelefonsvarerService(
     private val ringerRepository: RingerRepository
 ) {
     fun postSvarFraTelefonsvarer(request: AutentisertTelefonsvarerRequest) {
-        val person = personRepository.find("telefonnummer", request.request.telefonnummer).firstResult<Person>() ?: return
+        val optionalPerson = personRepository.find("telefonnummer", request.request.telefonnummer).firstResultOptional<Person>()
+        if (optionalPerson.isEmpty) {
+            println("${request.request.telefonnummer} ringte og svarte ja til meir informasjon uten å være registrert i systemet")
+            return
+        }
+        val person = optionalPerson.get()
 
         val systembruker = personRepository.find("fornavn='Systembruker' and etternavn='Frontend'").firstResult<Person>()
 
