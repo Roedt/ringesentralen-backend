@@ -130,9 +130,12 @@ class RingServiceBean(
 
     fun isBrukerEllerVenterPaaGodkjenning(ringer: Int) =
         GroupID.isBrukerEllerVenter(
-            ringerRepository.find("id=?1", ringer.toLong()).singleResult<Ringer>().personId
-                .let { personRepository.findById(it.toLong()) }
-                .groupID)
+            ringerRepository.find("id=?1", ringer.toLong()).singleResultOptional<Ringer>()
+                .map { it.personId }
+                .map { it.toLong() }
+                .map { personRepository.findById(it) }
+                .map { it.groupID }
+                .orElse(-1))
 
     override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): NestePersonAaRingeResponse {
         request.validate()
