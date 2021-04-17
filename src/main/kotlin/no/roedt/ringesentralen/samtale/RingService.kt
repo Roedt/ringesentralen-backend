@@ -109,7 +109,7 @@ class RingServiceBean(
             modus = autentisertRequest.modus
         )
         samtaleRepository.persist(persistentSamtale)
-        lagreResultat(persistentSamtale.id, getNesteGroupID(request), request, ringer)
+        lagreResultat(persistentSamtale.id, getNesteGroupID(request), request)
     }
 
     private fun getNesteGroupID(request: ResultatFraSamtaleRequest): GroupID? {
@@ -120,11 +120,11 @@ class RingServiceBean(
         }
     }
 
-    private fun lagreResultat(samtaleId: Long, nesteGroupID: GroupID?, request: ResultatFraSamtaleRequest, ringer: Int) {
+    private fun lagreResultat(samtaleId: Long, nesteGroupID: GroupID?, request: ResultatFraSamtaleRequest) {
         if (request.skalRegistrere()) {
             registrerValg21SpesifikkeResultat(samtaleId, request)
         }
-        if (isBrukerEllerVenterPaaGodkjenning(ringer)) return
+        if (isBrukerEllerVenterPaaGodkjenning(request.ringtID.toInt())) return
         nesteGroupID?.nr?.let { personRepository.update("groupID=?1 where id=?2", it, request.ringtID) }
     }
 
