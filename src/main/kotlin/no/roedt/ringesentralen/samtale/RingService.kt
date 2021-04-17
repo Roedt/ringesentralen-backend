@@ -53,7 +53,7 @@ class RingServiceBean(
             }
             return hentNestePerson(ringer, request.lokallag)
         } else {
-            if (!request.roller.contains(Roles.ringerGodkjennerAdmin))
+            if (!request.roller.contains(Roles.ringerMedlemmer))
                 throw ForbiddenException("Kun dei godkjente for det kan ringe medlemmar")
             nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(getPerson(request.userId), request.lokallag)
         }
