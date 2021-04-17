@@ -3,8 +3,8 @@ package no.roedt.ringesentralen.samtale
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.Roles
-import no.roedt.ringesentralen.hypersys.Ringer
-import no.roedt.ringesentralen.hypersys.RingerRepository
+import no.roedt.ringesentralen.person.Ringer
+import no.roedt.ringesentralen.person.RingerRepository
 import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person

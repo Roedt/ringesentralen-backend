@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.hypersys
+package no.roedt.ringesentralen.person
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import io.quarkus.hibernate.orm.panache.PanacheRepository

@@ -1,11 +1,7 @@
 package no.roedt.ringesentralen.samtale.telefonsvarer
 
 import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.hypersys.Ringer
-import no.roedt.ringesentralen.hypersys.RingerRepository
-import no.roedt.ringesentralen.person.GroupID
-import no.roedt.ringesentralen.person.Person
-import no.roedt.ringesentralen.person.PersonRepository
+import no.roedt.ringesentralen.person.*
 import no.roedt.ringesentralen.samtale.PersistentSamtale
 import no.roedt.ringesentralen.samtale.PersistentSamtaleRepository
 import javax.enterprise.context.Dependent
