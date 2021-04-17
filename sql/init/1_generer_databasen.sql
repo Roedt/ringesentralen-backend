@@ -6244,7 +6244,10 @@ CREATE TABLE IF NOT EXISTS `verving` (
   `fornavn` varchar(60) NOT NULL,
   `etternavn` varchar(60) NOT NULL,
   `verversNavn` varchar(120) DEFAULT NULL,
-  `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `postnummer` integer DEFAULT -1 NOT NULL,
+  `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`postnummer`) REFERENCES `postnummer` (`Postnummer`),
+  INDEX(`postnummer`)
 );
 
 -- --------------------------------------------------------

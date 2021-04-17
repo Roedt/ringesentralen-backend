@@ -17,14 +17,14 @@ data class Verving(
     var fornavn: String,
     var etternavn: String,
     var postnummer: Int,
-    var ververID: String?
+    var verversNavn: String?
 ) : PanacheEntity() {
     constructor(): this(
         telefonnummer = "",
         fornavn = "",
         etternavn = "",
         postnummer = 0,
-        ververID = null
+        verversNavn = null
     )
 }
 

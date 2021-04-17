@@ -2,7 +2,6 @@ package no.roedt.ringesentralen.verving
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.ringesentralen.person.UserId
 
 @RegisterForReflection
 data class VervingRequest(
@@ -14,4 +13,4 @@ data class VervingRequest(
 )
 
 @RegisterForReflection
-data class AutentisertVervingRequest(val request: VervingRequest, val userId: UserId)
+data class AutentisertVervingRequest(val request: VervingRequest)
