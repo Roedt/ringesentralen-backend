@@ -42,21 +42,21 @@ class BrukereServiceBean(
             GroupID.UgodkjentRinger.nr, GroupID.AvslaattRinger.nr, GroupID.GodkjentRinger.nr, GroupID.GodkjentRingerMedlemmer.nr, GroupID.LokalGodkjenner.nr, GroupID.Admin.nr
             )
             .filter { !it.isSystembruker() }
-            .map { r ->
-                Brukerinformasjon(
-                    id = r.id,
-                    fornavn = r.fornavn,
-                    etternavn = r.etternavn,
-                    telefonnummer = r.telefonnummer,
-                    postnummer = r.postnummer,
-                    fylke = fylkeRepository.findById(r.fylke),
-                    epost = r.email ?: "",
-                    hypersysID = r.hypersysID ?: -1,
-                    lokallag = lokallagRepository.findById(r.lokallag.toLong()),
-                    rolle = GroupID.from(r.groupID).roller
-                )
-            }
+            .map(this::toBrukerinformasjon)
     }
+
+    private fun toBrukerinformasjon(r: Person) = Brukerinformasjon(
+        id = r.id,
+        fornavn = r.fornavn,
+        etternavn = r.etternavn,
+        telefonnummer = r.telefonnummer,
+        postnummer = r.postnummer,
+        fylke = fylkeRepository.findById(r.fylke),
+        epost = r.email ?: "",
+        hypersysID = r.hypersysID ?: -1,
+        lokallag = lokallagRepository.findById(r.lokallag.toLong()),
+        rolle = GroupID.from(r.groupID).roller
+    )
 
     override fun aktiverRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(godkjennRequest, GroupID.GodkjentRinger)
 
@@ -83,17 +83,20 @@ class BrukereServiceBean(
         val person = personRepository.findById(personMedEndraTilgang)
         oppdaterNavnFraHypersys(person.postnummer, person.hypersysID)
 
-        try {
-            epostSender.sendEpost(person, nyTilgang)
-            brukerendring.epostSendt=true
-        }
-        catch (e: Exception) {
-            e.printStackTrace()
-        }
+        sendEpost(person, nyTilgang, brukerendring)
         return brukerendring
     }
 
-    private fun oppdaterNavnFraHypersys(naavaerendePostnummer: Int, hypersysID: Int?) {
+    private fun sendEpost(person: Person, nyTilgang: GroupID, brukerendring: Brukerendring) {
+        try {
+            epostSender.sendEpost(person, nyTilgang)
+            brukerendring.epostSendt = true
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun oppdaterNavnFraHypersys(naavaerendePostnummer: Int, hypersysID: Int?) =
         hypersysID
             ?.let { UserId(userId = it) }
             ?.let { hypersysService.getLokallag(userId = it)}
@@ -104,7 +107,6 @@ class BrukereServiceBean(
                 val nyttPostnr = modelConverter.finnPostnummer(it).takeIf { i -> i > -1 } ?: naavaerendePostnummer
                 personRepository.update("fornavn = ?1, etternavn = ?2, postnummer = ?3 where hypersysID = ?4", it["first_name"], it["last_name"], nyttPostnr, hypersysID)
             }
-    }
 
     private fun assertAutorisert(request: AutentisertTilgangsendringRequest) {
         val ringersBrukertype = hypersysIdTilPerson(request.userId).groupID
