@@ -37,9 +37,9 @@ class VervingController(val service: VervingService) : RingesentralenController 
     @Bulkhead(3)
     @Retry
     fun postPersonSomSkalRinges(@Context ctx: SecurityContext, request: VervingRequest): Response {
-        val person = service.postPersonSomSkalRinges(AutentisertVervingRequest(request = request, userId = ctx.userId()))
-        return if (person == null) Response.noContent().build()
-        else Response.created(URI.create(person.id.toString())).build()
+        val person = service.postPersonSomSkalRinges(AutentisertVervingRequest(request = request))
+        return if (!person.first) Response.noContent().build()
+        else Response.created(URI.create(person.second.id.toString())).build()
     }
 
     @RolesAllowed(Roles.systembrukerFrontend)

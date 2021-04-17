@@ -16,20 +16,20 @@ class VervingService(
     private val lokallagRepository: LokallagRepository
 ) {
 
-    fun postPersonSomSkalRinges(request: AutentisertVervingRequest) : Person? {
+    fun postPersonSomSkalRinges(request: AutentisertVervingRequest) : Pair<Boolean, Person> {
         val postnummer = request.request.postnummer
         vervingRepository.persist(Verving(
             telefonnummer = request.request.telefonnummer,
             fornavn = request.request.fornavn,
             etternavn = request.request.etternavn,
             postnummer = request.request.postnummer,
-            ververID = request.request.verversNavn
+            verversNavn = request.request.verversNavn
         ))
 
-        val vervaFraFoer = personRepository.find("telefonnummer=?1", request.request.telefonnummer).count() > 0L
-        if (vervaFraFoer) return null
+        val vervaFraFoer = personRepository.find("telefonnummer=?1", request.request.telefonnummer).singleResultOptional<Person>()
+        if (vervaFraFoer.isPresent) return Pair(false, vervaFraFoer.get())
 
-        return Person(
+        val person = Person(
             hypersysID = null,
             fornavn = request.request.fornavn,
             etternavn = request.request.etternavn,
@@ -41,6 +41,8 @@ class VervingService(
             groupID = GroupID.ManglerSamtykke.nr,
             kilde = Kilde.Verva
         )
+        personRepository.persist(person)
+        return Pair(true, person)
     }
 
     fun mottaSvar(request: AutentisertMottaSvarRequest) {
