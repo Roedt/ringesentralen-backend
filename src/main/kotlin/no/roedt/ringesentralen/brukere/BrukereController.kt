@@ -30,7 +30,7 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/brukere")
     @Operation(summary ="List ut brukere", description = Roles.godkjennerAdmin)
-    fun getBrukere(@Context ctx: SecurityContext) : List<Brukerinformasjon> = brukereService.getBrukere(ctx.userId(), jwt.groups)
+    fun getBrukere(@Context ctx: SecurityContext) : List<Brukerinformasjon> = brukereService.getBrukere(AutentisertGetBrukereRequest(ctx.userId(), jwt.groups))
 
     @RolesAllowed(Roles.godkjenner, Roles.admin)
     @PUT

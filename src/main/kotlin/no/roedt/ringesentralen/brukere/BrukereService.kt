@@ -18,7 +18,7 @@ interface BrukereService {
     fun deaktiverRinger(deaktiverRequest: AutentisertTilgangsendringRequest): Brukerendring
     fun gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring
     fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring
-    fun getBrukere(userId: UserId, groups: Set<String>): List<Brukerinformasjon>
+    fun getBrukere(request: AutentisertGetBrukereRequest): List<Brukerinformasjon>
     fun fjernTilgangTilAaRingeMedlemmer(request: AutentisertTilgangsendringRequest): Brukerendring
 }
 
@@ -34,13 +34,13 @@ class BrukereServiceBean(
     val modelConverter: ModelConverter
 ): BrukereService {
 
-    override fun getBrukere(userId: UserId, groups: Set<String>): List<Brukerinformasjon> {
-        val brukersFylke = personRepository.find("hypersysID", userId.userId).firstResult<Person>().fylke
-        val filtrerPaaFylke = if (groups.contains(Roles.admin)) "" else "and fylke=$brukersFylke"
+    override fun getBrukere(request: AutentisertGetBrukereRequest): List<Brukerinformasjon> {
+        val brukersFylke = personRepository.find("hypersysID", request.userId.userId).firstResult<Person>().fylke
+        val filtrerPaaFylke = if (request.groups.contains(Roles.admin)) "" else "and fylke=$brukersFylke"
         return personRepository.list(
             "(groupID=?1 or groupID=?2 or groupID=?3 or groupID=?4 or groupID=?5 or groupID=?6) $filtrerPaaFylke",
             GroupID.UgodkjentRinger.nr, GroupID.AvslaattRinger.nr, GroupID.GodkjentRinger.nr, GroupID.GodkjentRingerMedlemmer.nr, GroupID.LokalGodkjenner.nr, GroupID.Admin.nr
-            )
+        )
             .filter { !it.isSystembruker() }
             .map(this::toBrukerinformasjon)
     }
