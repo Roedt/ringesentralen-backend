@@ -47,6 +47,28 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/giTilgangTilAaRingeMedlemmer")
+    @Operation(summary = "Gi tilgang til å ringe medlemmer", description = Roles.godkjennerAdmin)
+    @Bulkhead(3)
+    @Retry
+    @Transactional
+    fun giTilgangTilAaRingeMedlemmer(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.giTilgangTilAaRingeMedlemmer(AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt))
+
+    @RolesAllowed(Roles.godkjenner, Roles.admin)
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/fjernTilgangTilAaRingeMedlemmer")
+    @Operation(summary = "Fjern tilgang til å ringe medlemmer", description = Roles.godkjennerAdmin)
+    @Bulkhead(3)
+    @Retry
+    @Transactional
+    fun fjernTilgangTilAaRingeMedlemmer(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.fjernTilgangTilAaRingeMedlemmer(AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt))
+
+    @RolesAllowed(Roles.godkjenner, Roles.admin)
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/deaktiver")
     @Operation(summary = "Deaktiver ringer", description = Roles.godkjennerAdmin)
     @Bulkhead(5)

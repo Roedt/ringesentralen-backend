@@ -39,7 +39,7 @@ class RingController(val ringService: RingService) : RingesentralenController {
         @QueryParam("modus") @DefaultValue("Velger") modus: Modus,
         @QueryParam("lokallag") @DefaultValue("-1") lokallag: Int
     ): NestePersonAaRingeResponse?
-            = ringService.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(ctx.userId(), modus, lokallag))
+            = ringService.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(ctx.userId(), modus, lokallag, jwt.groups))
 
     @RolesAllowed(Roles.ringer)
     @POST
@@ -75,6 +75,6 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Retry
     @Transactional
     fun noenRingerTilbake(@Context ctx: SecurityContext, request: RingerTilbakeRequest, @QueryParam("modus") modus: Modus): NestePersonAaRingeResponse
-            = ringService.noenRingerTilbake(AutentisertRingerTilbakeRequest(ctx.userId(), request, modus))
+            = ringService.noenRingerTilbake(AutentisertRingerTilbakeRequest(ctx.userId(), request, modus, jwt.groups))
 
 }

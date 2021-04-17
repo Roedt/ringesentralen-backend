@@ -2,6 +2,7 @@ package no.roedt.ringesentralen.samtale
 
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
+import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.hypersys.Ringer
 import no.roedt.ringesentralen.hypersys.RingerRepository
 import no.roedt.ringesentralen.lokallag.LokallagRepository
@@ -15,6 +16,7 @@ import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.Valg21SpesifikkeResultat
 import java.sql.Timestamp
 import javax.enterprise.context.ApplicationScoped
+import javax.ws.rs.ForbiddenException
 import javax.ws.rs.NotAuthorizedException
 
 interface RingService {
@@ -50,7 +52,11 @@ class RingServiceBean(
                 throw NotAuthorizedException("Kun godkjennarar og admins kan ringe utanfor eiget lokallag", "")
             }
             return hentNestePerson(ringer, request.lokallag)
-        } else nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(getPerson(request.userId), request.lokallag)
+        } else {
+            if (!request.roller.contains(Roles.ringerMedlemmer))
+                throw ForbiddenException("Kun dei godkjente for det kan ringe medlemmar")
+            nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(getPerson(request.userId), request.lokallag)
+        }
     }
 
     fun getPerson(userId: UserId): Person = personRepository.find("hypersysID", userId.userId).firstResult()
@@ -108,6 +114,7 @@ class RingServiceBean(
 
     private fun getNesteGroupID(request: ResultatFraSamtaleRequest): GroupID? {
         return when {
+            request.vilIkkeBliRingt -> GroupID.Ferdigringt
             request.resultat.nesteGroupID != null -> request.resultat.nesteGroupID
             erFleireEnnToIkkeSvar(request) -> GroupID.Ferdigringt
             else -> null
@@ -124,15 +131,22 @@ class RingServiceBean(
 
     fun isBrukerEllerVenterPaaGodkjenning(ringer: Int) =
         GroupID.isBrukerEllerVenter(
-            ringerRepository.find("id=?1", ringer.toLong()).singleResult<Ringer>().personId
-                .let { personRepository.findById(it.toLong()) }
-                .groupID)
+            ringerRepository.find("id=?1", ringer.toLong()).singleResultOptional<Ringer>()
+                .map { it.personId }
+                .map { it.toLong() }
+                .map { personRepository.findById(it) }
+                .map { it.groupID }
+                .orElse(-1))
 
     override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): NestePersonAaRingeResponse {
         request.validate()
         val oppringtNummer = request.ringtNummer()
-        val personSomRingerTilbake = personRepository.find("telefonnummer", oppringtNummer).firstResultOptional<Person>()
+        var personSomRingerTilbake = personRepository.find("telefonnummer", oppringtNummer).firstResultOptional<Person>()
             .orElseGet { personRepository.find("telefonnummer", "-1").firstResult() }
+        val modus = if (personSomRingerTilbake.hypersysID != null) Modus.medlemmer else Modus.velgere
+        if (modus == Modus.medlemmer && !request.groups.contains(Roles.ringerMedlemmer)) {
+            personSomRingerTilbake = personRepository.find("telefonnummer", "-1").firstResult()
+        }
 
         startSamtale(
             AutentisertStartSamtaleRequest(
@@ -140,7 +154,7 @@ class RingServiceBean(
                 startSamtaleRequest = StartSamtaleRequest(
                     skalRingesID = personSomRingerTilbake.id
                 ),
-                modus = if (personSomRingerTilbake.hypersysID != null) Modus.medlemmer else Modus.velgere
+                modus = modus
             ))
         return toResponse(personSomRingerTilbake)
     }
