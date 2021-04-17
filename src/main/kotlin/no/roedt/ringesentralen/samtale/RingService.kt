@@ -114,6 +114,7 @@ class RingServiceBean(
 
     private fun getNesteGroupID(request: ResultatFraSamtaleRequest): GroupID? {
         return when {
+            request.vilIkkeBliRingt -> GroupID.Ferdigringt
             request.resultat.nesteGroupID != null -> request.resultat.nesteGroupID
             erFleireEnnToIkkeSvar(request) -> GroupID.Ferdigringt
             else -> null
