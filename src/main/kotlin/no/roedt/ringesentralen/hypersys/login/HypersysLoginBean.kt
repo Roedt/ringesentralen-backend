@@ -1,5 +1,6 @@
-package no.roedt.ringesentralen.hypersys
+package no.roedt.ringesentralen.hypersys.login
 
+import no.roedt.ringesentralen.hypersys.*
 import no.roedt.ringesentralen.hypersys.externalModel.Profile
 import no.roedt.ringesentralen.person.*
 import no.roedt.ringesentralen.token.SecretFactory

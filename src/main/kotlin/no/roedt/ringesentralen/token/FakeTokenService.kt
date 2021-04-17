@@ -2,7 +2,7 @@ package no.roedt.ringesentralen.token
 
 import io.smallrye.jwt.build.Jwt
 import no.roedt.ringesentralen.Roles
-import no.roedt.ringesentralen.hypersys.LoginRequest
+import no.roedt.ringesentralen.hypersys.login.LoginRequest
 import no.roedt.ringesentralen.person.EpostValidator
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Duration

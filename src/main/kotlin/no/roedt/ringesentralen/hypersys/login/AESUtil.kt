@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.hypersys
+package no.roedt.ringesentralen.hypersys.login
 
 import no.roedt.ringesentralen.token.SecretFactory
 import java.util.*

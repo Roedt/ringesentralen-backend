@@ -3,7 +3,7 @@ import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
 import io.restassured.response.ValidatableResponseOptions
 import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.hypersys.LoginRequest
+import no.roedt.ringesentralen.hypersys.login.LoginRequest
 import no.roedt.ringesentralen.samtale.RingerTilbakeRequest
 import no.roedt.ringesentralen.samtale.StartSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.Resultat

@@ -3,6 +3,7 @@ package no.roedt.ringesentralen.hypersys
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import no.roedt.ringesentralen.hypersys.login.AESUtil
 import no.roedt.ringesentralen.token.SecretFactory
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

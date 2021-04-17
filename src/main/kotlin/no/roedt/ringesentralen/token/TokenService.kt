@@ -3,6 +3,9 @@ package no.roedt.ringesentralen.token
 import io.smallrye.jwt.build.Jwt
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.hypersys.*
+import no.roedt.ringesentralen.hypersys.login.AESUtil
+import no.roedt.ringesentralen.hypersys.login.HypersysLoginBean
+import no.roedt.ringesentralen.hypersys.login.LoginRequest
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository

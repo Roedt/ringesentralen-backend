@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.token
 
-import no.roedt.ringesentralen.hypersys.LoginRequest
+import no.roedt.ringesentralen.hypersys.login.LoginRequest
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
