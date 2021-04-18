@@ -4,11 +4,11 @@ import io.restassured.http.ContentType
 import io.restassured.response.ValidatableResponseOptions
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.hypersys.login.LoginRequest
-import no.roedt.ringesentralen.samtale.RingerTilbakeRequest
-import no.roedt.ringesentralen.samtale.StartSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.Valg21SpesifikkeResultat
+import no.roedt.ringesentralen.samtale.start.RingerTilbakeRequest
+import no.roedt.ringesentralen.samtale.start.StartSamtaleRequest
 import org.hamcrest.CoreMatchers.equalTo
 
 class FullFlytTest {

@@ -18,8 +18,7 @@ import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleReq
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.Valg21SpesifikkeResultat
-import no.roedt.ringesentralen.samtale.start.NesteMedlemAaRingeFinder
-import no.roedt.ringesentralen.samtale.start.OppslagRepository
+import no.roedt.ringesentralen.samtale.start.NestePersonAaRingeFinder
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
@@ -29,16 +28,15 @@ internal class RingServiceBeanTest {
 
     private val personRepository: PersonRepository = mock()
     private val databaseUpdater: DatabaseUpdater = mock()
-    private val oppslagRepository: OppslagRepository = mock()
     private val persistentSamtaleRepository: PersistentSamtaleRepository = mock()
     private val oppfoelgingValg21Repository: OppfoelgingValg21Repository = mock()
-    private val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder = mock()
     private val lokallagRepository: LokallagRepository = mock()
     private val ringerRepository: RingerRepository = mock()
+    private val nestePersonAaRingeFinder: NestePersonAaRingeFinder = mock()
 
-    private var ringService = RingServiceBean(personRepository = personRepository, databaseUpdater = databaseUpdater, oppslagRepository = oppslagRepository,
-        samtaleRepository = persistentSamtaleRepository, oppfoelgingValg21Repository = oppfoelgingValg21Repository, nesteMedlemAaRingeFinder = nesteMedlemAaRingeFinder,
-        lokallagRepository = lokallagRepository, ringerRepository = ringerRepository)
+    private var ringService = RingServiceBean(personRepository = personRepository, databaseUpdater = databaseUpdater,
+        samtaleRepository = persistentSamtaleRepository, oppfoelgingValg21Repository = oppfoelgingValg21Repository,
+        lokallagRepository = lokallagRepository, ringerRepository = ringerRepository, nestePersonAaRingeFinder = nestePersonAaRingeFinder)
 
     @BeforeEach
     fun setup() {

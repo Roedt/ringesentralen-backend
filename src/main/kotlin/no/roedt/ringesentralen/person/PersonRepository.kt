@@ -31,6 +31,8 @@ class PersonRepository : PanacheRepository<Person> {
         }
     }
 
+    fun getPerson(userId: UserId): Person = find("hypersysID", userId.userId).firstResult()
+
     private fun telefonnummerFinsAlt(person: Person) =
         person.telefonnummer != null && find("telefonnummer", person.telefonnummer).count() > 0L
 }

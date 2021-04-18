@@ -17,15 +17,10 @@ import no.roedt.ringesentralen.samtale.resultat.Valg21SpesifikkeResultat
 import no.roedt.ringesentralen.samtale.start.AutentisertNestePersonAaRingeRequest
 import no.roedt.ringesentralen.samtale.start.AutentisertRingerTilbakeRequest
 import no.roedt.ringesentralen.samtale.start.AutentisertStartSamtaleRequest
-import no.roedt.ringesentralen.samtale.start.NesteMedlemAaRingeFinder
+import no.roedt.ringesentralen.samtale.start.NestePersonAaRingeFinder
 import no.roedt.ringesentralen.samtale.start.NestePersonAaRingeResponse
-import no.roedt.ringesentralen.samtale.start.Oppslag
-import no.roedt.ringesentralen.samtale.start.OppslagRepository
 import no.roedt.ringesentralen.samtale.start.StartSamtaleRequest
-import java.sql.Timestamp
 import javax.enterprise.context.ApplicationScoped
-import javax.ws.rs.ForbiddenException
-import javax.ws.rs.NotAuthorizedException
 
 interface RingService {
     fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse?
@@ -38,81 +33,23 @@ interface RingService {
 class RingServiceBean(
     val personRepository: PersonRepository,
     val databaseUpdater: DatabaseUpdater,
-    val oppslagRepository: OppslagRepository,
     val samtaleRepository: PersistentSamtaleRepository,
     val oppfoelgingValg21Repository: OppfoelgingValg21Repository,
-    val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder,
     val lokallagRepository: LokallagRepository,
-    val ringerRepository: RingerRepository
+    val ringerRepository: RingerRepository,
+    val nestePersonAaRingeFinder: NestePersonAaRingeFinder
 ): RingService {
 
-    override fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? =
-        hentNestePersonAaRingeIDenneModusen(request)
-            ?.let { personRepository.findById(it.toLong()) }
-            ?.let { toResponse(it) }
-            ?.also { oppslagRepository.persist(Oppslag(ringt = it.person.id.toInt(), ringerHypersysId = request.userId() )) }
+    override fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest) = nestePersonAaRingeFinder.hentNestePersonAaRinge(request)
 
-    private fun hentNestePersonAaRingeIDenneModusen(request: AutentisertNestePersonAaRingeRequest): Int? =
-        if (request.modus == Modus.velgere) hentNesteVelgerAaRinge(request)
-        else hentNesteMedlemAaRinge(request)
-
-    private fun hentNesteMedlemAaRinge(request: AutentisertNestePersonAaRingeRequest): Int? {
-        if (!request.roller.contains(Roles.ringerMedlemmer))
-            throw ForbiddenException("Kun dei godkjente for det kan ringe medlemmar")
-        return nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(getPerson(request.userId), request.lokallag)
-    }
-
-    private fun hentNesteVelgerAaRinge(request: AutentisertNestePersonAaRingeRequest): Int? {
-        val ringer = getPerson(request.userId)
-        if (ringer.lokallag != request.lokallag && !GroupID.referencesOneOf(
-                ringer.groupID,
-                GroupID.LokalGodkjenner,
-                GroupID.Admin
-            )
-        ) {
-            throw NotAuthorizedException("Kun godkjennarar og admins kan ringe utanfor eiget lokallag", "")
-        }
-        return hentNestePerson(ringer, request.lokallag)
-    }
-
-    fun getPerson(userId: UserId): Person = personRepository.find("hypersysID", userId.userId).firstResult()
-
-    private fun hentNestePerson(ringer: Person, lokallag: Int) = databaseUpdater.getResultList(
-        """SELECT v.id FROM v_personerSomKanRinges v 
-                WHERE fylke = ${ringer.fylke} 
-                AND hypersysID is null 
-                ORDER BY ABS(lokallag-'${lokallag}') ASC, 
-                brukergruppe = ${GroupID.PrioritertAaRinge.nr} DESC,
-                v.hypersysID DESC""")
-        .map { it as Int }
-        .firstOrNull()
-
-    private fun getTidlegareSamtalarMedDennePersonen(oppringtNummer: String): List<Samtale> =
-        databaseUpdater.getResultList("SELECT resultat, ringerNavn, datetime, kommentar, ringtNavn, oppfoelgingId FROM `v_samtalerResultat` WHERE oppringtNummer = '$oppringtNummer'")
-            .map { it as Array<*> }
-            .map { Samtale(
-                resultat = it[0] as String,
-                ringer = it[1] as String,
-                tidspunkt = (it[2] as Timestamp).toString(),
-                kommentar = (it[3] ?: "") as String,
-                ringtNummer = oppringtNummer,
-                ringtNavn = it[4] as String,
-                oppfoelging = it[5]?.toString()?.let { i -> if (i != "null") oppfoelgingValg21Repository.findById(i.toLong()) else null }
-            ) }
-            .toList()
-
-    override fun startSamtale(request: AutentisertStartSamtaleRequest) {
-        val ringerId = hypersysIDTilRingerId(request.userId)
-
-        samtaleRepository.persist(
-            PersistentSamtale(
-                ringt = request.skalRingesID().toInt(),
-                ringer = ringerId.toString().toInt(),
-                resultat = Resultat.Samtale_startet.nr,
-                kommentar = "Starter samtale",
-                modus = request.modus
-            ))
-    }
+    override fun startSamtale(request: AutentisertStartSamtaleRequest) = samtaleRepository.persist(
+        PersistentSamtale(
+            ringt = request.skalRingesID().toInt(),
+            ringer = hypersysIDTilRingerId(request.userId).toString().toInt(),
+            resultat = Resultat.Samtale_startet.nr,
+            kommentar = "Starter samtale",
+            modus = request.modus
+        ))
 
     override fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest) {
         val request = autentisertRequest.request
@@ -178,7 +115,7 @@ class RingServiceBean(
         NestePersonAaRingeResponse(
             person = it,
             lokallagNavn = lokallagRepository.findById(it.lokallag.toLong()).navn,
-            tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1")
+            tidlegareSamtalar = nestePersonAaRingeFinder.getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1")
         )
 
     private fun erFleireEnnToIkkeSvar(request: ResultatFraSamtaleRequest): Boolean {

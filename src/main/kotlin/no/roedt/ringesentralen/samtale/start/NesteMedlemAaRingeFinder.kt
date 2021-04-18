@@ -17,20 +17,13 @@ open class NesteMedlemAaRingeFinder(
     private val kommuneRepository: KommuneRepository
 ) {
 
-    fun hentIDForNesteMedlemAaRinge(ringer: Person, lokallag: Int): Int? {
-        val nestePersonIEgetLokallag = hentNestePersonAaRingeIDetteLokallaget(
-            ringer,
-            lokallag
-        )
-        if (nestePersonIEgetLokallag != null) return nestePersonIEgetLokallag
-
-        return kommuneRepository.list("fylke_id=?1", ringer.fylke)
-            .map { it.lokallag_id }
+    fun hentIDForNesteMedlemAaRinge(ringer: Person, lokallag: Int): Int? =
+        hentNestePersonAaRingeIDetteLokallaget(ringer, lokallag) ?: kommuneRepository
+            .list("fylke_id=?1", ringer.fylke)
+            .mapNotNull { it.lokallag_id }
             .firstOrNull { hentNestePersonAaRingeIDetteLokallaget(ringer, it) != null }
-    }
 
-    private fun hentNestePersonAaRingeIDetteLokallaget(ringer: Person, lokallag: Int?): Int? {
-        if (lokallag == null) return null
+    private fun hentNestePersonAaRingeIDetteLokallaget(ringer: Person, lokallag: Int): Int? {
         val nestePersonFraDatabasen = hentNestePerson(ringer, lokallag)
         if (nestePersonFraDatabasen != null) return nestePersonFraDatabasen
 
@@ -55,6 +48,4 @@ open class NesteMedlemAaRingeFinder(
                 v.hypersysID DESC""")
         .map { it as Int }
         .firstOrNull()
-
-
 }
