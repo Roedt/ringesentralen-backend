@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.samtale
+package no.roedt.ringesentralen.samtale.start
 
 import java.util.regex.Pattern
 import javax.ws.rs.BadRequestException

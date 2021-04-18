@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.samtale
+package no.roedt.ringesentralen.samtale.start
 
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.KommuneRepository

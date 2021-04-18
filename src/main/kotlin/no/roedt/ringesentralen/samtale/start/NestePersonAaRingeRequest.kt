@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.samtale
+package no.roedt.ringesentralen.samtale.start
 
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.ringesentralen.Modus

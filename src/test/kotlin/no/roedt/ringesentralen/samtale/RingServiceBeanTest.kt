@@ -18,6 +18,8 @@ import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleReq
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.Valg21SpesifikkeResultat
+import no.roedt.ringesentralen.samtale.start.NesteMedlemAaRingeFinder
+import no.roedt.ringesentralen.samtale.start.OppslagRepository
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach

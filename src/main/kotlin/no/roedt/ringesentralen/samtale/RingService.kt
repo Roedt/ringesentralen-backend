@@ -14,6 +14,14 @@ import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleReq
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.Valg21SpesifikkeResultat
+import no.roedt.ringesentralen.samtale.start.AutentisertNestePersonAaRingeRequest
+import no.roedt.ringesentralen.samtale.start.AutentisertRingerTilbakeRequest
+import no.roedt.ringesentralen.samtale.start.AutentisertStartSamtaleRequest
+import no.roedt.ringesentralen.samtale.start.NesteMedlemAaRingeFinder
+import no.roedt.ringesentralen.samtale.start.NestePersonAaRingeResponse
+import no.roedt.ringesentralen.samtale.start.Oppslag
+import no.roedt.ringesentralen.samtale.start.OppslagRepository
+import no.roedt.ringesentralen.samtale.start.StartSamtaleRequest
 import java.sql.Timestamp
 import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.ForbiddenException

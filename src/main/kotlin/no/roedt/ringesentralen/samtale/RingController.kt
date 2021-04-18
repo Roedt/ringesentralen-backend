@@ -5,6 +5,12 @@ import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
+import no.roedt.ringesentralen.samtale.start.AutentisertNestePersonAaRingeRequest
+import no.roedt.ringesentralen.samtale.start.AutentisertRingerTilbakeRequest
+import no.roedt.ringesentralen.samtale.start.AutentisertStartSamtaleRequest
+import no.roedt.ringesentralen.samtale.start.NestePersonAaRingeResponse
+import no.roedt.ringesentralen.samtale.start.RingerTilbakeRequest
+import no.roedt.ringesentralen.samtale.start.StartSamtaleRequest
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation

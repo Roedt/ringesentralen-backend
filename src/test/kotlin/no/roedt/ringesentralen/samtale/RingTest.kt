@@ -13,6 +13,8 @@ import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.RingerRepository
+import no.roedt.ringesentralen.samtale.start.NesteMedlemAaRingeFinder
+import no.roedt.ringesentralen.samtale.start.OppslagRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.Optional
