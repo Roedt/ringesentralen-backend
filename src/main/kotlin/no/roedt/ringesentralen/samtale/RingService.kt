@@ -47,24 +47,32 @@ class RingServiceBean(
 ): RingService {
 
     override fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? =
-        hentFoerstePerson(request)
-            ?.let { it as Int }
+        hentNestePersonAaRingeIDenneModusen(request)
             ?.let { personRepository.findById(it.toLong()) }
             ?.let { toResponse(it) }
             ?.also { oppslagRepository.persist(Oppslag(ringt = it.person.id.toInt(), ringerHypersysId = request.userId() )) }
 
-    private fun hentFoerstePerson(request: AutentisertNestePersonAaRingeRequest): Any? {
-        return if (request.modus == Modus.velgere) {
-            val ringer = getPerson(request.userId)
-            if (ringer.lokallag != request.lokallag && !GroupID.referencesOneOf(ringer.groupID, GroupID.LokalGodkjenner, GroupID.Admin)) {
-                throw NotAuthorizedException("Kun godkjennarar og admins kan ringe utanfor eiget lokallag", "")
-            }
-            return hentNestePerson(ringer, request.lokallag)
-        } else {
-            if (!request.roller.contains(Roles.ringerMedlemmer))
-                throw ForbiddenException("Kun dei godkjente for det kan ringe medlemmar")
-            nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(getPerson(request.userId), request.lokallag)
+    private fun hentNestePersonAaRingeIDenneModusen(request: AutentisertNestePersonAaRingeRequest): Int? =
+        if (request.modus == Modus.velgere) hentNesteVelgerAaRinge(request)
+        else hentNesteMedlemAaRinge(request)
+
+    private fun hentNesteMedlemAaRinge(request: AutentisertNestePersonAaRingeRequest): Int? {
+        if (!request.roller.contains(Roles.ringerMedlemmer))
+            throw ForbiddenException("Kun dei godkjente for det kan ringe medlemmar")
+        return nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(getPerson(request.userId), request.lokallag)
+    }
+
+    private fun hentNesteVelgerAaRinge(request: AutentisertNestePersonAaRingeRequest): Int? {
+        val ringer = getPerson(request.userId)
+        if (ringer.lokallag != request.lokallag && !GroupID.referencesOneOf(
+                ringer.groupID,
+                GroupID.LokalGodkjenner,
+                GroupID.Admin
+            )
+        ) {
+            throw NotAuthorizedException("Kun godkjennarar og admins kan ringe utanfor eiget lokallag", "")
         }
+        return hentNestePerson(ringer, request.lokallag)
     }
 
     fun getPerson(userId: UserId): Person = personRepository.find("hypersysID", userId.userId).firstResult()
@@ -76,6 +84,7 @@ class RingServiceBean(
                 ORDER BY ABS(lokallag-'${lokallag}') ASC, 
                 brukergruppe = ${GroupID.PrioritertAaRinge.nr} DESC,
                 v.hypersysID DESC""")
+        .map { it as Int }
         .firstOrNull()
 
     private fun getTidlegareSamtalarMedDennePersonen(oppringtNummer: String): List<Samtale> =
@@ -120,13 +129,11 @@ class RingServiceBean(
         lagreResultat(persistentSamtale.id, getNesteGroupID(request), request)
     }
 
-    private fun getNesteGroupID(request: ResultatFraSamtaleRequest): GroupID? {
-        return when {
-            request.vilIkkeBliRingt -> GroupID.Ferdigringt
-            request.resultat.nesteGroupID != null -> request.resultat.nesteGroupID
-            erFleireEnnToIkkeSvar(request) -> GroupID.Ferdigringt
-            else -> null
-        }
+    private fun getNesteGroupID(request: ResultatFraSamtaleRequest): GroupID? = when {
+        request.vilIkkeBliRingt -> GroupID.Ferdigringt
+        request.resultat.nesteGroupID != null -> request.resultat.nesteGroupID
+        erFleireEnnToIkkeSvar(request) -> GroupID.Ferdigringt
+        else -> null
     }
 
     private fun lagreResultat(samtaleId: Long, nesteGroupID: GroupID?, request: ResultatFraSamtaleRequest) {
