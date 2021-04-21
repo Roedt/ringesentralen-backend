@@ -6092,6 +6092,12 @@ INSERT INTO `postnummerIKommunerMedFleireLag` (postnummerFra, postnummerTil, lok
 (5254,5254,(select id from lokallag where navn ='Rødt Bergen Sør'), 12),
 (5257,5257,(select id from lokallag where navn ='Rødt Bergen Sør'), 12),
 (5259,5259,(select id from lokallag where navn ='Rødt Bergen Sør'), 12);
+
+update person set lokallag = (select id from lokallag where navn ='Rødt Bergen Sør') where postnummer in (5259, 5257, 5254, 5068, 5054);
+update person set lokallag = (select id from lokallag where navn ='Rødt Bergen Nord') where postnummer in (5031, 5137);
+update person set lokallag = (select id from lokallag where navn ='Rødt Bergen Vest') where postnummer in (5098, 5174);
+update person set lokallag = (select id from lokallag where navn ='Rødt Bergen Sentrum') where postnummer in (5003, 5003);
+
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `brukergruppe` (
