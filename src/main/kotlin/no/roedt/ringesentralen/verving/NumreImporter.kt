@@ -1,33 +1,12 @@
 package no.roedt.ringesentralen.verving
 
-import io.quarkus.narayana.jta.runtime.TransactionConfiguration
-import no.roedt.ringesentralen.Kilde
-import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.hypersys.ModelConverter
 import no.roedt.ringesentralen.lokallag.LokallagRepository
-import no.roedt.ringesentralen.person.GroupID
-import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
-import org.apache.poi.poifs.crypt.Decryptor
-import org.apache.poi.poifs.crypt.EncryptionInfo
-import org.apache.poi.poifs.filesystem.POIFSFileSystem
-import org.apache.poi.ss.usermodel.Row
-import org.apache.poi.ss.usermodel.Workbook
-import org.apache.poi.xssf.usermodel.XSSFWorkbook
-import org.eclipse.microprofile.jwt.JsonWebToken
-import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
-import java.io.File
-import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.RequestScoped
-import javax.inject.Inject
-import javax.transaction.Transactional
-import javax.ws.rs.POST
 import javax.ws.rs.Path
-import javax.ws.rs.QueryParam
-import javax.ws.rs.core.Context
-import javax.ws.rs.core.SecurityContext
 
 @RequestScoped
 @Path("/importer")
@@ -38,7 +17,7 @@ class NumreImporter(
     private val personRepository: PersonRepository,
     private val lokallagRepository: LokallagRepository
 ) {
-
+/*
     @Inject
     lateinit var jwt: JsonWebToken
 
@@ -87,5 +66,5 @@ class NumreImporter(
             lokallag = lokallagRepository.fromPostnummer(postnummer),
             kilde = Kilde.Mosaic
         )
-    }
+    }*/
 }
