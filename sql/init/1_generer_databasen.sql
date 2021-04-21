@@ -6133,6 +6133,7 @@ CREATE TABLE IF NOT EXISTS `person` (
   `oppretta` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lokallag` int(3) DEFAULT -1 NOT NULL,
   `kilde` varchar(20) DEFAULT 'Ukjent' NOT NULL,
+  `IperID` int(10) DEFAULT NULL,
   FOREIGN KEY (`groupID`) REFERENCES `brukergruppe` (`id`),
   FOREIGN KEY(`fylke`) REFERENCES `fylker` (`id`),
   FOREIGN KEY(`lokallag`) REFERENCES `lokallag` (`id`),
@@ -6291,7 +6292,7 @@ inner join resultat r on r.id = samtale.resultat;
 -- --------------------------------------------------------
 
 create or replace view v_personerSomKanRinges as
-SELECT p.lokallag, p.id as id, p.hypersysID as hypersysID
+SELECT p.lokallag, p.id as id, p.hypersysID as hypersysID, p.fylke, p.groupID as brukergruppe
   FROM person p
   LEFT OUTER JOIN lokallag l on p.lokallag = l.id
    WHERE p.groupID in (select id from brukergruppe where navn = 'klar til å ringes' or navn = 'prioritert å ringe')
