@@ -749,7 +749,7 @@ CREATE TABLE IF NOT EXISTS `kommune` (
 
 -- --------------------------------------------------------
 
-CREATE TABLE postnummer(
+CREATE TABLE IF NOT EXISTS `postnummer` (
    Postnummer  INTEGER  NOT NULL PRIMARY KEY
   ,Poststed    VARCHAR(20) NOT NULL
   ,KommuneKode INTEGER  NOT NULL,
@@ -6081,7 +6081,17 @@ INSERT INTO `postnummerIKommunerMedFleireLag` (postnummerFra, postnummerTil, lok
 (7021,7039,(select id from lokallag where navn ='Rødt Trondheim Sentrum'), 50);
 
 
-
+INSERT INTO `postnummerIKommunerMedFleireLag` (postnummerFra, postnummerTil, lokallag, fylke) VALUES
+(5003,5003,(select id from lokallag where navn ='Rødt Bergen Sentrum'), 12),
+(5031,5031,(select id from lokallag where navn ='Rødt Bergen Nord'), 12),
+(5054,5054,(select id from lokallag where navn ='Rødt Bergen Sør'), 12),
+(5068,5068,(select id from lokallag where navn ='Rødt Bergen Sør'), 12),
+(5098,5098,(select id from lokallag where navn ='Rødt Bergen Vest'), 12),
+(5137,5137,(select id from lokallag where navn ='Rødt Bergen Nord'), 12),
+(5174,5174,(select id from lokallag where navn ='Rødt Bergen Vest'), 12),
+(5254,5254,(select id from lokallag where navn ='Rødt Bergen Sør'), 12),
+(5257,5257,(select id from lokallag where navn ='Rødt Bergen Sør'), 12),
+(5259,5259,(select id from lokallag where navn ='Rødt Bergen Sør'), 12);
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `brukergruppe` (
