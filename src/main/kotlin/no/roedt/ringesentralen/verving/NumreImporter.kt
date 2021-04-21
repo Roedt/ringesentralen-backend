@@ -52,7 +52,8 @@ class NumreImporter(
         var fornavn = it.getCell(5).stringCellValue
         if (it.getCell(6) != null) fornavn = fornavn + " " + it.getCell(6).stringCellValue
         val etternavn = it.getCell(7).stringCellValue
-        val telefonnummer = "+47${it.getCell(18).stringCellValue}"
+        val telefonnummer = "+47${it.getCell(18)?.stringCellValue ?: it.getCell(17).stringCellValue}"
+        val iperID = it.getCell(0).stringCellValue.toInt()
 
         return Person(
             hypersysID = null,
@@ -64,7 +65,8 @@ class NumreImporter(
             fylke = fylke,
             groupID = GroupID.KlarTilAaRinges.nr,
             lokallag = lokallagRepository.fromPostnummer(postnummer),
-            kilde = Kilde.Mosaic
+            kilde = Kilde.Mosaic,
+            iperID = iperID
         )
     }*/
 }
