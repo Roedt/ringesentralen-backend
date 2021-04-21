@@ -23,7 +23,8 @@ data class Person(
         var fylke: Int,
         var lokallag: Int,
         var groupID: Int,
-        @Enumerated(EnumType.STRING) var kilde: Kilde
+        @Enumerated(EnumType.STRING) var kilde: Kilde,
+        var iperID: Int?
 ) : PanacheEntity() {
         fun isSystembruker(): Boolean = fornavn == "Systembruker" && etternavn == "Frontend"
 
@@ -37,6 +38,7 @@ data class Person(
             fylke = -1,
             groupID = 0,
             lokallag = 1,
-            kilde = Kilde.Verva
+            kilde = Kilde.Verva,
+            iperID = null
     )
 }

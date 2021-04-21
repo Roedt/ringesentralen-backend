@@ -39,7 +39,8 @@ class VervingService(
             fylke = modelConverter.toFylke(postnummer),
             lokallag = lokallagRepository.fromPostnummer(postnummer),
             groupID = GroupID.ManglerSamtykke.nr,
-            kilde = Kilde.Verva
+            kilde = Kilde.Verva,
+            iperID = null
         )
         personRepository.persist(person)
         return Pair(true, person)

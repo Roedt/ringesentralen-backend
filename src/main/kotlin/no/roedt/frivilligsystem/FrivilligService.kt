@@ -48,7 +48,8 @@ class FrivilligService(
         fylke = -1,
         lokallag = getLokallagFraPostnummer(postnummer) ?: 0,
         groupID = 0,
-        kilde = Kilde.Verva
+        kilde = Kilde.Verva,
+        iperID = null
 //        rolle = Rolle.frivillig
     )
 
