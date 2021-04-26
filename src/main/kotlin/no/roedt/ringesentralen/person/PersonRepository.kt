@@ -22,7 +22,7 @@ class PersonRepository : PanacheRepository<Person> {
                         groupID = ${person.groupID},
                         email = '${person.email}'
                         $kilde
-                        where ((email = '${person.email}') or (telefonnummer != null and telefonnummer = $telefonnummer)) 
+                        where ((email = '${person.email}') or (telefonnummer is not null null and telefonnummer = $telefonnummer)) 
                         """
             )
         }
