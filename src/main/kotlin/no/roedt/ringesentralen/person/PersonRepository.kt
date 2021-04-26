@@ -12,6 +12,7 @@ class PersonRepository : PanacheRepository<Person> {
             val telefonnummer = person.telefonnummer?.let { "'$it'"  }
             val kilde = if (person.kilde == Kilde.Hypersys) ", kilde='${person.kilde}'" else ""
             val postnummer = if (person.postnummer != -1) "postnummer = ${person.postnummer}," else ""
+            val whereklausul = if (telefonnummer == null) " email = '${person.email}'" else " ((email = '${person.email}') or (telefonnummer = $telefonnummer)) "
             update(
                 """fornavn = '${person.fornavn}', 
                         etternavn = '${person.etternavn}', 
@@ -22,7 +23,7 @@ class PersonRepository : PanacheRepository<Person> {
                         groupID = ${person.groupID},
                         email = '${person.email}'
                         $kilde
-                        where ((email = '${person.email}') or (telefonnummer != null and telefonnummer = $telefonnummer)) 
+                        where $whereklausul
                         """
             )
         }
