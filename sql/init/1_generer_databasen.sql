@@ -333,7 +333,7 @@ CREATE TABLE IF NOT EXISTS `kommune` (
     INSERT INTO kommune(navn,nummer,fylke_id, lokallag_id) VALUES ('Moss',104,1, (select id from lokallag where navn = 'Rødt Moss og omegn'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Råde',135,1, (select id from lokallag where navn = 'Rødt Råde'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Rakkestad',128,1, (select id from lokallag where navn = 'Rødt Sarpsborg og omegn'));
-    INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Rømskog',121,1, (select id from lokallag where navn = 'Rødt Aurskog-Høland'));
+    INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Rømskog',121,2, (select id from lokallag where navn = 'Rødt Aurskog-Høland'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Rygge',136,1, (select id from lokallag where navn = 'Rødt Moss og omegn'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Sarpsborg',105,1, (select id from lokallag where navn = 'Rødt Sarpsborg og omegn'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Skiptvet',127,1, (select id from lokallag where navn = 'Rødt Indre Østfold'));
