@@ -6366,9 +6366,6 @@ INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `em
 
 
 -- --------------------------------------------------------
-FRIVILLIGSYSTEM HERIFRÅ
-
--- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `frivillig` (
   `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
