@@ -40,12 +40,12 @@ class FrivilligController(val frivilligService: FrivilligService) : Ringesentral
     @Retry
     fun hentAlle(@Context ctx: SecurityContext): List<Frivillig> = frivilligService.hentAlle(ctx.userId())
 
-    @RolesAllowed(Roles.systembrukerFrontend)
+    @RolesAllowed(Roles.systembrukerFrontend, Roles.admin)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/registrer")
-    @Operation(summary = "Registrer ny frivillig")
+    @Operation(summary = "Registrer ny frivillig", description = Roles.systembrukerFrontend)
     @Retry
     @Transactional
     fun registrerNyFrivillig(@Context ctx: SecurityContext, registrerNyFrivilligRequest: RegistrerNyFrivilligRequest): Frivillig = frivilligService.registrerNyFrivillig(AutentisertRegistrerNyFrivilligRequest(userId = ctx.userId(), request = registrerNyFrivilligRequest))
