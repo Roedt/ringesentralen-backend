@@ -3,6 +3,7 @@ package no.roedt.ringesentralen.dashboard
 import io.quarkus.panache.common.Sort
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
+import no.roedt.ringesentralen.brukere.FylkeRepository
 import no.roedt.ringesentralen.lokallag.Lokallag
 import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.GroupID
@@ -15,7 +16,8 @@ import javax.enterprise.context.ApplicationScoped
 class DashboardService(
     val lokallagRepository: LokallagRepository,
     val databaseUpdater: DatabaseUpdater,
-    val personRepository: PersonRepository
+    val personRepository: PersonRepository,
+    val fylkeRepository: FylkeRepository
 ) {
 
     fun getDashboard(ringerID: UserId, modus: Modus): DashboardResponse {
@@ -34,7 +36,8 @@ class DashboardService(
                     lokallag = lokallag,
                     igjenAaRinge = (igjenAaRingePerLokallag.getOrDefault(lokallag.id.toInt(), listOf()) as List<*>).size,
                     personerSomKanRinges = (personerSomKanRingesPerLokallag.getOrDefault(lokallag.id.toInt(), listOf()) as List<*>).size,
-                    totaltInklRingte = (totaltInklRingtePerLokallag.getOrDefault(lokallag.id.toInt(), listOf()) as List<*>).size
+                    totaltInklRingte = (totaltInklRingtePerLokallag.getOrDefault(lokallag.id.toInt(), listOf()) as List<*>).size,
+                    fylke = fylkeRepository.getFylkeFraLokallag(lokallag.id.toInt())
                 )
             }
             .sortedBy { it.lokallag.navn }

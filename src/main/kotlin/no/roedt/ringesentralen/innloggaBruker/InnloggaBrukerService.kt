@@ -41,7 +41,7 @@ class InnloggaBrukerService(
             return lokallagRepository.findAll().list()
         }
         else if (groups.contains(Roles.godkjenner)) {
-            val fylkeFraLokallag = fylkeRepository.getFylkeFraLokallag(person.lokallag)
+            val fylkeFraLokallag = fylkeRepository.getFylkeIdFraLokallag(person.lokallag)
             return lokallagRepository.fromFylke(fylkeFraLokallag)
         }
         return listOf(lokallagRepository.findById(person.lokallag.toLong()))

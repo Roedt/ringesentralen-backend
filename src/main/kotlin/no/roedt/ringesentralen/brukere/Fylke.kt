@@ -37,9 +37,11 @@ class FylkeRepository(
 ) : PanacheRepositoryBase<Fylke, Int> {
 
     fun getFylke(lokallag: Int, postnummer: Int): Int =
-        if (postnummer == -1 && lokallag != -1) getFylkeFraLokallag(lokallag) else toFylke(postnummer)
+        if (postnummer == -1 && lokallag != -1) getFylkeIdFraLokallag(lokallag) else toFylke(postnummer)
 
-    fun getFylkeFraLokallag(lokallag: Int): Int =
+    fun getFylkeFraLokallag(lokallag: Int): Fylke = findById(getFylkeIdFraLokallag(lokallag))
+
+    fun getFylkeIdFraLokallag(lokallag: Int): Int =
         kommuneRepository.find("lokallag_id=?1", lokallag).firstResultOptional<Kommune>()
             .map { it.fylke_id }
             .orElseGet {
