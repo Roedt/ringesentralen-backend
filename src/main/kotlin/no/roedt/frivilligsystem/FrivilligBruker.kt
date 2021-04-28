@@ -10,13 +10,12 @@ import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.Table
 
-
 @Entity
-@Table(name = "frivilligbruker")
+@Table(name = "frivilligBruker")
 @Cacheable
 @RegisterForReflection
-class FrivlligBruker(
-    var person: Int,
+class FrivilligBruker(
+    var personHypersysId: Int,
     @Enumerated(EnumType.STRING)
     var rolle: Rolle
 ) : PanacheEntity() {
@@ -27,4 +26,4 @@ class FrivlligBruker(
 }
 
 @ApplicationScoped
-class FrivilligBrukerRepository : PanacheRepository<FrivlligBruker>
+class FrivilligBrukerRepository : PanacheRepository<FrivilligBruker>

@@ -6372,9 +6372,18 @@ FRIVILLIGSYSTEM HERIFRÅ
 CREATE TABLE IF NOT EXISTS `frivilligBruker` (
   `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `oppretta` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `personHypersysId` int(6) NOT NULL UNIQUE,
+  FOREIGN KEY (`personHypersysId`) REFERENCES `person` (`hypersysID`),
+  `rolle` varchar(15) NOT NULL,
+  INDEX(`personHypersysId`)
+);
+-- --------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `frivillig` (
+  `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `oppretta` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `personId` int(6) NOT NULL UNIQUE,
   FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
-  `rolle` varchar(15) NOT NULL,
   INDEX(`personId`)
 );
 

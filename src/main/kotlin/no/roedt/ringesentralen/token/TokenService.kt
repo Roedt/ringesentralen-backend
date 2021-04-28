@@ -1,6 +1,8 @@
 package no.roedt.ringesentralen.token
 
 import io.smallrye.jwt.build.Jwt
+import no.roedt.frivilligsystem.FrivilligBruker
+import no.roedt.frivilligsystem.FrivilligBrukerRepository
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.hypersys.GyldigPersonToken
 import no.roedt.ringesentralen.hypersys.Token
@@ -25,7 +27,8 @@ class TokenService(
     private val privateKeyFactory: PrivateKeyFactory,
     private val secretFactory: SecretFactory,
     private val hypersysLoginBean: HypersysLoginBean,
-    private val aesUtil: AESUtil
+    private val aesUtil: AESUtil,
+    private val frivilligService: FrivilligBrukerRepository
 ) {
 
     @ConfigProperty(name = "token.expiryPeriod")
@@ -77,17 +80,23 @@ class TokenService(
         .sign(privateKeyFactory.readPrivateKey())
 
     private fun generateBaseToken() = Jwt
-            .audience("ringer")
-            .issuer("https://ringesentralen.no")
-            .subject("Ringesentralen")
-            .upn("Ringesentralen")
-            .issuedAt(System.currentTimeMillis())
-            .expiresAt(System.currentTimeMillis() + tokenExpiryPeriod.toSeconds())
+        .audience("ringer")
+        .issuer("https://ringesentralen.no")
+        .subject("Ringesentralen")
+        .upn("Ringesentralen")
+        .issuedAt(System.currentTimeMillis())
+        .expiresAt(System.currentTimeMillis() + tokenExpiryPeriod.toSeconds())
 
-    private fun getGroups(hypersysToken: GyldigPersonToken, person: Person): Set<String> =
-        getRolle(hypersysToken, person)
-            .roller
+    private fun getGroups(hypersysToken: GyldigPersonToken, person: Person): Set<String> {
+        var ringesentralRoller = getRolle(hypersysToken, person).roller
+        frivilligService.find("personHypersysId", person.hypersysID)
+            .firstResultOptional<FrivilligBruker>()
+            .map { it.rolle }
+            .map { it.name }
+            .ifPresent { ringesentralRoller = ringesentralRoller.plus(it) }
+        return ringesentralRoller
             .also { i -> if (i.isEmpty()) println("Fann ingen roller for ${hypersysToken.user_id}") }
+    }
 
     private fun getRolle(hypersysToken: GyldigPersonToken,person: Person): GroupID {
         var groupID = GroupID.from(getPersonFromHypersysID(hypersysToken).groupID)
