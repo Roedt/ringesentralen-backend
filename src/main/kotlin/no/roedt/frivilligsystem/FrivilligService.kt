@@ -3,9 +3,11 @@ package no.roedt.frivilligsystem
 import no.roedt.frivilligsystem.kontakt.AutentisertRegistrerKontaktRequest
 import no.roedt.frivilligsystem.kontakt.Kontakt
 import no.roedt.frivilligsystem.kontakt.KontaktRepository
+import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Kilde
+import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId
@@ -16,11 +18,13 @@ class FrivilligService(
     val frivilligRepository: FrivilligRepository,
     val personRepository: PersonRepository,
     val kontaktRepository: KontaktRepository,
-    val databaseUpdater: DatabaseUpdater
+    val databaseUpdater: DatabaseUpdater,
+    val lokallagRepository: LokallagRepository
 ) {
     fun hentAlle(userId: UserId): List<Frivillig> = frivilligRepository.findAll().list()
 
-    fun registrerNyFrivillig(request: RegistrerNyFrivilligRequest): Frivillig {
+    fun registrerNyFrivillig(autentisertRequest: AutentisertRegistrerNyFrivilligRequest): Frivillig {
+        val request = autentisertRequest.request
         val person = request.toPerson()
         personRepository.save(person)
         val frivillig = Frivillig(
@@ -44,24 +48,14 @@ class FrivilligService(
         etternavn = etternavn,
         telefonnummer = telefonnummer,
         email = null,
-        postnummer = postnummer.getPostnummer(),
+        postnummer = postnummer,
         fylke = -1,
-        lokallag = getLokallagFraPostnummer(postnummer) ?: 0,
+        lokallag = lokallagRepository.fromPostnummer(postnummer),
         groupID = 0,
         kilde = Kilde.Verva,
         iperID = null
 //        rolle = Rolle.frivillig
     )
-
-    private fun getLokallagFraPostnummer(postnummer: PostnummerDTO): Int? =
-        toLokallagId("select lokallag from postnummerIKommunerMedFleireLag where postnummerFra =< ${postnummer.postnummer} and postnummerTil >= ${postnummer.postnummer}")
-            ?: toLokallagId("select l.id from lokallag l inner join kommune k on k.lokallag_id = l.id inner join postnummer  p on p.kommunekode = k.nummer where p.postnummer = ${postnummer.postnummer}")
-
-    private fun toLokallagId(query: String) = databaseUpdater.getResultList(query)
-        .map { it as Array<*> }
-        .map { it[0] as Long }
-        .map { it.toInt() }
-        .firstOrNull()
 
     fun registrerKontakt(request: AutentisertRegistrerKontaktRequest) =
         kontaktRepository.persist(

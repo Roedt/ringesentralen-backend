@@ -6364,6 +6364,20 @@ INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `em
 ('Remoul', 'adine',	'+4722345682',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1, 'Verva'),
 ('Tragicom', 'ix',	'+4722345683',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1, 'Verva');
 
+
+-- --------------------------------------------------------
+FRIVILLIGSYSTEM HERIFRÅ
+-- --------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `frivilligBruker` (
+  `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `oppretta` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `personId` int(6) NOT NULL UNIQUE,
+  FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
+  `rolle` varchar(15) NOT NULL,
+  INDEX(`personId`)
+);
+
 -- --------------------------------------------------------
 
 

@@ -2,7 +2,7 @@ package no.roedt.frivilligsystem.registrer
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.frivilligsystem.PostnummerDTO
+import no.roedt.ringesentralen.person.UserId
 
 @RegisterForReflection
 data class RegistrerNyFrivilligRequest(
@@ -10,11 +10,17 @@ data class RegistrerNyFrivilligRequest(
     @JsonProperty("etternavn") var etternavn: String,
     @JsonProperty("epost") var epost: String,
     @JsonProperty("telefonnummer") var telefonnummer: String,
-    @JsonProperty("postnummer") var postnummer: PostnummerDTO,
+    @JsonProperty("postnummer") var postnummer: Int,
     @JsonProperty("alleredeAktivILokallag") var alleredeAktivILokallag: Boolean,
     @JsonProperty("medlemIRoedt") var medlemIRoedt: ErMedlemStatus,
     @JsonProperty("kanTenkeSegAaBidraMedAktiviteter") var kanTenkeSegAaBidraMedAktiviteter: List<Aktivitet>,
     @JsonProperty("spesiellKompetanse") var spesiellKompetanse: String?,
     @JsonProperty("andreTingDuVilBidraMed") var andreTingDuVilBidraMed: String?,
     @JsonProperty("fortellLittOmDegSelv") var fortellLittOmDegSelv: String?
+)
+
+@RegisterForReflection
+data class AutentisertRegistrerNyFrivilligRequest(
+    val userId: UserId,
+    val request: RegistrerNyFrivilligRequest
 )
