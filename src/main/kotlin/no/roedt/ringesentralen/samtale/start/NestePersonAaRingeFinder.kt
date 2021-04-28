@@ -59,6 +59,7 @@ class NestePersonAaRingeFinder(
                 AND hypersysID is null 
                 ORDER BY ABS(lokallag-'${lokallag}') ASC, 
                 brukergruppe = ${GroupID.PrioritertAaRinge.nr} DESC,
+                sisteSamtale ASC,
                 v.hypersysID DESC""")
         .map { it as Int }
         .firstOrNull()

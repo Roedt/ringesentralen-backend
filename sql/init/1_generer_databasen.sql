@@ -6294,7 +6294,8 @@ inner join resultat r on r.id = samtale.resultat;
 -- --------------------------------------------------------
 
 create or replace view v_personerSomKanRinges as
-SELECT p.lokallag, p.id as id, p.hypersysID as hypersysID, p.fylke, p.groupID as brukergruppe
+SELECT p.lokallag, p.id as id, p.hypersysID as hypersysID, p.fylke, p.groupID as brukergruppe,
+(SELECT `datetime` from samtale where ringt = p.id ORDER BY datetime DESC LIMIT 1) as sisteSamtale
   FROM person p
   LEFT OUTER JOIN lokallag l on p.lokallag = l.id
    WHERE p.groupID in (select id from brukergruppe where navn = 'klar til å ringes' or navn = 'prioritert å ringe')
