@@ -6382,6 +6382,20 @@ CREATE TABLE IF NOT EXISTS `frivillig` (
 
 -- --------------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS `kontakt` (
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `frivillig_id` int(6) NOT NULL,
+  `tilbakemelding` varchar(1024) DEFAULT NULL,
+  `registrert_av` int(6) NOT NULL,
+  `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX(`frivillig_id`),
+  FOREIGN KEY (`frivillig_id`) REFERENCES `frivillig` (`id`),
+  INDEX(`registrert_av`),
+  FOREIGN KEY (`registrert_av`) REFERENCES `person` (`id`)
+);
+
+-- --------------------------------------------------------
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
