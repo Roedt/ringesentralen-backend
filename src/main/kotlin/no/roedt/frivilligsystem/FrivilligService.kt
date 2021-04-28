@@ -7,6 +7,7 @@ import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Kilde
+import no.roedt.ringesentralen.brukere.FylkeRepository
 import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
@@ -19,7 +20,8 @@ class FrivilligService(
     val personRepository: PersonRepository,
     val kontaktRepository: KontaktRepository,
     val databaseUpdater: DatabaseUpdater,
-    val lokallagRepository: LokallagRepository
+    val lokallagRepository: LokallagRepository,
+    val fylkeRepository: FylkeRepository
 ) {
     fun hentAlle(userId: UserId): List<Frivillig> = frivilligRepository.findAll().list()
 
@@ -30,7 +32,6 @@ class FrivilligService(
         val frivillig = Frivillig(
             alleredeAktivILokallag = request.alleredeAktivILokallag,
             medlemIRoedt = request.medlemIRoedt,
-            //     kanTenkeSegAaBidraMedAktiviteter = request.kanTenkeSegAaBidraMedAktiviteter,
             spesiellKompetanse = request.spesiellKompetanse,
             andreTingDuVilBidraMed = request.andreTingDuVilBidraMed,
             fortellLittOmDegSelv = request.fortellLittOmDegSelv,
@@ -42,20 +43,23 @@ class FrivilligService(
         return frivillig
     }
 
-    private fun RegistrerNyFrivilligRequest.toPerson() = Person(
-        hypersysID = null,
-        fornavn = fornavn,
-        etternavn = etternavn,
-        telefonnummer = telefonnummer,
-        email = null,
-        postnummer = postnummer,
-        fylke = -1,
-        lokallag = lokallagRepository.fromPostnummer(postnummer),
-        groupID = 0,
-        kilde = Kilde.Verva,
-        iperID = null
-//        rolle = Rolle.frivillig
-    )
+    private fun RegistrerNyFrivilligRequest.toPerson() : Person {
+        val lokallag = lokallagRepository.fromPostnummer(postnummer)
+        val person = Person(
+            hypersysID = null,
+            fornavn = fornavn,
+            etternavn = etternavn,
+            telefonnummer = telefonnummer,
+            email = null,
+            postnummer = postnummer,
+            fylke = fylkeRepository.getFylke(lokallag, postnummer),
+            lokallag = lokallag,
+            groupID = 0,
+            kilde = Kilde.Frivillig,
+            iperID = null
+        )
+        return person
+    }
 
     fun registrerKontakt(request: AutentisertRegistrerKontaktRequest) =
         kontaktRepository.persist(

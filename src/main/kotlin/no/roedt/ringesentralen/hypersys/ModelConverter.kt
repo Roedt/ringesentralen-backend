@@ -1,6 +1,5 @@
 package no.roedt.ringesentralen.hypersys
 
-import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Kilde
 import no.roedt.ringesentralen.brukere.FylkeRepository
 import no.roedt.ringesentralen.hypersys.externalModel.Address
@@ -21,7 +20,6 @@ interface ModelConverter {
 
 @Dependent
 class ModelConverterBean(
-    private val databaseUpdater: DatabaseUpdater,
     private val lokallagRepository: LokallagRepository,
     private val personRepository: PersonRepository,
     private val fylkeRepository: FylkeRepository
@@ -33,7 +31,7 @@ class ModelConverterBean(
         val etternavn = user.name.substring(sisteMellomrom+1)
         val postnummer = toPostnummer(user)
         val lokallag = toLokallag(user.memberships)
-        val fylke = if (postnummer == -1 && lokallag != -1) fylkeRepository.getFylkeFraLokallag(lokallag) else toFylke(postnummer)
+        val fylke = fylkeRepository.getFylke(lokallag, postnummer)
         return Person(
             hypersysID = user.id,
             fornavn = fornavn,
@@ -66,7 +64,7 @@ class ModelConverterBean(
             telefonnummer = telefonnummer,
             email = itOrNull(map["email"]),
             postnummer = postnummer,
-            fylke = toFylke(postnummer),
+            fylke = fylkeRepository.toFylke(postnummer),
             groupID = groupID,
             lokallag = lokallagRepository.fromOrganisationName(map["organisation"].toString()),
             kilde = Kilde.Hypersys,
@@ -98,15 +96,7 @@ class ModelConverterBean(
     private fun toPostnummer(user: User): Int =
         user.addresses.map { it.postalCode }.map { it[1] }.map { it.toInt() }.maxByOrNull { it != 1 } ?: -1
 
-    override fun toFylke(postnummer: Int): Int =
-        databaseUpdater.getResultList(
-            "select fylke.id from `postnummer` p " +
-                    "inner join kommune kommune on p.KommuneKode = kommune.nummer " +
-                    "inner join `fylker` fylke on fylke.id=kommune.fylke_id where postnummer = $postnummer"
-        )
-            .map { it as Int }
-            .firstOrNull()
-            ?: -1
+    override fun toFylke(postnummer: Int): Int = fylkeRepository.toFylke(postnummer)
 
     fun toLokallag(memberships: List<Membership>): Int = getOrganisationName(memberships)?.let { lokallagRepository.fromOrganisationName(it) } ?: -1
 

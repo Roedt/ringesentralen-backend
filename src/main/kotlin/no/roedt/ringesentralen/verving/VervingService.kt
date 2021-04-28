@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.verving
 
 import no.roedt.ringesentralen.Kilde
-import no.roedt.ringesentralen.hypersys.ModelConverter
+import no.roedt.ringesentralen.brukere.FylkeRepository
 import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
@@ -10,10 +10,10 @@ import javax.enterprise.context.Dependent
 
 @Dependent
 class VervingService(
-    private val modelConverter: ModelConverter,
     private val personRepository: PersonRepository,
     private val vervingRepository: VervingRepository,
-    private val lokallagRepository: LokallagRepository
+    private val lokallagRepository: LokallagRepository,
+    private val fylkeRepository: FylkeRepository
 ) {
 
     fun postPersonSomSkalRinges(request: AutentisertVervingRequest) : Pair<Boolean, Person> {
@@ -36,7 +36,7 @@ class VervingService(
             telefonnummer = request.request.telefonnummer,
             email = null,
             postnummer = postnummer,
-            fylke = modelConverter.toFylke(postnummer),
+            fylke = fylkeRepository.toFylke(postnummer),
             lokallag = lokallagRepository.fromPostnummer(postnummer),
             groupID = GroupID.ManglerSamtykke.nr,
             kilde = Kilde.Verva,
