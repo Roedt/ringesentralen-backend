@@ -32,11 +32,11 @@ class FrivilligController(val frivilligService: FrivilligService) : Ringesentral
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(Roles.ringerForMedlemmerGodkjennerAdmin)
+    @RolesAllowed(Roles.ringerMedlemmer, Roles.godkjenner, Roles.admin)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/alle")
-    @Operation(summary = "Finn alle frivillige i laget")
+    @Operation(summary = "Finn alle frivillige i laget", description = Roles.ringerForMedlemmerGodkjennerAdmin)
     @Retry
     fun hentAlle(@Context ctx: SecurityContext): List<Frivillig> = frivilligService.hentAlle(ctx.userId())
 
@@ -50,12 +50,12 @@ class FrivilligController(val frivilligService: FrivilligService) : Ringesentral
     @Transactional
     fun registrerNyFrivillig(@Context ctx: SecurityContext, registrerNyFrivilligRequest: RegistrerNyFrivilligRequest): Frivillig = frivilligService.registrerNyFrivillig(AutentisertRegistrerNyFrivilligRequest(userId = ctx.userId(), request = registrerNyFrivilligRequest))
 
-    @RolesAllowed(Roles.ringerForMedlemmerGodkjennerAdmin)
+    @RolesAllowed(Roles.ringerMedlemmer, Roles.godkjenner, Roles.admin)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/registrerKontakt")
-    @Operation(summary = "Registrer kontakt med frivillig")
+    @Operation(summary = "Registrer kontakt med frivillig", description = Roles.ringerForMedlemmerGodkjennerAdmin)
     @Retry
     @Transactional
     fun registrerKontakt(@Context ctx: SecurityContext, registrerKontaktRequest: RegistrerKontaktRequest) = frivilligService.registrerKontakt(

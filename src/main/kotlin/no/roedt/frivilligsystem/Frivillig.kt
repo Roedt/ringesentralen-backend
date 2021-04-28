@@ -4,11 +4,11 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity
 import io.quarkus.hibernate.orm.panache.PanacheRepository
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.frivilligsystem.registrer.ErMedlemStatus
-import no.roedt.ringesentralen.person.Person
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
 import javax.persistence.Entity
-import javax.persistence.OneToOne
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 import javax.persistence.Table
 
 @Entity
@@ -16,24 +16,23 @@ import javax.persistence.Table
 @Cacheable
 @RegisterForReflection
 data class Frivillig(
+    var personId: Int,
     var alleredeAktivILokallag: Boolean,
+    @Enumerated(EnumType.STRING)
     var medlemIRoedt: ErMedlemStatus,
-    // var kanTenkeSegAaBidraMedAktiviteter: List<Aktivitet>, TOOD: Finn ut korleis denne skal persisterast
     var spesiellKompetanse: String?,
     var andreTingDuVilBidraMed: String?,
     var fortellLittOmDegSelv: String?,
 ) : PanacheEntity()
 {
     constructor() : this(
+        personId = 0,
         alleredeAktivILokallag = false,
         medlemIRoedt = ErMedlemStatus.Nei,
         spesiellKompetanse = null,
         andreTingDuVilBidraMed = null,
         fortellLittOmDegSelv = null
     )
-
-    @OneToOne
-    lateinit var person: Person
 }
 
 @ApplicationScoped

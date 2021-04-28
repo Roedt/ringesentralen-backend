@@ -6375,7 +6375,12 @@ CREATE TABLE IF NOT EXISTS `frivillig` (
   `oppretta` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `personId` int(6) NOT NULL UNIQUE,
   FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
-  INDEX(`personId`)
+  INDEX(`personId`),
+  `alleredeAktivILokallag` bit DEFAULT FALSE,
+  `medlemIRoedt` varchar(30) NOT NULL,
+  `spesiellKompetanse` varchar(1024) DEFAULT NULL,
+  `andreTingDuVilBidraMed` varchar(1024) DEFAULT NULL,
+  `fortellLittOmDegSelv` varchar(1024) DEFAULT NULL
 );
 
 -- --------------------------------------------------------

@@ -30,15 +30,13 @@ class FrivilligService(
         val person = request.toPerson()
         personRepository.save(person)
         val frivillig = Frivillig(
+            personId = person.id.toInt(),
             alleredeAktivILokallag = request.alleredeAktivILokallag,
             medlemIRoedt = request.medlemIRoedt,
             spesiellKompetanse = request.spesiellKompetanse,
             andreTingDuVilBidraMed = request.andreTingDuVilBidraMed,
             fortellLittOmDegSelv = request.fortellLittOmDegSelv,
         )
-            .apply {
-                this.person = personRepository.find("epost", person.email).firstResult()
-            }
         frivilligRepository.persist(frivillig)
         return frivillig
     }
