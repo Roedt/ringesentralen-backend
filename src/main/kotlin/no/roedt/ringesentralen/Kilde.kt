@@ -4,5 +4,6 @@ enum class Kilde {
     Hypersys,
     Mosaic,
     Verva,
-    Systembruker
+    Systembruker,
+    Frivillig
 }

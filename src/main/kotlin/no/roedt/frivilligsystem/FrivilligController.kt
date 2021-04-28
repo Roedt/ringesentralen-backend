@@ -32,7 +32,7 @@ class FrivilligController(val frivilligService: FrivilligService) : Ringesentral
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed("lokallag", "distrikt", "sentralt")
+    @RolesAllowed(Roles.ringerForMedlemmerGodkjennerAdmin)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/alle")
@@ -50,7 +50,7 @@ class FrivilligController(val frivilligService: FrivilligService) : Ringesentral
     @Transactional
     fun registrerNyFrivillig(@Context ctx: SecurityContext, registrerNyFrivilligRequest: RegistrerNyFrivilligRequest): Frivillig = frivilligService.registrerNyFrivillig(AutentisertRegistrerNyFrivilligRequest(userId = ctx.userId(), request = registrerNyFrivilligRequest))
 
-    @RolesAllowed("lokallag", "distrikt", "sentralt")
+    @RolesAllowed(Roles.ringerForMedlemmerGodkjennerAdmin)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

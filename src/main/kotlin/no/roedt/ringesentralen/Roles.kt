@@ -11,6 +11,7 @@ class Roles {
         const val godkjenner = "godkjenner"
         const val admin = "admin"
         const val godkjennerAdmin = "$godkjenner, $admin"
+        const val ringerForMedlemmerGodkjennerAdmin = "$ringerMedlemmer, $godkjenner, $admin"
         const val ringerGodkjennerAdmin = "$ringer, $ringerMedlemmer, $godkjenner, $admin"
         const val brukerVenterPaaGodkjenning = "$bruker, $venterPaaGodkjenning"
     }

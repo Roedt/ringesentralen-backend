@@ -43,9 +43,9 @@ class FrivilligService(
         return frivillig
     }
 
-    private fun RegistrerNyFrivilligRequest.toPerson() : Person {
+    private fun RegistrerNyFrivilligRequest.toPerson(): Person {
         val lokallag = lokallagRepository.fromPostnummer(postnummer)
-        val person = Person(
+        return Person(
             hypersysID = null,
             fornavn = fornavn,
             etternavn = etternavn,
@@ -58,7 +58,6 @@ class FrivilligService(
             kilde = Kilde.Frivillig,
             iperID = null
         )
-        return person
     }
 
     fun registrerKontakt(request: AutentisertRegistrerKontaktRequest) =
