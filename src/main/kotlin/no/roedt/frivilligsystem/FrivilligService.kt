@@ -3,6 +3,8 @@ package no.roedt.frivilligsystem
 import no.roedt.frivilligsystem.kontakt.AutentisertRegistrerKontaktRequest
 import no.roedt.frivilligsystem.kontakt.Kontakt
 import no.roedt.frivilligsystem.kontakt.KontaktRepository
+import no.roedt.frivilligsystem.registrer.AktivitetForFrivillig
+import no.roedt.frivilligsystem.registrer.AktivitetForFrivilligRepository
 import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.ringesentralen.DatabaseUpdater
@@ -21,7 +23,8 @@ class FrivilligService(
     val kontaktRepository: KontaktRepository,
     val databaseUpdater: DatabaseUpdater,
     val lokallagRepository: LokallagRepository,
-    val fylkeRepository: FylkeRepository
+    val fylkeRepository: FylkeRepository,
+    val aktivitetForFrivilligRepository: AktivitetForFrivilligRepository
 ) {
     fun hentAlle(userId: UserId): List<Frivillig> = frivilligRepository.findAll().list()
 
@@ -38,8 +41,13 @@ class FrivilligService(
             fortellLittOmDegSelv = request.fortellLittOmDegSelv,
         )
         frivilligRepository.persist(frivillig)
+        request.kanTenkeSegAaBidraMedAktiviteter
+            .map { AktivitetForFrivillig(frivillig = frivillig, aktivitet = it) }
+            .forEach { aktivitetForFrivilligRepository.persist(it) }
+
         return frivillig
     }
+
 
     private fun RegistrerNyFrivilligRequest.toPerson(): Person {
         val lokallag = lokallagRepository.fromPostnummer(postnummer)
