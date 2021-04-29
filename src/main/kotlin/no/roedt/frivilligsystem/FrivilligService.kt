@@ -26,7 +26,8 @@ class FrivilligService(
     val fylkeRepository: FylkeRepository,
     val aktivitetForFrivilligRepository: AktivitetForFrivilligRepository
 ) {
-    fun hentAlle(userId: UserId): List<Frivillig> = frivilligRepository.findAll().list()
+    fun hentAlle(userId: UserId) = frivilligRepository.findAll().list<Frivillig?>()
+        .map { FrivilligResponse(frivillig = it, aktiviteter = aktivitetForFrivilligRepository.list("frivillig_id", it.id)) }
 
     fun registrerNyFrivillig(autentisertRequest: AutentisertRegistrerNyFrivilligRequest): Frivillig {
         val request = autentisertRequest.request

@@ -11,7 +11,6 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
-import javax.annotation.security.PermitAll
 import javax.annotation.security.RolesAllowed
 import javax.inject.Inject
 import javax.transaction.Transactional
@@ -39,10 +38,9 @@ class FrivilligController(val frivilligService: FrivilligService) : Ringesentral
     @Path("/alle")
     @Operation(summary = "Finn alle frivillige i laget", description = Roles.ringerForMedlemmerGodkjennerAdmin)
     @Retry
-    fun hentAlle(@Context ctx: SecurityContext): List<Frivillig> = frivilligService.hentAlle(ctx.userId())
+    fun hentAlle(@Context ctx: SecurityContext) = frivilligService.hentAlle(ctx.userId())
 
-    @PermitAll
-//    @RolesAllowed(Roles.systembrukerFrontend)
+    @RolesAllowed(Roles.systembrukerFrontend)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
