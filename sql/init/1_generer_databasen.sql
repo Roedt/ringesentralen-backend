@@ -6387,6 +6387,16 @@ CREATE TABLE IF NOT EXISTS `aktivitet` (
   `aktivitet` varchar(50) NOT NULL PRIMARY KEY
 );
 
+INSERT INTO `aktivitet` (`aktivitet`) VALUES
+('Stand'),
+('SoMe'),
+('Doerbanking'),
+('Ringing'),
+('SMS'),
+('Postkasseutdeling'),
+('Morgenaksjon'),
+('Bil');
+
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `aktivitetForFrivillig` (

@@ -3,7 +3,6 @@ package no.roedt.frivilligsystem.registrer
 import io.quarkus.hibernate.orm.panache.PanacheEntity
 import io.quarkus.hibernate.orm.panache.PanacheRepository
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.frivilligsystem.Frivillig
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
 import javax.persistence.Entity
@@ -16,11 +15,11 @@ import javax.persistence.Table
 @Cacheable
 @RegisterForReflection
 data class AktivitetForFrivillig(
-    var frivillig: Frivillig,
+    var frivillig_id: Long,
     @Enumerated(EnumType.STRING) var aktivitet: Aktivitet
 ) : PanacheEntity() {
     constructor() : this(
-        Frivillig(),
+        0L,
         Aktivitet.Bil
     )
 }

@@ -42,7 +42,7 @@ class FrivilligService(
         )
         frivilligRepository.persist(frivillig)
         request.kanTenkeSegAaBidraMedAktiviteter
-            .map { AktivitetForFrivillig(frivillig = frivillig, aktivitet = it) }
+            .map { AktivitetForFrivillig(frivillig_id = frivillig.id, aktivitet = it) }
             .forEach { aktivitetForFrivilligRepository.persist(it) }
 
         return frivillig
