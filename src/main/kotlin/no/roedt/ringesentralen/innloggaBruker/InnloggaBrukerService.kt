@@ -35,15 +35,9 @@ class InnloggaBrukerService(
         lokallagNavn = lokallagRepository.findById(lokallag.toLong()).navn
     )
 
-    fun getLokallag(userId: UserId, groups: Set<String>): List<Lokallag> {
-        val person = getPerson(userId)
-        if (groups.contains(Roles.admin)) {
-            return lokallagRepository.findAll().list()
-        }
-        else if (groups.contains(Roles.godkjenner)) {
-            val fylkeFraLokallag = fylkeRepository.getFylkeIdFraLokallag(person.lokallag)
-            return lokallagRepository.fromFylke(fylkeFraLokallag)
-        }
-        return listOf(lokallagRepository.findById(person.lokallag.toLong()))
+    fun getLokallag(userId: UserId, groups: Set<String>): List<Lokallag> = when {
+        groups.contains(Roles.admin) -> lokallagRepository.findAll().list()
+        groups.contains(Roles.godkjenner) -> lokallagRepository.fromFylke(fylkeRepository.getFylkeIdFraLokallag(getPerson(userId).lokallag))
+        else -> listOf(lokallagRepository.findById(getPerson(userId).lokallag.toLong()))
     }
 }

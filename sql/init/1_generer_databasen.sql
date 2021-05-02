@@ -59,10 +59,13 @@ INSERT INTO `fylker` (`id`, `navn`) VALUES
 CREATE TABLE IF NOT EXISTS `lokallag` (
   `id` int(3) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `navn` varchar(100) NOT NULL UNIQUE,
-  `hypersysID` int NULL UNIQUE
+  `hypersysID` int NULL UNIQUE,
+  `fylke` int NOT NULL,
+  FOREIGN KEY (`fylke`) REFERENCES `fylker` (`id`),
+  INDEX(`fylke`)
 );
 
-insert into `lokallag` (`id`, `navn`) values (-1, 'Udefinert');
+insert into `lokallag` (`id`, `navn`, `fylke`) values (-1, 'Udefinert', -1);
 
 insert into `lokallag` (navn) values
 ('Raudt Alver'),
@@ -308,6 +311,36 @@ INSERT INTO `lokallag`(`navn`) values
 ('Trysil'),
 ('Tynset'),
 ('Ullensaker');
+
+UPDATE lokallag SET fylke=-1 where navn in ('Udefinert', 'Rødt', 'Test-lokallag', 'Utland', 'Organisasjon1 sentralt');
+UPDATE lokallag SET fylke=1 where navn in ('Uten lag Østfold', 'Rødt Fredrikstad', 'Rødt Halden', 'Rødt Indre Østfold', 'Rødt Moss og omegn', 'Rødt Råde', 'Rødt Sarpsborg og omegn', 'Rødt Våler i Østfold');
+UPDATE lokallag SET fylke=2 where navn in ('Uten lag Akershus', 'Rødt Asker', 'Rødt Bærum', 'Rødt Eidsvoll og Hurdal', 'Rødt Frogn', 'Rødt Lillestrøm', 'Rødt Lørenskog', 'Rødt Nes', 'Rødt Nesodden',
+'Rødt Nittedal', 'Rødt Nordre Follo', 'Rødt Ullensaker og Nannestad', 'Rødt Vestby', 'Rødt Ås', 'Ullensaker', 'Nannestad', 'Rødt Aurskog-Høland', 'Rødt Ås Studentlag', 'Rødt Nedre Romerike');
+UPDATE lokallag SET fylke=3 where navn in ('Rødt Oslo Alna', 'Rødt Oslo Bjerke', 'Rødt Oslo Gamle Oslo', 'Rødt Oslo Grorud', 'Rødt Oslo Grünerløkka', 'Rødt Oslo Nordre Aker', 'Rødt Oslo Nordstrand',
+'Rødt Oslo Sagene','Rødt Oslo St. Hanshaugen', 'Rødt Oslo Stovner', 'Rødt Oslo Søndre Nordstrand', 'Rødt Oslo Vest', 'Rødt Oslo Østensjø', 'Rødt Oslo Arbeiderlag', 'Rødt Oslo Jernbane og Sporveier',
+'Rødt Oslo Kvinnepolitisk', 'Rødt Oslo Skole og Barnehage', 'Rødt Oslo Solidaritetslag', 'Rødt Oslo Studentlag', 'Rødt Oslo kommune', 'Uten lag Oslo');
+UPDATE lokallag SET fylke=4 where navn in ('Rødt Elverum', 'Rødt Folldal', 'Rødt Hamar', 'Rødt Kongsvinger og omegn', 'Rødt Løten', 'Rødt Odal', 'Rødt Ringsaker', 'Rødt Stange', 'Rødt Åsnes', 'Uten lag Hedmark', 'Tynset', 'Trysil');
+UPDATE lokallag SET fylke=5 where navn in ('Raudt Valdres', 'Rødt Gjøvik og Land', 'Rødt Gran', 'Rødt Lillehammer', 'Rødt Lunner', 'Rødt Midt-Gudbrandsdalen', 'Rødt Vestre Toten', 'Rødt Østre Toten',
+'Uten lag Oppland', 'Land', 'Gjøvik');
+UPDATE lokallag SET fylke=6 where navn in ('Rødt Drammen', 'Rødt Kongsberg', 'Rødt Lier', 'Rødt Modum', 'Rødt Øvre Eiker', 'Uten lag Buskerud', 'Rødt Ringerike');
+UPDATE lokallag SET fylke=7 where navn in ('Uten lag Vestfold', 'Uten lag Vestfold og Telemark', 'Rødt Holmestrand', 'Rødt Horten', 'Rødt Larvik', 'Rødt Sandefjord', 'Rødt Tønsberg og Færder');
+UPDATE lokallag SET fylke=8 where navn in ('Rødt Bamble', 'Rødt Kragerø', 'Rødt Midt-Telemark', 'Rødt Notodden', 'Rødt Porsgrunn', 'Rødt Skien', 'Uten lag Telemark');
+UPDATE lokallag SET fylke=9 where navn in ('Rødt Arendal', 'Rødt Froland', 'Rødt Grimstad', 'Rødt Lillesand', 'Rødt Risør', 'Rødt Setesdal', 'Rødt Tvedestrand', 'Rødt Vegårshei', 'Rødt Åmli');
+UPDATE lokallag SET fylke=10 where navn in ('Rødt Farsund', 'Rødt Flekkefjord', 'Rødt Kristiansand', 'Rødt Lindesnes', 'Rødt Lyngdal', 'Rødt Vennesla', 'Uten Lag Agder');
+UPDATE lokallag SET fylke=11 where navn in ('Raudt Hå', 'Rødt Dalane', 'Rødt Haugaland', 'Rødt Sandnes', 'Rødt Stavanger', 'Rødt Strand', 'Uten lag Rogaland', 'Rødt Stavanger Studentlag', 'Rødt Time og Klepp', 'Rødt Sola');
+UPDATE lokallag SET fylke=12 where navn in ('Raudt Alver', 'Raudt Austrheim', 'Raudt Bjørnafjorden', 'Raudt Bømlo', 'Raudt Kvam', 'Raudt Kvinnherad', 'Raudt Stord', 'Raudt Voss', 'Rødt Askøy',
+'Rødt Bergen Møhlenpris', 'Rødt Bergen Nord', 'Rødt Bergen Sentrum', 'Rødt Bergen Sør', 'Rødt Bergen Vest', 'Rødt Ullensvang', 'Rødt Øygarden', 'uten lag Hordaland', 'Rødt Bergen Studentlag', 'Vaksdal');
+UPDATE lokallag SET fylke=14 where navn in ('Raudt Bremanger', 'Raudt Dalsfjorden', 'Raudt Flora', 'Raudt Gloppen', 'Raudt Høyanger', 'Raudt Indre Sunnfjord', 'Raudt Luster', 'Raudt Lærdal',
+'Raudt Stryn', 'Raudt Vågsøy', 'Raudt Årdal', 'Uten lag Sogn og Fjordane', 'Raudt Kinn');
+UPDATE lokallag SET fylke=15 where navn in ('Raudt Søre Sunnmøre', 'Raudt Ulstein', 'Raudt Ørsta', 'Raudt Volda', 'Rødt Kristiansund', 'Rødt Molde', 'Rødt Sunndal', 'Rødt Ålesund', 'Uten lag Møre og Romsdal', 'Giske');
+UPDATE lokallag SET fylke=50 where navn in ('Rødt Frøya', 'Rødt Hitra', 'Rødt Levanger', 'Rødt Malvik', 'Rødt Melhus', 'Rødt Namsos', 'Rødt Nærøysund', 'Rødt Orkland', 'Rødt Skaun', 'Rødt Steinkjer',
+'Rødt Stjørdal', 'Rødt Trondheim Ila', 'Rødt Trondheim Sentrum', 'Rødt Trondheim Østbyen', 'Rødt Verdal', 'Rødt Ørland', 'Røros', 'Trondheim Strinda', 'Uten lag Trøndelag', 'Rødt Trondheim Fagliglag',
+'Trondheim Universitetslag', 'Trondheim Helse- og Sosialpolitisk lag', 'Rødt Flatanger', 'Indre Fosen');
+UPDATE lokallag SET fylke=18 where navn in ('Rødt Alstahaug', 'Rødt Andøy', 'Rødt Bodø', 'Rødt Brønnøy', 'Rødt Dønna', 'Rødt Fauske', 'Rødt Hadsel', 'Rødt Hamarøy',
+'Rødt Hemnes', 'Rødt Leirfjord', 'Rødt Narvik', 'Rødt Nesna', 'Rødt Rana', 'Rødt Røst', 'Rødt Saltdal', 'Rødt Sortland', 'Rødt Steigen', 'Rødt Sømna', 'Rødt Sørfold', 'Rødt Vefsn', 'Rødt Vega', 'Rødt Vestvågøy',
+'Rødt Vågan', 'Rødt Øksnes', 'Uten lag Nordland');
+UPDATE lokallag SET fylke=19 where navn in ('Uten lag Troms', 'Rødt Balsfjord', 'Rødt Harstad', 'Rødt Målselv', 'Rødt Salangen', 'Rødt Skjervøy', 'Rødt Tromsø', 'Rødt Tromsø Studentlag');
+UPDATE lokallag SET fylke=20 where navn in ('Rødt Alta', 'Rødt Hammerfest', 'Rødt Måsøy', 'Rødt Sør-Varanger', 'Rødt Vadsø', 'Uten lag Finnmark', 'GAMVIK', 'Tana', 'Karasjok', 'PORSANGER PORSÁNGU PORSANKI');
 
 -- --------------------------------------------------------
 
