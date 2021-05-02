@@ -48,7 +48,15 @@ class FrivilligController(val frivilligService: FrivilligService) : Ringesentral
     @Operation(summary = "Registrer ny frivillig", description = Roles.systembrukerFrontend)
     @Retry
     @Transactional
-    fun registrerNyFrivillig(@Context ctx: SecurityContext, registrerNyFrivilligRequest: RegistrerNyFrivilligRequest): Frivillig = frivilligService.registrerNyFrivillig(AutentisertRegistrerNyFrivilligRequest(userId = ctx.userId(), request = registrerNyFrivilligRequest))
+    fun registrerNyFrivillig(@Context ctx: SecurityContext, registrerNyFrivilligRequest: RegistrerNyFrivilligRequest): Frivillig =
+        try {
+            frivilligService.registrerNyFrivillig(AutentisertRegistrerNyFrivilligRequest(userId = ctx.userId(), request = registrerNyFrivilligRequest))
+        }
+        catch (e: java.lang.NullPointerException) {
+            e.printStackTrace()
+            System.err.println(registrerNyFrivilligRequest)
+            throw e
+        }
 
     @RolesAllowed(Roles.ringerMedlemmer, Roles.godkjenner, Roles.admin)
     @POST
