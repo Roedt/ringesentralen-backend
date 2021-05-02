@@ -38,7 +38,7 @@ class FrivilligController(val frivilligService: FrivilligService) : Ringesentral
     @Path("/alle")
     @Operation(summary = "Finn alle frivillige i laget", description = Roles.ringerForMedlemmerGodkjennerAdmin)
     @Retry
-    fun hentAlle(@Context ctx: SecurityContext) = frivilligService.hentAlle(ctx.userId())
+    fun hentAlle(@Context ctx: SecurityContext) = frivilligService.hentAlle(ctx.userId(), jwt.groups)
 
     @RolesAllowed(Roles.systembrukerFrontend)
     @POST

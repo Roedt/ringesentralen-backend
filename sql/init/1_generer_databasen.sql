@@ -6380,7 +6380,6 @@ CREATE TABLE IF NOT EXISTS `frivillig` (
   `andreTingDuVilBidraMed` varchar(1024) DEFAULT NULL,
   `fortellLittOmDegSelv` varchar(1024) DEFAULT NULL
 );
-
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `aktivitet` (
@@ -6423,6 +6422,17 @@ CREATE TABLE IF NOT EXISTS `kontakt` (
   INDEX(`registrert_av`),
   FOREIGN KEY (`registrert_av`) REFERENCES `person` (`id`)
 );
+
+-- --------------------------------------------------------
+
+INSERT INTO `frivillig` (personId, alleredeAktivILokallag, medlemIRoedt, spesiellKompetanse, andreTingDuVilBidraMed, fortellLittOmDegSelv) VALUES
+((SELECT id from person where fornavn='Aster' and etternavn='Ix'), true, 'ja', 'rask og effektiv', 'bidrar med alt mogleg', 'frå Gallia'),
+((SELECT id from person where fornavn='Obel' and etternavn='Ix'), true, 'Vilbli', 'stor og sterk', 'rydde veg', 'også frå Gallia');
+
+INSERT INTO `aktivitetForFrivillig` (frivillig_id, aktivitet) VALUES
+((SELECT id from frivillig where spesiellKompetanse='rask og effektiv'), 'Ringing'),
+((SELECT id from frivillig where spesiellKompetanse='rask og effektiv'), 'SoMe'),
+((SELECT id from frivillig where spesiellKompetanse='stor og sterk'), 'Doerbanking');
 
 -- --------------------------------------------------------
 

@@ -9,6 +9,7 @@ import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Kilde
+import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.brukere.FylkeRepository
 import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.Person
@@ -26,12 +27,26 @@ class FrivilligService(
     val fylkeRepository: FylkeRepository,
     val aktivitetForFrivilligRepository: AktivitetForFrivilligRepository
 ) {
-    fun hentAlle(userId: UserId) = frivilligRepository.findAll().list<Frivillig>()
+    fun hentAlle(userId: UserId, roller: Set<String>) = hentFrivilligeUtFraMinRolle(roller, personRepository.getPerson(userId))
         .map { FrivilligResponse(
             frivillig = it,
             person = personRepository.findById(it.personId.toLong()),
             aktiviteter = aktivitetForFrivilligRepository.list("frivillig_id", it.id)
         ) }
+
+    private fun hentFrivilligeUtFraMinRolle(roller: Set<String>, ringer: Person): List<Frivillig> = when {
+        roller.contains(Roles.admin) -> frivilligRepository.listAll()
+        roller.contains(Roles.godkjenner) -> {
+            databaseUpdater.getResultList("select f.id from frivillig f inner join person p on p.id = f.personId and p.fylke=${ringer.fylke} ORDER BY p.etternavn ASC")
+                .map { it as Int }
+                .map { it.toLong() }
+                .map { frivilligRepository.findById(it) }
+        }
+        else -> databaseUpdater.getResultList("select f.id from frivillig f inner join person p on p.id = f.personId and p.lokallag=${ringer.lokallag} ORDER BY p.etternavn ASC")
+            .map { it as Int }
+            .map { it.toLong() }
+            .map { frivilligRepository.findById(it) }
+    }
 
     fun registrerNyFrivillig(autentisertRequest: AutentisertRegistrerNyFrivilligRequest): Frivillig {
         val request = autentisertRequest.request
