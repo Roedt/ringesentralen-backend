@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `lokallag` (
   `id` int(3) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `navn` varchar(100) NOT NULL UNIQUE,
   `hypersysID` int NULL UNIQUE,
-  `fylke` int NOT NULL,
+  `fylke` int(2) NOT NULL,
   FOREIGN KEY (`fylke`) REFERENCES `fylker` (`id`),
   INDEX(`fylke`)
 );
