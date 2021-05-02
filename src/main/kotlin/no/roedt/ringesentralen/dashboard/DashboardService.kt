@@ -28,7 +28,7 @@ class DashboardService(
 
         val igjenAaRingePerLokallag = databaseUpdater.getResultList("SELECT lokallag from person where groupID=${GroupID.KlarTilAaRinges.nr} and hypersysID $hypersysID").filter { lokallagIDar.contains(it) }.groupBy { it }
         val personerSomKanRingesPerLokallag = databaseUpdater.getResultList("SELECT lokallag FROM v_personerSomKanRinges where hypersysID $hypersysID").filter { lokallagIDar.contains(it) }.groupBy { it }
-        val totaltInklRingtePerLokallag = databaseUpdater.getResultList("SELECT lokallag from person where groupID=${GroupID.Ferdigringt.nr} and hypersysID $hypersysID").filter { lokallagIDar.contains(it) }.groupBy { it }
+        val totaltInklRingtePerLokallag = databaseUpdater.getResultList("SELECT lokallag from person where groupID iN (${GroupID.Ferdigringt.nr}, ${GroupID.Slett.nr}) and hypersysID $hypersysID").filter { lokallagIDar.contains(it) }.groupBy { it }
 
         val statusliste: List<Lokallagsstatus> = mineLokallag
             .map { lokallag ->
@@ -37,7 +37,7 @@ class DashboardService(
                     igjenAaRinge = (igjenAaRingePerLokallag.getOrDefault(lokallag.id.toInt(), listOf()) as List<*>).size,
                     personerSomKanRinges = (personerSomKanRingesPerLokallag.getOrDefault(lokallag.id.toInt(), listOf()) as List<*>).size,
                     totaltInklRingte = (totaltInklRingtePerLokallag.getOrDefault(lokallag.id.toInt(), listOf()) as List<*>).size,
-                    fylke = fylkeRepository.getFylkeFraLokallag(lokallag.id.toInt())
+                    fylke = fylkeRepository.findById(lokallag.fylke)
                 )
             }
             .sortedBy { it.lokallag.navn }

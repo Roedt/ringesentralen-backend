@@ -32,13 +32,10 @@ class FylkeRepository(
     private val lokallagRepository: LokallagRepository
 ) : PanacheRepositoryBase<Fylke, Int> {
 
-
     fun getFylke(lokallag: Int, postnummer: Int): Int =
         if (postnummer == -1 && lokallag != -1) getFylkeIdFraLokallag(lokallag) else toFylke(postnummer)
 
-    fun getFylkeFraLokallag(lokallag: Int): Fylke = findById(getFylkeIdFraLokallag(lokallag))
-
-    fun getFylkeIdFraLokallag(lokallag: Int): Int =lokallagRepository.findById(lokallag.toLong()).fylke
+    fun getFylkeIdFraLokallag(lokallag: Int): Int = lokallagRepository.findById(lokallag.toLong()).fylke
 
     fun toFylke(postnummer: Int): Int =
         databaseUpdater.getResultList(
@@ -49,6 +46,4 @@ class FylkeRepository(
             .map { it as Int }
             .firstOrNull()
             ?: -1
-
-
 }
