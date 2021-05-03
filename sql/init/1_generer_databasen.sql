@@ -342,6 +342,8 @@ UPDATE lokallag SET fylke=18 where navn in ('Rødt Alstahaug', 'Rødt Andøy', '
 UPDATE lokallag SET fylke=19 where navn in ('Uten lag Troms', 'Rødt Balsfjord', 'Rødt Harstad', 'Rødt Målselv', 'Rødt Salangen', 'Rødt Skjervøy', 'Rødt Tromsø', 'Rødt Tromsø Studentlag');
 UPDATE lokallag SET fylke=20 where navn in ('Rødt Alta', 'Rødt Hammerfest', 'Rødt Måsøy', 'Rødt Sør-Varanger', 'Rødt Vadsø', 'Uten lag Finnmark', 'GAMVIK', 'Tana', 'Karasjok', 'PORSANGER PORSÁNGU PORSANKI');
 
+INSERT INTO lokallag (navn, fylke) values ('Rødt Fredrikstad og Hvaler', 1);
+
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `kommune` (
