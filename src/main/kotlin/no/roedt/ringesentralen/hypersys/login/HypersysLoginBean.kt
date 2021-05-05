@@ -17,7 +17,6 @@ import no.roedt.ringesentralen.token.SecretFactory
 import java.net.http.HttpResponse
 import java.util.Optional
 import javax.enterprise.context.Dependent
-import kotlin.math.max
 
 @Dependent
 class HypersysLoginBean(
@@ -88,17 +87,23 @@ class HypersysLoginBean(
         ringerIV1Repository.list("telefonnummer", convertedPerson.telefonnummer?.replace("+47", ""))
             .map { it.brukergruppe }
             .firstOrNull()
-            ?.let { convertedPerson.groupID = maksBrukergruppe(it, convertedPerson.groupID) }
+            ?.let { convertedPerson.groupID = maksBrukergruppe(it, convertedPerson.groupID).nr }
     }
 
-    private fun maksBrukergruppe(it: Int, groupID: Int): Int =
+    private fun maksBrukergruppe(it: Int, groupID: Int): GroupID =
         when {
-            (GroupID.AvslaattRinger.references(it) || GroupID.AvslaattRinger.references(groupID)) -> GroupID.AvslaattRinger.nr
-            (GroupID.Admin.references(it) || GroupID.Admin.references(groupID)) -> GroupID.Admin.nr
-            (GroupID.LokalGodkjenner.references(it) || GroupID.LokalGodkjenner.references(groupID)) -> GroupID.LokalGodkjenner.nr
-            (GroupID.GodkjentRingerMedlemmer.references(it) || GroupID.GodkjentRingerMedlemmer.references(groupID)) -> GroupID.GodkjentRingerMedlemmer.nr
-            (GroupID.GodkjentRinger.references(it) || GroupID.GodkjentRinger.references(groupID)) -> GroupID.GodkjentRinger.nr
-            (GroupID.UgodkjentRinger.references(it) || GroupID.UgodkjentRinger.references(groupID)) -> GroupID.UgodkjentRinger.nr
-            else -> max(it, groupID)
+            GroupID.AvslaattRinger.oneOf(it, groupID) -> GroupID.AvslaattRinger
+            GroupID.Admin.oneOf(it, groupID) -> GroupID.Admin
+            GroupID.LokalGodkjenner.oneOf(it, groupID) -> GroupID.LokalGodkjenner
+            GroupID.GodkjentRingerMedlemmer.oneOf(it, groupID) -> GroupID.GodkjentRingerMedlemmer
+            GroupID.GodkjentRinger.oneOf(it, groupID) -> GroupID.GodkjentRinger
+            GroupID.UgodkjentRinger.oneOf(it, groupID) -> GroupID.UgodkjentRinger
+            GroupID.PrioritertAaRinge.oneOf(it, groupID) -> GroupID.PrioritertAaRinge
+            GroupID.TrengerOppfoelging.oneOf(it, groupID) -> GroupID.TrengerOppfoelging
+            GroupID.Slett.oneOf(it, groupID) -> GroupID.Slett
+            GroupID.Ferdigringt.oneOf(it, groupID) -> GroupID.Ferdigringt
+            GroupID.KlarTilAaRinges.oneOf(it, groupID) -> GroupID.KlarTilAaRinges
+            GroupID.ManglerSamtykke.oneOf(it, groupID) -> GroupID.ManglerSamtykke
+            else -> GroupID.ManglerSamtykke
         }
 }
