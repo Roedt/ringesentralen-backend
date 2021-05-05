@@ -88,6 +88,17 @@ class HypersysLoginBean(
         ringerIV1Repository.list("telefonnummer", convertedPerson.telefonnummer?.replace("+47", ""))
             .map { it.brukergruppe }
             .firstOrNull()
-            ?.let { convertedPerson.groupID = max(it, convertedPerson.groupID) }
+            ?.let { convertedPerson.groupID = maksBrukergruppe(it, convertedPerson.groupID) }
     }
+
+    private fun maksBrukergruppe(it: Int, groupID: Int): Int =
+        when {
+            (GroupID.AvslaattRinger.references(it) || GroupID.AvslaattRinger.references(groupID)) -> GroupID.AvslaattRinger.nr
+            (GroupID.Admin.references(it) || GroupID.Admin.references(groupID)) -> GroupID.Admin.nr
+            (GroupID.LokalGodkjenner.references(it) || GroupID.LokalGodkjenner.references(groupID)) -> GroupID.LokalGodkjenner.nr
+            (GroupID.GodkjentRingerMedlemmer.references(it) || GroupID.GodkjentRingerMedlemmer.references(groupID)) -> GroupID.GodkjentRingerMedlemmer.nr
+            (GroupID.GodkjentRinger.references(it) || GroupID.GodkjentRinger.references(groupID)) -> GroupID.GodkjentRinger.nr
+            (GroupID.UgodkjentRinger.references(it) || GroupID.UgodkjentRinger.references(groupID)) -> GroupID.UgodkjentRinger.nr
+            else -> max(it, groupID)
+        }
 }
