@@ -27,12 +27,17 @@ class FrivilligService(
     val fylkeRepository: FylkeRepository,
     val aktivitetForFrivilligRepository: AktivitetForFrivilligRepository
 ) {
-    fun hentAlle(userId: UserId, roller: Set<String>) = hentFrivilligeUtFraMinRolle(roller, personRepository.getPerson(userId))
-        .map { FrivilligResponse(
-            frivillig = it,
-            person = personRepository.findById(it.personId.toLong()),
-            aktiviteter = aktivitetForFrivilligRepository.list("frivillig_id", it.id)
-        ) }
+    fun hentAlle(userId: UserId, roller: Set<String>) =
+        hentFrivilligeUtFraMinRolle(roller, personRepository.getPerson(userId))
+            .map { Pair(it, personRepository.findById(it.personId.toLong())) }
+            .map {
+                FrivilligResponse(
+                    frivillig = it.first,
+                    person = it.second,
+                    aktiviteter = aktivitetForFrivilligRepository.list("frivillig_id", it.first.id),
+                    fylke = fylkeRepository.findById(it.second.fylke)
+                )
+            }
 
     private fun hentFrivilligeUtFraMinRolle(roller: Set<String>, ringer: Person): List<Frivillig> = when {
         roller.contains(Roles.admin) -> frivilligRepository.listAll()
