@@ -82,7 +82,7 @@ class FrivilligService(
             fornavn = fornavn,
             etternavn = etternavn,
             telefonnummer = telefonnummer,
-            email = null,
+            email = epost,
             postnummer = postnummer,
             fylke = fylkeRepository.getFylke(lokallag, postnummer),
             lokallag = lokallag,
