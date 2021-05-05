@@ -35,7 +35,8 @@ class FrivilligService(
                     frivillig = it.first,
                     person = it.second,
                     aktiviteter = aktivitetForFrivilligRepository.list("frivillig_id", it.first.id),
-                    fylke = fylkeRepository.findById(it.second.fylke)
+                    fylke = fylkeRepository.findById(it.second.fylke),
+                    lokallag = lokallagRepository.findById(it.second.lokallag.toLong())
                 )
             }
 
