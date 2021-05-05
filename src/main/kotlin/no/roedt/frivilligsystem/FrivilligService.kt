@@ -12,6 +12,7 @@ import no.roedt.ringesentralen.Kilde
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.brukere.FylkeRepository
 import no.roedt.ringesentralen.lokallag.LokallagRepository
+import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId
@@ -86,7 +87,7 @@ class FrivilligService(
             postnummer = postnummer,
             fylke = fylkeRepository.getFylke(lokallag, postnummer),
             lokallag = lokallag,
-            groupID = 0,
+            groupID = GroupID.Frivillig.nr,
             kilde = Kilde.Frivillig,
             iperID = null
         )

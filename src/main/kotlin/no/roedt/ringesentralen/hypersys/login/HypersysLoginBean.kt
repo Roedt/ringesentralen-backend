@@ -98,6 +98,7 @@ class HypersysLoginBean(
             GroupID.GodkjentRingerMedlemmer.oneOf(it, groupID) -> GroupID.GodkjentRingerMedlemmer
             GroupID.GodkjentRinger.oneOf(it, groupID) -> GroupID.GodkjentRinger
             GroupID.UgodkjentRinger.oneOf(it, groupID) -> GroupID.UgodkjentRinger
+            GroupID.Frivillig.oneOf(it, groupID) -> GroupID.Frivillig
             GroupID.PrioritertAaRinge.oneOf(it, groupID) -> GroupID.PrioritertAaRinge
             GroupID.TrengerOppfoelging.oneOf(it, groupID) -> GroupID.TrengerOppfoelging
             GroupID.Slett.oneOf(it, groupID) -> GroupID.Slett

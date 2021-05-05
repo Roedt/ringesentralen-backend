@@ -6147,6 +6147,7 @@ INSERT INTO brukergruppe VALUES (8, 'ringer som kan godkjenne ringere i sitt fyl
 INSERT INTO brukergruppe VALUES (9, 'admin');
 INSERT INTO brukergruppe VALUES (10, 'prioritert å ringe');
 INSERT INTO brukergruppe VALUES (11, 'godkjent ringer for velgere og medlemmer');
+INSERT INTO brukergruppe VALUES (12, 'har meldt seg som valgkampfrivillig');
 
 -- --------------------------------------------------------
 
