@@ -3,6 +3,7 @@ package no.roedt.frivilligsystem
 import no.roedt.frivilligsystem.kontakt.AutentisertRegistrerKontaktRequest
 import no.roedt.frivilligsystem.kontakt.Kontakt
 import no.roedt.frivilligsystem.kontakt.KontaktRepository
+import no.roedt.frivilligsystem.kontakt.KontaktResponse
 import no.roedt.frivilligsystem.registrer.AktivitetForFrivillig
 import no.roedt.frivilligsystem.registrer.AktivitetForFrivilligRepository
 import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
@@ -42,7 +43,14 @@ class FrivilligService(
                     aktiviteter = aktivitetForFrivilligRepository.list("frivillig_id", it.first.id),
                     fylke = fylkeRepository.findById(it.second.fylke),
                     lokallag = lokallagRepository.findById(it.second.lokallag.toLong()),
-                    kontakt = kontaktRepository.list("frivillig_id", it.first.id.toInt())
+                    kontakt = kontaktRepository.list("frivillig_id", it.first.id.toInt()).map {
+                        i -> KontaktResponse(
+                        frivillig_id = i.frivillig_id,
+                        tilbakemelding = i.tilbakemelding,
+                        registrert_av = personRepository.findById(i.registrert_av),
+                        datetime = i.datetime
+                        )
+                    }
                 )
             }
 
@@ -108,5 +116,6 @@ class FrivilligService(
             )
         )
 
-    private fun now() = Date.valueOf(ZonedDateTime.now(ZoneId.of("Europe/Oslo")).format(DateTimeFormatter.ISO_DATE_TIME))
+    private fun now() =
+        Date.valueOf(ZonedDateTime.now(ZoneId.of("Europe/Oslo")).format(DateTimeFormatter.ISO_DATE_TIME))
 }

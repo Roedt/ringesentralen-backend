@@ -1,7 +1,7 @@
 package no.roedt.frivilligsystem
 
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.frivilligsystem.kontakt.Kontakt
+import no.roedt.frivilligsystem.kontakt.KontaktResponse
 import no.roedt.frivilligsystem.registrer.AktivitetForFrivillig
 import no.roedt.ringesentralen.brukere.Fylke
 import no.roedt.ringesentralen.lokallag.Lokallag
@@ -14,5 +14,5 @@ data class FrivilligResponse(
     val aktiviteter: List<AktivitetForFrivillig>,
     val fylke: Fylke,
     val lokallag: Lokallag,
-    val kontakt: List<Kontakt>
+    val kontakt: List<KontaktResponse>
 )
