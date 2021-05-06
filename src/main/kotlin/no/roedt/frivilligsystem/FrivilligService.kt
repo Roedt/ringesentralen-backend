@@ -16,6 +16,10 @@ import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId
+import java.sql.Date
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -37,7 +41,8 @@ class FrivilligService(
                     person = it.second,
                     aktiviteter = aktivitetForFrivilligRepository.list("frivillig_id", it.first.id),
                     fylke = fylkeRepository.findById(it.second.fylke),
-                    lokallag = lokallagRepository.findById(it.second.lokallag.toLong())
+                    lokallag = lokallagRepository.findById(it.second.lokallag.toLong()),
+                    kontakt = kontaktRepository.list("frivillig_id", it.first.id.toInt())
                 )
             }
 
@@ -98,7 +103,10 @@ class FrivilligService(
             Kontakt(
                 frivillig_id = request.request.frivillig_id,
                 tilbakemelding = request.request.tilbakemelding,
-                registrert_av = personRepository.find("hypersysID", request.userId.userId).firstResult<Person>().id
+                registrert_av = personRepository.find("hypersysID", request.userId.userId).firstResult<Person>().id,
+                datetime = now()
             )
         )
+
+    private fun now() = Date.valueOf(ZonedDateTime.now(ZoneId.of("Europe/Oslo")).format(DateTimeFormatter.ISO_DATE_TIME))
 }
