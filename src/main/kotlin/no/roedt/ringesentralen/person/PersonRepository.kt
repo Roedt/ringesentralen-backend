@@ -7,12 +7,13 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class PersonRepository : PanacheRepository<Person> {
 
-    fun save(person: Person) {
+    fun save(person: Person): Person {
         if (find("email", person.email).count() > 0L || telefonnummerFinsAlt(person)) {
+            val eksisterendePerson: Person = find("email=?1", person.email).firstResultOptional<Person>()
+                .orElseGet { find("telefonnummer=?1", person.telefonnummer).firstResult() }
             val telefonnummer = person.telefonnummer?.let { "'$it'"  }
             val kilde = if (person.kilde == Kilde.Hypersys) ", kilde='${person.kilde}'" else ""
             val postnummer = if (person.postnummer != -1) "postnummer = ${person.postnummer}," else ""
-            val whereklausul = if (telefonnummer == null) " email = '${person.email}'" else " ((email = '${person.email}') or (telefonnummer = $telefonnummer)) "
             update(
                 """fornavn = '${person.fornavn}', 
                         etternavn = '${person.etternavn}', 
@@ -23,14 +24,17 @@ class PersonRepository : PanacheRepository<Person> {
                         groupID = ${person.groupID},
                         email = '${person.email}'
                         $kilde
-                        where $whereklausul
+                        where id=${eksisterendePerson.id}
                         """
             )
+            return eksisterendePerson
         }
         else {
             persist(person)
+            return person
         }
     }
+
 
     fun getPerson(userId: UserId): Person = find("hypersysID", userId.userId).firstResult()
 

@@ -70,8 +70,8 @@ class FrivilligService(
 
     fun registrerNyFrivillig(autentisertRequest: AutentisertRegistrerNyFrivilligRequest): Frivillig {
         val request = autentisertRequest.request
-        val person = request.toPerson()
-        personRepository.save(person)
+        var person = request.toPerson()
+        person = personRepository.save(person)
         val frivillig = Frivillig(
             personId = person.id.toInt(),
             alleredeAktivILokallag = request.alleredeAktivILokallag,
