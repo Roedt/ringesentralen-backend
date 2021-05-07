@@ -28,10 +28,10 @@ class NestePersonAaRingeFinder(
     fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? {
         nyligeOppslagCache.assertAtIngenAndreSoekerIDetteLagetAkkuratNo(request.lokallag)
         return hentNestePersonAaRingeIDenneModusen(request)
-            ?.also { nyligeOppslagCache.remove(request.lokallag) }
             ?.let { personRepository.findById(it.toLong()) }
             ?.let { toResponse(it) }
             ?.also { oppslagRepository.persist(Oppslag(ringt = it.person.id.toInt(), ringerHypersysId = request.userId())) }
+            ?.also { nyligeOppslagCache.remove(request.lokallag) }
     }
 
     private fun hentNestePersonAaRingeIDenneModusen(request: AutentisertNestePersonAaRingeRequest): Int? =
