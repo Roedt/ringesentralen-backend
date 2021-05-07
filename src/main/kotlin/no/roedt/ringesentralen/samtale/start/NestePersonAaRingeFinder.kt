@@ -21,14 +21,18 @@ class NestePersonAaRingeFinder(
     val oppslagRepository: OppslagRepository,
     val oppfoelgingValg21Repository: OppfoelgingValg21Repository,
     val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder,
-    val lokallagRepository: LokallagRepository
+    val lokallagRepository: LokallagRepository,
+    val nyligeOppslagCache: NyligeOppslagCache
 ) {
 
-    fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? =
-        hentNestePersonAaRingeIDenneModusen(request)
+    fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? {
+        nyligeOppslagCache.assertAtIngenAndreSoekerIDetteLagetAkkuratNo(request.lokallag)
+        return hentNestePersonAaRingeIDenneModusen(request)
+            ?.also { nyligeOppslagCache.remove(request.lokallag) }
             ?.let { personRepository.findById(it.toLong()) }
             ?.let { toResponse(it) }
-            ?.also { oppslagRepository.persist(Oppslag(ringt = it.person.id.toInt(), ringerHypersysId = request.userId() )) }
+            ?.also { oppslagRepository.persist(Oppslag(ringt = it.person.id.toInt(), ringerHypersysId = request.userId())) }
+    }
 
     private fun hentNestePersonAaRingeIDenneModusen(request: AutentisertNestePersonAaRingeRequest): Int? =
         if (request.modus == Modus.velgere) hentNesteVelgerAaRinge(request)
