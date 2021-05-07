@@ -70,10 +70,10 @@ class FrivilligService(
 
     fun registrerNyFrivillig(autentisertRequest: AutentisertRegistrerNyFrivilligRequest): Frivillig {
         val request = autentisertRequest.request
-        var person = request.toPerson()
-        person = personRepository.save(person)
+        val person = request.toPerson()
+        val id = personRepository.save(person)
         val frivillig = Frivillig(
-            personId = person.id.toInt(),
+            personId = person.id?.toInt() ?: id.toInt(),
             alleredeAktivILokallag = request.alleredeAktivILokallag,
             medlemIRoedt = request.medlemIRoedt,
             spesiellKompetanse = request.spesiellKompetanse,
