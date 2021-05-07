@@ -127,7 +127,7 @@ insert into `lokallag` (navn) values
 ('Rødt Fauske'),
 ('Rødt Flekkefjord'),
 ('Rødt Folldal'),
-('Rødt Fredrikstad'),
+('Rødt Fredrikstad og Hvaler'),
 ('Rødt Frogn'),
 ('Rødt Froland'),
 ('Rødt Frøya'),
@@ -313,7 +313,7 @@ INSERT INTO `lokallag`(`navn`) values
 ('Ullensaker');
 
 UPDATE lokallag SET fylke=-1 where navn in ('Udefinert', 'Rødt', 'Test-lokallag', 'Utland', 'Organisasjon1 sentralt');
-UPDATE lokallag SET fylke=1 where navn in ('Uten lag Østfold', 'Rødt Fredrikstad', 'Rødt Halden', 'Rødt Indre Østfold', 'Rødt Moss og omegn', 'Rødt Råde', 'Rødt Sarpsborg og omegn', 'Rødt Våler i Østfold');
+UPDATE lokallag SET fylke=1 where navn in ('Uten lag Østfold', 'Rødt Fredrikstad og Hvaler', 'Rødt Halden', 'Rødt Indre Østfold', 'Rødt Moss og omegn', 'Rødt Råde', 'Rødt Sarpsborg og omegn', 'Rødt Våler i Østfold');
 UPDATE lokallag SET fylke=2 where navn in ('Uten lag Akershus', 'Rødt Asker', 'Rødt Bærum', 'Rødt Eidsvoll og Hurdal', 'Rødt Frogn', 'Rødt Lillestrøm', 'Rødt Lørenskog', 'Rødt Nes', 'Rødt Nesodden',
 'Rødt Nittedal', 'Rødt Nordre Follo', 'Rødt Ullensaker og Nannestad', 'Rødt Vestby', 'Rødt Ås', 'Ullensaker', 'Nannestad', 'Rødt Aurskog-Høland', 'Rødt Ås Studentlag', 'Rødt Nedre Romerike');
 UPDATE lokallag SET fylke=3 where navn in ('Rødt Oslo Alna', 'Rødt Oslo Bjerke', 'Rødt Oslo Gamle Oslo', 'Rødt Oslo Grorud', 'Rødt Oslo Grünerløkka', 'Rødt Oslo Nordre Aker', 'Rødt Oslo Nordstrand',
@@ -342,8 +342,6 @@ UPDATE lokallag SET fylke=18 where navn in ('Rødt Alstahaug', 'Rødt Andøy', '
 UPDATE lokallag SET fylke=19 where navn in ('Uten lag Troms', 'Rødt Balsfjord', 'Rødt Harstad', 'Rødt Målselv', 'Rødt Salangen', 'Rødt Skjervøy', 'Rødt Tromsø', 'Rødt Tromsø Studentlag');
 UPDATE lokallag SET fylke=20 where navn in ('Rødt Alta', 'Rødt Hammerfest', 'Rødt Måsøy', 'Rødt Sør-Varanger', 'Rødt Vadsø', 'Uten lag Finnmark', 'GAMVIK', 'Tana', 'Karasjok', 'PORSANGER PORSÁNGU PORSANKI');
 
-INSERT INTO lokallag (navn, fylke) values ('Rødt Fredrikstad og Hvaler', 1);
-
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `kommune` (
@@ -360,10 +358,10 @@ CREATE TABLE IF NOT EXISTS `kommune` (
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Aremark',118,1, (select id from lokallag where navn = 'Rødt Indre Østfold'));
     INSERT INTO kommune(navn,nummer,fylke_id, lokallag_id) VALUES ('Askim',124,1, (select id from lokallag where navn = 'Rødt Indre Østfold'));
     INSERT INTO kommune(navn,nummer,fylke_id, lokallag_id) VALUES ('Eidsberg',125,1, (select id from lokallag where navn = 'Rødt Indre Østfold'));
-    INSERT INTO kommune(navn,nummer,fylke_id, lokallag_id) VALUES ('Fredrikstad',106,1, (select id from lokallag where navn = 'Rødt Fredrikstad'));
+    INSERT INTO kommune(navn,nummer,fylke_id, lokallag_id) VALUES ('Fredrikstad',106,1, (select id from lokallag where navn = 'Rødt Fredrikstad og Hvaler'));
     INSERT INTO kommune(navn,nummer,fylke_id, lokallag_id) VALUES ('Halden',101,1, (select id from lokallag where navn = 'Rødt Halden'));
     INSERT INTO kommune(navn,nummer,fylke_id, lokallag_id) VALUES ('Hobøl',138,1, (select id from lokallag where navn = 'Rødt Indre Østfold'));
-    INSERT INTO kommune(navn,nummer,fylke_id, lokallag_id) VALUES ('Hvaler',111,1, (select id from lokallag where navn = 'Rødt Fredrikstad'));
+    INSERT INTO kommune(navn,nummer,fylke_id, lokallag_id) VALUES ('Hvaler',111,1, (select id from lokallag where navn = 'Rødt Fredrikstad og Hvaler'));
     INSERT INTO kommune(navn,nummer,fylke_id, lokallag_id) VALUES ('Marker',119,1, (select id from lokallag where navn = 'Rødt Indre Østfold'));
     INSERT INTO kommune(navn,nummer,fylke_id, lokallag_id) VALUES ('Moss',104,1, (select id from lokallag where navn = 'Rødt Moss og omegn'));
     INSERT INTO kommune(navn,nummer,fylke_id,lokallag_id) VALUES ('Råde',135,1, (select id from lokallag where navn = 'Rødt Råde'));
