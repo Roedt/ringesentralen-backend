@@ -6337,7 +6337,7 @@ SELECT p.lokallag, p.id as id, p.hypersysID as hypersysID, p.fylke, p.groupID as
     coalesce((select UNIX_TIMESTAMP(max(datetime)) from samtale where samtale.ringt = p.id), 0)
     > 86400)
     -- 86400 sekund = 1 døgn
-  AND NOT exists (select 1 from oppslag o where o.ringt=p.id and (UNIX_TIMESTAMP(now())-UNIX_TIMESTAMP(o.datetime)) < 120 );
+  AND NOT exists (select 1 from oppslag o where o.ringt=p.id and (UNIX_TIMESTAMP(now())-UNIX_TIMESTAMP(o.datetime)) < 3600 );
 
 -- --------------------------------------------------------
 
