@@ -11,12 +11,13 @@ class PersonRepository : PanacheRepository<Person> {
         val eksisterendePerson: Person? = finnPerson(person)
         if (eksisterendePerson != null) {
             val telefonnummer = person.telefonnummer?.let { "'$it'"  }
-            val kilde = if (person.kilde == Kilde.Hypersys) ", kilde='${person.kilde}'" else ""
+            val kilde = if (person.kilde == Kilde.Hypersys || person.kilde == Kilde.Frivillig) ", kilde='${person.kilde}'" else ""
             val postnummer = if (person.postnummer != -1) "postnummer = ${person.postnummer}," else ""
+            val hypersysID = if (person.hypersysID != null) "hypersysID = ${person.hypersysID}, " else ""
             update(
                 """fornavn = '${person.fornavn}', 
                         etternavn = '${person.etternavn}', 
-                        hypersysID = ${person.hypersysID}, 
+                        $hypersysID
                         telefonnummer = $telefonnummer,
                         $postnummer
                         lokallag = ${person.lokallag},
@@ -34,7 +35,7 @@ class PersonRepository : PanacheRepository<Person> {
         }
     }
 
-    fun finnPerson(person: Person) =
+    fun finnPerson(person: Person) : Person? =
         find("email=?1", person.email).firstResultOptional<Person>()
             .orElseGet { find("telefonnummer=?1", person.telefonnummer).firstResultOptional<Person>().orElse(null) }
 

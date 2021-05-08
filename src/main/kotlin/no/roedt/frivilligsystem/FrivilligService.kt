@@ -95,7 +95,7 @@ class FrivilligService(
 
     private fun RegistrerNyFrivilligRequest.toPerson(): Person {
         val lokallag = lokallagRepository.fromPostnummer(postnummer)
-        return Person(
+        val person = Person(
             hypersysID = null,
             fornavn = fornavn,
             etternavn = etternavn,
@@ -108,6 +108,11 @@ class FrivilligService(
             kilde = Kilde.Frivillig,
             iperID = null
         )
+        val eksisterendePerson = personRepository.finnPerson(person = person)
+        if (!GroupID.isBrukerEllerVenter(eksisterendePerson?.groupID ?: -1)) {
+            eksisterendePerson?.groupID = GroupID.Frivillig.nr
+        }
+        return eksisterendePerson ?: person
     }
 
     fun registrerKontakt(request: AutentisertRegistrerKontaktRequest) =
