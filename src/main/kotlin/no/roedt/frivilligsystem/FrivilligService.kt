@@ -72,8 +72,12 @@ class FrivilligService(
         val request = autentisertRequest.request
         val person = request.toPerson()
         val id = personRepository.save(person)
+        val personId = person.id?.toInt() ?: id.toInt()
+        if (frivilligRepository.find("personId", personId).count() > 0L) {
+            return frivilligRepository.find("personId", personId).firstResult()
+        }
         val frivillig = Frivillig(
-            personId = person.id?.toInt() ?: id.toInt(),
+            personId = personId,
             alleredeAktivILokallag = request.alleredeAktivILokallag,
             medlemIRoedt = request.medlemIRoedt,
             spesiellKompetanse = request.spesiellKompetanse,
