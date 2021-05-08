@@ -1,5 +1,8 @@
 package no.roedt.frivilligsystem
 
+import com.google.cloud.storage.Blob
+import com.google.cloud.storage.Bucket
+import com.google.cloud.storage.Storage
 import no.roedt.frivilligsystem.registrer.Aktivitet
 import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.ErMedlemStatus
@@ -7,18 +10,28 @@ import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.ringesentralen.person.UserId
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
-import java.io.FileReader
+import java.io.Reader
+import java.io.StringReader
 import javax.enterprise.context.Dependent
 
-@Dependent
-class FrivilligImporter(private val frivilligService: FrivilligService) {
 
-    fun importer(userId: UserId, filnavn: String) = CSVFormat.DEFAULT
+@Dependent
+class FrivilligImporter(private val frivilligService: FrivilligService, private val storage: Storage) {
+
+    fun importer(userId: UserId, filnavn: String, bucketName: String) = CSVFormat.DEFAULT
         .withFirstRecordAsHeader()
-        .parse(FileReader(filnavn))
+        .parse(fil(filnavn, bucketName))
         .map { tilModellobjekt(it) }
         .map { AutentisertRegistrerNyFrivilligRequest(userId = userId, request = it) }
         .forEach { frivilligService.registrerNyFrivillig(it) }
+
+    private fun fil(filnavn: String, bucketName: String): Reader {
+        val bucket: Bucket = storage.get(bucketName)
+        val blob: Blob = bucket.get(filnavn)
+        val bytes = blob.getContent()
+        val content = String(bytes)
+        return StringReader(content)
+    }
 
     private fun tilModellobjekt(it: CSVRecord): RegistrerNyFrivilligRequest {
         var i = 0

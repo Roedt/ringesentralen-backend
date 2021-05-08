@@ -72,10 +72,14 @@ class FrivilligController(val frivilligService: FrivilligService, val frivilligI
     )
 
     @POST
-    @Path("/numre")
+    @Path("/importer")
     @Transactional
     @TransactionConfiguration(timeout = 3600)
     @RolesAllowed(Roles.admin)
     @Operation(summary = "Importer frivillige frå csv-fil")
-    fun import(@Context ctx: SecurityContext) = frivilligImporter.importer(ctx.userId(), "frivillige.csv")
+    fun import(@Context ctx: SecurityContext) = frivilligImporter.importer(
+        ctx.userId(),
+        "frivillige.csv",
+        "frivillig-import"
+    )
 }
