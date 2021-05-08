@@ -31,7 +31,8 @@ internal class NestePersonAaRingeFinderTest {
         oppslagRepository = oppslagRepository,
         oppfoelgingValg21Repository = oppfoelgingValg21Repository,
         nesteMedlemAaRingeFinder = nesteMedlemAaRingeFinder,
-        lokallagRepository = lokallagRepository
+        lokallagRepository = lokallagRepository,
+        nyligeOppslagCache = NyligeOppslagCache()
     )
 
     @BeforeEach
