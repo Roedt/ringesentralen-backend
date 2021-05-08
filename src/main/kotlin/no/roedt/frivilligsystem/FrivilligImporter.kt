@@ -1,8 +1,11 @@
 package no.roedt.frivilligsystem
 
+import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.storage.Blob
 import com.google.cloud.storage.Bucket
 import com.google.cloud.storage.Storage
+import com.google.cloud.storage.StorageOptions
+import io.quarkiverse.googlecloudservices.common.GcpConfiguration
 import no.roedt.frivilligsystem.registrer.Aktivitet
 import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.ErMedlemStatus
@@ -12,11 +15,25 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
 import java.io.Reader
 import java.io.StringReader
+import javax.annotation.PostConstruct
 import javax.enterprise.context.Dependent
 
 
 @Dependent
-class FrivilligImporter(private val frivilligService: FrivilligService, private val storage: Storage) {
+class FrivilligImporter(
+    private val frivilligService: FrivilligService,
+    private val gcpConfiguration: GcpConfiguration
+) {
+
+    lateinit var storage: Storage
+
+    @PostConstruct
+    fun getStorage() {
+        storage = StorageOptions.newBuilder()
+            .setCredentials(GoogleCredentials.getApplicationDefault())
+            .setProjectId(gcpConfiguration.projectId)
+            .build().service
+    }
 
     fun importer(userId: UserId, filnavn: String, bucketName: String) = CSVFormat.DEFAULT
         .withFirstRecordAsHeader()
