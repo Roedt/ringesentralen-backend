@@ -25,7 +25,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.SecurityContext
 
 
-@Path("/")
+@Path("/frivillig")
 @Tag(name = "Frivilligsystem")
 @SecurityRequirement(name = "jwt")
 class FrivilligController(val frivilligService: FrivilligService, val frivilligImporter: FrivilligImporter) : RingesentralenController {
