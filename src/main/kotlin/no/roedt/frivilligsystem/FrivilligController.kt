@@ -1,5 +1,6 @@
 package no.roedt.frivilligsystem
 
+import io.quarkus.narayana.jta.runtime.TransactionConfiguration
 import no.roedt.frivilligsystem.kontakt.AutentisertRegistrerKontaktRequest
 import no.roedt.frivilligsystem.kontakt.RegistrerKontaktRequest
 import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
@@ -27,7 +28,7 @@ import javax.ws.rs.core.SecurityContext
 @Path("/")
 @Tag(name = "Frivilligsystem")
 @SecurityRequirement(name = "jwt")
-class FrivilligController(val frivilligService: FrivilligService) : RingesentralenController {
+class FrivilligController(val frivilligService: FrivilligService, val frivilligImporter: FrivilligImporter) : RingesentralenController {
 
     @Inject
     lateinit var jwt: JsonWebToken
@@ -69,4 +70,12 @@ class FrivilligController(val frivilligService: FrivilligService) : Ringesentral
     fun registrerKontakt(@Context ctx: SecurityContext, registrerKontaktRequest: RegistrerKontaktRequest) = frivilligService.registrerKontakt(
         AutentisertRegistrerKontaktRequest(userId = ctx.userId(), request = registrerKontaktRequest)
     )
+
+    @POST
+    @Path("/numre")
+    @Transactional
+    @TransactionConfiguration(timeout = 3600)
+    @RolesAllowed(Roles.admin)
+    @Operation(summary = "Importer frivillige frå csv-fil")
+    fun import(@Context ctx: SecurityContext) = frivilligImporter.importer(ctx.userId(), "frivillige.csv")
 }
