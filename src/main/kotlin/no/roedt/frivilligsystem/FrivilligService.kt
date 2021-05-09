@@ -74,7 +74,7 @@ class FrivilligService(
         val person = request.toPerson()
         val id = personRepository.save(person)
         val personId = person.id?.toInt() ?: id.toInt()
-        if (frivilligRepository.find("personId", personId).count() > 0L) {
+        if (frivilligRepository.count("personId", personId) > 0L) {
             return frivilligRepository.find("personId", personId).firstResult()
         }
         val frivillig = Frivillig(
