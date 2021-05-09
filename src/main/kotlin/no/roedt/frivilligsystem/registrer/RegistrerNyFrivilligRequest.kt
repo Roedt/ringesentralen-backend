@@ -20,7 +20,11 @@ data class RegistrerNyFrivilligRequest(
     @JsonProperty("spesiellKompetanse") var spesiellKompetanse: String?,
     @JsonProperty("andreTingDuVilBidraMed") var andreTingDuVilBidraMed: String?,
     @JsonProperty("fortellLittOmDegSelv") var fortellLittOmDegSelv: String?,
-    @JsonProperty("opptattAv") var opptattAv: List<OpptattAv>
+    @JsonProperty("opptattAv") var opptattAv: List<OpptattAv>,
+    @JsonProperty("haandtering") var haandtering: String,
+    @JsonProperty("personlig") var personlig: Boolean,
+    @JsonProperty("tydelig") var tydelig: String,
+    @JsonProperty("forslag") var forslag: String
 )
 
 @RegisterForReflection

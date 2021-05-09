@@ -29,7 +29,8 @@ class FrivilligService(
     val lokallagRepository: LokallagRepository,
     val fylkeRepository: FylkeRepository,
     val aktivitetForFrivilligRepository: AktivitetForFrivilligRepository,
-    val frivilligOpptattAvRepository: FrivilligOpptattAvRepository
+    val frivilligOpptattAvRepository: FrivilligOpptattAvRepository,
+    val frivilligKoronaRepository: FrivilligKoronaRepository
 ) {
     fun hentAlle(userId: UserId, roller: Set<String>) =
         hentFrivilligeUtFraMinRolle(roller, personRepository.getPerson(userId))
@@ -48,7 +49,9 @@ class FrivilligService(
                         registrert_av = personRepository.findById(i.registrert_av),
                         datetime = i.datetime
                         )
-                    }
+                    },
+                    opptattAv = frivilligOpptattAvRepository.list("frivillig_id", it.first.id).map { i -> i.opptattAv }.map { i -> i.displaytext },
+                    frivilligKorona = frivilligKoronaRepository.find("frivillig_id", it.first.id).firstResultOptional<FrivilligKorona>().orElse(null)
                 )
             }
 
@@ -89,6 +92,16 @@ class FrivilligService(
         request.opptattAv
             .map { FrivilligOpptattAv(frivillig_id = frivillig.id, opptattAv = it) }
             .forEach { frivilligOpptattAvRepository.persist(it) }
+
+        frivilligKoronaRepository.persist(
+            FrivilligKorona(
+                frivillig_id = frivillig.id,
+                haandtering = request.haandtering,
+                personlig = request.personlig,
+                tydelig = request.tydelig,
+                forslag = request.forslag
+            )
+        )
 
         return frivillig
     }

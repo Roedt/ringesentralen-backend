@@ -150,7 +150,11 @@ class FrivilligImporter(
             spesiellKompetanse = spesiellKompetanse,
             andreTingDuVilBidraMed = andreTingDuVilBidraMed,
             fortellLittOmDegSelv = fortellLittOmDegSelv,
-            opptattAv = politikkSjekkboksar
+            opptattAv = politikkSjekkboksar,
+            haandtering = haandtering,
+            personlig = "Ja" == personlig,
+            tydelig = tydelig,
+            forslag = forslag
         )
     }
 

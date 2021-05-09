@@ -14,5 +14,7 @@ data class FrivilligResponse(
     val aktiviteter: List<AktivitetForFrivillig>,
     val fylke: Fylke,
     val lokallag: Lokallag,
-    val kontakt: List<KontaktResponse>
+    val kontakt: List<KontaktResponse>,
+    val opptattAv: List<String>,
+    val frivilligKorona: FrivilligKorona?
 )
