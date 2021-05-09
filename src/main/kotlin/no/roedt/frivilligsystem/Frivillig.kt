@@ -24,7 +24,7 @@ data class Frivillig(
     var spesiellKompetanse: String?,
     var andreTingDuVilBidraMed: String?,
     var fortellLittOmDegSelv: String?,
-    val registrertTidspunkt: Instant
+    var registrertTidspunkt: Instant
 ) : PanacheEntity()
 {
     constructor() : this(
