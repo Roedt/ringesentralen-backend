@@ -77,8 +77,8 @@ class FrivilligImporter(
 
         // Fritekst
         val spesiellKompetanse = it.get(i++)
-        val spraak = if (it.size() > 63) it.get(i++) else null
-        val spraak2 = if (it.size() > 63) it.get(i++) else null
+        val spraak = if (it.size() > 63) it.get(i++) else ""
+        val spraak2 = if (it.size() > 63) it.get(i++) else ""
         val andreTingDuVilBidraMed = it.get(i++)
         val fortellLittOmDegSelv = it.get(i++)
 
@@ -152,6 +152,7 @@ class FrivilligImporter(
             telefonnummer = fixTelefonnummer(telefonnummer),
             postnummer = postnummer.toInt(),
             alleredeAktivILokallag = alleredeAktivILokallag == "Ja",
+            spraak = spraak2,
             medlemIRoedt = ErMedlemStatus.valueOf(medlemIRoedt.replace(" ", "")),
             kanTenkeSegAaBidraMedAktiviteter = aktiviteter,
             spesiellKompetanse = spesiellKompetanse,

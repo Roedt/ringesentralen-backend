@@ -23,6 +23,7 @@ data class Frivillig(
     var medlemIRoedt: ErMedlemStatus,
     var spesiellKompetanse: String?,
     var andreTingDuVilBidraMed: String?,
+    var spraak: String?,
     var fortellLittOmDegSelv: String?,
     var registrertTidspunkt: Instant
 ) : PanacheEntity()
@@ -33,6 +34,7 @@ data class Frivillig(
         medlemIRoedt = ErMedlemStatus.Nei,
         spesiellKompetanse = null,
         andreTingDuVilBidraMed = null,
+        spraak = null,
         fortellLittOmDegSelv = null,
         Instant.MIN
     )

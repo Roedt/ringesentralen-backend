@@ -19,6 +19,7 @@ data class RegistrerNyFrivilligRequest(
     @JsonProperty("alleredeAktivILokallag") var alleredeAktivILokallag: Boolean,
     @JsonProperty("medlemIRoedt") var medlemIRoedt: ErMedlemStatus,
     @JsonProperty("kanTenkeSegAaBidraMedAktiviteter") var kanTenkeSegAaBidraMedAktiviteter: List<Aktivitet>,
+    @JsonProperty("spraak") var spraak: String,
     @JsonProperty("spesiellKompetanse") var spesiellKompetanse: String?,
     @JsonProperty("andreTingDuVilBidraMed") var andreTingDuVilBidraMed: String?,
     @JsonProperty("fortellLittOmDegSelv") var fortellLittOmDegSelv: String?,

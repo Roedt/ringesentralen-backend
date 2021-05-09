@@ -83,6 +83,7 @@ class FrivilligService(
             medlemIRoedt = request.medlemIRoedt,
             spesiellKompetanse = request.spesiellKompetanse,
             andreTingDuVilBidraMed = request.andreTingDuVilBidraMed,
+            spraak = request.spraak,
             fortellLittOmDegSelv = request.fortellLittOmDegSelv,
             registrertTidspunkt = request.tidspunkt
         )

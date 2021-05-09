@@ -6410,6 +6410,7 @@ CREATE TABLE IF NOT EXISTS `frivillig` (
   FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
   INDEX(`personId`),
   `alleredeAktivILokallag` bit DEFAULT FALSE,
+  `spraak` varchar(512) DEFAULT NULL,
   `medlemIRoedt` varchar(30) NOT NULL,
   `spesiellKompetanse` varchar(4096) DEFAULT NULL,
   `andreTingDuVilBidraMed` varchar(4096) DEFAULT NULL,
