@@ -6406,13 +6406,14 @@ CREATE TABLE IF NOT EXISTS `frivillig` (
   `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `oppretta` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `personId` int(6) NOT NULL UNIQUE,
+  `registrertTidspunkt` datetime NOT NULL,
   FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
   INDEX(`personId`),
   `alleredeAktivILokallag` bit DEFAULT FALSE,
   `medlemIRoedt` varchar(30) NOT NULL,
-  `spesiellKompetanse` varchar(1024) DEFAULT NULL,
-  `andreTingDuVilBidraMed` varchar(1024) DEFAULT NULL,
-  `fortellLittOmDegSelv` varchar(1024) DEFAULT NULL
+  `spesiellKompetanse` varchar(4096) DEFAULT NULL,
+  `andreTingDuVilBidraMed` varchar(4096) DEFAULT NULL,
+  `fortellLittOmDegSelv` varchar(4096) DEFAULT NULL
 );
 -- --------------------------------------------------------
 

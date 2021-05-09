@@ -15,6 +15,10 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
 import java.io.Reader
 import java.io.StringReader
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import javax.annotation.PostConstruct
 import javax.enterprise.context.Dependent
 
@@ -74,6 +78,7 @@ class FrivilligImporter(
         // Fritekst
         val spesiellKompetanse = it.get(i++)
         val spraak = if (it.size() > 63) it.get(i++) else null
+        val spraak2 = if (it.size() > 63) it.get(i++) else null
         val andreTingDuVilBidraMed = it.get(i++)
         val fortellLittOmDegSelv = it.get(i++)
 
@@ -121,7 +126,7 @@ class FrivilligImporter(
             ),
             Pair(OpptattAv.Reverseringavtvangssammenslaattefylkerogkommuner, it.get(i++)),
             Pair(OpptattAv.Oekesosialstoenaden, it.get(i++)),
-            Pair(OpptattAv.Oektnorskselvforsyningavmat_medisinerogannet, if (it.size() > 63) it.get(i++) else "false")
+//            Pair(OpptattAv.Oektnorskselvforsyningavmat_medisinerogannet, if (it.size() > 63) it.get(i++) else "false")
         )
             .filter { it.second.toBoolean() }
             .map { it.first }
@@ -139,10 +144,12 @@ class FrivilligImporter(
         val aktiviteter = tilAktiviteter(stand, some, doerbanking, ringing, sms, postkasseutdeling, morgenaksjon, bil)
 
         return RegistrerNyFrivilligRequest(
+            tidspunkt = LocalDateTime.parse(date.uppercase(), DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm:ss a", Locale.ENGLISH)).toInstant(
+                ZoneOffset.UTC),
             fornavn = fornavn,
             etternavn = etternavn,
             epost = epost,
-            telefonnummer = telefonnummer,
+            telefonnummer = fixTelefonnummer(telefonnummer),
             postnummer = postnummer.toInt(),
             alleredeAktivILokallag = alleredeAktivILokallag == "Ja",
             medlemIRoedt = ErMedlemStatus.valueOf(medlemIRoedt.replace(" ", "")),
@@ -156,6 +163,11 @@ class FrivilligImporter(
             tydelig = tydelig,
             forslag = forslag
         )
+    }
+
+    private fun fixTelefonnummer(telefonnummer: String): String {
+        val tlf = telefonnummer.replace("'", "").replace(" ", "").replace("0047", "+47")
+        return if (tlf.length == 8) "+47$tlf" else tlf
     }
 
     private fun tilAktiviteter(

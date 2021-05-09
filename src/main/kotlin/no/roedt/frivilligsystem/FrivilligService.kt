@@ -84,6 +84,7 @@ class FrivilligService(
             spesiellKompetanse = request.spesiellKompetanse,
             andreTingDuVilBidraMed = request.andreTingDuVilBidraMed,
             fortellLittOmDegSelv = request.fortellLittOmDegSelv,
+            registrertTidspunkt = request.tidspunkt
         )
         frivilligRepository.persist(frivillig)
         request.kanTenkeSegAaBidraMedAktiviteter

@@ -5,10 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.frivilligsystem.OpptattAv
 import no.roedt.ringesentralen.person.UserId
+import java.time.Instant
 
 @RegisterForReflection
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class RegistrerNyFrivilligRequest(
+    @JsonProperty("tidspunkt") var tidspunkt: Instant,
     @JsonProperty("fornavn") var fornavn: String,
     @JsonProperty("etternavn") var etternavn: String,
     @JsonProperty("epost") var epost: String,

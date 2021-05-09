@@ -4,6 +4,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity
 import io.quarkus.hibernate.orm.panache.PanacheRepository
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.frivilligsystem.registrer.ErMedlemStatus
+import java.time.Instant
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
 import javax.persistence.Entity
@@ -23,6 +24,7 @@ data class Frivillig(
     var spesiellKompetanse: String?,
     var andreTingDuVilBidraMed: String?,
     var fortellLittOmDegSelv: String?,
+    val registrertTidspunkt: Instant
 ) : PanacheEntity()
 {
     constructor() : this(
@@ -31,7 +33,8 @@ data class Frivillig(
         medlemIRoedt = ErMedlemStatus.Nei,
         spesiellKompetanse = null,
         andreTingDuVilBidraMed = null,
-        fortellLittOmDegSelv = null
+        fortellLittOmDegSelv = null,
+        Instant.MIN
     )
 }
 
