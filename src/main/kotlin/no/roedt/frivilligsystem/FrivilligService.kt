@@ -91,9 +91,7 @@ class FrivilligService(
         request.kanTenkeSegAaBidraMedAktiviteter
             .map { AktivitetForFrivillig(frivillig_id = frivillig.id, aktivitet = it) }
             .forEach { aktivitetForFrivilligRepository.persist(it) }
-        request.opptattAv
-            .map { FrivilligOpptattAv(frivillig_id = frivillig.id, opptattAv = it) }
-            .forEach { frivilligOpptattAvRepository.persist(it) }
+        lagreOpptattAv(request, frivillig)
 
         frivilligKoronaRepository.persist(
             FrivilligKorona(
@@ -106,6 +104,20 @@ class FrivilligService(
         )
 
         return frivillig
+    }
+
+    private fun lagreOpptattAv(
+        request: RegistrerNyFrivilligRequest,
+        frivillig: Frivillig
+    ) {
+        try {
+            request.opptattAv
+                .map { OpptattAv.valueOf(it) }
+                .map { FrivilligOpptattAv(frivillig_id = frivillig.id, opptattAv = it) }
+                .forEach { frivilligOpptattAvRepository.persist(it) }
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
     }
 
 

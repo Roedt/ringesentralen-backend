@@ -130,6 +130,7 @@ class FrivilligImporter(
         )
             .filter { it.second.toBoolean() }
             .map { it.first }
+            .map { it.name }
 
         // for dei nyaste er det nok ein ekstra sjekkboks her for mat og beredskap
 
