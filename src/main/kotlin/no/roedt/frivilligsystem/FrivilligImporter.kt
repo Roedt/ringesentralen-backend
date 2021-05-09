@@ -72,56 +72,59 @@ class FrivilligImporter(
         val bil = it.get(i++)
 
         // Fritekst
-        val spesiellKompetanse = if (it.size() > 63) it.get(i++) else null
+        val spesiellKompetanse = it.get(i++)
         val spraak = if (it.size() > 63) it.get(i++) else null
-        val andreTingDuVilBidraMed = if (it.size() > 63) it.get(i++) else null
-        val fortellLittOmDegSelv = if (it.size() > 63) it.get(i++) else null
+        val andreTingDuVilBidraMed = it.get(i++)
+        val fortellLittOmDegSelv = it.get(i++)
 
-        // Politikk-sjekkboksar
-        val oekedagpengenivaaet = it.get(i++)
-        val spesieltforlavtloente = it.get(i++)
-        val Erstattemarkedsstyringmedtillitsreformioffentligsektor = it.get(i++)
-        val Kuttipolitikerloenningene = it.get(i++)
-        val Etmerrettferdigpensjonssystem = it.get(i++)
-        val Erstatthelseforetakenemedenaapenogdemokratiskstyringsmodell = it.get(i++)
-        val Gratisbarnehage = it.get(i++)
-        val Opprettelseavenlikeloennspottforaautjevneloennsforskjellerbasertpaakjoenn = it.get(i++)
-        val oekebarnetrygdenogholdedenutenforberegningenavsosialhjelp = it.get(i++)
-        val oekningiskattenefordesuperrike = it.get(i++)
-        val Forbyprivatebemanningsselskaper = it.get(i++)
-        val Sikreatingenmisterarbeidsavklaringspengerfoerdeeravklart = it.get(i++)
-        val Gratistannhelse = it.get(i++)
-        val Kutteiflateavgiftersomikketarhensyntilhvormyeduhar = it.get(i++)
-        val hvorduborellerhvormyeduforbruker = it.get(i++)
-        val MeldeNorgeutavNATOogjobbeforennordiskforsvarsallianse = it.get(i++)
-        val Innfoeringavdynastiskatt = it.get(i++)
-        val enrettferdigogprogressivskattpaaluksusarv = it.get(i++)
-        val Sekstimersnormalarbeidsdag_30timersarbeidsuke = it.get(i++)
-        val Sikreuroertnatur = it.get(i++)
-        val Styrkekommuneoekonomien = it.get(i++)
-        val ErstatteEoeSavtalenmedenhandelsavtale = it.get(i++)
-        val Styrkebemanningenivelferden = it.get(i++)
-        val Postombaeringfemdageriuka = it.get(i++)
-        val Hindrediskrimineringograsismeiboligmarkedetogarbeidslivet = it.get(i++)
-        val Lovfestingavretttillaerlingplass = it.get(i++)
-        val Bedreogbilligerekollektivtransport = it.get(i++)
-        val Sikrenorskearbeidsplasserifiskeriet = it.get(i++)
-        val Atasylsoekereskalfaajobbemensdeventerpaasvar = it.get(i++)
-        val Stanseletingogutbyggingavnyeoljefelt = it.get(i++)
-        val Neitilnyevindkraftanleggpaaland = it.get(i++)
-        val Kutteiegenandelenpaahelsetjenester = it.get(i++)
-        val Styrkedetnorskeforsvaret = it.get(i++)
-        val Taimotflereasylsoekereogkvoteflyktninger = it.get(i++)
-        val Sikreatingenmisterdagpengeneutentilbudomjobbellerutdanning = it.get(i++)
-        val Enikkekommersiellboligsektormedbilligereboliger = it.get(i++)
-        val Tatilbakejernbanenioffentligregi = it.get(i++)
-        val Innfoeringavleksefriskole = it.get(i++)
-        val Profittfrivelferd = it.get(i++)
-        val SineitilEUdirektivsomsvekkerfagbevegelsenogrettigheteriarbeidslivet = it.get(i++)
-        val Brukedeleravoljefondetpaaaagjoerenoedvendigeinvesteringeriutbyggingavklimavennliginfrastruktur = it.get(i++)
-        val Reverseringavtvangssammenslaattefylkerogkommuner = it.get(i++)
-        val oekesosialstoenaden = it.get(i++)
-        val Oektnorskselvforsyningavmat_medisinerogannet = if (it.size() > 63) it.get(i++) else null
+        val politikkSjekkboksar  = listOf<Pair<OpptattAv, String>>(
+            Pair(OpptattAv.Oekedagpengenivaaet_spesieltforlavtloente, it.get(i++)),
+            Pair(OpptattAv.Erstattemarkedsstyringmedtillitsreformioffentligsektor, it.get(i++)),
+            Pair(OpptattAv.Kuttipolitikerloenningene, it.get(i++)),
+            Pair(OpptattAv.Etmerrettferdigpensjonssystem, it.get(i++)),
+            Pair(OpptattAv.Erstatthelseforetakenemedenaapenogdemokratiskstyringsmodell, it.get(i++)),
+            Pair(OpptattAv.Gratisbarnehage, it.get(i++)),
+            Pair(OpptattAv.Opprettelseavenlikeloennspottforaautjevneloennsforskjellerbasertpaakjoenn, it.get(i++)),
+            Pair(OpptattAv.Oekebarnetrygdenogholdedenutenforberegningenavsosialhjelp, it.get(i++)),
+            Pair(OpptattAv.Oekningiskattenefordesuperrike, it.get(i++)),
+            Pair(OpptattAv.Forbyprivatebemanningsselskaper, it.get(i++)),
+            Pair(OpptattAv.Sikreatingenmisterarbeidsavklaringspengerfoerdeeravklart, it.get(i++)),
+            Pair(OpptattAv.Gratistannhelse, it.get(i++)),
+            Pair(OpptattAv.Kutteiflateavgiftersomikketarhensyntilhvormyeduhar_hvorduborellerhvormyeduforbruker, it.get(i++)),
+            Pair(OpptattAv.MeldeNorgeutavNATOogjobbeforennordiskforsvarsallianse, it.get(i++)),
+            Pair(OpptattAv.Innfoeringavdynastiskatt_enrettferdigogprogressivskattpaaluksusarv, it.get(i++)),
+            Pair(OpptattAv.Sekstimersnormalarbeidsdag_30timersarbeidsuke, it.get(i++)),
+            Pair(OpptattAv.Sikreuroertnatur, it.get(i++)),
+            Pair(OpptattAv.Styrkekommuneoekonomien, it.get(i++)),
+            Pair(OpptattAv.ErstatteEoeSavtalenmedenhandelsavtale, it.get(i++)),
+            Pair(OpptattAv.Styrkebemanningenivelferden, it.get(i++)),
+            Pair(OpptattAv.Postombaeringfemdageriuka, it.get(i++)),
+            Pair(OpptattAv.Hindrediskrimineringograsismeiboligmarkedetogarbeidslivet, it.get(i++)),
+            Pair(OpptattAv.Lovfestingavretttillaerlingplass, it.get(i++)),
+            Pair(OpptattAv.Bedreogbilligerekollektivtransport, it.get(i++)),
+            Pair(OpptattAv.Sikrenorskearbeidsplasserifiskeriet, it.get(i++)),
+            Pair(OpptattAv.Atasylsoekereskalfaajobbemensdeventerpaasvar, it.get(i++)),
+            Pair(OpptattAv.Stanseletingogutbyggingavnyeoljefelt, it.get(i++)),
+            Pair(OpptattAv.Neitilnyevindkraftanleggpaaland, it.get(i++)),
+            Pair(OpptattAv.Kutteiegenandelenpaahelsetjenester, it.get(i++)),
+            Pair(OpptattAv.Styrkedetnorskeforsvaret, it.get(i++)),
+            Pair(OpptattAv.Taimotflereasylsoekereogkvoteflyktninger, it.get(i++)),
+            Pair(OpptattAv.Sikreatingenmisterdagpengeneutentilbudomjobbellerutdanning, it.get(i++)),
+            Pair(OpptattAv.Enikkekommersiellboligsektormedbilligereboliger, it.get(i++)),
+            Pair(OpptattAv.Tatilbakejernbanenioffentligregi, it.get(i++)),
+            Pair(OpptattAv.Innfoeringavleksefriskole, it.get(i++)),
+            Pair(OpptattAv.Profittfrivelferd, it.get(i++)),
+            Pair(OpptattAv.SineitilEUdirektivsomsvekkerfagbevegelsenogrettigheteriarbeidslivet, it.get(i++)),
+            Pair(
+                OpptattAv.Brukedeleravoljefondetpaaaagjoerenoedvendigeinvesteringeriutbyggingavklimavennliginfrastruktur,
+                it.get(i++)
+            ),
+            Pair(OpptattAv.Reverseringavtvangssammenslaattefylkerogkommuner, it.get(i++)),
+            Pair(OpptattAv.Oekesosialstoenaden, it.get(i++)),
+            Pair(OpptattAv.Oektnorskselvforsyningavmat_medisinerogannet, if (it.size() > 63) it.get(i++) else "false")
+        )
+            .filter { it.second.toBoolean() }
+            .map { it.first }
 
         // for dei nyaste er det nok ein ekstra sjekkboks her for mat og beredskap
 
@@ -146,7 +149,8 @@ class FrivilligImporter(
             kanTenkeSegAaBidraMedAktiviteter = aktiviteter,
             spesiellKompetanse = spesiellKompetanse,
             andreTingDuVilBidraMed = andreTingDuVilBidraMed,
-            fortellLittOmDegSelv = fortellLittOmDegSelv
+            fortellLittOmDegSelv = fortellLittOmDegSelv,
+            opptattAv = politikkSjekkboksar
         )
     }
 

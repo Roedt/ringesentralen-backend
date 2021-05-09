@@ -28,7 +28,8 @@ class FrivilligService(
     val databaseUpdater: DatabaseUpdater,
     val lokallagRepository: LokallagRepository,
     val fylkeRepository: FylkeRepository,
-    val aktivitetForFrivilligRepository: AktivitetForFrivilligRepository
+    val aktivitetForFrivilligRepository: AktivitetForFrivilligRepository,
+    val frivilligOpptattAvRepository: FrivilligOpptattAvRepository
 ) {
     fun hentAlle(userId: UserId, roller: Set<String>) =
         hentFrivilligeUtFraMinRolle(roller, personRepository.getPerson(userId))
@@ -85,6 +86,9 @@ class FrivilligService(
         request.kanTenkeSegAaBidraMedAktiviteter
             .map { AktivitetForFrivillig(frivillig_id = frivillig.id, aktivitet = it) }
             .forEach { aktivitetForFrivilligRepository.persist(it) }
+        request.opptattAv
+            .map { FrivilligOpptattAv(frivillig_id = frivillig.id, opptattAv = it) }
+            .forEach { frivilligOpptattAvRepository.persist(it) }
 
         return frivillig
     }

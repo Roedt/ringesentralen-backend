@@ -6445,6 +6445,17 @@ CREATE TABLE IF NOT EXISTS `aktivitetForFrivillig` (
 
 -- --------------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS `frivilligOpptattAv` (
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `frivillig_id` int(6) NOT NULL,
+  `opptattAv` varchar(200) NOT NULL,
+  `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX(`frivillig_id`),
+  FOREIGN KEY (`frivillig_id`) REFERENCES `frivillig` (`id`)
+);
+
+-- --------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS `kontakt` (
   `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `frivillig_id` int(6) NOT NULL,
