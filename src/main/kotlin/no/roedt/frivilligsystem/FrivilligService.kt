@@ -17,10 +17,7 @@ import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId
-import java.sql.Date
-import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
+import java.time.Instant
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -121,10 +118,7 @@ class FrivilligService(
                 frivillig_id = request.request.frivillig_id,
                 tilbakemelding = request.request.tilbakemelding,
                 registrert_av = personRepository.find("hypersysID", request.userId.userId).firstResult<Person>().id,
-                datetime = now()
+                datetime = Instant.now()
             )
         )
-
-    private fun now() =
-        Date.valueOf(ZonedDateTime.now(ZoneId.of("Europe/Oslo")).format(DateTimeFormatter.ISO_DATE_TIME))
 }
