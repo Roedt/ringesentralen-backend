@@ -83,7 +83,7 @@ class RingServiceBean(
 
     fun isBrukerEllerVenterPaaGodkjenning(ringer: Int) =
         GroupID.isBrukerEllerVenter(
-            ringerRepository.find("id=?1", ringer.toLong()).singleResultOptional<Ringer>()
+            ringerRepository.find("personId=?1", ringer).singleResultOptional<Ringer>()
                 .map { it.personId }
                 .map { it.toLong() }
                 .map { personRepository.findById(it) }
