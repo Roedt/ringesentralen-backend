@@ -44,12 +44,14 @@ internal class NestePersonAaRingeFinderTest {
     fun `hentar neste person aa ringe`() {
         doReturn(listOf(1234)).whenever(databaseUpdater).getResultList(any())
 
-        nestePersonAaRingeFinder.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(
-            userId = UserId(userId = 1),
-            modus = Modus.velgere,
-            lokallag = 1,
-            roller = setOf()
-        ))
+        nestePersonAaRingeFinder.hentNestePersonAaRinge(
+            AutentisertNestePersonAaRingeRequest(
+                userId = UserId(userId = 1),
+                modus = Modus.velgere,
+                lokallag = 1,
+                roller = setOf()
+            )
+        )
 
         verify(databaseUpdater).getResultList(any())
         verify(personRepository).findById(1234)
@@ -61,12 +63,14 @@ internal class NestePersonAaRingeFinderTest {
         doReturn(emptyList).whenever(databaseUpdater).getResultList(any())
         verifyNoMoreInteractions(personRepository)
 
-        nestePersonAaRingeFinder.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(
-            userId = UserId(userId = 1),
-            modus = Modus.velgere,
-            lokallag = 1,
-            roller = setOf()
-        ))
+        nestePersonAaRingeFinder.hentNestePersonAaRinge(
+            AutentisertNestePersonAaRingeRequest(
+                userId = UserId(userId = 1),
+                modus = Modus.velgere,
+                lokallag = 1,
+                roller = setOf()
+            )
+        )
         verify(databaseUpdater).getResultList(any())
     }
 }

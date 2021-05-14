@@ -28,18 +28,19 @@ class FullFlytTest {
         loginWithToken(token)
             .body(
                 ResultatFraSamtaleRequest(
-                modus = Modus.velgere,
-                ringtID = ringtId,
-                resultat = Resultat.Passet_ikke,
-                kommentar = "Frå automatisk test",
-                modusspesifikkeResultat = Valg21SpesifikkeResultat(
-                    vilBliMerAktiv = true,
-                    vilPolitikkLink = true,
-                    vilBliRingtAugust = false,
-                    vilHaMedlemsLink = true,
-                    vilHaFellesskapLink = true
-                ),
-                vilIkkeBliRingt = false)
+                    modus = Modus.velgere,
+                    ringtID = ringtId,
+                    resultat = Resultat.Passet_ikke,
+                    kommentar = "Frå automatisk test",
+                    modusspesifikkeResultat = Valg21SpesifikkeResultat(
+                        vilBliMerAktiv = true,
+                        vilPolitikkLink = true,
+                        vilBliRingtAugust = false,
+                        vilHaMedlemsLink = true,
+                        vilHaFellesskapLink = true
+                    ),
+                    vilIkkeBliRingt = false
+                )
             )
             .contentType(ContentType.JSON)
             .post("/samtale/registrerResultatFraSamtale")
@@ -69,5 +70,5 @@ class FullFlytTest {
 
     private fun loginWithToken(token: String) = given().`when`().header("Authorization", "Bearer $token")
 
-    private fun Any.responseAsString() =(this as ValidatableResponseOptions<*, *>).log().all().extract().response().asString()
+    private fun Any.responseAsString() = (this as ValidatableResponseOptions<*, *>).log().all().extract().response().asString()
 }

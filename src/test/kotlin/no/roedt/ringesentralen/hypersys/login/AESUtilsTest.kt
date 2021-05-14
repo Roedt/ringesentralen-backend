@@ -13,7 +13,7 @@ import javax.crypto.Cipher
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 
-internal class AESUtilUnitTest {
+internal class AESUtilsTest {
 
     private val secretFactory: SecretFactory = mock()
 
@@ -38,6 +38,6 @@ internal class AESUtilUnitTest {
         return Cipher.getInstance(algorithm)
             .also { it.init(Cipher.ENCRYPT_MODE, key, iv) }
             .doFinal(input.encodeToByteArray())
-            .let { encoder.encodeToString(iv.iv)  +":" + encoder.encodeToString(it) }
+            .let { encoder.encodeToString(iv.iv) + ":" + encoder.encodeToString(it) }
     }
 }

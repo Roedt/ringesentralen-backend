@@ -102,5 +102,4 @@ internal class BrukereServiceBeanTest {
         doReturn(panacheQuery).whenever(personRepository).find("hypersysID", 1)
         return userId
     }
-
 }

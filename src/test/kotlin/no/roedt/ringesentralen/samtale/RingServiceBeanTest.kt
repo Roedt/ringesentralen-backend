@@ -34,9 +34,11 @@ internal class RingServiceBeanTest {
     private val ringerRepository: RingerRepository = mock()
     private val nestePersonAaRingeFinder: NestePersonAaRingeFinder = mock()
 
-    private var ringService = RingServiceBean(personRepository = personRepository, databaseUpdater = databaseUpdater,
+    private var ringService = RingServiceBean(
+        personRepository = personRepository, databaseUpdater = databaseUpdater,
         samtaleRepository = persistentSamtaleRepository, oppfoelgingValg21Repository = oppfoelgingValg21Repository,
-        lokallagRepository = lokallagRepository, ringerRepository = ringerRepository, nestePersonAaRingeFinder = nestePersonAaRingeFinder)
+        lokallagRepository = lokallagRepository, ringerRepository = ringerRepository, nestePersonAaRingeFinder = nestePersonAaRingeFinder
+    )
 
     @BeforeEach
     fun setup() {
@@ -44,14 +46,15 @@ internal class RingServiceBeanTest {
         createRingbarPerson("Andre", "Kvakk", "12345679", 2, 2)
     }
 
-    //TODO Mads: følg opp denne
+    // TODO Mads: følg opp denne
     fun `samtale blir registrert`() {
         ringService = spy(ringService)
         doReturn(1).whenever(ringService).hypersysIDTilRingerId(any())
         doReturn(false).whenever(ringService).isBrukerEllerVenterPaaGodkjenning(any())
 
         val request = AutentisertResultatFraSamtaleRequest(
-            UserId(1), ResultatFraSamtaleRequest(
+            UserId(1),
+            ResultatFraSamtaleRequest(
                 modus = Modus.medlemmer,
                 ringtID = 2,
                 resultat = Resultat.Svarte,
@@ -64,7 +67,7 @@ internal class RingServiceBeanTest {
                     vilHaFellesskapLink = true
                 ),
                 vilIkkeBliRingt = false
-        ),
+            ),
             modus = Modus.velgere
         )
 
@@ -99,11 +102,13 @@ internal class RingServiceBeanTest {
     }
 
     private fun createRingbarPerson(fornavn: String, etternavn: String, telefonnummer: String, id: Long, hypersysID: Int) {
-        val person = Person(hypersysID = hypersysID, fornavn = fornavn, etternavn = etternavn,
+        val person = Person(
+            hypersysID = hypersysID, fornavn = fornavn, etternavn = etternavn,
             telefonnummer = telefonnummer, email = "",
-            postnummer = 1234, fylke = 0, lokallag = 0, groupID = 0, kilde = Kilde.Mosaic, iperID = null)
+            postnummer = 1234, fylke = 0, lokallag = 0, groupID = 0, kilde = Kilde.Mosaic, iperID = null
+        )
         doReturn(person).whenever(personRepository).findById(id)
-        val query : PanacheQuery<Person> = mock()
+        val query: PanacheQuery<Person> = mock()
         doReturn(person).whenever(query).firstResult<Person>()
         doReturn(query).whenever(personRepository).find("hypersysID", hypersysID)
     }
