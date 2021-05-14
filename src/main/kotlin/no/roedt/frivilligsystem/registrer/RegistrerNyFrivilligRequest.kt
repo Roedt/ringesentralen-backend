@@ -9,7 +9,7 @@ import java.time.Instant
 @RegisterForReflection
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class RegistrerNyFrivilligRequest(
-    @JsonProperty("tidspunkt") var tidspunkt: Instant,
+    @JsonProperty("tidspunkt") var tidspunkt: Instant = Instant.now(),
     @JsonProperty("fornavn") var fornavn: String,
     @JsonProperty("etternavn") var etternavn: String,
     @JsonProperty("epost") var epost: String,
