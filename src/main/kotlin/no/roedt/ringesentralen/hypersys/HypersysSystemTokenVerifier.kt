@@ -6,8 +6,8 @@ import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class HypersysSystemTokenVerifier(
-        val hypersysProxy: HypersysProxy,
-        val secretFactory: SecretFactory
+    val hypersysProxy: HypersysProxy,
+    val secretFactory: SecretFactory
 ) {
     lateinit var token: Token
 

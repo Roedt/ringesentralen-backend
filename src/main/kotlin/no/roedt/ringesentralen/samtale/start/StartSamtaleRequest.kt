@@ -7,14 +7,14 @@ import no.roedt.ringesentralen.person.UserId
 
 @RegisterForReflection
 data class StartSamtaleRequest(
-        @JsonProperty("skalRingesID") val skalRingesID: Long
+    @JsonProperty("skalRingesID") val skalRingesID: Long
 )
 
 @RegisterForReflection
 data class AutentisertStartSamtaleRequest(
-        val userId: UserId,
-        val startSamtaleRequest: StartSamtaleRequest,
-        val modus: Modus
+    val userId: UserId,
+    val startSamtaleRequest: StartSamtaleRequest,
+    val modus: Modus
 ) {
-        fun skalRingesID() = startSamtaleRequest.skalRingesID
+    fun skalRingesID() = startSamtaleRequest.skalRingesID
 }

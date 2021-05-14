@@ -11,21 +11,24 @@ import javax.annotation.security.DeclareRoles
 import javax.ws.rs.core.Application
 
 @OpenAPIDefinition(
-        info = Info(
-                title="Ringesentral-API",
-                version = "1.0.0",
-                contact = Contact(
-                        name = "Mads Opheim",
-                        url = "http://github.com/roedt/ringesentralen-backend"),
-                license = License(
-                        name = "MIT License",
-                        url = "https://github.com/Roedt/ringesentralen-backend/blob/main/LICENSE"))
+    info = Info(
+        title = "Ringesentral-API",
+        version = "1.0.0",
+        contact = Contact(
+            name = "Mads Opheim",
+            url = "http://github.com/roedt/ringesentralen-backend"
+        ),
+        license = License(
+            name = "MIT License",
+            url = "https://github.com/Roedt/ringesentralen-backend/blob/main/LICENSE"
+        )
+    )
 )
 @SecurityScheme(
-        securitySchemeName = "jwt",
-        type = SecuritySchemeType.HTTP,
-        scheme = "bearer",
-        bearerFormat = "jwt"
+    securitySchemeName = "jwt",
+    type = SecuritySchemeType.HTTP,
+    scheme = "bearer",
+    bearerFormat = "jwt"
 )
 @LoginConfig(authMethod = "MP-JWT", realmName = "jwt-jaspi")
 @DeclareRoles("ringer")

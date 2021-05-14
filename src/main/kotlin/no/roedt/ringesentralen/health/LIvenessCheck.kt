@@ -9,6 +9,4 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class LivenessCheck : HealthCheck {
     override fun call(): HealthCheckResponse = HealthCheckResponse.up(LivenessCheck::class.simpleName)
-
-
 }

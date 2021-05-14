@@ -18,7 +18,6 @@ import javax.ws.rs.ForbiddenException
 import javax.ws.rs.NotAuthorizedException
 import javax.ws.rs.ServiceUnavailableException
 
-
 @RequestScoped
 class TokenService(
     private val personRepository: PersonRepository,
@@ -77,19 +76,19 @@ class TokenService(
         .sign(privateKeyFactory.readPrivateKey())
 
     private fun generateBaseToken() = Jwt
-            .audience("ringer")
-            .issuer("https://ringesentralen.no")
-            .subject("Ringesentralen")
-            .upn("Ringesentralen")
-            .issuedAt(System.currentTimeMillis())
-            .expiresAt(System.currentTimeMillis() + tokenExpiryPeriod.toSeconds())
+        .audience("ringer")
+        .issuer("https://ringesentralen.no")
+        .subject("Ringesentralen")
+        .upn("Ringesentralen")
+        .issuedAt(System.currentTimeMillis())
+        .expiresAt(System.currentTimeMillis() + tokenExpiryPeriod.toSeconds())
 
     private fun getGroups(hypersysToken: GyldigPersonToken, person: Person): Set<String> =
         getRolle(hypersysToken, person)
             .roller
             .also { i -> if (i.isEmpty()) println("Fann ingen roller for ${hypersysToken.user_id}") }
 
-    private fun getRolle(hypersysToken: GyldigPersonToken,person: Person): GroupID {
+    private fun getRolle(hypersysToken: GyldigPersonToken, person: Person): GroupID {
         var groupID = GroupID.from(getPersonFromHypersysID(hypersysToken).groupID())
         if (GroupID.isIkkeRegistrertRinger(groupID.nr)) {
             groupID = GroupID.from(person.groupID())

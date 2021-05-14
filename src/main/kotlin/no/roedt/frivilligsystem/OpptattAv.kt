@@ -2,7 +2,7 @@ package no.roedt.frivilligsystem
 
 enum class OpptattAv(val displaytext: String) {
     Oekedagpengenivaaet_spesieltforlavtloente("Øke dagpengenivået, spesielt for lavtlønte"),
-/* NY */    Brukestatensressurserpaaaaskapemiljoevennligearbeidsplasser("Bruke statens ressurser på å skape miljøvennlige  arbeidsplasser"),
+/* NY */ Brukestatensressurserpaaaaskapemiljoevennligearbeidsplasser("Bruke statens ressurser på å skape miljøvennlige  arbeidsplasser"),
     Erstattemarkedsstyringmedtillitsreformioffentligsektor("Erstatte markedsstyring med tillitsreform i  offentlig sektor"),
     Kuttipolitikerloenningene("Kutt i politikerlønningene"),
     Etmerrettferdigpensjonssystem("Et mer rettferdig pensjonssystem"),
@@ -43,5 +43,5 @@ enum class OpptattAv(val displaytext: String) {
     Brukedeleravoljefondetpaaaagjoerenoedvendigeinvesteringeriutbyggingavklimavennliginfrastruktur("Bruke deler av oljefondet på å gjøre  nødvendige investeringer i utbygging av klimavennlig infrastruktur"),
     Reverseringavtvangssammenslaattefylkerogkommuner("Reversering av tvangssammenslåtte fylker og  kommuner"),
     Oekesosialstoenaden("Øke sosialstønaden"),
-/* NY */    Oektnorskselvforsyningavmat_medisinerogannet("Økt norsk selvforsyning av mat, medisiner og  annet")
+/* NY */ Oektnorskselvforsyningavmat_medisinerogannet("Økt norsk selvforsyning av mat, medisiner og  annet")
 }

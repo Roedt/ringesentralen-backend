@@ -21,9 +21,9 @@ class AESUtil(val secretFactory: SecretFactory) {
     }
 
     fun decrypt(cipherText: String): String = Cipher.getInstance(algorithm)
-            .also { it.init(Cipher.DECRYPT_MODE, key, getIV(cipherText)) }
-            .doFinal(decode(cipherText))
-            .let { String(it) }
+        .also { it.init(Cipher.DECRYPT_MODE, key, getIV(cipherText)) }
+        .doFinal(decode(cipherText))
+        .let { String(it) }
 
     private fun getIV(cipherText: String) = IvParameterSpec(Base64.getDecoder().decode(cipherText.split(":")[0]))
 

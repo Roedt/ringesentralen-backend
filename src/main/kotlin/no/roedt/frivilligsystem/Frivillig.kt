@@ -26,8 +26,7 @@ data class Frivillig(
     var spraak: String?,
     var fortellLittOmDegSelv: String?,
     var registrertTidspunkt: Instant
-) : PanacheEntity()
-{
+) : PanacheEntity() {
     constructor() : this(
         personId = 0,
         alleredeAktivILokallag = false,

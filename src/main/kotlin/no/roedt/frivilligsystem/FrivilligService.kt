@@ -43,11 +43,12 @@ class FrivilligService(
                     fylke = fylkeRepository.findById(it.second.fylke),
                     lokallag = lokallagRepository.findById(it.second.lokallag.toLong()),
                     kontakt = kontaktRepository.list("frivillig_id", it.first.id.toInt()).map {
-                        i -> KontaktResponse(
-                        frivillig_id = i.frivillig_id,
-                        tilbakemelding = i.tilbakemelding,
-                        registrert_av = personRepository.findById(i.registrert_av),
-                        datetime = i.datetime
+                        i ->
+                        KontaktResponse(
+                            frivillig_id = i.frivillig_id,
+                            tilbakemelding = i.tilbakemelding,
+                            registrert_av = personRepository.findById(i.registrert_av),
+                            datetime = i.datetime
                         )
                     },
                     opptattAv = frivilligOpptattAvRepository.list("frivillig_id", it.first.id).map { i -> i.opptattAv }.map { i -> i.displaytext },
@@ -119,7 +120,6 @@ class FrivilligService(
             ex.printStackTrace()
         }
     }
-
 
     private fun RegistrerNyFrivilligRequest.toPerson(): Person {
         val lokallag = lokallagRepository.fromPostnummer(postnummer)

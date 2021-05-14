@@ -51,7 +51,7 @@ class HypersysLoginBean(
 
     private fun oppdaterRingerFraaHypersys(token: GyldigPersonToken): Person {
         val profile: Profile = hypersysProxy.get("actor/api/profile/", token, Profile::class.java)
-        val convertedPerson  = modelConverter.convert(profile.user, getRolle(profile))
+        val convertedPerson = modelConverter.convert(profile.user, getRolle(profile))
 
         lagreSomRinger(convertedPerson)
         oppdaterBrukergruppeFraV1(convertedPerson)

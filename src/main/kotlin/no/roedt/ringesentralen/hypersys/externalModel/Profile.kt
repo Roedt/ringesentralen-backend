@@ -5,5 +5,5 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 
 @RegisterForReflection
 data class Profile(
-        @JsonProperty("user") val user: User
+    @JsonProperty("user") val user: User
 )

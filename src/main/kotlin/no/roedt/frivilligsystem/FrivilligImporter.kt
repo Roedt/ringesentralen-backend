@@ -22,7 +22,6 @@ import java.util.Locale
 import javax.annotation.PostConstruct
 import javax.enterprise.context.Dependent
 
-
 @Dependent
 class FrivilligImporter(
     private val frivilligService: FrivilligService,
@@ -82,7 +81,7 @@ class FrivilligImporter(
         val andreTingDuVilBidraMed = it.get(i++)
         val fortellLittOmDegSelv = it.get(i++)
 
-        val politikkSjekkboksar  = listOf<Pair<OpptattAv, String>>(
+        val politikkSjekkboksar = listOf<Pair<OpptattAv, String>>(
             Pair(OpptattAv.Oekedagpengenivaaet_spesieltforlavtloente, it.get(i++)),
             Pair(OpptattAv.Erstattemarkedsstyringmedtillitsreformioffentligsektor, it.get(i++)),
             Pair(OpptattAv.Kuttipolitikerloenningene, it.get(i++)),
@@ -146,7 +145,8 @@ class FrivilligImporter(
 
         return RegistrerNyFrivilligRequest(
             tidspunkt = LocalDateTime.parse(date.uppercase(), DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm:ss a", Locale.ENGLISH)).toInstant(
-                ZoneOffset.UTC),
+                ZoneOffset.UTC
+            ),
             fornavn = fornavn,
             etternavn = etternavn,
             epost = epost,

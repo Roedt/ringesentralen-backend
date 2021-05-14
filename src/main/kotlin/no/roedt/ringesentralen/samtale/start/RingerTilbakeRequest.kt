@@ -7,9 +7,9 @@ import no.roedt.ringesentralen.person.UserId
 
 @RegisterForReflection
 data class RingerTilbakeRequest(
-        @JsonProperty("ringtNummer") val ringtNummer: String
+    @JsonProperty("ringtNummer") val ringtNummer: String
 ) {
-        fun validate() = TelefonnummerValidator.validate(ringtNummer)
+    fun validate() = TelefonnummerValidator.validate(ringtNummer)
 }
 
 @RegisterForReflection
@@ -19,6 +19,6 @@ data class AutentisertRingerTilbakeRequest(
     val modus: Modus,
     val groups: Set<String>
 ) {
-        fun ringtNummer() = ringerTilbakeRequest.ringtNummer
-        fun validate() = ringerTilbakeRequest.validate()
+    fun ringtNummer() = ringerTilbakeRequest.ringtNummer
+    fun validate() = ringerTilbakeRequest.validate()
 }

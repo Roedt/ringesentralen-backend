@@ -26,16 +26,17 @@ class TelefonsvarerService(
 
         val systembruker = personRepository.find("fornavn='Systembruker' and etternavn='Frontend'").firstResult<Person>()
 
-        samtaleRepository.persist(PersistentSamtale(
-            ringt = person.id.toInt(),
-            ringer = ringerRepository.find("personId", systembruker.id.toInt()).firstResult<Ringer>().id.toInt(),
-            kommentar = "Resultat frå telefonsvar",
-            resultat = request.resultat().nr,
-            modus = if (person.hypersysID != null) Modus.medlemmer else Modus.velgere
-        ))
+        samtaleRepository.persist(
+            PersistentSamtale(
+                ringt = person.id.toInt(),
+                ringer = ringerRepository.find("personId", systembruker.id.toInt()).firstResult<Ringer>().id.toInt(),
+                kommentar = "Resultat frå telefonsvar",
+                resultat = request.resultat().nr,
+                modus = if (person.hypersysID != null) Modus.medlemmer else Modus.velgere
+            )
+        )
 
         if (GroupID.isBrukerEllerVenter(person.groupID())) return
         request.resultat().nesteGroupID?.nr?.let { personRepository.update("groupID=?1 where id=?2", it, person.id) }
     }
-
 }

@@ -10,7 +10,7 @@ import javax.ws.rs.Path
 
 @RequestScoped
 @Path("/importer")
-@Tag(name ="importer")
+@Tag(name = "importer")
 @SecurityRequirement(name = "jwt")
 class NumreImporter(
     private val modelConverter: ModelConverter,

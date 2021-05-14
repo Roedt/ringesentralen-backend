@@ -9,8 +9,10 @@ import java.time.Duration
 import javax.enterprise.context.RequestScoped
 
 @RequestScoped
-class FakeTokenService(private val secretFactory: SecretFactory,
-                       private val privateKeyFactory: PrivateKeyFactory) {
+class FakeTokenService(
+    private val secretFactory: SecretFactory,
+    private val privateKeyFactory: PrivateKeyFactory
+) {
 
     @ConfigProperty(name = "token.expiryPeriod")
     lateinit var tokenExpiryPeriod: Duration

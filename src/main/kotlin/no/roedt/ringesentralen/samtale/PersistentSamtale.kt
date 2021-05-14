@@ -23,7 +23,7 @@ data class PersistentSamtale(
     constructor() : this(
         ringt = 0,
         ringer = 0,
-        resultat=  0,
+        resultat = 0,
         kommentar = null,
         modus = Modus.velgere
     )

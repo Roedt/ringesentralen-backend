@@ -10,7 +10,7 @@ class PersonRepository : PanacheRepository<Person> {
     fun save(person: Person): Long {
         val eksisterendePerson: Person? = finnPerson(person)
         if (eksisterendePerson != null) {
-            val telefonnummer = person.telefonnummer?.let { "'$it'"  }
+            val telefonnummer = person.telefonnummer?.let { "'$it'" }
             val kilde = if (person.kilde == Kilde.Hypersys || person.kilde == Kilde.Frivillig) ", kilde='${person.kilde}'" else ""
             val postnummer = if (person.postnummer != -1) "postnummer = ${person.postnummer}," else ""
             val hypersysID = if (person.hypersysID != null) "hypersysID = ${person.hypersysID}, " else ""
@@ -28,17 +28,15 @@ class PersonRepository : PanacheRepository<Person> {
                         """
             )
             return eksisterendePerson.id
-        }
-        else {
+        } else {
             persist(person)
             return person.id
         }
     }
 
-    fun finnPerson(person: Person) : Person? =
+    fun finnPerson(person: Person): Person? =
         find("email=?1", person.email).firstResultOptional<Person>()
             .orElseGet { find("telefonnummer=?1", person.telefonnummer).firstResultOptional<Person>().orElse(null) }
-
 
     fun getPerson(userId: UserId): Person = find("hypersysID", userId.userId).firstResult()
 }

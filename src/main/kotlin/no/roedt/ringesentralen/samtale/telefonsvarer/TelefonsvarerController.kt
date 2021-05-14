@@ -19,7 +19,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.SecurityContext
 
 @Path("/telefonsvar")
-@Tag(name ="Telefonsvar")
+@Tag(name = "Telefonsvar")
 @SecurityRequirement(name = "jwt")
 class TelefonsvarerController(val telefonsvarerService: TelefonsvarerService) : RingesentralenController {
 

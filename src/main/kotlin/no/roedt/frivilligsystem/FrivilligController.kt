@@ -24,7 +24,6 @@ import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.SecurityContext
 
-
 @Path("/frivillig")
 @Tag(name = "Frivilligsystem")
 @SecurityRequirement(name = "jwt")
@@ -52,8 +51,7 @@ class FrivilligController(val frivilligService: FrivilligService, val frivilligI
     fun registrerNyFrivillig(@Context ctx: SecurityContext, registrerNyFrivilligRequest: RegistrerNyFrivilligRequest): Frivillig =
         try {
             frivilligService.registrerNyFrivillig(AutentisertRegistrerNyFrivilligRequest(userId = ctx.userId(), request = registrerNyFrivilligRequest))
-        }
-        catch (e: java.lang.NullPointerException) {
+        } catch (e: java.lang.NullPointerException) {
             e.printStackTrace()
             System.err.println(registrerNyFrivilligRequest)
             throw e

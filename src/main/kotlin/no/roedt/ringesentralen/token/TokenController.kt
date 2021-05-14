@@ -14,7 +14,7 @@ import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
 @Path("/token")
-@Tag(name ="Token")
+@Tag(name = "Token")
 @SecurityRequirement(name = "jwt")
 class TokenController(private val tokenService: TokenService, private val fakeTokenService: FakeTokenService) {
 
@@ -32,5 +32,4 @@ class TokenController(private val tokenService: TokenService, private val fakeTo
     fun login(loginRequest: LoginRequest): String {
         return if (brukHypersys.toBoolean()) tokenService.login(loginRequest) else fakeTokenService.login(loginRequest)
     }
-
 }

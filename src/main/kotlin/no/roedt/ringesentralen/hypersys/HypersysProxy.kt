@@ -17,15 +17,14 @@ import javax.enterprise.context.Dependent
 @Dependent
 class HypersysProxy {
 
-
     @ConfigProperty(name = "hypersysBaseUrl", defaultValue = "")
     lateinit var baseURL: String
 
     val kMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     fun post(id: String, secret: String, entity: String, loggingtekst: String): HttpResponse<String> {
-        val base64Credentials: String = Base64.getEncoder().encodeToString(("${id}:${secret}").toByteArray())
+        val base64Credentials: String = Base64.getEncoder().encodeToString(("$id:$secret").toByteArray())
         val request = HttpRequest.newBuilder()
             .POST(BodyPublishers.ofString(entity))
             .uri(URI.create("$baseURL/api/o/token/").also { log(it, loggingtekst) })
@@ -43,7 +42,6 @@ class HypersysProxy {
 
     inline fun <reified T> get(url: String, token: GyldigToken, typeReference: TypeReference<T>): T =
         kMapper.readValue(gjennomfoerGetkall(url, token).body(), typeReference)
-
 
     fun gjennomfoerGetkall(url: String, token: GyldigToken): HttpResponse<String> {
         val response = httpCall(get("$baseURL/$url", token))

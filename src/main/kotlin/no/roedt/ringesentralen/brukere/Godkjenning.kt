@@ -15,7 +15,7 @@ data class Godkjenning(
     var godkjentPerson: Int,
     var nyGroupId: Int
 ) : PanacheEntity() {
-    constructor(): this(
+    constructor() : this(
         godkjenner = 0,
         godkjentPerson = 0,
         nyGroupId = 0

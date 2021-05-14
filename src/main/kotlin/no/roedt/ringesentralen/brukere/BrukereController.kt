@@ -20,7 +20,6 @@ import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.SecurityContext
 
-
 @Path("/brukere")
 @Tag(name = "Brukere")
 @SecurityRequirement(name = "jwt")
@@ -33,8 +32,8 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/brukere")
-    @Operation(summary ="List ut brukere", description = Roles.godkjennerAdmin)
-    fun getBrukere(@Context ctx: SecurityContext) : List<Brukerinformasjon> = brukereService.getBrukere(AutentisertGetBrukereRequest(ctx.userId(), jwt.groups))
+    @Operation(summary = "List ut brukere", description = Roles.godkjennerAdmin)
+    fun getBrukere(@Context ctx: SecurityContext): List<Brukerinformasjon> = brukereService.getBrukere(AutentisertGetBrukereRequest(ctx.userId(), jwt.groups))
 
     @RolesAllowed(Roles.godkjenner, Roles.admin)
     @PUT
@@ -89,11 +88,13 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Bulkhead(5)
     @Retry
     @Transactional
-    fun gjoerRingerTilLokalGodkjenner(@Context ctx: SecurityContext, tilLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = brukereService.gjoerRingerTilLokalGodkjenner(AutentisertTilgangsendringRequest(
-        ctx.userId(),
-        tilLokalGodkjennerRequest,
-        jwt
-    ))
+    fun gjoerRingerTilLokalGodkjenner(@Context ctx: SecurityContext, tilLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = brukereService.gjoerRingerTilLokalGodkjenner(
+        AutentisertTilgangsendringRequest(
+            ctx.userId(),
+            tilLokalGodkjennerRequest,
+            jwt
+        )
+    )
 
     @RolesAllowed(Roles.admin)
     @PUT
@@ -104,10 +105,11 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Bulkhead(5)
     @Retry
     @Transactional
-    fun fjernRingerSomLokalGodkjenner(@Context ctx: SecurityContext, fjernSomLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = brukereService.fjernRingerSomLokalGodkjenner(AutentisertTilgangsendringRequest(
-        ctx.userId(),
-        fjernSomLokalGodkjennerRequest,
-        jwt
-    ))
-
+    fun fjernRingerSomLokalGodkjenner(@Context ctx: SecurityContext, fjernSomLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = brukereService.fjernRingerSomLokalGodkjenner(
+        AutentisertTilgangsendringRequest(
+            ctx.userId(),
+            fjernSomLokalGodkjennerRequest,
+            jwt
+        )
+    )
 }

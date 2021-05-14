@@ -19,7 +19,7 @@ data class Verving(
     var postnummer: Int,
     var verversNavn: String?
 ) : PanacheEntity() {
-    constructor(): this(
+    constructor() : this(
         telefonnummer = "",
         fornavn = "",
         etternavn = "",
@@ -29,4 +29,4 @@ data class Verving(
 }
 
 @Dependent
-class VervingRepository: PanacheRepository<Verving>
+class VervingRepository : PanacheRepository<Verving>

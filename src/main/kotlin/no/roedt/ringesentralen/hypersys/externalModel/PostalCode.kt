@@ -5,6 +5,6 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 
 @RegisterForReflection
 data class PostalCode(
-        @JsonProperty("name") val name: String,
-        @JsonProperty("zip") val zip: String
+    @JsonProperty("name") val name: String,
+    @JsonProperty("zip") val zip: String
 )

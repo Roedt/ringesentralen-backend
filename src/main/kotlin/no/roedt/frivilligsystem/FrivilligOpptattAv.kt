@@ -10,7 +10,6 @@ import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.Table
 
-
 @Entity
 @Table(name = "frivilligOpptattAv")
 @Cacheable

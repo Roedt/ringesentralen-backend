@@ -20,18 +20,20 @@ class EpostSender(var mailer: Mailer) {
             return
         }
         val eposttekst = "Hei, ${person.fornavn} ${person.etternavn}. " +
-                "Du har no fått endra status i Raudts Ringesentral." + System.lineSeparator() +
-                "Din nye status er: ${nyTilgang.skildring}" + System.lineSeparator().repeat(3) +
-                "Dette er ein automatisk utsendt e-post."
+            "Du har no fått endra status i Raudts Ringesentral." + System.lineSeparator() +
+            "Din nye status er: ${nyTilgang.skildring}" + System.lineSeparator().repeat(3) +
+            "Dette er ein automatisk utsendt e-post."
         if (mock.toBoolean()) {
             println("Epostutsending er avskrudd. Ville elles sendt ${nyTilgang.name} til ${person.id}")
             return
         }
         println("Sender epost: Person med id ${person.id} har no fått ${nyTilgang.name}")
-        mailer.send(Mail.withText(
-            "${person.email}",
-            "E-post frå Raudts Ringesentral",
-            eposttekst
-        ))
+        mailer.send(
+            Mail.withText(
+                "${person.email}",
+                "E-post frå Raudts Ringesentral",
+                eposttekst
+            )
+        )
     }
 }

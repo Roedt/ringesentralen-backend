@@ -17,12 +17,12 @@ class HistorikkService(
 
     fun getMineSamtaler(userId: UserId, modus: Modus): List<Samtale> = getSamtaler(modus, "where hypersysID='${userId.userId}'")
 
-    fun getLagetsSamtaler(userId: UserId, modus: Modus, lokallag: Int): List<Samtale> = getSamtaler(modus,"where lokallag = $lokallag")
+    fun getLagetsSamtaler(userId: UserId, modus: Modus, lokallag: Int): List<Samtale> = getSamtaler(modus, "where lokallag = $lokallag")
 
     private fun getSamtaler(modus: Modus, whereklausul: String): List<Samtale> {
         val sql =
             "select resultat, ringerNavn, tidspunkt, kommentar, oppringtNummer, ringtNavn, oppfoelgingId " +
-                    "from v_mineSamtaler $whereklausul and modus='${modus.name}'"
+                "from v_mineSamtaler $whereklausul and modus='${modus.name}'"
         return databaseUpdater.getResultList(sql)
             .map { it as Array<*> }
             .map {

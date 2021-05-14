@@ -39,14 +39,14 @@ open class NesteMedlemAaRingeFinder(
             .filter { it.telefonnummer != null }
             .forEach { personRepository.save(it) }
 
-
     private fun hentNestePerson(ringer: Person, lokallag: Int) = databaseUpdater.getResultList(
         """SELECT v.id FROM v_personerSomKanRinges v
                 WHERE fylke = ${ringer.fylke} 
                 AND lokallag=$lokallag AND hypersysID is not null 
                 ORDER BY ABS(lokallag-'${ringer.lokallag}') ASC,
                 sisteSamtale ASC,
-                v.hypersysID DESC""")
+                v.hypersysID DESC"""
+    )
         .map { it as Int }
         .firstOrNull()
 }

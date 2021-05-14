@@ -40,8 +40,8 @@ class FylkeRepository(
     fun toFylke(postnummer: Int): Int =
         databaseUpdater.getResultList(
             "select fylke.id from `postnummer` p " +
-                    "inner join kommune kommune on p.KommuneKode = kommune.nummer " +
-                    "inner join `fylker` fylke on fylke.id=kommune.fylke_id where postnummer = $postnummer"
+                "inner join kommune kommune on p.KommuneKode = kommune.nummer " +
+                "inner join `fylker` fylke on fylke.id=kommune.fylke_id where postnummer = $postnummer"
         )
             .map { it as Int }
             .firstOrNull()

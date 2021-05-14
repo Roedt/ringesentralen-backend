@@ -19,7 +19,8 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
         } else StatistikkResponse(
             samtalerStatistikkResponse = getSamtalerStatistikkResponse(),
             ringereStatistikkResponse = null,
-            personerStatistikkResponse = null)
+            personerStatistikkResponse = null
+        )
     }
 
     private fun getSamtalerStatistikkResponse(): SamtalerStatistikkResponse {
@@ -32,7 +33,7 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
                     antal = get("SELECT ringer FROM `samtale` WHERE resultat = ${it.id}").size
                 )
             }
-            .filter { it.antal > 0}
+            .filter { it.antal > 0 }
 
         return SamtalerStatistikkResponse(
             resultat = list,
@@ -48,10 +49,12 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
             aktiveRingereIDag = get("select distinct ringer from `samtale` where CURDATE() =  DATE(datetime)").size,
             lokaleGodkjennere = get("select 1 FROM person WHERE groupID=${GroupID.LokalGodkjenner.nr}").size,
             avvisteRingere = get("select 1 FROM person WHERE groupID=${GroupID.AvslaattRinger.nr}").size,
-            antallLokallagRingtFraTotalt = get("select distinct ringer from `samtale` c " +
+            antallLokallagRingtFraTotalt = get(
+                "select distinct ringer from `samtale` c " +
                     "inner join ringer ringer on c.ringer = ringer.id " +
                     "inner join person p on ringer.personId = p.id " +
-                    "inner join lokallag l on l.id = p.lokallag").size
+                    "inner join lokallag l on l.id = p.lokallag"
+            ).size
         )
 
     private fun getPersonerStatistikkResponse(): PersonerStatistikkResponse = PersonerStatistikkResponse(
@@ -60,7 +63,7 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
         ferdigringte = get("select 1 FROM person WHERE groupID=${GroupID.Ferdigringt.nr} or groupID=${GroupID.Slett.nr}").size,
         ringtUtenSvar = get("select 1 FROM person p inner join samtale s on s.ringt=p.id AND p.groupID=${GroupID.KlarTilAaRinges.nr}").size,
         ikkeRingt = get("select 1 FROM person p where p.groupID < ${GroupID.UgodkjentRinger.nr} and not exists (select 1 from samtale s where s.ringt=p.id)").size,
-        antallLokallagMedPersonerTilknytta = get( "select distinct lokallag FROM person where lokallag is not null").size
+        antallLokallagMedPersonerTilknytta = get("select distinct lokallag FROM person where lokallag is not null").size
     )
 
     private fun get(query: String) = databaseUpdater.getResultList(query)

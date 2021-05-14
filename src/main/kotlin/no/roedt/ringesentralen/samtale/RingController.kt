@@ -50,8 +50,8 @@ class RingController(val ringService: RingService) : RingesentralenController {
         @Context ctx: SecurityContext,
         @QueryParam("modus") @DefaultValue("Velger") modus: Modus,
         @QueryParam("lokallag") @DefaultValue("-1") lokallag: Int
-    ): NestePersonAaRingeResponse?
-            = ringService.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(ctx.userId(), modus, lokallag, jwt.groups))
+    ): NestePersonAaRingeResponse? =
+        ringService.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(ctx.userId(), modus, lokallag, jwt.groups))
 
     @RolesAllowed(Roles.ringer)
     @POST
@@ -61,8 +61,8 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Operation(summary = "Start samtale", description = Roles.ringer)
     @Retry
     @Transactional
-    fun startSamtale(@Context ctx: SecurityContext, startSamtaleRequest: StartSamtaleRequest, @QueryParam("modus") modus: Modus)
-            = ringService.startSamtale(AutentisertStartSamtaleRequest(ctx.userId(), startSamtaleRequest, modus))
+    fun startSamtale(@Context ctx: SecurityContext, startSamtaleRequest: StartSamtaleRequest, @QueryParam("modus") modus: Modus) =
+        ringService.startSamtale(AutentisertStartSamtaleRequest(ctx.userId(), startSamtaleRequest, modus))
 
     @RolesAllowed(Roles.ringer)
     @POST
@@ -72,11 +72,10 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Operation(summary = "Registrer resultat fra samtale", description = Roles.ringer)
     @Retry
     @Transactional
-    fun registrerResultatFraSamtale(@Context ctx: SecurityContext, resultatFraSamtaleRequest: ResultatFraSamtaleRequest, @QueryParam("modus") modus: Modus)
-            = ringService.registrerResultatFraSamtale(
-        AutentisertResultatFraSamtaleRequest(ctx.userId(), resultatFraSamtaleRequest, modus)
-    )
-
+    fun registrerResultatFraSamtale(@Context ctx: SecurityContext, resultatFraSamtaleRequest: ResultatFraSamtaleRequest, @QueryParam("modus") modus: Modus) =
+        ringService.registrerResultatFraSamtale(
+            AutentisertResultatFraSamtaleRequest(ctx.userId(), resultatFraSamtaleRequest, modus)
+        )
 
     @RolesAllowed(Roles.ringer)
     @POST
@@ -86,7 +85,6 @@ class RingController(val ringService: RingService) : RingesentralenController {
     @Operation(summary = "Noen ringer tilbake", description = Roles.ringer)
     @Retry
     @Transactional
-    fun noenRingerTilbake(@Context ctx: SecurityContext, request: RingerTilbakeRequest, @QueryParam("modus") modus: Modus): NestePersonAaRingeResponse
-            = ringService.noenRingerTilbake(AutentisertRingerTilbakeRequest(ctx.userId(), request, modus, jwt.groups))
-
+    fun noenRingerTilbake(@Context ctx: SecurityContext, request: RingerTilbakeRequest, @QueryParam("modus") modus: Modus): NestePersonAaRingeResponse =
+        ringService.noenRingerTilbake(AutentisertRingerTilbakeRequest(ctx.userId(), request, modus, jwt.groups))
 }

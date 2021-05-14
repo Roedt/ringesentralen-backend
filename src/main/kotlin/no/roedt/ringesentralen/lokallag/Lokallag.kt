@@ -14,10 +14,10 @@ import javax.persistence.Table
 @Cacheable
 @RegisterForReflection
 data class Lokallag(
-        var navn: String,
-        var hypersysID: Int?,
-        var fylke: Int
-): PanacheEntity() {
+    var navn: String,
+    var hypersysID: Int?,
+    var fylke: Int
+) : PanacheEntity() {
     constructor() : this(
         navn = "",
         hypersysID = 0,
@@ -37,7 +37,7 @@ class LokallagRepository(
 
     private fun toLokallagId(query: String) = databaseUpdater.getResultList(query).map { it as Int }.firstOrNull()
 
-    fun fromOrganisationName(organisationName: String) : Int =
+    fun fromOrganisationName(organisationName: String): Int =
         find("navn", organisationName)
             .firstResultOptional<Lokallag>()
             ?.map { it.id }
@@ -45,5 +45,5 @@ class LokallagRepository(
             ?.orElse(-1)
             ?: -1
 
-    fun fromFylke(fylkeId: Int) : List<Lokallag> = list("fylke=?1", fylkeId)
+    fun fromFylke(fylkeId: Int): List<Lokallag> = list("fylke=?1", fylkeId)
 }

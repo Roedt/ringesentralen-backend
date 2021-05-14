@@ -4,5 +4,5 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 
 @RegisterForReflection
 data class DashboardResponse(
-        val statusliste: List<Lokallagsstatus>
+    val statusliste: List<Lokallagsstatus>
 )

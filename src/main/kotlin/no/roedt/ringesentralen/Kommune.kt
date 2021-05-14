@@ -28,6 +28,5 @@ data class Kommune(
     )
 }
 
-
 @ApplicationScoped
 class KommuneRepository : PanacheRepositoryBase<Kommune, Int>

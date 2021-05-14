@@ -17,15 +17,13 @@ import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.SecurityContext
 
-
 @Path("/profil")
-@Tag(name ="Profil")
+@Tag(name = "Profil")
 @SecurityRequirement(name = "jwt")
 class InnloggaBrukerController(val innloggaBrukerService: InnloggaBrukerService) : RingesentralenController {
 
     @Inject
     lateinit var jwt: JsonWebToken
-
 
     @RolesAllowed(Roles.bruker, Roles.venterPaaGodkjenning)
     @GET
@@ -35,7 +33,6 @@ class InnloggaBrukerController(val innloggaBrukerService: InnloggaBrukerService)
     @Bulkhead(5)
     @Retry
     fun getProfil(@Context ctx: SecurityContext) = innloggaBrukerService.getProfil(ctx.userId())
-
 
     @RolesAllowed(Roles.bruker)
     @GET

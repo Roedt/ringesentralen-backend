@@ -16,15 +16,17 @@ class VervingService(
     private val fylkeRepository: FylkeRepository
 ) {
 
-    fun postPersonSomSkalRinges(request: AutentisertVervingRequest) : Pair<Boolean, Person> {
+    fun postPersonSomSkalRinges(request: AutentisertVervingRequest): Pair<Boolean, Person> {
         val postnummer = request.request.postnummer
-        vervingRepository.persist(Verving(
-            telefonnummer = request.request.telefonnummer,
-            fornavn = request.request.fornavn,
-            etternavn = request.request.etternavn,
-            postnummer = request.request.postnummer,
-            verversNavn = request.request.verversNavn
-        ))
+        vervingRepository.persist(
+            Verving(
+                telefonnummer = request.request.telefonnummer,
+                fornavn = request.request.fornavn,
+                etternavn = request.request.etternavn,
+                postnummer = request.request.postnummer,
+                verversNavn = request.request.verversNavn
+            )
+        )
 
         val vervaFraFoer = personRepository.find("telefonnummer=?1", request.request.telefonnummer).singleResultOptional<Person>()
         if (vervaFraFoer.isPresent) return Pair(false, vervaFraFoer.get())
@@ -51,7 +53,7 @@ class VervingService(
             .find("telefonnummer", request.request.telefonnummer)
             .firstResultOptional<Person>()
             .map { it.groupID() }
-            .filter { GroupID.isBrukerEllerVenter(it)}
+            .filter { GroupID.isBrukerEllerVenter(it) }
         if (erBruker.isPresent) return
 
         val nextValue = if (request.request.svar) GroupID.PrioritertAaRinge else GroupID.Slett

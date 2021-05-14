@@ -5,5 +5,5 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 
 @RegisterForReflection
 data class Organs(
-        @JsonProperty("organs") val organs: List<Organ>
+    @JsonProperty("organs") val organs: List<Organ>
 )

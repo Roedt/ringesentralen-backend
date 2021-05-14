@@ -21,6 +21,5 @@ data class Ringer(
     )
 }
 
-
 @ApplicationScoped
 class RingerRepository : PanacheRepository<Ringer>

@@ -12,7 +12,7 @@ interface HypersysService {
     fun getMedlemmer(hypersysLokallagId: Int?): List<LinkedHashMap<String, *>>
     fun convertToHypersysLokallagId(lokallag: Int): Int?
     fun getLokallag(userId: UserId): Int?
-    fun hentFraMedlemslista(hypersysID: Int?): LinkedHashMap<*,*>?
+    fun hentFraMedlemslista(hypersysID: Int?): LinkedHashMap<*, *>?
 }
 
 @ApplicationScoped
@@ -26,10 +26,10 @@ class HypersysServiceBean(
     override fun getMedlemmer(hypersysLokallagId: Int?): List<LinkedHashMap<String, *>> {
         return if (hypersysLokallagId == null) listOf()
         else hypersysProxy.get("/membership/api/membership/$hypersysLokallagId/2021/", hypersysSystemTokenVerifier.assertGyldigSystemToken(), List::class.java)
-                as List<LinkedHashMap<String, *>>
+            as List<LinkedHashMap<String, *>>
     }
 
-    override fun convertToHypersysLokallagId(lokallag: Int) : Int? {
+    override fun convertToHypersysLokallagId(lokallag: Int): Int? {
         val hypersysId = lokallagRepository.findById(lokallag.toLong())
             ?.let { mittLag ->
                 if (mittLag.hypersysID != null) mittLag.hypersysID!! else getLokallagIdFromHypersys(
@@ -42,7 +42,7 @@ class HypersysServiceBean(
 
     override fun getLokallag(userId: UserId) = personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag
 
-    private fun getLokallagIdFromHypersys(mittLag: Lokallag) : Int {
+    private fun getLokallagIdFromHypersys(mittLag: Lokallag): Int {
         val lag = getAlleLokallag().first { mittLag.navn == it.name }
         lokallagRepository.update("hypersysID=?1 where id=?2", lag.id, mittLag.id)
         return lag.id
@@ -54,7 +54,7 @@ class HypersysServiceBean(
     override fun hentFraMedlemslista(hypersysID: Int?): LinkedHashMap<*, *>? =
         hypersysID
             ?.let { UserId(userId = it) }
-            ?.let { getLokallag(userId = it)}
+            ?.let { getLokallag(userId = it) }
             ?.let { convertToHypersysLokallagId(it) }
             ?.let { getMedlemmer(it) }
             ?.firstOrNull { it["member_id"] == hypersysID }

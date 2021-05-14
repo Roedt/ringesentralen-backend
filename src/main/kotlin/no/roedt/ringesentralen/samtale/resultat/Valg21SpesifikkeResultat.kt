@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import io.quarkus.runtime.annotations.RegisterForReflection
 
 @RegisterForReflection
-data class Valg21SpesifikkeResultat (
+data class Valg21SpesifikkeResultat(
     @JsonProperty("vilPolitikkLink") val vilPolitikkLink: Boolean,
     @JsonProperty("vilBliMerAktiv") val vilBliMerAktiv: Boolean,
     @JsonProperty("vilBliRingtAugust") val vilBliRingtAugust: Boolean,

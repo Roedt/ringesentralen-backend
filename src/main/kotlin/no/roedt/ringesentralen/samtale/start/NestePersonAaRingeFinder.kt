@@ -61,10 +61,11 @@ class NestePersonAaRingeFinder(
         """SELECT v.id FROM v_personerSomKanRinges v 
                 WHERE fylke = ${ringer.fylke} 
                 AND hypersysID is null 
-                ORDER BY ABS(lokallag-'${lokallag}') ASC, 
+                ORDER BY ABS(lokallag-'$lokallag') ASC, 
                 brukergruppe = ${GroupID.PrioritertAaRinge.nr} DESC,
                 sisteSamtale ASC,
-                v.hypersysID DESC""")
+                v.hypersysID DESC"""
+    )
         .map { it as Int }
         .firstOrNull()
 
@@ -78,14 +79,16 @@ class NestePersonAaRingeFinder(
     fun getTidlegareSamtalarMedDennePersonen(oppringtNummer: String): List<Samtale> =
         databaseUpdater.getResultList("SELECT resultat, ringerNavn, datetime, kommentar, ringtNavn, oppfoelgingId FROM `v_samtalerResultat` WHERE oppringtNummer = '$oppringtNummer'")
             .map { it as Array<*> }
-            .map { Samtale(
-                resultat = it[0] as String,
-                ringer = it[1] as String,
-                tidspunkt = (it[2] as Timestamp).toString(),
-                kommentar = (it[3] ?: "") as String,
-                ringtNummer = oppringtNummer,
-                ringtNavn = it[4] as String,
-                oppfoelging = it[5]?.toString()?.let { i -> if (i != "null") oppfoelgingValg21Repository.findById(i.toLong()) else null }
-            ) }
+            .map {
+                Samtale(
+                    resultat = it[0] as String,
+                    ringer = it[1] as String,
+                    tidspunkt = (it[2] as Timestamp).toString(),
+                    kommentar = (it[3] ?: "") as String,
+                    ringtNummer = oppringtNummer,
+                    ringtNavn = it[4] as String,
+                    oppfoelging = it[5]?.toString()?.let { i -> if (i != "null") oppfoelgingValg21Repository.findById(i.toLong()) else null }
+                )
+            }
             .toList()
 }

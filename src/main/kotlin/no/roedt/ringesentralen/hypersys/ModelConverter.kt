@@ -12,7 +12,7 @@ import no.roedt.ringesentralen.person.PersonRepository
 import javax.enterprise.context.Dependent
 
 interface ModelConverter {
-    fun convert(user: User, groupID: Int) : Person
+    fun convert(user: User, groupID: Int): Person
     fun convertMembershipToPerson(map: Map<*, *>): Person
     fun toFylke(postnummer: Int): Int
     fun finnPostnummer(map: Map<*, *>): Int
@@ -28,7 +28,7 @@ class ModelConverterBean(
     override fun convert(user: User, groupID: Int): Person {
         val sisteMellomrom = user.name.lastIndexOf(" ")
         val fornavn = user.name.substring(0, sisteMellomrom)
-        val etternavn = user.name.substring(sisteMellomrom+1)
+        val etternavn = user.name.substring(sisteMellomrom + 1)
         val postnummer = toPostnummer(user)
         val lokallag = toLokallag(user.memberships)
         val fylke = fylkeRepository.getFylke(lokallag, postnummer)
@@ -47,7 +47,7 @@ class ModelConverterBean(
         )
     }
 
-    override fun convertMembershipToPerson(map: Map<*, *>) : Person {
+    override fun convertMembershipToPerson(map: Map<*, *>): Person {
         val postnummer = finnPostnummer(map)
 
         val telefonnummer = itOrNull(map["mobile"])?.let { toTelefonnummer(it) }
@@ -55,7 +55,6 @@ class ModelConverterBean(
             .singleResultOptional<Person>()
             .map { it.groupID() }
             .orElse(GroupID.KlarTilAaRinges.nr)
-
 
         return Person(
             hypersysID = map["member_id"].toString().toInt(),
@@ -91,7 +90,6 @@ class ModelConverterBean(
 
     fun toTelefonnummer(telefonnummer: String): String? =
         telefonnummer.replace(" ", "").takeIf { it != "" }
-
 
     private fun toPostnummer(user: User): Int =
         user.addresses.map { it.postalCode }.map { it[1] }.map { it.toInt() }.maxByOrNull { it != 1 } ?: -1

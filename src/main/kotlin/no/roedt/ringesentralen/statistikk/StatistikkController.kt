@@ -28,5 +28,5 @@ class StatistikkController(val service: StatistikkService) : RingesentralenContr
     @Path("/statistikk")
     @Operation(summary = "Hent statistikk", description = Roles.ringerGodkjennerAdmin)
     @Produces(MediaType.APPLICATION_JSON)
-    fun getStatistikk(@Context ctx: SecurityContext) : StatistikkResponse = service.getStatistikk(jwt.groups)
+    fun getStatistikk(@Context ctx: SecurityContext): StatistikkResponse = service.getStatistikk(jwt.groups)
 }

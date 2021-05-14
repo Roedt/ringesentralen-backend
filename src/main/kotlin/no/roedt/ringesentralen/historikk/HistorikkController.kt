@@ -21,7 +21,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.SecurityContext
 
 @Path("/historikk")
-@Tag(name ="Historikk")
+@Tag(name = "Historikk")
 @SecurityRequirement(name = "jwt")
 class HistorikkController(private val historikkService: HistorikkService) : RingesentralenController {
 

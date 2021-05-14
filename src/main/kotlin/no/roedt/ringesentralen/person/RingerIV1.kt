@@ -14,7 +14,7 @@ data class RingerIV1(
     var telefonnummer: String,
     var brukergruppe: Int
 ) : PanacheEntity() {
-    constructor(): this(
+    constructor() : this(
         telefonnummer = "",
         brukergruppe = 0
     )

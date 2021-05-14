@@ -38,7 +38,7 @@ class RingServiceBean(
     val lokallagRepository: LokallagRepository,
     val ringerRepository: RingerRepository,
     val nestePersonAaRingeFinder: NestePersonAaRingeFinder
-): RingService {
+) : RingService {
 
     override fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest) = nestePersonAaRingeFinder.hentNestePersonAaRinge(request)
 
@@ -49,7 +49,8 @@ class RingServiceBean(
             resultat = Resultat.Samtale_startet.nr,
             kommentar = "Starter samtale",
             modus = request.modus
-        ))
+        )
+    )
 
     override fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest) {
         val request = autentisertRequest.request
@@ -88,7 +89,8 @@ class RingServiceBean(
                 .map { it.toLong() }
                 .map { personRepository.findById(it) }
                 .map { it.groupID() }
-                .orElse(-1))
+                .orElse(-1)
+        )
 
     override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): NestePersonAaRingeResponse {
         request.validate()
@@ -107,7 +109,8 @@ class RingServiceBean(
                     skalRingesID = personSomRingerTilbake.id
                 ),
                 modus = modus
-            ))
+            )
+        )
         return toResponse(personSomRingerTilbake)
     }
 

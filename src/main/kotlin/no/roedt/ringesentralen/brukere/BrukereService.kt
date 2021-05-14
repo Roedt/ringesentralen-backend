@@ -35,7 +35,7 @@ class BrukereServiceBean(
     val godkjenningRepository: GodkjenningRepository,
     val modelConverter: ModelConverter,
     val ringerRepository: RingerRepository
-): BrukereService {
+) : BrukereService {
 
     override fun getBrukere(request: AutentisertGetBrukereRequest): List<Brukerinformasjon> {
         val brukersFylke = personRepository.find("hypersysID", request.userId.userId).firstResult<Person>().fylke
@@ -118,8 +118,7 @@ class BrukereServiceBean(
 
     private fun hypersysIdTilPerson(hypersysId: UserId) = personRepository.find("hypersysID", hypersysId.userId).firstResult<Person>()
 
-
     private fun hypersysIDTilRingerId(userId: UserId) = databaseUpdater.getResultList(
-            "select ringer.id from ringer inner join person on person.id = ringer.personId and person.hypersysID = ${userId.userId} "
-        ).first()
+        "select ringer.id from ringer inner join person on person.id = ringer.personId and person.hypersysID = ${userId.userId} "
+    ).first()
 }

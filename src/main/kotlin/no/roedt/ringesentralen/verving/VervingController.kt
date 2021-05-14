@@ -21,7 +21,7 @@ import javax.ws.rs.core.Response
 import javax.ws.rs.core.SecurityContext
 
 @Path("/verving")
-@Tag(name ="Verving")
+@Tag(name = "Verving")
 @SecurityRequirement(name = "jwt")
 class VervingController(val service: VervingService) : RingesentralenController {
 
@@ -53,5 +53,4 @@ class VervingController(val service: VervingService) : RingesentralenController 
     fun mottaSvar(@Context ctx: SecurityContext, request: MottaSvarRequest) = service.mottaSvar(
         AutentisertMottaSvarRequest(request = request, userId = ctx.userId())
     )
-
 }
