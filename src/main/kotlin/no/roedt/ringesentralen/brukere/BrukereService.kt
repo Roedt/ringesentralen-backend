@@ -8,6 +8,8 @@ import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
+import no.roedt.ringesentralen.person.Ringer
+import no.roedt.ringesentralen.person.RingerRepository
 import no.roedt.ringesentralen.person.UserId
 import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.ForbiddenException
@@ -31,7 +33,8 @@ class BrukereServiceBean(
     val epostSender: EpostSender,
     val hypersysService: HypersysService,
     val godkjenningRepository: GodkjenningRepository,
-    val modelConverter: ModelConverter
+    val modelConverter: ModelConverter,
+    val ringerRepository: RingerRepository
 ): BrukereService {
 
     override fun getBrukere(request: AutentisertGetBrukereRequest): List<Brukerinformasjon> {
@@ -55,7 +58,8 @@ class BrukereServiceBean(
         epost = r.email ?: "",
         hypersysID = r.hypersysID ?: -1,
         lokallag = lokallagRepository.findById(r.lokallag.toLong()),
-        rolle = GroupID.from(r.groupID).roller
+        rolle = GroupID.from(r.groupID).roller,
+        registreringstidspunkt = ringerRepository.find("personId", r.id.toInt()).firstResult<Ringer>().oppretta
     )
 
     override fun aktiverRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring = endreTilgang(godkjennRequest, GroupID.GodkjentRinger)

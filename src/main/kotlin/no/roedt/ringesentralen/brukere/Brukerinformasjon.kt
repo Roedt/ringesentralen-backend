@@ -2,6 +2,7 @@ package no.roedt.ringesentralen.brukere
 
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.ringesentralen.lokallag.Lokallag
+import java.time.Instant
 
 @RegisterForReflection
 data class Brukerinformasjon(
@@ -14,5 +15,6 @@ data class Brukerinformasjon(
     val postnummer: Int,
     val fylke: Fylke,
     val lokallag: Lokallag?,
-    var rolle: Set<String>
+    var rolle: Set<String>,
+    val registreringstidspunkt: Instant
 )

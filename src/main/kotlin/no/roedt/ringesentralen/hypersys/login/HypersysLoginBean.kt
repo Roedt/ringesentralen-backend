@@ -15,6 +15,7 @@ import no.roedt.ringesentralen.person.RingerIV1Repository
 import no.roedt.ringesentralen.person.RingerRepository
 import no.roedt.ringesentralen.token.SecretFactory
 import java.net.http.HttpResponse
+import java.time.Instant
 import java.util.Optional
 import javax.enterprise.context.Dependent
 
@@ -72,7 +73,7 @@ class HypersysLoginBean(
         val id = lagrePerson(convertedPerson)
 
         if (ringerRepository.find("personId", id.toInt()).count() == 0L) {
-            ringerRepository.persist(Ringer(personId = id.toInt()))
+            ringerRepository.persist(Ringer(oppretta = Instant.now(), personId = id.toInt()))
         }
     }
 
