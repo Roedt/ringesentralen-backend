@@ -47,6 +47,13 @@ class VervingService(
     }
 
     fun mottaSvar(request: AutentisertMottaSvarRequest) {
+        val erBruker = personRepository
+            .find("telefonnummer", request.request.telefonnummer)
+            .firstResultOptional<Person>()
+            .map { it.groupID() }
+            .filter { GroupID.isBrukerEllerVenter(it)}
+        if (erBruker.isPresent) return
+
         val nextValue = if (request.request.svar) GroupID.PrioritertAaRinge else GroupID.Slett
         personRepository.update("groupID=?1 where telefonnummer=?2", nextValue.nr, request.request.telefonnummer)
     }
