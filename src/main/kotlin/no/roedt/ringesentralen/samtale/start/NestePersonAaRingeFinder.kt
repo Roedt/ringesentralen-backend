@@ -47,7 +47,7 @@ class NestePersonAaRingeFinder(
     private fun hentNesteVelgerAaRinge(request: AutentisertNestePersonAaRingeRequest): Int? {
         val ringer = personRepository.getPerson(request.userId)
         if (ringer.lokallag != request.lokallag && !GroupID.referencesOneOf(
-                ringer.groupID,
+                ringer.groupID(),
                 GroupID.LokalGodkjenner,
                 GroupID.Admin
             )

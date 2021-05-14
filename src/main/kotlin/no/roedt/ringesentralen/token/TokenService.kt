@@ -90,9 +90,9 @@ class TokenService(
             .also { i -> if (i.isEmpty()) println("Fann ingen roller for ${hypersysToken.user_id}") }
 
     private fun getRolle(hypersysToken: GyldigPersonToken,person: Person): GroupID {
-        var groupID = GroupID.from(getPersonFromHypersysID(hypersysToken).groupID)
+        var groupID = GroupID.from(getPersonFromHypersysID(hypersysToken).groupID())
         if (GroupID.isIkkeRegistrertRinger(groupID.nr)) {
-            groupID = GroupID.from(person.groupID)
+            groupID = GroupID.from(person.groupID())
         }
         if (groupID.nr < GroupID.UgodkjentRinger.nr)
             throw NotAuthorizedException("${hypersysToken.user_id} har ikkje gyldig rolle for å bruke systemet.", "")

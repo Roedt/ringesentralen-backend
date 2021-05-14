@@ -58,7 +58,7 @@ class BrukereServiceBean(
         epost = r.email ?: "",
         hypersysID = r.hypersysID ?: -1,
         lokallag = lokallagRepository.findById(r.lokallag.toLong()),
-        rolle = GroupID.from(r.groupID).roller,
+        rolle = GroupID.from(r.groupID()).roller,
         registreringstidspunkt = ringerRepository.find("personId", r.id.toInt()).firstResult<Ringer>().oppretta
     )
 
@@ -107,9 +107,9 @@ class BrukereServiceBean(
         }
 
     private fun assertAutorisert(request: AutentisertTilgangsendringRequest) {
-        val ringersBrukertype = hypersysIdTilPerson(request.userId).groupID
+        val ringersBrukertype = hypersysIdTilPerson(request.userId).groupID()
         val personMedEndraTilgang = personRepository.findById(request.personMedEndraTilgang())
-        val groupID = personMedEndraTilgang.groupID
+        val groupID = personMedEndraTilgang.groupID()
 
         if (personMedEndraTilgang.isSystembruker()) throw ForbiddenException("Kan ikkje endre systembruker")
         if (GroupID.Admin.references(groupID)) throw ForbiddenException("Kan ikkje endre admins")

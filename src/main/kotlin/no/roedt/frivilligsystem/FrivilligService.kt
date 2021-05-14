@@ -137,8 +137,8 @@ class FrivilligService(
             iperID = null
         )
         val eksisterendePerson = personRepository.finnPerson(person = person)
-        if (!GroupID.isBrukerEllerVenter(eksisterendePerson?.groupID ?: -1)) {
-            eksisterendePerson?.groupID = GroupID.Frivillig.nr
+        if (!GroupID.isBrukerEllerVenter(eksisterendePerson?.groupID() ?: -1)) {
+            eksisterendePerson?.setGroupID(GroupID.Frivillig)
         }
         return eksisterendePerson ?: person
     }

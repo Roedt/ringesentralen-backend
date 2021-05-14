@@ -87,7 +87,7 @@ class RingServiceBean(
                 .map { it.personId }
                 .map { it.toLong() }
                 .map { personRepository.findById(it) }
-                .map { it.groupID }
+                .map { it.groupID() }
                 .orElse(-1))
 
     override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): NestePersonAaRingeResponse {

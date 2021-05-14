@@ -22,7 +22,7 @@ data class Person(
         var postnummer: Int,
         var fylke: Int,
         var lokallag: Int,
-        var groupID: Int,
+        private var groupID: Int,
         @Enumerated(EnumType.STRING) var kilde: Kilde,
         var iperID: Int?
 ) : PanacheEntity() {
@@ -41,4 +41,15 @@ data class Person(
             kilde = Kilde.Verva,
             iperID = null
     )
+
+    fun groupID() = groupID
+
+    fun setGroupID(groupID: Int) {
+        if (GroupID.isBrukerEllerVenter(this.groupID) && GroupID.isIkkeRegistrertRinger(groupID)) {
+            throw RuntimeException("$id er allerede ringer, og kan ikke settes til ei ikke-ringer-rolle.")
+        }
+        this.groupID = groupID
+    }
+
+    fun setGroupID(groupID: GroupID) = setGroupID(groupID.nr)
 }

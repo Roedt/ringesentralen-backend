@@ -46,8 +46,8 @@ class DashboardService(
     }
 
     private fun getMineLokallag(ringer: Person): List<Lokallag> = when {
-        GroupID.Admin.references(ringer.groupID) -> lokallagRepository.findAll(Sort.ascending("navn")).list()
-        GroupID.LokalGodkjenner.references(ringer.groupID) -> lokallagRepository.fromFylke(ringer.fylke)
+        GroupID.Admin.references(ringer.groupID()) -> lokallagRepository.findAll(Sort.ascending("navn")).list()
+        GroupID.LokalGodkjenner.references(ringer.groupID()) -> lokallagRepository.fromFylke(ringer.fylke)
         else -> lokallagRepository.list("id", ringer.lokallag.toLong())
     }
 

@@ -13,6 +13,7 @@ import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
+import no.roedt.ringesentralen.person.RingerRepository
 import no.roedt.ringesentralen.person.UserId
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -31,6 +32,7 @@ internal class BrukereServiceBeanTest {
     private val hypersysService: HypersysService = mock()
     private val godkjenningRepository: GodkjenningRepository = mock()
     private val modelConverter: ModelConverter = mock()
+    private val ringerRepository: RingerRepository = mock()
 
     private val brukereService = BrukereServiceBean(
         personRepository = personRepository,
@@ -40,7 +42,8 @@ internal class BrukereServiceBeanTest {
         epostSender = epostSender,
         hypersysService = hypersysService,
         godkjenningRepository = godkjenningRepository,
-        modelConverter = modelConverter
+        modelConverter = modelConverter,
+        ringerRepository = ringerRepository
     )
 
     @Test
@@ -74,7 +77,7 @@ internal class BrukereServiceBeanTest {
 
         val ringt = Person()
         ringt.hypersysID = 3
-        ringt.groupID = GroupID.Admin.nr
+        ringt.setGroupID(GroupID.Admin)
         doReturn(ringt).whenever(personRepository).findById(2L)
 
         doReturn(listOf(1L)).whenever(databaseUpdater).getResultList(any())
@@ -92,7 +95,7 @@ internal class BrukereServiceBeanTest {
 
     private fun setupRinger(): UserId {
         val ringerPerson = Person()
-        ringerPerson.groupID = GroupID.LokalGodkjenner.nr
+        ringerPerson.setGroupID(GroupID.LokalGodkjenner)
         val userId = UserId(userId = 1)
         val panacheQuery: PanacheQuery<Person> = mock()
         doReturn(ringerPerson).whenever(panacheQuery).firstResult<Person>()

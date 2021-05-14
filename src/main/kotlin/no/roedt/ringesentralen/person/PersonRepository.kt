@@ -21,7 +21,7 @@ class PersonRepository : PanacheRepository<Person> {
                         telefonnummer = $telefonnummer,
                         $postnummer
                         lokallag = ${person.lokallag},
-                        groupID = ${person.groupID},
+                        groupID = ${person.groupID()},
                         email = '${person.email}'
                         $kilde
                         where id=${eksisterendePerson.id}

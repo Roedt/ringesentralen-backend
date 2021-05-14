@@ -30,7 +30,7 @@ class InnloggaBrukerService(
         postnummer = postnummer,
         fylke = fylke,
         lokallag = lokallag,
-        rolle = GroupID.from(groupID).roller,
+        rolle = GroupID.from(groupID()).roller,
         fylkeNavn = fylkeRepository.findById(fylke).navn,
         lokallagNavn = lokallagRepository.findById(lokallag.toLong()).navn
     )

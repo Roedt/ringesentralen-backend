@@ -53,7 +53,7 @@ class ModelConverterBean(
         val telefonnummer = itOrNull(map["mobile"])?.let { toTelefonnummer(it) }
         val groupID = personRepository.find("telefonnummer", telefonnummer)
             .singleResultOptional<Person>()
-            .map { it.groupID }
+            .map { it.groupID() }
             .orElse(GroupID.KlarTilAaRinges.nr)
 
 

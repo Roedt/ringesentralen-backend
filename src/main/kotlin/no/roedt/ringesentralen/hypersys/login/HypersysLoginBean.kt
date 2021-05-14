@@ -62,7 +62,7 @@ class HypersysLoginBean(
     private fun getRolle(profile: Profile): Int {
         val groupID: Optional<Int> = personRepository.find("hypersysID=?1", profile.user.id)
             .singleResultOptional<Person>()
-            .map { it.groupID }
+            .map { it.groupID() }
         if (!groupID.isPresent || GroupID.isIkkeRegistrertRinger(groupID.get())) {
             return GroupID.UgodkjentRinger.nr
         }
@@ -88,7 +88,7 @@ class HypersysLoginBean(
         ringerIV1Repository.list("telefonnummer", convertedPerson.telefonnummer?.replace("+47", ""))
             .map { it.brukergruppe }
             .firstOrNull()
-            ?.let { convertedPerson.groupID = maksBrukergruppe(it, convertedPerson.groupID).nr }
+            ?.let { convertedPerson.setGroupID(maksBrukergruppe(it, convertedPerson.groupID())) }
     }
 
     private fun maksBrukergruppe(it: Int, groupID: Int): GroupID =

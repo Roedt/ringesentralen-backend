@@ -34,7 +34,7 @@ class TelefonsvarerService(
             modus = if (person.hypersysID != null) Modus.medlemmer else Modus.velgere
         ))
 
-        if (GroupID.referencesOneOf(person.groupID, GroupID.Admin, GroupID.LokalGodkjenner, GroupID.GodkjentRinger, GroupID.GodkjentRingerMedlemmer, GroupID.UgodkjentRinger)) return
+        if (GroupID.referencesOneOf(person.groupID(), GroupID.Admin, GroupID.LokalGodkjenner, GroupID.GodkjentRinger, GroupID.GodkjentRingerMedlemmer, GroupID.UgodkjentRinger)) return
         request.resultat().nesteGroupID?.nr?.let { personRepository.update("groupID=?1 where id=?2", it, person.id) }
     }
 
