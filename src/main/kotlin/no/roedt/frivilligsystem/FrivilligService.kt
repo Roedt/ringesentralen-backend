@@ -86,7 +86,7 @@ class FrivilligService(
             andreTingDuVilBidraMed = request.andreTingDuVilBidraMed,
             spraak = request.spraak,
             fortellLittOmDegSelv = request.fortellLittOmDegSelv,
-            registrertTidspunkt = request.tidspunkt
+            registrertTidspunkt = request.tidspunkt ?: Instant.now()
         )
         frivilligRepository.persist(frivillig)
         request.kanTenkeSegAaBidraMedAktiviteter
