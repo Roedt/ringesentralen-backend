@@ -136,7 +136,7 @@ class FrivilligImporter(
         val haandtering = it.get(i++) // dette er fire radioboksar
         val personlig = it.get(i++) // ja/nei-radioboksar
         val tydelig = it.get(i++) // ja-nei-vet ikke-radioboksar
-        val forslag = it.get(i) // ja+fritekst eller nei
+        val forslag = if (it.size() > 64) it.get(i) else "" // ja+fritekst eller nei
 
         val fornavn = navn.substringBeforeLast(" ")
         val etternavn = navn.substringAfterLast(" ")
