@@ -10,5 +10,6 @@ data class PostalAddress(
     @JsonProperty("postal_code") val postal_code: String?,
     @JsonProperty("postal_code_name") val postal_code_name: String?,
     @JsonProperty("municipality") val municipality: Any?,
-    @JsonProperty("mobile") val mobile: String?
+    @JsonProperty("mobile") val mobile: String?,
+    @JsonProperty("country") val country: String?
 )

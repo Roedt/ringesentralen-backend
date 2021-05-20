@@ -2,7 +2,6 @@ package no.roedt.ringesentralen.hypersys
 
 import no.roedt.ringesentralen.Kilde
 import no.roedt.ringesentralen.brukere.FylkeRepository
-import no.roedt.ringesentralen.hypersys.externalModel.Address
 import no.roedt.ringesentralen.hypersys.externalModel.Membership
 import no.roedt.ringesentralen.hypersys.externalModel.User
 import no.roedt.ringesentralen.lokallag.LokallagRepository
@@ -71,22 +70,16 @@ class ModelConverterBean(
         )
     }
 
-    override fun finnPostnummer(map: Map<*, *>): Int {
-        val addresses = listOf(toAddress(map["postal_address"]))
-        return addresses.flatMap { it.postalCode }.firstOrNull { i -> i != "null" }?.toString()?.toInt() ?: -1
-    }
-
-    private fun toAddress(get: Any?): Address {
-        val address = get as Map<*, *>
-        return Address(
-            id = 1,
-            name = address["address1"].toString(),
-            address1 = address["address1"].toString(),
-            address2 = address["address2"].toString(),
-            subject = "",
-            postalCode = listOf(address["postal_code"].toString())
-        )
-    }
+    override fun finnPostnummer(map: Map<*, *>): Int =
+        (map["postal_address"] as Map<*, *>)
+            .takeIf { it["country"]?.equals("Norway") ?: false }
+            ?.get("postal_code")
+            ?.toString()
+            ?.let { listOf(it) }
+            ?.firstOrNull { i -> i != "null" }
+            ?.toString()
+            ?.toInt()
+            ?: -1
 
     fun toTelefonnummer(telefonnummer: String): String? =
         telefonnummer.replace(" ", "").takeIf { it != "" }
