@@ -100,7 +100,7 @@ class FrivilligImporter(
             Pair(OpptattAv.Sekstimersnormalarbeidsdag_30timersarbeidsuke, it.get(i++)),
             Pair(OpptattAv.Sikreuroertnatur, it.get(i++)),
             Pair(OpptattAv.Styrkekommuneoekonomien, it.get(i++)),
-            Pair(OpptattAv.ErstatteEoeSavtalenmedenhandelsavtale, it.get(i++)),
+            Pair(OpptattAv.ErstatteEOeSavtalenmedenhandelsavtale, it.get(i++)),
             Pair(OpptattAv.Styrkebemanningenivelferden, it.get(i++)),
             Pair(OpptattAv.Postombaeringfemdageriuka, it.get(i++)),
             Pair(OpptattAv.Hindrediskrimineringograsismeiboligmarkedetogarbeidslivet, it.get(i++)),
