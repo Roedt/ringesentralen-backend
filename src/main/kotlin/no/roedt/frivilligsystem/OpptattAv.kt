@@ -20,7 +20,7 @@ enum class OpptattAv(val displaytext: String) {
     Sekstimersnormalarbeidsdag_30timersarbeidsuke("Sekstimers normal-arbeidsdag (30 timers  arbeidsuke)"),
     Sikreuroertnatur("Sikre urørt natur"),
     Styrkekommuneoekonomien("Styrke kommuneøkonomien"),
-    ErstatteEoeSavtalenmedenhandelsavtale("Erstatte EØS-avtalen med en handelsavtale"),
+    ErstatteEOeSavtalenmedenhandelsavtale("Erstatte EØS-avtalen med en handelsavtale"),
     Styrkebemanningenivelferden("Styrke bemanningen i velferden"),
     Postombaeringfemdageriuka("Postombæring fem dager i uka"),
     Hindrediskrimineringograsismeiboligmarkedetogarbeidslivet("Hindre diskriminering og rasisme i boligmarkedet  og arbeidslivet"),
