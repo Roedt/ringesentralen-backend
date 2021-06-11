@@ -29,4 +29,11 @@ class StatistikkController(val service: StatistikkService) : RingesentralenContr
     @Operation(summary = "Hent statistikk", description = Roles.ringerGodkjennerAdmin)
     @Produces(MediaType.APPLICATION_JSON)
     fun getStatistikk(@Context ctx: SecurityContext): StatistikkResponse = service.getStatistikk(jwt.groups)
+
+    @RolesAllowed(Roles.ringer, Roles.godkjenner, Roles.admin)
+    @GET
+    @Path("/ringtFlest")
+    @Operation(summary = "Hvem har ringt mest?", description = Roles.ringerGodkjennerAdmin)
+    @Produces(MediaType.APPLICATION_JSON)
+    fun ringtFlestStatistikk(@Context ctx: SecurityContext): RingtFlestStatistikk = service.getRingtMest(ctx.userId())
 }

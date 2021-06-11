@@ -3,6 +3,7 @@ package no.roedt.ringesentralen.statistikk
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.person.GroupID
+import no.roedt.ringesentralen.person.UserId
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import javax.enterprise.context.ApplicationScoped
 
@@ -67,4 +68,33 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
     )
 
     private fun get(query: String) = databaseUpdater.getResultList(query)
+
+    fun getRingtMest(userId: UserId): RingtFlestStatistikk {
+        val hypersysId = userId.userId
+        val sql =
+            """SELECT 1 FROM samtale samtale 
+                INNER JOIN ringer ringer on samtale.ringer=ringer.id 
+                INNER JOIN person ringerPerson on ringerPerson.id=ringer.personId 
+                WHERE ringerPerson.hypersysID=$hypersysId 
+                and samtale.resultat != ${Resultat.Samtale_startet.nr} 
+                and samtale.ringt != ringerPerson.id"""
+        val mineRingte = get(sql).size
+
+        val sqlPersonRingtFlest = """
+            SELECT count(1) FROM samtale samtale 
+            INNER JOIN ringer ringer on samtale.ringer=ringer.id 
+            INNER JOIN person ringerPerson on ringerPerson.id=ringer.personId
+            WHERE samtale.resultat != 9
+            and samtale.ringt != ringerPerson.id
+            group by ringer.id
+            order by count(1) desc limit 1
+        """
+
+        val personSomHarRingtFlest = get(sqlPersonRingtFlest)[0].toString().toInt()
+
+        return RingtFlestStatistikk(
+            jegHarRingt = mineRingte,
+            maksRingt = personSomHarRingtFlest
+        )
+    }
 }
