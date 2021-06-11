@@ -35,5 +35,5 @@ class StatistikkController(val service: StatistikkService) : RingesentralenContr
     @Path("/ringtFlest")
     @Operation(summary = "Hvem har ringt mest?", description = Roles.ringerGodkjennerAdmin)
     @Produces(MediaType.APPLICATION_JSON)
-    fun ringtFlestStatistikk(@Context ctx: SecurityContext): RingtFlestStatistikk = service.getRingtMest(ctx.userId())
+    fun ringtFlestStatistikk(@Context ctx: SecurityContext): RingtFlestStatistikk = service.getRingtMest(ctx.userId().userId)
 }

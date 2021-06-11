@@ -3,7 +3,6 @@ package no.roedt.ringesentralen.statistikk
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.person.GroupID
-import no.roedt.ringesentralen.person.UserId
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import javax.enterprise.context.ApplicationScoped
 
@@ -69,19 +68,24 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
 
     private fun get(query: String) = databaseUpdater.getResultList(query)
 
-    fun getRingtMest(userId: UserId): RingtFlestStatistikk {
-        val hypersysId = userId.userId
-        val sql =
-            """SELECT 1 FROM samtale samtale 
+    fun getRingtMest(hypersysId: Int): RingtFlestStatistikk = RingtFlestStatistikk(
+        jegHarRingt = mineRingte(hypersysId),
+        maksRingt = personSomHarRingtFlest(),
+        samtalerGjennomfoertILaget = samtalerGjennomfoertILaget(hypersysId),
+        antallRingereILaget = antallRingereILaget(hypersysId)
+    )
+
+    private fun mineRingte(hypersysId: Int): Int = get(
+        """SELECT 1 FROM samtale samtale 
                 INNER JOIN ringer ringer on samtale.ringer=ringer.id 
                 INNER JOIN person ringerPerson on ringerPerson.id=ringer.personId 
                 WHERE ringerPerson.hypersysID=$hypersysId 
                 and samtale.resultat != ${Resultat.Samtale_startet.nr} 
                 and samtale.ringt != ringerPerson.id"""
-        val mineRingte = get(sql).size
+    ).size
 
-        val sqlPersonRingtFlest = """
-            SELECT count(1) FROM samtale samtale 
+    private fun personSomHarRingtFlest(): Int = get(
+        """SELECT count(1) FROM samtale samtale 
             INNER JOIN ringer ringer on samtale.ringer=ringer.id 
             INNER JOIN person ringerPerson on ringerPerson.id=ringer.personId
             WHERE samtale.resultat != 9
@@ -89,12 +93,23 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
             group by ringer.id
             order by count(1) desc limit 1
         """
+    )[0].toString().toInt()
 
-        val personSomHarRingtFlest = get(sqlPersonRingtFlest)[0].toString().toInt()
+    private fun samtalerGjennomfoertILaget(hypersysId: Int): Int =
+        get(
+            """SELECT 1 FROM samtale samtale 
+                INNER JOIN ringer ringer on samtale.ringer=ringer.id 
+                INNER JOIN person ringerPerson on ringerPerson.id=ringer.personId            
+                WHERE ringerPerson.lokallag=(select lokallag from person where hypersysID=$hypersysId) 
+                and samtale.resultat != ${Resultat.Samtale_startet.nr} 
+                and samtale.ringt != ringerPerson.id"""
+        ).size
 
-        return RingtFlestStatistikk(
-            jegHarRingt = mineRingte,
-            maksRingt = personSomHarRingtFlest
-        )
-    }
+    private fun antallRingereILaget(hypersysId: Int): Int =
+        get(
+            """SELECT 1 FROM ringer ringer
+                INNER JOIN person person on ringer.personId = person.id
+                WHERE person.lokallag =(select lokallag from person where hypersysID=$hypersysId)
+            """
+        ).size
 }
