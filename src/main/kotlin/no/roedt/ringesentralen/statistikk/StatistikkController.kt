@@ -7,6 +7,10 @@ import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import javax.annotation.security.RolesAllowed
 import javax.inject.Inject
 import javax.ws.rs.GET
@@ -37,12 +41,24 @@ class StatistikkController(val service: StatistikkService) : RingesentralenContr
     @Path("/ringtFlest")
     @Operation(summary = "Hvem har ringt mest?", description = Roles.ringerGodkjennerAdmin)
     @Produces(MediaType.APPLICATION_JSON)
-    fun ringtFlestStatistikk(@Context ctx: SecurityContext): RingtFlestStatistikk = service.getRingtMest(ctx.userId().userId)
+    fun ringtFlestStatistikk(@Context ctx: SecurityContext): RingtFlestStatistikk =
+        service.getRingtMest(ctx.userId().userId)
 
     @RolesAllowed(Roles.admin)
     @GET
     @Path("/lodd")
     @Operation(summary = "Hvem har ringt mest? Henter ut liste til loddtrekning", description = Roles.admin)
     @Produces(MediaType.APPLICATION_JSON)
-    fun lodd(@Context ctx: SecurityContext, @QueryParam("fra") fra: String, @QueryParam("til") til: String): List<LoddStatistikk> = service.lodd(Instant.parse(fra), Instant.parse(til))
+    fun lodd(
+        @Context ctx: SecurityContext,
+        @QueryParam("fra") fra: String,
+        @QueryParam("til") til: String
+    ): List<LoddStatistikk> = service.lodd(
+        toInstant(fra), toInstant(til)
+    )
+
+    private fun toInstant(tidspunkt: String): Instant = if (tidspunkt.contains("T")) {
+        Instant.parse(tidspunkt)
+    } else
+        Instant.from(ZonedDateTime.of(LocalDate.parse(tidspunkt), LocalTime.of(0, 0, 0, 0), ZoneId.of("Europe/Oslo")))
 }
