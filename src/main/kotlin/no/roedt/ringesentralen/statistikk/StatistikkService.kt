@@ -4,6 +4,8 @@ import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.samtale.resultat.Resultat
+import java.sql.Timestamp
+import java.time.Instant
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -112,4 +114,28 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
                 WHERE person.lokallag =(select lokallag from person where hypersysID=$hypersysId)
             """
         ).size
+
+    fun lodd(fra: Instant, til: Instant): List<LoddStatistikk> =
+        get(
+            """
+                SELECT ringerPerson.fornavn, ringerPerson.etternavn, lokallag.navn, count(1)
+                FROM samtale samtale
+                INNER JOIN ringer ringer on ringer.id = samtale.ringer
+                INNER JOIN person ringerPerson on ringer.personId = ringerPerson.id
+                INNER JOIN lokallag lokallag on lokallag.id = ringerPerson.lokallag
+                AND samtale.datetime >= '${Timestamp.from(fra)}'
+                AND samtale.datetime <= '${Timestamp.from(til)}'
+                AND samtale.resultat != ${Resultat.Samtale_startet.nr}
+                GROUP BY ringerPerson.id
+            """.trimIndent()
+        )
+            .map { it as Array<*> }
+            .map {
+                LoddStatistikk(
+                    fornavn = it[0].toString(),
+                    etternavn = it[1].toString(),
+                    lokallag = it[2].toString(),
+                    antallSamtaler = it[3].toString().toInt()
+                )
+            }
 }
