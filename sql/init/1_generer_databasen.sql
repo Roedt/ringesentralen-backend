@@ -6360,6 +6360,18 @@ WHERE samtale.resultat != 9
 ORDER BY samtale.datetime ASC;
 
 -- --------------------------------------------------------
+
+create or replace view v_slettaMosaic as
+SELECT distinct
+person.iperID
+FROM person person
+INNER JOIN samtale samtale on samtale.ringt = person.id
+INNER JOIN oppfoelgingValg21 oppfoelging on samtale.id = oppfoelging.samtale_id
+WHERE person.kilde = 'Mosaic'
+and oppfoelging.vilIkkeBliRingt=1
+and person.groupID in (select id from brukergruppe where navn = 'slett' or navn = 'ferdigringt')
+
+-- --------------------------------------------------------
 INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `email`, `fylke`, `groupID`, `lokallag`, `hypersysID`, `kilde`) VALUES
 ('Systembruker', 'Frontend', '+4711223344', -1, null, -1, 4, -1, -2, 'Systembruker');
 
