@@ -39,7 +39,7 @@ class SMSController(val service: SMSService) : RingesentralenController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/alle")
-    @Operation(summary = "Finn alle frivillige i laget", description = Roles.ringerForMedlemmerGodkjennerAdmin)
+    @Operation(summary = "Hent neste usendte å sende melding til", description = Roles.ringerForMedlemmerGodkjennerAdmin)
     @Retry
-    fun hentAlle(meldingID: Long, antall: Int) = service.hentNesteUsendte(meldingID, antall)
+    fun hentNesteUsendte(meldingID: Long, antall: Int) = service.hentNesteUsendte(meldingID, antall)
 }
