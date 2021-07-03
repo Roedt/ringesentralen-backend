@@ -3,6 +3,7 @@ package no.roedt.frivilligsystem
 import io.quarkus.narayana.jta.runtime.TransactionConfiguration
 import no.roedt.frivilligsystem.kontakt.AutentisertRegistrerKontaktRequest
 import no.roedt.frivilligsystem.kontakt.RegistrerKontaktRequest
+import no.roedt.frivilligsystem.registrer.Aktivitet
 import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.ringesentralen.RingesentralenController
@@ -27,7 +28,8 @@ import javax.ws.rs.core.SecurityContext
 @Path("/frivillig")
 @Tag(name = "Frivilligsystem")
 @SecurityRequirement(name = "jwt")
-class FrivilligController(val frivilligService: FrivilligService, val frivilligImporter: FrivilligImporter) : RingesentralenController {
+class FrivilligController(val frivilligService: FrivilligService, val frivilligImporter: FrivilligImporter) :
+    RingesentralenController {
 
     @Inject
     lateinit var jwt: JsonWebToken
@@ -40,6 +42,18 @@ class FrivilligController(val frivilligService: FrivilligService, val frivilligI
     @Retry
     fun hentAlle(@Context ctx: SecurityContext) = frivilligService.hentAlle(ctx.userId(), jwt.groups)
 
+    @RolesAllowed(Roles.ringerMedlemmer, Roles.godkjenner, Roles.admin)
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/aktivitet")
+    @Operation(
+        summary = "Finn alle frivillige som kan bidra med en gitt aktivitet",
+        description = Roles.ringerForMedlemmerGodkjennerAdmin
+    )
+    @Retry
+    fun hentAlleForAktivitet(@Context ctx: SecurityContext, aktivitet: Aktivitet) =
+        frivilligService.hentAlleForAktivitet(ctx.userId(), jwt.groups, aktivitet)
+
     @RolesAllowed(Roles.systembrukerFrontend)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -48,9 +62,17 @@ class FrivilligController(val frivilligService: FrivilligService, val frivilligI
     @Operation(summary = "Registrer ny frivillig", description = Roles.systembrukerFrontend)
     @Retry
     @Transactional
-    fun registrerNyFrivillig(@Context ctx: SecurityContext, registrerNyFrivilligRequest: RegistrerNyFrivilligRequest): Frivillig =
+    fun registrerNyFrivillig(
+        @Context ctx: SecurityContext,
+        registrerNyFrivilligRequest: RegistrerNyFrivilligRequest
+    ): Frivillig =
         try {
-            frivilligService.registrerNyFrivillig(AutentisertRegistrerNyFrivilligRequest(userId = ctx.userId(), request = registrerNyFrivilligRequest))
+            frivilligService.registrerNyFrivillig(
+                AutentisertRegistrerNyFrivilligRequest(
+                    userId = ctx.userId(),
+                    request = registrerNyFrivilligRequest
+                )
+            )
         } catch (e: java.lang.NullPointerException) {
             e.printStackTrace()
             System.err.println(registrerNyFrivilligRequest)
@@ -65,9 +87,10 @@ class FrivilligController(val frivilligService: FrivilligService, val frivilligI
     @Operation(summary = "Registrer kontakt med frivillig", description = Roles.ringerForMedlemmerGodkjennerAdmin)
     @Retry
     @Transactional
-    fun registrerKontakt(@Context ctx: SecurityContext, registrerKontaktRequest: RegistrerKontaktRequest) = frivilligService.registrerKontakt(
-        AutentisertRegistrerKontaktRequest(userId = ctx.userId(), request = registrerKontaktRequest)
-    )
+    fun registrerKontakt(@Context ctx: SecurityContext, registrerKontaktRequest: RegistrerKontaktRequest) =
+        frivilligService.registrerKontakt(
+            AutentisertRegistrerKontaktRequest(userId = ctx.userId(), request = registrerKontaktRequest)
+        )
 
     @POST
     @Path("/importer")

@@ -4,6 +4,7 @@ import no.roedt.frivilligsystem.kontakt.AutentisertRegistrerKontaktRequest
 import no.roedt.frivilligsystem.kontakt.Kontakt
 import no.roedt.frivilligsystem.kontakt.KontaktRepository
 import no.roedt.frivilligsystem.kontakt.KontaktResponse
+import no.roedt.frivilligsystem.registrer.Aktivitet
 import no.roedt.frivilligsystem.registrer.AktivitetForFrivillig
 import no.roedt.frivilligsystem.registrer.AktivitetForFrivilligRepository
 import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
@@ -42,8 +43,7 @@ class FrivilligService(
                     aktiviteter = aktivitetForFrivilligRepository.list("frivillig_id", it.first.id),
                     fylke = fylkeRepository.findById(it.second.fylke),
                     lokallag = lokallagRepository.findById(it.second.lokallag.toLong()),
-                    kontakt = kontaktRepository.list("frivillig_id", it.first.id.toInt()).map {
-                        i ->
+                    kontakt = kontaktRepository.list("frivillig_id", it.first.id.toInt()).map { i ->
                         KontaktResponse(
                             frivillig_id = i.frivillig_id,
                             tilbakemelding = i.tilbakemelding,
@@ -51,8 +51,10 @@ class FrivilligService(
                             datetime = i.datetime
                         )
                     },
-                    opptattAv = frivilligOpptattAvRepository.list("frivillig_id", it.first.id).map { i -> i.opptattAv }.map { i -> i.displaytext },
-                    frivilligKorona = frivilligKoronaRepository.find("frivillig_id", it.first.id).firstResultOptional<FrivilligKorona>().orElse(null)
+                    opptattAv = frivilligOpptattAvRepository.list("frivillig_id", it.first.id).map { i -> i.opptattAv }
+                        .map { i -> i.displaytext },
+                    frivilligKorona = frivilligKoronaRepository.find("frivillig_id", it.first.id)
+                        .firstResultOptional<FrivilligKorona>().orElse(null)
                 )
             }
 
@@ -152,4 +154,7 @@ class FrivilligService(
                 datetime = Instant.now()
             )
         )
+
+    fun hentAlleForAktivitet(userId: UserId, groups: Set<String>, aktivitet: Aktivitet) = hentAlle(userId, groups)
+        .filter { frivillig -> frivillig.aktiviteter.map { it.aktivitet }.contains(aktivitet) }
 }
