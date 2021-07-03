@@ -25,7 +25,7 @@ class SMSController(val service: SMSService) : RingesentralenController {
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(Roles.systembrukerFrontend)
+    @RolesAllowed(Roles.admin)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -35,10 +35,10 @@ class SMSController(val service: SMSService) : RingesentralenController {
     @Transactional
     fun lagreMelding(tekst: Melding) = service.lagreMelding(tekst)
 
-    @RolesAllowed(Roles.ringerMedlemmer, Roles.godkjenner, Roles.admin)
+    @RolesAllowed(Roles.admin)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/alle")
+    @Path("/nesteUsendte")
     @Operation(summary = "Hent neste usendte å sende melding til", description = Roles.ringerForMedlemmerGodkjennerAdmin)
     @Retry
     fun hentNesteUsendte(meldingID: Long, antall: Int) = service.hentNesteUsendte(meldingID, antall)
