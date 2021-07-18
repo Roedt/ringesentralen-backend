@@ -2,6 +2,7 @@ package no.roedt.ringesentralen.token
 
 import io.smallrye.jwt.build.Jwt
 import no.roedt.ringesentralen.Roles
+import no.roedt.ringesentralen.hypersys.login.AESUtil
 import no.roedt.ringesentralen.hypersys.login.LoginRequest
 import no.roedt.ringesentralen.person.EpostValidator
 import org.eclipse.microprofile.config.inject.ConfigProperty
@@ -11,7 +12,8 @@ import javax.enterprise.context.RequestScoped
 @RequestScoped
 class FakeTokenService(
     private val secretFactory: SecretFactory,
-    private val privateKeyFactory: PrivateKeyFactory
+    private val privateKeyFactory: PrivateKeyFactory,
+    private val aesUtil: AESUtil
 ) {
 
     @ConfigProperty(name = "token.expiryPeriod")
@@ -21,7 +23,7 @@ class FakeTokenService(
         if (loginRequest.key != secretFactory.getFrontendTokenKey()) {
             throw IllegalArgumentException("Illegal key")
         }
-        EpostValidator.validate(loginRequest.brukarnamn)
+        aesUtil.decrypt(loginRequest.brukarnamn).also { EpostValidator.validate(it) }
 
         return Jwt
             .audience("ringer")
