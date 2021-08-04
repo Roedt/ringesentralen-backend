@@ -27,15 +27,15 @@ CREATE TABLE IF NOT EXISTS `fylker` (
 
 INSERT INTO `fylker` (`id`, `navn`) VALUES
 (-1, 'Udefinert fylke'),
-(01, 'Østfold'),
-(02, 'Akershus'),
-(03, 'Oslo'),
-(04, 'Hedmark'),
-(05, 'Oppland'),
-(06, 'Buskerud'),
-(07, 'Vestfold'),
-(08, 'Telemark'),
-(09, 'Aust-Agder'),
+(1, 'Østfold'),
+(2, 'Akershus'),
+(3, 'Oslo'),
+(4, 'Hedmark'),
+(5, 'Oppland'),
+(6, 'Buskerud'),
+(7, 'Vestfold'),
+(8, 'Telemark'),
+(9, 'Aust-Agder'),
 (10, 'Vest-Agder'),
 (11, 'Rogaland'),
 (12, 'Hordaland'),
@@ -60,9 +60,7 @@ CREATE TABLE IF NOT EXISTS `lokallag` (
   `id` int(3) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `navn` varchar(100) NOT NULL UNIQUE,
   `hypersysID` int NULL UNIQUE,
-  `fylke` int(2) NOT NULL,
-  FOREIGN KEY (`fylke`) REFERENCES `fylker` (`id`),
-  INDEX(`fylke`)
+  `fylke` int(2) DEFAULT NULL
 );
 
 insert into `lokallag` (`id`, `navn`, `fylke`) values (-1, 'Udefinert', -1);
@@ -343,6 +341,12 @@ UPDATE lokallag SET fylke=19 where navn in ('Uten lag Troms', 'Rødt Balsfjord',
 UPDATE lokallag SET fylke=20 where navn in ('Rødt Alta', 'Rødt Hammerfest', 'Rødt Måsøy', 'Rødt Sør-Varanger', 'Rødt Vadsø', 'Uten lag Finnmark', 'GAMVIK', 'Tana', 'Karasjok', 'PORSANGER PORSÁNGU PORSANKI');
 
 -- --------------------------------------------------------
+ALTER TABLE lokallag modify fylke int(2) NOT NULL;
+ALTER TABLE lokallag ADD CONSTRAINT fk_lokallag_fylke FOREIGN KEY (fylke) REFERENCES fylker(id);
+ALTER TABLE `lokallag` ADD INDEX `lokallag_fylke_index` (`fylke`);
+
+-- --------------------------------------------------------
+
 
 CREATE TABLE IF NOT EXISTS `kommune` (
   `nummer` integer NOT NULL PRIMARY KEY,
@@ -6366,10 +6370,10 @@ SELECT distinct
 person.iperID
 FROM person person
 INNER JOIN samtale samtale on samtale.ringt = person.id
-INNER JOIN oppfoelgingValg21 oppfoelging on samtale.id = oppfoelging.samtale_id
+INNER JOIN oppfoelgingValg21 oppfoelging on samtale.id = oppfoelging.samtaleId
 WHERE person.kilde = 'Mosaic'
 and oppfoelging.vilIkkeBliRingt=1
-and person.groupID in (select id from brukergruppe where navn = 'slett' or navn = 'ferdigringt')
+and person.groupID in (select id from brukergruppe where navn = 'slett' or navn = 'ferdigringt');
 
 -- --------------------------------------------------------
 INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `email`, `fylke`, `groupID`, `lokallag`, `hypersysID`, `kilde`) VALUES
@@ -6494,6 +6498,26 @@ CREATE TABLE IF NOT EXISTS `kontakt` (
   FOREIGN KEY (`frivillig_id`) REFERENCES `frivillig` (`id`),
   INDEX(`registrert_av`),
   FOREIGN KEY (`registrert_av`) REFERENCES `person` (`id`)
+);
+
+-- --------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `sms` (
+  `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `tekst` varchar(2048) NOT NULL
+);
+
+-- --------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `smsTilMottaker` (
+  `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `sms_id` int(6) NOT NULL,
+  INDEX(`sms_id`),
+  FOREIGN KEY (`sms_id`) REFERENCES `sms` (`id`),
+  `mottaker_id` int(6) NOT NULL,
+  INDEX(`mottaker_id`),
+  FOREIGN KEY (`mottaker_id`) REFERENCES `frivillig` (`id`),
+  `utsendingsstatus` varchar(64) NOT NULL
 );
 
 -- --------------------------------------------------------

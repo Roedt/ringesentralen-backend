@@ -4,5 +4,6 @@ enum class ErMedlemStatus {
     Ja,
     Nei,
     Vilbli,
-    RU
+    RU,
+    Ukjent
 }

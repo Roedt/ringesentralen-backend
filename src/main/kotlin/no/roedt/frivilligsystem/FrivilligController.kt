@@ -5,7 +5,9 @@ import no.roedt.frivilligsystem.kontakt.AutentisertRegistrerKontaktRequest
 import no.roedt.frivilligsystem.kontakt.RegistrerKontaktRequest
 import no.roedt.frivilligsystem.registrer.Aktivitet
 import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
+import no.roedt.frivilligsystem.registrer.AutentisertSMSFrivilligRequest
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
+import no.roedt.frivilligsystem.registrer.SMSFrivilligRequest
 import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.faulttolerance.Retry
@@ -103,4 +105,29 @@ class FrivilligController(val frivilligService: FrivilligService, val frivilligI
         "frivillige.csv",
         "frivillig-import"
     )
+
+    @RolesAllowed(Roles.systembrukerFrontend)
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/registrerSMSFrivillig")
+    @Operation(summary = "Registrer ny SMS-frivillig", description = Roles.systembrukerFrontend)
+    @Retry
+    @Transactional
+    fun smsFrivilligregistrering(
+        @Context ctx: SecurityContext,
+        request: SMSFrivilligRequest
+    ): Frivillig =
+        try {
+            frivilligService.registrerNySMSFrivillig(
+                AutentisertSMSFrivilligRequest(
+                    userId = ctx.userId(),
+                    request = request
+                )
+            )
+        } catch (e: java.lang.RuntimeException) {
+            e.printStackTrace()
+            System.err.println(request)
+            throw e
+        }
 }
