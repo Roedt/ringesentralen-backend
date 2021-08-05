@@ -8,7 +8,7 @@ import no.roedt.frivilligsystem.registrer.Aktivitet
 import no.roedt.frivilligsystem.registrer.AktivitetForFrivillig
 import no.roedt.frivilligsystem.registrer.AktivitetForFrivilligRepository
 import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
-import no.roedt.frivilligsystem.registrer.AutentisertSMSFrivilligRequest
+import no.roedt.frivilligsystem.registrer.AutentisertSoMeFrivilligRequest
 import no.roedt.frivilligsystem.registrer.ErMedlemStatus
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.ringesentralen.DatabaseUpdater
@@ -160,23 +160,23 @@ class FrivilligService(
     fun hentAlleForAktivitet(userId: UserId, groups: Set<String>, aktivitet: Aktivitet) = hentAlle(userId, groups)
         .filter { frivillig -> frivillig.aktiviteter.map { it.aktivitet }.contains(aktivitet) }
 
-    fun registrerNySMSFrivillig(autentisertSMSFrivilligRequest: AutentisertSMSFrivilligRequest): Frivillig =
+    fun registrerNySoMeFrivillig(autentisertSoMeFrivilligRequest: AutentisertSoMeFrivilligRequest): Frivillig =
         registrerNyFrivillig(
             AutentisertRegistrerNyFrivilligRequest(
-                userId = autentisertSMSFrivilligRequest.userId,
+                userId = autentisertSoMeFrivilligRequest.userId,
                 request = RegistrerNyFrivilligRequest(
-                    tidspunkt = autentisertSMSFrivilligRequest.request.tidspunkt,
-                    fornavn = autentisertSMSFrivilligRequest.request.fornavn,
-                    etternavn = autentisertSMSFrivilligRequest.request.etternavn,
-                    telefonnummer = autentisertSMSFrivilligRequest.request.telefonnummer,
-                    postnummer = autentisertSMSFrivilligRequest.request.postnummer,
+                    tidspunkt = autentisertSoMeFrivilligRequest.request.tidspunkt,
+                    fornavn = autentisertSoMeFrivilligRequest.request.fornavn,
+                    etternavn = autentisertSoMeFrivilligRequest.request.etternavn,
+                    telefonnummer = autentisertSoMeFrivilligRequest.request.telefonnummer,
+                    postnummer = autentisertSoMeFrivilligRequest.request.postnummer,
                     alleredeAktivILokallag = false,
-                    andreTingDuVilBidraMed = "Meldte seg direkte som SMS-frivillig",
+                    andreTingDuVilBidraMed = "Meldte seg direkte som SoMe-frivillig",
                     epost = "",
                     forslag = "",
-                    fortellLittOmDegSelv = "Meldte seg direkte som SMS-frivillig",
+                    fortellLittOmDegSelv = "Meldte seg direkte som SoMe-frivillig",
                     haandtering = "",
-                    kanTenkeSegAaBidraMedAktiviteter = listOf(Aktivitet.SMS),
+                    kanTenkeSegAaBidraMedAktiviteter = listOf(Aktivitet.SoMe),
                     medlemIRoedt = ErMedlemStatus.Ukjent,
                     opptattAv = listOf(),
                     personlig = false,

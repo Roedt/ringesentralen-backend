@@ -5,9 +5,9 @@ import no.roedt.frivilligsystem.kontakt.AutentisertRegistrerKontaktRequest
 import no.roedt.frivilligsystem.kontakt.RegistrerKontaktRequest
 import no.roedt.frivilligsystem.registrer.Aktivitet
 import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
-import no.roedt.frivilligsystem.registrer.AutentisertSMSFrivilligRequest
+import no.roedt.frivilligsystem.registrer.AutentisertSoMeFrivilligRequest
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
-import no.roedt.frivilligsystem.registrer.SMSFrivilligRequest
+import no.roedt.frivilligsystem.registrer.SoMeFrivilligRequest
 import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.faulttolerance.Retry
@@ -110,17 +110,17 @@ class FrivilligController(val frivilligService: FrivilligService, val frivilligI
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/registrerSMSFrivillig")
-    @Operation(summary = "Registrer ny SMS-frivillig", description = Roles.systembrukerFrontend)
+    @Path("/registrerSoMeFrivillig")
+    @Operation(summary = "Registrer ny SoMe-frivillig", description = Roles.systembrukerFrontend)
     @Retry
     @Transactional
-    fun smsFrivilligregistrering(
+    fun soMeFrivilligregistrering(
         @Context ctx: SecurityContext,
-        request: SMSFrivilligRequest
+        request: SoMeFrivilligRequest
     ): Frivillig =
         try {
-            frivilligService.registrerNySMSFrivillig(
-                AutentisertSMSFrivilligRequest(
+            frivilligService.registrerNySoMeFrivillig(
+                AutentisertSoMeFrivilligRequest(
                     userId = ctx.userId(),
                     request = request
                 )

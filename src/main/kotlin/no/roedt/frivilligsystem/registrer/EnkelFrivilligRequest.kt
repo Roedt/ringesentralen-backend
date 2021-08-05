@@ -8,7 +8,7 @@ import java.time.Instant
 
 @RegisterForReflection
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class SMSFrivilligRequest(
+data class SoMeFrivilligRequest(
     @JsonProperty("tidspunkt") var tidspunkt: Instant?,
     @JsonProperty("fornavn") var fornavn: String,
     @JsonProperty("etternavn") var etternavn: String,
@@ -17,7 +17,7 @@ data class SMSFrivilligRequest(
 )
 
 @RegisterForReflection
-data class AutentisertSMSFrivilligRequest(
+data class AutentisertSoMeFrivilligRequest(
     val userId: UserId,
-    val request: SMSFrivilligRequest
+    val request: SoMeFrivilligRequest
 )
