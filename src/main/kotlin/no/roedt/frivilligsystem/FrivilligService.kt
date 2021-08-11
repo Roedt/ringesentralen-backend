@@ -165,7 +165,7 @@ class FrivilligService(
             AutentisertRegistrerNyFrivilligRequest(
                 userId = autentisertSoMeFrivilligRequest.userId,
                 request = RegistrerNyFrivilligRequest(
-                    tidspunkt = autentisertSoMeFrivilligRequest.request.tidspunkt,
+                    tidspunkt = Instant.now(),
                     fornavn = autentisertSoMeFrivilligRequest.request.fornavn,
                     etternavn = autentisertSoMeFrivilligRequest.request.etternavn,
                     telefonnummer = autentisertSoMeFrivilligRequest.request.telefonnummer,

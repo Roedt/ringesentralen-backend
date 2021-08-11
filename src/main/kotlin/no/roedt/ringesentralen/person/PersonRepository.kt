@@ -35,7 +35,9 @@ class PersonRepository : PanacheRepository<Person> {
     }
 
     fun finnPerson(person: Person): Person? =
-        find("email=?1", person.email).firstResultOptional<Person>()
+        find("email=?1", person.email)
+            .firstResultOptional<Person>()
+            .filter { it.email != ""}
             .orElseGet { find("telefonnummer=?1", person.telefonnummer).firstResultOptional<Person>().orElse(null) }
 
     fun getPerson(userId: UserId): Person = find("hypersysID", userId.userId).firstResult()
