@@ -35,7 +35,7 @@ class SMSController(val smsService: SMSService) : RingesentralenController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/lagre")
-    @Operation(summary = "Registrer ny SMS som skal sendast ut", description = Roles.systembrukerFrontend)
+    @Operation(summary = "Registrer ny SMS som skal sendast ut", description = Roles.admin)
     @Retry
     @Transactional
     fun registrerSMSForUtsending(@Context ctx: SecurityContext, request: LagreSMSRequest) =
@@ -46,7 +46,7 @@ class SMSController(val smsService: SMSService) : RingesentralenController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/oppdater")
-    @Operation(summary = "Oppdater utsendingsstatus", description = Roles.systembrukerFrontend)
+    @Operation(summary = "Oppdater utsendingsstatus", description = Roles.admin)
     @Retry
     @Transactional
     fun oppdaterUtsendingsstatus(@Context ctx: SecurityContext, request: OppdaterSMSRequest) =
