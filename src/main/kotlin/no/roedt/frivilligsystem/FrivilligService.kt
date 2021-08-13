@@ -86,10 +86,10 @@ class FrivilligService(
             personId = personId,
             alleredeAktivILokallag = request.alleredeAktivILokallag,
             medlemIRoedt = request.medlemIRoedt,
-            spesiellKompetanse = request.spesiellKompetanse,
-            andreTingDuVilBidraMed = request.andreTingDuVilBidraMed,
-            spraak = request.spraak,
-            fortellLittOmDegSelv = request.fortellLittOmDegSelv,
+            spesiellKompetanse = Emojifjerner.fjernEmojis(request.spesiellKompetanse),
+            andreTingDuVilBidraMed = Emojifjerner.fjernEmojis(request.andreTingDuVilBidraMed),
+            spraak = Emojifjerner.fjernEmojis(request.spraak),
+            fortellLittOmDegSelv = Emojifjerner.fjernEmojis(request.fortellLittOmDegSelv),
             registrertTidspunkt = request.tidspunkt ?: Instant.now()
         )
         frivilligRepository.persist(frivillig)
@@ -101,10 +101,10 @@ class FrivilligService(
         frivilligKoronaRepository.persist(
             FrivilligKorona(
                 frivillig_id = frivillig.id,
-                haandtering = request.haandtering,
+                haandtering = Emojifjerner.fjernEmojis(request.haandtering) ?: "",
                 personlig = request.personlig,
-                tydelig = request.tydelig,
-                forslag = request.forslag
+                tydelig = Emojifjerner.fjernEmojis(request.tydelig) ?: "",
+                forslag = Emojifjerner.fjernEmojis(request.forslag) ?: ""
             )
         )
 

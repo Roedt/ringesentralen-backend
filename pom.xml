@@ -163,6 +163,11 @@
       <artifactId>quarkus-google-cloud-storage</artifactId>
       <version>${googleCloudServicesVersion}</version>
     </dependency>
+    <dependency>
+      <groupId>com.vdurmont</groupId>
+      <artifactId>emoji-java</artifactId>
+      <version>4.0.0</version>
+    </dependency>
   </dependencies>
   <build>
     <sourceDirectory>src/main/kotlin</sourceDirectory>
