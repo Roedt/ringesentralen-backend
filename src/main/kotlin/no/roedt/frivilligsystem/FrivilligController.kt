@@ -115,7 +115,7 @@ class FrivilligController(
         "frivillig-import"
     )
 
-    @RolesAllowed(Roles.admin)
+    @RolesAllowed(Roles.systembrukerFrontend)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
