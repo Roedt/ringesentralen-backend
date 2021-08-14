@@ -30,6 +30,24 @@ class EpostSender(var mailer: Mailer) {
         )
     }
 
+    fun sendEpostOmRegistrertSoMeFrivillig(person: Person) {
+        sendEpost(
+            person,
+            Epost(
+                tekst = """Hei, ${person.fornavn} ${person.etternavn}. 
+                    Vi har nå registrert at du vil hjelpe Rødt å spre vårt politiske budskap i sosiale medier fram mot valget.
+                   ${System.lineSeparator()}
+                   Er dette feil? Kontakt oss på roedt@roedt.no, så fikser vi det.
+                   ${System.lineSeparator()}
+                   Dette er ein automatisk utsendt e-post.
+                """.trimMargin(),
+                loggFoerSendingTekst = "${person.fornavn} ${person.etternavn} er registrert som SoMe-frivillig",
+                tekstAaLoggeHvisDeaktivert =  "$person er registrert som SoMe-frivillig",
+                tittel = "Du er nå registrert som sosiale media-aktivist"
+            )
+        )
+    }
+
     private fun sendEpost(
         person: Person,
         epost: Epost

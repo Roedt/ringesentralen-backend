@@ -10,6 +10,8 @@ import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.SoMeFrivilligRequest
 import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.Roles
+import no.roedt.ringesentralen.brukere.EpostSender
+import no.roedt.ringesentralen.person.PersonRepository
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
@@ -32,7 +34,12 @@ import javax.ws.rs.core.SecurityContext
 @Path("/frivillig")
 @Tag(name = "Frivilligsystem")
 @SecurityRequirement(name = "jwt")
-class FrivilligController(val frivilligService: FrivilligService, val frivilligImporter: FrivilligImporter) :
+class FrivilligController(
+    val frivilligService: FrivilligService,
+    val frivilligImporter: FrivilligImporter,
+    val epostSender: EpostSender,
+    val personRepository: PersonRepository
+    ) :
     RingesentralenController {
 
     @Inject
@@ -108,7 +115,7 @@ class FrivilligController(val frivilligService: FrivilligService, val frivilligI
         "frivillig-import"
     )
 
-    @RolesAllowed(Roles.systembrukerFrontend)
+    @RolesAllowed(Roles.admin)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -128,7 +135,14 @@ class FrivilligController(val frivilligService: FrivilligService, val frivilligI
                 )
             )
             return if (!frivillig.first) Response.noContent().build()
-            else Response.created(URI.create(frivillig.second.id.toString())).entity(frivillig.second).build()
+            else {
+                try {
+                    epostSender.sendEpostOmRegistrertSoMeFrivillig(personRepository.findById(frivillig.second.personId.toLong()))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                Response.created(URI.create(frivillig.second.id.toString())).entity(frivillig.second).build()
+            }
         } catch (e: java.lang.RuntimeException) {
             e.printStackTrace()
             System.err.println(request)
