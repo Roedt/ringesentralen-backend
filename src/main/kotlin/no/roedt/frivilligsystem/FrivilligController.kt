@@ -15,6 +15,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
+import java.net.URI
 import javax.annotation.security.RolesAllowed
 import javax.inject.Inject
 import javax.transaction.Transactional
@@ -25,6 +26,7 @@ import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.Response
 import javax.ws.rs.core.SecurityContext
 
 @Path("/frivillig")
@@ -74,7 +76,7 @@ class FrivilligController(val frivilligService: FrivilligService, val frivilligI
                     userId = ctx.userId(),
                     request = registrerNyFrivilligRequest
                 )
-            )
+            ).second
         } catch (e: java.lang.NullPointerException) {
             e.printStackTrace()
             System.err.println(registrerNyFrivilligRequest)
@@ -117,17 +119,20 @@ class FrivilligController(val frivilligService: FrivilligService, val frivilligI
     fun soMeFrivilligregistrering(
         @Context ctx: SecurityContext,
         request: SoMeFrivilligRequest
-    ): Frivillig =
+    ): Response {
         try {
-            frivilligService.registrerNySoMeFrivillig(
+            val frivillig = frivilligService.registrerNySoMeFrivillig(
                 AutentisertSoMeFrivilligRequest(
                     userId = ctx.userId(),
                     request = request
                 )
             )
+            return if (!frivillig.first) Response.noContent().build()
+            else Response.created(URI.create(frivillig.second.id.toString())).entity(frivillig.second).build()
         } catch (e: java.lang.RuntimeException) {
             e.printStackTrace()
             System.err.println(request)
             throw e
         }
+    }
 }

@@ -74,13 +74,13 @@ class FrivilligService(
             .map { frivilligRepository.findById(it) }
     }
 
-    fun registrerNyFrivillig(autentisertRequest: AutentisertRegistrerNyFrivilligRequest): Frivillig {
+    fun registrerNyFrivillig(autentisertRequest: AutentisertRegistrerNyFrivilligRequest): Pair<Boolean, Frivillig> {
         val request = autentisertRequest.request
         val person = request.toPerson()
         val id = personRepository.save(person)
         val personId = person.id?.toInt() ?: id.toInt()
         if (frivilligRepository.count("personId", personId) > 0L) {
-            return frivilligRepository.find("personId", personId).firstResult()
+            return Pair(false, frivilligRepository.find("personId", personId).firstResult())
         }
         val frivillig = Frivillig(
             personId = personId,
@@ -108,7 +108,7 @@ class FrivilligService(
             )
         )
 
-        return frivillig
+        return Pair(true, frivillig)
     }
 
     private fun lagreOpptattAv(
@@ -160,7 +160,7 @@ class FrivilligService(
     fun hentAlleForAktivitet(userId: UserId, groups: Set<String>, aktivitet: Aktivitet) = hentAlle(userId, groups)
         .filter { frivillig -> frivillig.aktiviteter.map { it.aktivitet }.contains(aktivitet) }
 
-    fun registrerNySoMeFrivillig(autentisertSoMeFrivilligRequest: AutentisertSoMeFrivilligRequest): Frivillig =
+    fun registrerNySoMeFrivillig(autentisertSoMeFrivilligRequest: AutentisertSoMeFrivilligRequest): Pair<Boolean, Frivillig> =
         registrerNyFrivillig(
             AutentisertRegistrerNyFrivilligRequest(
                 userId = autentisertSoMeFrivilligRequest.userId,
