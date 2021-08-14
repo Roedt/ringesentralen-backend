@@ -93,7 +93,7 @@ class BrukereServiceBean(
 
     private fun sendEpost(person: Person, nyTilgang: GroupID, brukerendring: Brukerendring) {
         try {
-            epostSender.sendEpost(person, nyTilgang)
+            epostSender.sendEpostOmEndraStatus(person, nyTilgang)
             brukerendring.epostSendt = true
         } catch (e: Exception) {
             e.printStackTrace()

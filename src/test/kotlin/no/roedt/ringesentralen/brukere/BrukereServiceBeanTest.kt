@@ -68,7 +68,7 @@ internal class BrukereServiceBeanTest {
         assertTrue { brukerendring.epostSendt }
         verify(personRepository).update(any(), eq(GroupID.GodkjentRinger.nr), eq(2L))
         verify(hypersysService).hentFraMedlemslista(3)
-        verify(epostSender).sendEpost(person = eq(ringt), nyTilgang = eq(GroupID.GodkjentRinger))
+        verify(epostSender).sendEpostOmEndraStatus(person = eq(ringt), nyTilgang = eq(GroupID.GodkjentRinger))
     }
 
     @Test

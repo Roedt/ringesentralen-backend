@@ -15,24 +15,38 @@ class EpostSender(var mailer: Mailer) {
     @ConfigProperty(name = "quarkus.mailer.mock")
     lateinit var mock: String
 
-    fun sendEpost(person: Person, nyTilgang: GroupID) {
+    fun sendEpostOmEndraStatus(person: Person, nyTilgang: GroupID) {
+        sendEpost(
+            person,
+            Epost(
+                tekst = "Hei, ${person.fornavn} ${person.etternavn}. " +
+                        "Du har no fått endra status i Raudts Ringesentral." + System.lineSeparator() +
+                        "Din nye status er: ${nyTilgang.skildring}" + System.lineSeparator().repeat(3) +
+                        "Dette er ein automatisk utsendt e-post.",
+                tekstAaLoggeHvisDeaktivert = "${nyTilgang.name} til ${person.id}",
+                loggFoerSendingTekst = "Person med id ${person.id} har no fått ${nyTilgang.name}",
+                tittel = "E-post frå Raudts Ringesentral"
+            )
+        )
+    }
+
+    private fun sendEpost(
+        person: Person,
+        epost: Epost
+    ) {
         if (person.email == null) {
             return
         }
-        val eposttekst = "Hei, ${person.fornavn} ${person.etternavn}. " +
-            "Du har no fått endra status i Raudts Ringesentral." + System.lineSeparator() +
-            "Din nye status er: ${nyTilgang.skildring}" + System.lineSeparator().repeat(3) +
-            "Dette er ein automatisk utsendt e-post."
         if (mock.toBoolean()) {
-            println("Epostutsending er avskrudd. Ville elles sendt ${nyTilgang.name} til ${person.id}")
+            println("Epostutsending er avskrudd. Ville elles sendt ${epost.tekstAaLoggeHvisDeaktivert}")
             return
         }
-        println("Sender epost: Person med id ${person.id} har no fått ${nyTilgang.name}")
+        println("Sender epost: ${epost.loggFoerSendingTekst}")
         mailer.send(
             Mail.withText(
                 "${person.email}",
-                "E-post frå Raudts Ringesentral",
-                eposttekst
+                epost.tittel,
+                epost.tekst
             )
         )
     }
