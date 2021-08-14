@@ -52,7 +52,7 @@ class EpostSender(var mailer: Mailer) {
         person: Person,
         epost: Epost
     ) {
-        if (person.email == null) {
+        if (person.email == null || person.email == "") {
             return
         }
         if (mock.toBoolean()) {
