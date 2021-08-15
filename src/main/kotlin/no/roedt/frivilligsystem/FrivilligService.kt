@@ -172,7 +172,7 @@ class FrivilligService(
                     postnummer = autentisertSoMeFrivilligRequest.request.postnummer,
                     alleredeAktivILokallag = false,
                     andreTingDuVilBidraMed = "Meldte seg direkte som SoMe-frivillig",
-                    epost = "",
+                    epost = autentisertSoMeFrivilligRequest.request.email ?: "",
                     forslag = "",
                     fortellLittOmDegSelv = "Meldte seg direkte som SoMe-frivillig",
                     haandtering = "",
