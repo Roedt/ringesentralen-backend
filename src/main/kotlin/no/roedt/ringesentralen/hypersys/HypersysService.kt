@@ -30,6 +30,7 @@ class HypersysServiceBean(
     }
 
     override fun convertToHypersysLokallagId(lokallag: Int): Int? {
+        if (lokallag == -1) return null
         val hypersysId = lokallagRepository.findById(lokallag.toLong())
             ?.let { mittLag ->
                 if (mittLag.hypersysID != null) mittLag.hypersysID!! else getLokallagIdFromHypersys(
