@@ -20,7 +20,6 @@ import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.SecurityContext
 
-
 @Path("/sms")
 @Tag(name = "SMS")
 @SecurityRequirement(name = "jwt")
@@ -51,5 +50,4 @@ class SMSController(val smsService: SMSService) : RingesentralenController {
     @Transactional
     fun oppdaterUtsendingsstatus(@Context ctx: SecurityContext, request: OppdaterSMSRequest) =
         smsService.oppdaterUtsendingsstatus(AutentisertOppdaterSMSRequest(userId = ctx.userId(), request = request))
-
 }

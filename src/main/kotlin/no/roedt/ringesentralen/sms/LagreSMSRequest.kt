@@ -4,7 +4,7 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.ringesentralen.person.UserId
 
 @RegisterForReflection
-data class LagreSMSRequest (
+data class LagreSMSRequest(
     val tekst: String,
     val mottakere: List<Long>
 )

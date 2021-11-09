@@ -20,9 +20,9 @@ class EpostSender(var mailer: Mailer) {
             person,
             Epost(
                 tekst = "Hei, ${person.fornavn} ${person.etternavn}. " +
-                        "Du har no fått endra status i Raudts Ringesentral." + System.lineSeparator() +
-                        "Din nye status er: ${nyTilgang.skildring}" + System.lineSeparator().repeat(3) +
-                        "Dette er ein automatisk utsendt e-post.",
+                    "Du har no fått endra status i Raudts Ringesentral." + System.lineSeparator() +
+                    "Din nye status er: ${nyTilgang.skildring}" + System.lineSeparator().repeat(3) +
+                    "Dette er ein automatisk utsendt e-post.",
                 tekstAaLoggeHvisDeaktivert = "${nyTilgang.name} til ${person.id}",
                 loggFoerSendingTekst = "Person med id ${person.id} har no fått ${nyTilgang.name}",
                 tittel = "E-post frå Raudts Ringesentral"
@@ -42,7 +42,7 @@ class EpostSender(var mailer: Mailer) {
                    Dette er ein automatisk utsendt e-post.
                 """.trimMargin(),
                 loggFoerSendingTekst = "${person.fornavn} ${person.etternavn} er registrert som SoMe-frivillig",
-                tekstAaLoggeHvisDeaktivert =  "$person er registrert som SoMe-frivillig",
+                tekstAaLoggeHvisDeaktivert = "$person er registrert som SoMe-frivillig",
                 tittel = "Du er nå registrert som sosiale media-aktivist"
             )
         )

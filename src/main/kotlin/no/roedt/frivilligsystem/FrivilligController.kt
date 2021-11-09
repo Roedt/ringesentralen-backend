@@ -39,7 +39,7 @@ class FrivilligController(
     val frivilligImporter: FrivilligImporter,
     val epostSender: EpostSender,
     val personRepository: PersonRepository
-    ) :
+) :
     RingesentralenController {
 
     @Inject

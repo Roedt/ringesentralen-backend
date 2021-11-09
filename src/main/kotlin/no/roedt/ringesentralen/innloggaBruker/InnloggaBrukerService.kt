@@ -19,7 +19,7 @@ class InnloggaBrukerService(
 ) {
     fun getProfil(userId: UserId): Profil? = getPerson(userId).map { it.toProfil() }.orElse(null)
 
-    private fun getPerson(userId: UserId) : Optional<Person> =
+    private fun getPerson(userId: UserId): Optional<Person> =
         personRepository.find("hypersysID", userId.userId).firstResultOptional()
 
     private fun Person.toProfil(): Profil = Profil(
@@ -38,7 +38,11 @@ class InnloggaBrukerService(
 
     fun getLokallag(userId: UserId, groups: Set<String>): List<Lokallag> = when {
         groups.contains(Roles.admin) -> lokallagRepository.findAll().list()
-        groups.contains(Roles.godkjenner) -> lokallagRepository.fromFylke(fylkeRepository.getFylkeIdFraLokallag(getPerson(userId).get().lokallag))
+        groups.contains(Roles.godkjenner) -> lokallagRepository.fromFylke(
+            fylkeRepository.getFylkeIdFraLokallag(
+                getPerson(userId).get().lokallag
+            )
+        )
         getProfil(userId) == null -> listOf()
         else -> listOf(lokallagRepository.findById(getPerson(userId).get().lokallag.toLong()))
     }

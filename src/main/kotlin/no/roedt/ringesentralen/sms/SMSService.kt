@@ -37,5 +37,4 @@ class SMSService(
             smsTilMottakerRepository.update("utsendingsstatus=?1 where mottaker_id=?2 and sms_id=?3", innerRequest.status, it, innerRequest.smsId)
         }
     }
-
 }
