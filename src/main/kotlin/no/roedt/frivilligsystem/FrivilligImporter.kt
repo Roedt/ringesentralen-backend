@@ -34,7 +34,7 @@ class FrivilligImporter(
     fun getStorage() {
         storage = StorageOptions.newBuilder()
             .setCredentials(GoogleCredentials.getApplicationDefault())
-            .setProjectId(gcpConfiguration.projectId.get())
+            .setProjectId(gcpConfiguration.projectId)
             .build().service
     }
 
