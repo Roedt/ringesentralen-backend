@@ -5,7 +5,6 @@ import com.google.cloud.storage.Blob
 import com.google.cloud.storage.Bucket
 import com.google.cloud.storage.Storage
 import com.google.cloud.storage.StorageOptions
-import io.quarkiverse.googlecloudservices.common.GcpConfiguration
 import no.roedt.frivilligsystem.registrer.Aktivitet
 import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.ErMedlemStatus
@@ -24,8 +23,7 @@ import javax.enterprise.context.Dependent
 
 @Dependent
 class FrivilligImporter(
-    private val frivilligService: FrivilligService,
-    private val gcpConfiguration: GcpConfiguration
+    private val frivilligService: FrivilligService
 ) {
 
     lateinit var storage: Storage
@@ -34,7 +32,6 @@ class FrivilligImporter(
     fun getStorage() {
         storage = StorageOptions.newBuilder()
             .setCredentials(GoogleCredentials.getApplicationDefault())
-            .setProjectId(gcpConfiguration.projectId)
             .build().service
     }
 
