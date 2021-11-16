@@ -16,7 +16,7 @@
     <quarkus.version>1.13.7.Final</quarkus.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
     <poi.version>5.0.0</poi.version>
-    <googleCloudServicesVersion>0.7.0</googleCloudServicesVersion>
+    <googleCloudServicesVersion>0.8.0</googleCloudServicesVersion>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -45,7 +45,27 @@
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-core</artifactId>
-        <version>1.94.0</version>
+        <version>1.96.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api</groupId>
+        <artifactId>gax</artifactId>
+        <version>2.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.auto.value</groupId>
+        <artifactId>auto-value-annotations</artifactId>
+        <version>1.8.2</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api.grpc</groupId>
+        <artifactId>proto-google-iam-v1</artifactId>
+        <version>1.0.14</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java-util</artifactId>
+        <version>3.17.3</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
