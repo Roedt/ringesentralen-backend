@@ -1,5 +1,5 @@
 # Step 1: build the native image
-FROM ghcr.io/graalvm/graalvm-ce:java11-21.0.0 as graalvm
+FROM ghcr.io/graalvm/graalvm-ce:java11-21 as graalvm
 COPY . /home/app
 WORKDIR /home/app
 
