@@ -8,6 +8,7 @@ import no.roedt.ringesentralen.person.Ringer
 import no.roedt.ringesentralen.person.RingerRepository
 import no.roedt.ringesentralen.samtale.PersistentSamtale
 import no.roedt.ringesentralen.samtale.PersistentSamtaleRepository
+import no.roedt.ringesentralen.samtale.Ringesesjon
 import javax.enterprise.context.Dependent
 
 @Dependent
@@ -31,6 +32,7 @@ class TelefonsvarerService(
                 ringt = person.id.toInt(),
                 ringer = ringerRepository.find("personId", systembruker.id.toInt()).firstResult<Ringer>().id.toInt(),
                 kommentar = "Resultat frå telefonsvar",
+                ringesesjon = Ringesesjon.Ringing2022.id,
                 resultat = request.resultat().nr,
                 modus = if (person.hypersysID != null) Modus.medlemmer else Modus.velgere
             )

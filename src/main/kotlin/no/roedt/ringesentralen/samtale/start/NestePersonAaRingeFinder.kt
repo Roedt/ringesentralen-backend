@@ -62,6 +62,7 @@ class NestePersonAaRingeFinder(
                 WHERE fylke = ${ringer.fylke} 
                 AND hypersysID is null 
                 ORDER BY ABS(lokallag-'$lokallag') ASC, 
+                hypersysID DESC,
                 brukergruppe = ${GroupID.PrioritertAaRinge.nr} DESC,
                 sisteSamtale ASC,
                 v.hypersysID DESC"""

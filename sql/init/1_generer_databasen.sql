@@ -6236,6 +6236,16 @@ CREATE TABLE IF NOT EXISTS `godkjenning` (
   INDEX(`nyGroupId`),
   FOREIGN KEY (`nyGroupId`) REFERENCES `brukergruppe` (`id`)
 );
+-- --------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `ringesesjon` (
+  `id` int(6) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `tekst` varchar(2048) NOT NULL
+);
+
+INSERT INTO `ringesesjon` (id, tekst) VALUES
+(1, 'Valkamp 2021'),
+(2, 'Ringing 2022');
 
 -- --------------------------------------------------------
 
@@ -6246,6 +6256,7 @@ CREATE TABLE IF NOT EXISTS `samtale` (
   `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `resultat` int(1) NOT NULL DEFAULT '0',
   `kommentar` longtext NULL,
+  `ringesesjon` int(6) NOT NULL,
   `modus` varchar(20) NOT NULL,
   INDEX (`resultat`),
   FOREIGN KEY (`resultat`) REFERENCES `resultat` (`id`),
@@ -6253,6 +6264,8 @@ CREATE TABLE IF NOT EXISTS `samtale` (
   FOREIGN KEY (`ringt`) REFERENCES `person` (`id`),
   INDEX(`ringer`),
   FOREIGN KEY (`ringer`) REFERENCES `ringer` (`id`)
+  INDEX(`ringesesjon`),
+  FOREIGN KEY (`ringesesjon`) REFERENCES `ringesesjon` (`id`)
 );
 
 -- --------------------------------------------------------
@@ -6522,9 +6535,9 @@ CREATE TABLE IF NOT EXISTS `smsTilMottaker` (
 
 -- --------------------------------------------------------
 
-INSERT INTO `frivillig` (personId, alleredeAktivILokallag, medlemIRoedt, spesiellKompetanse, andreTingDuVilBidraMed, fortellLittOmDegSelv) VALUES
-((SELECT id from person where fornavn='Aster' and etternavn='Ix'), true, 'ja', 'rask og effektiv', 'bidrar med alt mogleg', 'frå Gallia'),
-((SELECT id from person where fornavn='Obel' and etternavn='Ix'), true, 'Vilbli', 'stor og sterk', 'rydde veg', 'også frå Gallia');
+INSERT INTO `frivillig` (personId, registrertTidspunkt, alleredeAktivILokallag, medlemIRoedt, spesiellKompetanse, andreTingDuVilBidraMed, fortellLittOmDegSelv) VALUES
+((SELECT id from person where fornavn='Aster' and etternavn='ix'), '2022-03-06 14:59:38', true, 'ja', 'rask og effektiv', 'bidrar med alt mogleg', 'frå Gallia'),
+((SELECT id from person where fornavn='Obel' and etternavn='ix'), '2022-03-06 14:59:38', true, 'Vilbli', 'stor og sterk', 'rydde veg', 'også frå Gallia');
 
 INSERT INTO `aktivitetForFrivillig` (frivillig_id, aktivitet) VALUES
 ((SELECT id from frivillig where spesiellKompetanse='rask og effektiv'), 'Ringing'),

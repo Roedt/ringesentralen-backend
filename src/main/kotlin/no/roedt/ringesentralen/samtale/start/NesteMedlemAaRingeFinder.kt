@@ -44,6 +44,7 @@ open class NesteMedlemAaRingeFinder(
                 WHERE fylke = ${ringer.fylke} 
                 AND lokallag=$lokallag AND hypersysID is not null 
                 ORDER BY ABS(lokallag-'${ringer.lokallag}') ASC,
+                hypersysID DESC,
                 sisteSamtale ASC,
                 v.hypersysID DESC"""
     )

@@ -17,6 +17,7 @@ data class PersistentSamtale(
     var ringt: Int,
     var ringer: Int,
     var resultat: Int,
+    var ringesesjon: Int,
     var kommentar: String?,
     @Enumerated(EnumType.STRING) var modus: Modus
 ) : PanacheEntity() {
@@ -24,6 +25,7 @@ data class PersistentSamtale(
         ringt = 0,
         ringer = 0,
         resultat = 0,
+        ringesesjon = 0,
         kommentar = null,
         modus = Modus.velgere
     )
