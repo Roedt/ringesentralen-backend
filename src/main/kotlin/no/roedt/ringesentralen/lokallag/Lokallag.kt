@@ -4,6 +4,7 @@ import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.RingesentralenPanacheEntity
 import no.roedt.ringesentralen.DatabaseUpdater
+import java.time.Instant
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
 import javax.persistence.Entity
@@ -16,12 +17,14 @@ import javax.persistence.Table
 data class Lokallag(
     var navn: String,
     var hypersysID: Int?,
-    var fylke: Int
+    var fylke: Int,
+    var sistOppdatert: Instant?
 ) : RingesentralenPanacheEntity() {
     constructor() : this(
         navn = "",
         hypersysID = 0,
-        fylke = 0
+        fylke = 0,
+        sistOppdatert = Instant.now()
     )
 }
 

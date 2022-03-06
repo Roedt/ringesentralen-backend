@@ -60,7 +60,8 @@ CREATE TABLE IF NOT EXISTS `lokallag` (
   `id` int(3) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `navn` varchar(100) NOT NULL UNIQUE,
   `hypersysID` int NULL UNIQUE,
-  `fylke` int(2) DEFAULT NULL
+  `fylke` int(2) DEFAULT NULL,
+  `sistOppdatert` datetime
 );
 
 insert into `lokallag` (`id`, `navn`, `fylke`) values (-1, 'Udefinert', -1);

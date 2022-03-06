@@ -3,9 +3,13 @@ package no.roedt.ringesentralen.samtale.start
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.KommuneRepository
 import no.roedt.ringesentralen.hypersys.HypersysService
-import no.roedt.ringesentralen.hypersys.ModelConverter
+import no.roedt.ringesentralen.lokallag.Lokallag
+import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import javax.enterprise.context.Dependent
 
 @Dependent
@@ -13,8 +17,8 @@ open class NesteMedlemAaRingeFinder(
     val personRepository: PersonRepository,
     val databaseUpdater: DatabaseUpdater,
     private val hypersysService: HypersysService,
-    private val modelConverter: ModelConverter,
-    private val kommuneRepository: KommuneRepository
+    private val kommuneRepository: KommuneRepository,
+    private val lokallagRepository: LokallagRepository
 ) {
 
     fun hentIDForNesteMedlemAaRinge(ringer: Person, lokallag: Int): Int? =
@@ -24,20 +28,27 @@ open class NesteMedlemAaRingeFinder(
             .firstOrNull { hentNestePersonAaRingeIDetteLokallaget(ringer, it) != null }
 
     private fun hentNestePersonAaRingeIDetteLokallaget(ringer: Person, lokallag: Int): Int? {
+        val oppdaterteLokallag = oppdaterMedlemsliste(lokallag)
+
         val nestePersonFraDatabasen = hentNestePerson(ringer, lokallag)
         if (nestePersonFraDatabasen != null) return nestePersonFraDatabasen
 
-        hentMedlemmerFraLokallag(hypersysService.convertToHypersysLokallagId(lokallag))
+        oppdaterteLokallag.forEach { lokallagRepository.persist(it) }
+        hypersysService.oppdaterMedlemmerILokallag(lokallag)
 
         return hentNestePerson(ringer, lokallag)
     }
 
-    private fun hentMedlemmerFraLokallag(hypersysLokallagId: Int?) =
-        hypersysService.getMedlemmer(hypersysLokallagId)
-            .filter { medlem -> personRepository.find("hypersysID", medlem["member_id"]).count() == 0L }
-            .map { modelConverter.convertMembershipToPerson(it) }
-            .filter { it.telefonnummer != null }
-            .forEach { personRepository.save(it) }
+    private fun oppdaterMedlemsliste(lokallagID: Int): Set<Lokallag> {
+        val lokallag = lokallagRepository.findById(lokallagID)
+        val sistOppdatert = lokallag.sistOppdatert?.atZone(ZoneId.of("UTC"))
+        if (sistOppdatert?.isBefore(ZonedDateTime.now().minusDays(7)) == true || sistOppdatert == null) {
+            hypersysService.oppdaterMedlemmerILokallag(lokallagID)
+            lokallag.sistOppdatert = Instant.now()
+            return setOf(lokallag)
+        }
+        return setOf()
+    }
 
     private fun hentNestePerson(ringer: Person, lokallag: Int) = databaseUpdater.getResultList(
         """SELECT v.id FROM v_personerSomKanRinges v
