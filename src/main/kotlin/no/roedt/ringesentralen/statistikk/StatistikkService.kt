@@ -83,7 +83,8 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
                 INNER JOIN person ringerPerson on ringerPerson.id=ringer.personId 
                 WHERE ringerPerson.hypersysID=$hypersysId 
                 and samtale.resultat != ${Resultat.Samtale_startet.nr} 
-                and samtale.ringt != ringerPerson.id"""
+                and samtale.ringt != ringerPerson.id
+        """
     ).size
 
     private fun personSomHarRingtFlest(): Int = get(
@@ -104,7 +105,8 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
                 INNER JOIN person ringerPerson on ringerPerson.id=ringer.personId            
                 WHERE ringerPerson.lokallag=(select lokallag from person where hypersysID=$hypersysId) 
                 and samtale.resultat != ${Resultat.Samtale_startet.nr} 
-                and samtale.ringt != ringerPerson.id"""
+                and samtale.ringt != ringerPerson.id
+            """
         ).size
 
     private fun antallRingereILaget(hypersysId: Int): Int =

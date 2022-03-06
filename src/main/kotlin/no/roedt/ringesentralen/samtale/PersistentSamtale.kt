@@ -1,10 +1,11 @@
 package no.roedt.ringesentralen.samtale
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity
-import io.quarkus.hibernate.orm.panache.PanacheRepository
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
+import no.roedt.RingesentralenPanacheEntity
 import no.roedt.ringesentralen.Modus
 import javax.enterprise.context.ApplicationScoped
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
@@ -18,9 +19,10 @@ data class PersistentSamtale(
     var ringer: Int,
     var resultat: Int,
     var ringesesjon: Int,
+    @Column(columnDefinition = "longtext")
     var kommentar: String?,
     @Enumerated(EnumType.STRING) var modus: Modus
-) : PanacheEntity() {
+) : RingesentralenPanacheEntity() {
     constructor() : this(
         ringt = 0,
         ringer = 0,
@@ -32,4 +34,4 @@ data class PersistentSamtale(
 }
 
 @ApplicationScoped
-class PersistentSamtaleRepository : PanacheRepository<PersistentSamtale>
+class PersistentSamtaleRepository : PanacheRepositoryBase<PersistentSamtale, Int>

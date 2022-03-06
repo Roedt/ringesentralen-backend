@@ -1,17 +1,18 @@
 package no.roedt.ringesentralen.person
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import no.roedt.ringesentralen.Kilde
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
-class PersonRepository : PanacheRepository<Person> {
+class PersonRepository : PanacheRepositoryBase<Person, Int> {
 
     fun save(person: Person): Long {
         val eksisterendePerson: Person? = finnPerson(person)
         if (eksisterendePerson != null) {
             val telefonnummer = person.telefonnummer?.let { "'$it'" }
-            val kilde = if (person.kilde == Kilde.Hypersys || person.kilde == Kilde.Frivillig) ", kilde='${person.kilde}'" else ""
+            val kilde =
+                if (person.kilde == Kilde.Hypersys || person.kilde == Kilde.Frivillig) ", kilde='${person.kilde}'" else ""
             val postnummer = if (person.postnummer != -1) "postnummer = ${person.postnummer}," else ""
             val hypersysID = if (person.hypersysID != null) "hypersysID = ${person.hypersysID}, " else ""
             update(
@@ -25,12 +26,12 @@ class PersonRepository : PanacheRepository<Person> {
                         email = '${person.email}'
                         $kilde
                         where id=${eksisterendePerson.id}
-                        """
+                """
             )
-            return eksisterendePerson.id
+            return eksisterendePerson.id.toLong()
         } else {
             persist(person)
-            return person.id
+            return person.id.toLong()
         }
     }
 

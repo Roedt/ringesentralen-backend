@@ -49,7 +49,7 @@ class BrukereServiceBean(
     }
 
     private fun toBrukerinformasjon(r: Person) = Brukerinformasjon(
-        id = r.id,
+        id = r.id.toLong(),
         fornavn = r.fornavn,
         etternavn = r.etternavn,
         telefonnummer = r.telefonnummer,
@@ -57,7 +57,7 @@ class BrukereServiceBean(
         fylke = fylkeRepository.findById(r.fylke),
         epost = r.email ?: "",
         hypersysID = r.hypersysID ?: -1,
-        lokallag = lokallagRepository.findById(r.lokallag.toLong()),
+        lokallag = lokallagRepository.findById(r.lokallag),
         rolle = GroupID.from(r.groupID()).roller,
         registreringstidspunkt = ringerRepository.find("personId", r.id.toInt()).firstResult<Ringer>().oppretta
     )

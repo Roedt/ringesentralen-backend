@@ -33,7 +33,7 @@ class InnloggaBrukerService(
         lokallag = lokallag,
         rolle = GroupID.from(groupID()).roller,
         fylkeNavn = fylkeRepository.findById(fylke).navn,
-        lokallagNavn = lokallagRepository.findById(lokallag.toLong()).navn
+        lokallagNavn = lokallagRepository.findById(lokallag).navn
     )
 
     fun getLokallag(userId: UserId, groups: Set<String>): List<Lokallag> = when {
@@ -44,6 +44,6 @@ class InnloggaBrukerService(
             )
         )
         getProfil(userId) == null -> listOf()
-        else -> listOf(lokallagRepository.findById(getPerson(userId).get().lokallag.toLong()))
+        else -> listOf(lokallagRepository.findById(getPerson(userId).get().lokallag))
     }
 }

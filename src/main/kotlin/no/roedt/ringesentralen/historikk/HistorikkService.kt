@@ -33,7 +33,7 @@ class HistorikkService(
                     kommentar = (it[3] ?: "") as String,
                     ringtNummer = (it[4] ?: "Ukjent") as String,
                     ringtNavn = it[5] as String,
-                    oppfoelging = it[6]?.toString()?.let { i -> if (i != "null") oppfoelgingValg21Repository.findById(i.toLong()) else null }
+                    oppfoelging = it[6]?.toString()?.let { i -> if (i != "null") oppfoelgingValg21Repository.findById(i.toInt()) else null }
                 )
             }
     }

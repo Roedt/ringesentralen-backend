@@ -66,7 +66,7 @@ class RingServiceBean(
             modus = autentisertRequest.modus
         )
         samtaleRepository.persist(persistentSamtale)
-        lagreResultat(persistentSamtale.id, getNesteGroupID(request), request)
+        lagreResultat(persistentSamtale.id.toLong(), getNesteGroupID(request), request)
     }
 
     private fun getNesteGroupID(request: ResultatFraSamtaleRequest): GroupID? = when {
@@ -81,14 +81,13 @@ class RingServiceBean(
             registrerValg21SpesifikkeResultat(samtaleId, request)
         }
         if (isBrukerEllerVenterPaaGodkjenning(request.ringtID.toInt())) return
-        nesteGroupID?.nr?.let { personRepository.update("groupID=?1 where id=?2", it, request.ringtID) }
+        nesteGroupID?.nr?.let { personRepository.update("groupID=?1 where id=?2", it, request.ringtID.toInt()) }
     }
 
     fun isBrukerEllerVenterPaaGodkjenning(ringer: Int) =
         GroupID.isBrukerEllerVenter(
             ringerRepository.find("personId=?1", ringer).singleResultOptional<Ringer>()
                 .map { it.personId }
-                .map { it.toLong() }
                 .map { personRepository.findById(it) }
                 .map { it.groupID() }
                 .orElse(-1)
@@ -108,7 +107,7 @@ class RingServiceBean(
             AutentisertStartSamtaleRequest(
                 userId = request.userId,
                 startSamtaleRequest = StartSamtaleRequest(
-                    skalRingesID = personSomRingerTilbake.id
+                    skalRingesID = personSomRingerTilbake.id.toLong()
                 ),
                 modus = modus
             )
@@ -119,7 +118,7 @@ class RingServiceBean(
     private fun toResponse(it: Person) =
         NestePersonAaRingeResponse(
             person = it,
-            lokallagNavn = lokallagRepository.findById(it.lokallag.toLong()).navn,
+            lokallagNavn = lokallagRepository.findById(it.lokallag).navn,
             tidlegareSamtalar = nestePersonAaRingeFinder.getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1")
         )
 

@@ -1,8 +1,8 @@
 package no.roedt.ringesentralen.lokallag
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity
-import io.quarkus.hibernate.orm.panache.PanacheRepository
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
+import no.roedt.RingesentralenPanacheEntity
 import no.roedt.ringesentralen.DatabaseUpdater
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
@@ -17,7 +17,7 @@ data class Lokallag(
     var navn: String,
     var hypersysID: Int?,
     var fylke: Int
-) : PanacheEntity() {
+) : RingesentralenPanacheEntity() {
     constructor() : this(
         navn = "",
         hypersysID = 0,
@@ -28,7 +28,7 @@ data class Lokallag(
 @ApplicationScoped
 class LokallagRepository(
     private val databaseUpdater: DatabaseUpdater
-) : PanacheRepository<Lokallag> {
+) : PanacheRepositoryBase<Lokallag, Int> {
 
     fun fromPostnummer(postnummer: Int): Int =
         toLokallagId("select lokallag from postnummerIKommunerMedFleireLag where postnummerFra <= $postnummer and postnummerTil >= $postnummer")

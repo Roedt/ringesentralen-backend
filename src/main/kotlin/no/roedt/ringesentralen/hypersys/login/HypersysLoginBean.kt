@@ -81,7 +81,7 @@ class HypersysLoginBean(
         personRepository.save(convertedPerson)
         var id = convertedPerson.id
         if (id == null) personRepository.find("email", convertedPerson.email).firstResult<Person>().id.also { id = it }
-        return id
+        return id.toLong()
     }
 
     private fun oppdaterBrukergruppeFraV1(convertedPerson: Person) {

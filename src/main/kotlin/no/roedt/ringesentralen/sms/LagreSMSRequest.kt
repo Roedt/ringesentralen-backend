@@ -6,7 +6,7 @@ import no.roedt.ringesentralen.person.UserId
 @RegisterForReflection
 data class LagreSMSRequest(
     val tekst: String,
-    val mottakere: List<Long>
+    val mottakere: List<Int>
 )
 
 @RegisterForReflection

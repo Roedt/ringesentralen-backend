@@ -52,18 +52,18 @@ internal class BrukereServiceBeanTest {
 
         val ringt = Person()
         ringt.hypersysID = 3
-        doReturn(ringt).whenever(personRepository).findById(2L)
+        doReturn(ringt).whenever(personRepository).findById(2)
 
         doReturn(listOf(1L)).whenever(databaseUpdater).getResultList(any())
 
         val brukerendring = brukereService.aktiverRinger(
             AutentisertTilgangsendringRequest(
                 userId = userId,
-                tilgangsendringRequest = TilgangsendringsRequest(personMedEndraTilgang = 2L),
+                tilgangsendringRequest = TilgangsendringsRequest(personMedEndraTilgang = 2),
                 jwt = mock()
             )
         )
-        assertEquals(2L, brukerendring.personID)
+        assertEquals(2, brukerendring.personID)
         assertEquals(GroupID.GodkjentRinger, brukerendring.nyGroupId)
         assertTrue { brukerendring.epostSendt }
         verify(personRepository).update(any(), eq(GroupID.GodkjentRinger.nr), eq(2L))
@@ -78,7 +78,7 @@ internal class BrukereServiceBeanTest {
         val ringt = Person()
         ringt.hypersysID = 3
         ringt.setGroupID(GroupID.Admin)
-        doReturn(ringt).whenever(personRepository).findById(2L)
+        doReturn(ringt).whenever(personRepository).findById(2)
 
         doReturn(listOf(1L)).whenever(databaseUpdater).getResultList(any())
 
@@ -86,7 +86,7 @@ internal class BrukereServiceBeanTest {
             brukereService.aktiverRinger(
                 AutentisertTilgangsendringRequest(
                     userId = userId,
-                    tilgangsendringRequest = TilgangsendringsRequest(personMedEndraTilgang = 2L),
+                    tilgangsendringRequest = TilgangsendringsRequest(personMedEndraTilgang = 2),
                     jwt = mock()
                 )
             )

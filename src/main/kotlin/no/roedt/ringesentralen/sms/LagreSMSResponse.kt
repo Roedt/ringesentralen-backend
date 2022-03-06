@@ -4,5 +4,5 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 
 @RegisterForReflection
 data class LagreSMSResponse(
-    val id: Long
+    val id: Int
 )

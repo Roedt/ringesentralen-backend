@@ -7,7 +7,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 
 @RegisterForReflection
 data class TilgangsendringsRequest(
-    @JsonProperty("personMedEndraTilgang") val personMedEndraTilgang: Long
+    @JsonProperty("personMedEndraTilgang") val personMedEndraTilgang: Int
 )
 
 @RegisterForReflection

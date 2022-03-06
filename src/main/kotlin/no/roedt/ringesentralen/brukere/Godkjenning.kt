@@ -1,8 +1,8 @@
 package no.roedt.ringesentralen.brukere
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity
-import io.quarkus.hibernate.orm.panache.PanacheRepository
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
+import no.roedt.RingesentralenPanacheEntity
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Entity
 import javax.persistence.Table
@@ -14,7 +14,7 @@ data class Godkjenning(
     var godkjenner: Int,
     var godkjentPerson: Int,
     var nyGroupId: Int
-) : PanacheEntity() {
+) : RingesentralenPanacheEntity() {
     constructor() : this(
         godkjenner = 0,
         godkjentPerson = 0,
@@ -23,4 +23,4 @@ data class Godkjenning(
 }
 
 @ApplicationScoped
-class GodkjenningRepository : PanacheRepository<Godkjenning>
+class GodkjenningRepository : PanacheRepositoryBase<Godkjenning, Int>

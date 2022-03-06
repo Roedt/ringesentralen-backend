@@ -28,7 +28,7 @@ class NestePersonAaRingeFinder(
     fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? {
         nyligeOppslagCache.assertAtIngenAndreSoekerIDetteLagetAkkuratNo(request.lokallag)
         return hentNestePersonAaRingeIDenneModusen(request)
-            ?.let { personRepository.findById(it.toLong()) }
+            ?.let { personRepository.findById(it) }
             ?.let { toResponse(it) }
             ?.also { oppslagRepository.persist(Oppslag(ringt = it.person.id.toInt(), ringerHypersysId = request.userId())) }
             ?.also { nyligeOppslagCache.remove(request.lokallag) }
@@ -65,7 +65,8 @@ class NestePersonAaRingeFinder(
                 hypersysID DESC,
                 brukergruppe = ${GroupID.PrioritertAaRinge.nr} DESC,
                 sisteSamtale ASC,
-                v.hypersysID DESC"""
+                v.hypersysID DESC
+        """
     )
         .map { it as Int }
         .firstOrNull()
@@ -73,7 +74,7 @@ class NestePersonAaRingeFinder(
     private fun toResponse(it: Person) =
         NestePersonAaRingeResponse(
             person = it,
-            lokallagNavn = lokallagRepository.findById(it.lokallag.toLong()).navn,
+            lokallagNavn = lokallagRepository.findById(it.lokallag).navn,
             tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1")
         )
 
@@ -88,7 +89,7 @@ class NestePersonAaRingeFinder(
                     kommentar = (it[3] ?: "") as String,
                     ringtNummer = oppringtNummer,
                     ringtNavn = it[4] as String,
-                    oppfoelging = it[5]?.toString()?.let { i -> if (i != "null") oppfoelgingValg21Repository.findById(i.toLong()) else null }
+                    oppfoelging = it[5]?.toString()?.let { i -> if (i != "null") oppfoelgingValg21Repository.findById(i.toInt()) else null }
                 )
             }
             .toList()

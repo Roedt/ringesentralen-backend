@@ -46,7 +46,8 @@ open class NesteMedlemAaRingeFinder(
                 ORDER BY ABS(lokallag-'${ringer.lokallag}') ASC,
                 hypersysID DESC,
                 sisteSamtale ASC,
-                v.hypersysID DESC"""
+                v.hypersysID DESC
+        """
     )
         .map { it as Int }
         .firstOrNull()

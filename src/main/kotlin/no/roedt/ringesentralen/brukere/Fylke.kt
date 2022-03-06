@@ -35,7 +35,7 @@ class FylkeRepository(
     fun getFylke(lokallag: Int, postnummer: Int): Int =
         if (postnummer == -1 && lokallag != -1) getFylkeIdFraLokallag(lokallag) else toFylke(postnummer)
 
-    fun getFylkeIdFraLokallag(lokallag: Int): Int = lokallagRepository.findById(lokallag.toLong()).fylke
+    fun getFylkeIdFraLokallag(lokallag: Int): Int = lokallagRepository.findById(lokallag).fylke
 
     fun toFylke(postnummer: Int): Int =
         databaseUpdater.getResultList(

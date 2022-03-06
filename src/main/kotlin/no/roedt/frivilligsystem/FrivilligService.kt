@@ -37,14 +37,14 @@ class FrivilligService(
 ) {
     fun hentAlle(userId: UserId, roller: Set<String>) =
         hentFrivilligeUtFraMinRolle(roller, personRepository.getPerson(userId))
-            .map { Pair(it, personRepository.findById(it.personId.toLong())) }
+            .map { Pair(it, personRepository.findById(it.personId)) }
             .map {
                 FrivilligResponse(
                     frivillig = it.first,
                     person = it.second,
                     aktiviteter = aktivitetForFrivilligRepository.list("frivillig_id", it.first.id),
                     fylke = fylkeRepository.findById(it.second.fylke),
-                    lokallag = lokallagRepository.findById(it.second.lokallag.toLong()),
+                    lokallag = lokallagRepository.findById(it.second.lokallag),
                     kontakt = kontaktRepository.list("frivillig_id", it.first.id.toInt()).map { i ->
                         KontaktResponse(
                             frivillig_id = i.frivillig_id,
@@ -65,12 +65,10 @@ class FrivilligService(
         roller.contains(Roles.godkjenner) -> {
             databaseUpdater.getResultList("select f.id from frivillig f inner join person p on p.id = f.personId and p.fylke=${ringer.fylke} ORDER BY p.etternavn ASC")
                 .map { it as Int }
-                .map { it.toLong() }
                 .map { frivilligRepository.findById(it) }
         }
         else -> databaseUpdater.getResultList("select f.id from frivillig f inner join person p on p.id = f.personId and p.lokallag=${ringer.lokallag} ORDER BY p.etternavn ASC")
             .map { it as Int }
-            .map { it.toLong() }
             .map { frivilligRepository.findById(it) }
     }
 
@@ -94,7 +92,7 @@ class FrivilligService(
         )
         frivilligRepository.persist(frivillig)
         request.kanTenkeSegAaBidraMedAktiviteter
-            .map { AktivitetForFrivillig(frivillig_id = frivillig.id, aktivitet = it) }
+            .map { AktivitetForFrivillig(frivillig_id = frivillig.id.toInt(), aktivitet = it) }
             .forEach { aktivitetForFrivilligRepository.persist(it) }
         lagreOpptattAv(request, frivillig)
 
@@ -152,7 +150,7 @@ class FrivilligService(
             Kontakt(
                 frivillig_id = request.request.frivillig_id,
                 tilbakemelding = request.request.tilbakemelding,
-                registrert_av = personRepository.find("hypersysID", request.userId.userId).firstResult<Person>().id,
+                registrert_av = personRepository.find("hypersysID", request.userId.userId).firstResult<Person>().id.toInt(),
                 datetime = Instant.now()
             )
         )

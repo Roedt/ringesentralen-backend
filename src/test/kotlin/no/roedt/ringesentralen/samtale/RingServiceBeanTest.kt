@@ -101,7 +101,7 @@ internal class RingServiceBeanTest {
         }
     }
 
-    private fun createRingbarPerson(fornavn: String, etternavn: String, telefonnummer: String, id: Long, hypersysID: Int) {
+    private fun createRingbarPerson(fornavn: String, etternavn: String, telefonnummer: String, id: Int, hypersysID: Int) {
         val person = Person(
             hypersysID = hypersysID, fornavn = fornavn, etternavn = etternavn,
             telefonnummer = telefonnummer, email = "",

@@ -1,8 +1,8 @@
 package no.roedt.ringesentralen.person
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity
-import io.quarkus.hibernate.orm.panache.PanacheRepository
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
+import no.roedt.RingesentralenPanacheEntity
 import java.time.Instant
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Entity
@@ -14,7 +14,7 @@ import javax.persistence.Table
 data class Ringer(
     var oppretta: Instant,
     var personId: Int
-) : PanacheEntity() {
+) : RingesentralenPanacheEntity() {
     constructor() : this(
         oppretta = Instant.MIN,
         personId = 0
@@ -22,4 +22,4 @@ data class Ringer(
 }
 
 @ApplicationScoped
-class RingerRepository : PanacheRepository<Ringer>
+class RingerRepository : PanacheRepositoryBase<Ringer, Int>

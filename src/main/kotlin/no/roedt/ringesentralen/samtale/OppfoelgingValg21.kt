@@ -1,8 +1,8 @@
 package no.roedt.ringesentralen.samtale
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity
-import io.quarkus.hibernate.orm.panache.PanacheRepository
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
+import no.roedt.RingesentralenPanacheEntity
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Entity
 import javax.persistence.Table
@@ -18,7 +18,7 @@ data class OppfoelgingValg21(
     var vilHaMedlemsLink: Boolean,
     var vilHaFellesskapLink: Boolean,
     var vilBliRingtAugust: Boolean,
-) : PanacheEntity() {
+) : RingesentralenPanacheEntity() {
     constructor() : this(
         samtaleId = 0,
         vilBliMerAktiv = false,
@@ -31,4 +31,4 @@ data class OppfoelgingValg21(
 }
 
 @ApplicationScoped
-class OppfoelgingValg21Repository : PanacheRepository<OppfoelgingValg21>
+class OppfoelgingValg21Repository : PanacheRepositoryBase<OppfoelgingValg21, Int >

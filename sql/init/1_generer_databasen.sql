@@ -6263,7 +6263,7 @@ CREATE TABLE IF NOT EXISTS `samtale` (
   INDEX(`ringt`),
   FOREIGN KEY (`ringt`) REFERENCES `person` (`id`),
   INDEX(`ringer`),
-  FOREIGN KEY (`ringer`) REFERENCES `ringer` (`id`)
+  FOREIGN KEY (`ringer`) REFERENCES `ringer` (`id`),
   INDEX(`ringesesjon`),
   FOREIGN KEY (`ringesesjon`) REFERENCES `ringesesjon` (`id`)
 );
