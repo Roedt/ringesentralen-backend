@@ -34,7 +34,6 @@ open class NesteMedlemAaRingeFinder(
         if (nestePersonFraDatabasen != null) return nestePersonFraDatabasen
 
         oppdaterteLokallag.forEach { lokallagRepository.persist(it) }
-        hypersysService.oppdaterMedlemmerILokallag(lokallag)
 
         return hentNestePerson(ringer, lokallag)
     }
@@ -42,8 +41,13 @@ open class NesteMedlemAaRingeFinder(
     private fun oppdaterMedlemsliste(lokallagID: Int): Set<Lokallag> {
         val lokallag = lokallagRepository.findById(lokallagID)
         val sistOppdatert = lokallag.sistOppdatert?.atZone(ZoneId.of("UTC"))
-        if (sistOppdatert?.isBefore(ZonedDateTime.now().minusDays(7)) == true || sistOppdatert == null) {
-            hypersysService.oppdaterMedlemmerILokallag(lokallagID)
+        if (lokallag != null && (
+            sistOppdatert?.isBefore(
+                    ZonedDateTime.now().minusDays(7)
+                ) == true || sistOppdatert == null
+            )
+        ) {
+            hypersysService.oppdaterMedlemmerILokallag(lokallag!!)
             lokallag.sistOppdatert = Instant.now()
             return setOf(lokallag)
         }

@@ -13,7 +13,7 @@ interface HypersysService {
     fun getMedlemmer(hypersysLokallagId: Int?): List<LinkedHashMap<String, *>>
     fun convertToHypersysLokallagId(lokallag: Int): Int?
     fun hentFraMedlemslista(hypersysID: Int?): LinkedHashMap<*, *>?
-    fun oppdaterMedlemmerILokallag(hypersysLokallagId: Int?)
+    fun oppdaterMedlemmerILokallag(lokallag: Lokallag)
 }
 
 @ApplicationScoped
@@ -51,7 +51,8 @@ class HypersysServiceBean(
         personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag
 
     private fun getLokallagIdFromHypersys(mittLag: Lokallag): Int {
-        val lag = getAlleLokallag().first { mittLag.navn == it.name }
+        val alleLokallag = getAlleLokallag()
+        val lag = alleLokallag.first { mittLag.navn == it.name }
         lokallagRepository.update("hypersysID=?1 where id=?2", lag.id, mittLag.id)
         return lag.id
     }
@@ -63,12 +64,15 @@ class HypersysServiceBean(
             ListOrganisasjonsleddTypeReference()
         )
 
-    override fun oppdaterMedlemmerILokallag(hypersysLokallagId: Int?) =
+    override fun oppdaterMedlemmerILokallag(lokallag: Lokallag) {
+        val hypersysLokallagId =
+            if (lokallag.hypersysID != null) lokallag.hypersysID else convertToHypersysLokallagId(lokallag.id)
         getMedlemmer(hypersysLokallagId)
             .filter { medlem -> personRepository.find("hypersysID", medlem["member_id"]).count() == 0L }
             .map { modelConverter.convertMembershipToPerson(it) }
             .filter { it.telefonnummer != null }
             .forEach { personRepository.save(it) }
+    }
 
     override fun hentFraMedlemslista(hypersysID: Int?): LinkedHashMap<*, *>? =
         hypersysID
