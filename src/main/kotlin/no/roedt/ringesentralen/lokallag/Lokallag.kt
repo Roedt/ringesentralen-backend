@@ -40,18 +40,25 @@ class LokallagRepository(
 
     private fun toLokallagId(query: String) = databaseUpdater.getResultList(query).map { it as Int }.firstOrNull()
 
-    fun fromOrganisationName(organisationName: String): Int =
+    fun fromOrganisationName(organisationName: String): Int {
+        val finnLokallag = finnLokallag(organisationName)
+        if (finnLokallag?.isPresent == true) {
+            return finnLokallag.get()
+        }
+        val medRoedtprefiks = finnLokallag("Rødt $organisationName")
+        if (medRoedtprefiks?.isPresent == true) {
+            println("$organisationName fins i databasen utan Rødt-prefiks, og bør oppdaterast")
+            return medRoedtprefiks.get()
+        }
+        println("$organisationName fins ikkje som lokallag i databasen, returnerer udefinert")
+        return -1
+    }
+
+    private fun finnLokallag(organisationName: String) =
         find("navn", organisationName)
             .firstResultOptional<Lokallag>()
             ?.map { it.id }
             ?.map { it.toInt() }
-            ?.orElse(standardLokallag(organisationName))
-            ?: standardLokallag(organisationName)
-
-    private fun standardLokallag(organisationName: String): Int {
-        println("$organisationName fins ikkje som lokallag i databasen")
-        return -1
-    }
 
     fun fromFylke(fylkeId: Int): List<Lokallag> = list("fylke=?1", fylkeId)
 }
