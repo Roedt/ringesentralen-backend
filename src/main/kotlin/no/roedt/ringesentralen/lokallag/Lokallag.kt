@@ -45,8 +45,13 @@ class LokallagRepository(
             .firstResultOptional<Lokallag>()
             ?.map { it.id }
             ?.map { it.toInt() }
-            ?.orElse(-1)
-            ?: -1
+            ?.orElse(standardLokallag(organisationName))
+            ?: standardLokallag(organisationName)
+
+    private fun standardLokallag(organisationName: String): Int {
+        println("$organisationName fins ikkje som lokallag i databasen")
+        return -1
+    }
 
     fun fromFylke(fylkeId: Int): List<Lokallag> = list("fylke=?1", fylkeId)
 }
