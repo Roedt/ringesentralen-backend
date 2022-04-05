@@ -6,6 +6,7 @@ import no.roedt.ringesentralen.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId
+import java.time.Instant
 import java.time.LocalDate
 import javax.enterprise.context.ApplicationScoped
 
@@ -14,6 +15,7 @@ interface HypersysService {
     fun convertToHypersysLokallagId(lokallag: Int): Int?
     fun hentFraMedlemslista(hypersysID: Int?): LinkedHashMap<*, *>?
     fun oppdaterMedlemmerILokallag(lokallag: Lokallag)
+    fun oppdaterLokallag()
 }
 
 @ApplicationScoped
@@ -53,8 +55,30 @@ class HypersysServiceBean(
     private fun getLokallagIdFromHypersys(mittLag: Lokallag): Int {
         val alleLokallag = getAlleLokallag()
         val lag = alleLokallag.first { mittLag.navn == it.name }
-        lokallagRepository.update("hypersysID=?1 where id=?2", lag.id, mittLag.id)
+        lokallagRepository.update("hypersysID=?1, navn=?2 where id=?3", lag.id, lag.name, mittLag.id)
         return lag.id
+    }
+
+    override fun oppdaterLokallag() {
+        var lokallagAaLeggeTil: Set<Lokallag> = setOf()
+        val alleLokallag = getAlleLokallag()
+        alleLokallag.forEach { lag ->
+            if (lokallagRepository.find("hypersysID", lag.id).count() > 0) {
+                lokallagRepository.update("navn=?1 where hypersysID=?2", lag.name, lag.id)
+            } else if (lokallagRepository.find("navn", lag.name).count() > 0) {
+                lokallagRepository.update("hypersysID=?1 where navn=?2", lag.id, lag.name)
+            } else {
+                lokallagAaLeggeTil = lokallagAaLeggeTil.plus(
+                    Lokallag(
+                        navn = lag.name,
+                        hypersysID = lag.id,
+                        fylke = -1, // TODO: har ikkje funne nokon god måte for å finne koplinga til fylke automatisk
+                        sistOppdatert = Instant.now()
+                    )
+                )
+            }
+        }
+        lokallagAaLeggeTil.forEach { lokallagRepository.persist(it) }
     }
 
     private fun getAlleLokallag(): List<Organisasjonsledd> =

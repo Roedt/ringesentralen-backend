@@ -47,6 +47,11 @@ open class NesteMedlemAaRingeFinder(
                 ) == true || sistOppdatert == null
             )
         ) {
+            try {
+                hypersysService.oppdaterLokallag()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
             hypersysService.oppdaterMedlemmerILokallag(lokallag!!)
             lokallag.sistOppdatert = Instant.now()
             return setOf(lokallag)
