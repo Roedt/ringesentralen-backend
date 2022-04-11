@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.brukere
 
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.ringesentralen.lokallag.Lokallag
+import no.roedt.lokallag.Lokallag
 import java.time.Instant
 
 @RegisterForReflection

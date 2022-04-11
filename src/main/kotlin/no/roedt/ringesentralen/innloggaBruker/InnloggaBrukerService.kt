@@ -2,8 +2,8 @@ package no.roedt.ringesentralen.innloggaBruker
 
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.brukere.FylkeRepository
-import no.roedt.ringesentralen.lokallag.Lokallag
-import no.roedt.ringesentralen.lokallag.LokallagRepository
+import no.roedt.lokallag.Lokallag
+import no.roedt.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository

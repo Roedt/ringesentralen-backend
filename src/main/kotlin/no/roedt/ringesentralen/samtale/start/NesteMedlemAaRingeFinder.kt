@@ -3,8 +3,8 @@ package no.roedt.ringesentralen.samtale.start
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.KommuneRepository
 import no.roedt.ringesentralen.hypersys.HypersysService
-import no.roedt.ringesentralen.lokallag.Lokallag
-import no.roedt.ringesentralen.lokallag.LokallagRepository
+import no.roedt.lokallag.Lokallag
+import no.roedt.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import java.time.Instant

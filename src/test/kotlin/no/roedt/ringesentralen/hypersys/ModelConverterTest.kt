@@ -2,7 +2,7 @@ package no.roedt.ringesentralen.hypersys
 
 import com.nhaarman.mockitokotlin2.mock
 import no.roedt.ringesentralen.brukere.FylkeRepository
-import no.roedt.ringesentralen.lokallag.LokallagRepository
+import no.roedt.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.PersonRepository
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
