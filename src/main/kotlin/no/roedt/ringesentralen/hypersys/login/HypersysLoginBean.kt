@@ -13,7 +13,7 @@ import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.Ringer
 import no.roedt.ringesentralen.person.RingerIV1Repository
 import no.roedt.ringesentralen.person.RingerRepository
-import no.roedt.ringesentralen.token.SecretFactory
+import no.roedt.token.SecretFactory
 import java.net.http.HttpResponse
 import java.time.Instant
 import java.util.Optional

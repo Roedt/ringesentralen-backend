@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.token
+package no.roedt.token
 
 interface SecretFactory {
     fun getPrivateKey(): String

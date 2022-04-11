@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen
+package no.roedt
 
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.tags.Tag

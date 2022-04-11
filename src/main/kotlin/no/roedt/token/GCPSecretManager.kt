@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.token
+package no.roedt.token
 
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient
 import com.google.cloud.secretmanager.v1.SecretVersionName

@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.hypersys
 
-import no.roedt.ringesentralen.token.SecretFactory
+import no.roedt.token.SecretFactory
 import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
 

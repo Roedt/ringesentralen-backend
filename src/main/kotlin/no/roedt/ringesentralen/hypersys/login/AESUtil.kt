@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.hypersys.login
 
-import no.roedt.ringesentralen.token.SecretFactory
+import no.roedt.token.SecretFactory
 import java.util.Base64
 import javax.annotation.PostConstruct
 import javax.crypto.Cipher

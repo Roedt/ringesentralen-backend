@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.token
+package no.roedt.token
 
 import io.smallrye.jwt.build.Jwt
 import no.roedt.ringesentralen.Roles

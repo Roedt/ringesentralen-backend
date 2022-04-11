@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.health
+package no.roedt
 
 import org.eclipse.microprofile.health.HealthCheck
 import org.eclipse.microprofile.health.HealthCheckResponse

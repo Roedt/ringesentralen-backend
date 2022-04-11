@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.token
+package no.roedt.token
 
 import no.roedt.ringesentralen.hypersys.login.LoginRequest
 import org.eclipse.microprofile.config.inject.ConfigProperty
