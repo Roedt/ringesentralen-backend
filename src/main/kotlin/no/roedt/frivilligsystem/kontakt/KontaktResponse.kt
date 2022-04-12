@@ -1,7 +1,7 @@
 package no.roedt.frivilligsystem.kontakt
 
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.ringesentralen.person.Person
+import no.roedt.person.Person
 import java.time.Instant
 
 @RegisterForReflection

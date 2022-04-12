@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.person
+package no.roedt.person
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import no.roedt.ringesentralen.Kilde

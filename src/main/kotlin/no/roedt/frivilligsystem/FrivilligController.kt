@@ -8,10 +8,10 @@ import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.AutentisertSoMeFrivilligRequest
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.SoMeFrivilligRequest
+import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.brukere.EpostSender
-import no.roedt.ringesentralen.person.PersonRepository
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation

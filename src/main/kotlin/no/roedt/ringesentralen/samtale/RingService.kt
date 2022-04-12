@@ -1,15 +1,15 @@
 package no.roedt.ringesentralen.samtale
 
 import no.roedt.lokallag.LokallagRepository
+import no.roedt.person.GroupID
+import no.roedt.person.Person
+import no.roedt.person.PersonRepository
+import no.roedt.person.UserId
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.Roles
-import no.roedt.ringesentralen.person.GroupID
-import no.roedt.ringesentralen.person.Person
-import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.Ringer
 import no.roedt.ringesentralen.person.RingerRepository
-import no.roedt.ringesentralen.person.UserId
 import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest

@@ -1,11 +1,11 @@
 package no.roedt.ringesentralen.verving
 
 import no.roedt.lokallag.LokallagRepository
+import no.roedt.person.GroupID
+import no.roedt.person.Person
+import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.Kilde
 import no.roedt.ringesentralen.brukere.FylkeRepository
-import no.roedt.ringesentralen.person.GroupID
-import no.roedt.ringesentralen.person.Person
-import no.roedt.ringesentralen.person.PersonRepository
 import javax.enterprise.context.Dependent
 
 @Dependent

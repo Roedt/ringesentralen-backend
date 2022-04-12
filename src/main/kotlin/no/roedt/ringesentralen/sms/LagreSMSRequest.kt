@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.sms
 
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.ringesentralen.person.UserId
+import no.roedt.person.UserId
 
 @RegisterForReflection
 data class LagreSMSRequest(

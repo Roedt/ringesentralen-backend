@@ -3,9 +3,9 @@ package no.roedt.hypersys
 import no.roedt.hypersys.externalModel.Organisasjonsledd
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagRepository
-import no.roedt.ringesentralen.person.Person
-import no.roedt.ringesentralen.person.PersonRepository
-import no.roedt.ringesentralen.person.UserId
+import no.roedt.person.Person
+import no.roedt.person.PersonRepository
+import no.roedt.person.UserId
 import java.time.Instant
 import java.time.LocalDate
 import javax.enterprise.context.ApplicationScoped

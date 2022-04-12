@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.person
+package no.roedt.person
 
 import no.roedt.ringesentralen.Roles
 

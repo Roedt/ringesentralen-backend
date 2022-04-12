@@ -9,7 +9,7 @@ import no.roedt.frivilligsystem.registrer.Aktivitet
 import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.ErMedlemStatus
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
-import no.roedt.ringesentralen.person.UserId
+import no.roedt.person.UserId
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
 import java.io.Reader

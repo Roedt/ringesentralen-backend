@@ -9,12 +9,12 @@ import io.quarkus.hibernate.orm.panache.PanacheQuery
 import no.roedt.hypersys.HypersysService
 import no.roedt.hypersys.ModelConverter
 import no.roedt.lokallag.LokallagRepository
+import no.roedt.person.GroupID
+import no.roedt.person.Person
+import no.roedt.person.PersonRepository
+import no.roedt.person.UserId
 import no.roedt.ringesentralen.DatabaseUpdater
-import no.roedt.ringesentralen.person.GroupID
-import no.roedt.ringesentralen.person.Person
-import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.RingerRepository
-import no.roedt.ringesentralen.person.UserId
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.doReturn

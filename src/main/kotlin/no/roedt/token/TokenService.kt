@@ -7,10 +7,10 @@ import no.roedt.hypersys.UgyldigToken
 import no.roedt.hypersys.login.AESUtil
 import no.roedt.hypersys.login.HypersysLoginBean
 import no.roedt.hypersys.login.LoginRequest
+import no.roedt.person.GroupID
+import no.roedt.person.Person
+import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.Roles
-import no.roedt.ringesentralen.person.GroupID
-import no.roedt.ringesentralen.person.Person
-import no.roedt.ringesentralen.person.PersonRepository
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Duration
 import javax.enterprise.context.RequestScoped

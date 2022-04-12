@@ -2,12 +2,11 @@ package no.roedt.innloggaBruker
 
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagRepository
+import no.roedt.person.Person
+import no.roedt.person.PersonRepository
+import no.roedt.person.UserId
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.brukere.FylkeRepository
-import no.roedt.ringesentralen.person.GroupID
-import no.roedt.ringesentralen.person.Person
-import no.roedt.ringesentralen.person.PersonRepository
-import no.roedt.ringesentralen.person.UserId
 import java.util.Optional
 import javax.enterprise.context.ApplicationScoped
 
@@ -31,7 +30,7 @@ class InnloggaBrukerService(
         postnummer = postnummer,
         fylke = fylke,
         lokallag = lokallag,
-        rolle = GroupID.from(groupID()).roller,
+        rolle = no.roedt.person.GroupID.from(groupID()).roller,
         fylkeNavn = fylkeRepository.findById(fylke).navn,
         lokallagNavn = lokallagRepository.findById(lokallag).navn
     )

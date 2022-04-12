@@ -2,7 +2,7 @@ package no.roedt.ringesentralen.verving
 
 import no.roedt.hypersys.ModelConverter
 import no.roedt.lokallag.LokallagRepository
-import no.roedt.ringesentralen.person.PersonRepository
+import no.roedt.person.PersonRepository
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.enterprise.context.RequestScoped

@@ -2,8 +2,8 @@ package no.roedt.ringesentralen.brukere
 
 import io.quarkus.mailer.Mail
 import io.quarkus.mailer.Mailer
-import no.roedt.ringesentralen.person.GroupID
-import no.roedt.ringesentralen.person.Person
+import no.roedt.person.GroupID
+import no.roedt.person.Person
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject

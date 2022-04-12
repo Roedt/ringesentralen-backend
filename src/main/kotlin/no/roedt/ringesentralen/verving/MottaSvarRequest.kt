@@ -2,7 +2,7 @@ package no.roedt.ringesentralen.verving
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.ringesentralen.person.UserId
+import no.roedt.person.UserId
 
 @RegisterForReflection
 data class MottaSvarRequest(

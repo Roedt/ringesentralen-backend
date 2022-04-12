@@ -12,14 +12,14 @@ import no.roedt.frivilligsystem.registrer.AutentisertSoMeFrivilligRequest
 import no.roedt.frivilligsystem.registrer.ErMedlemStatus
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.lokallag.LokallagRepository
+import no.roedt.person.GroupID
+import no.roedt.person.Person
+import no.roedt.person.PersonRepository
+import no.roedt.person.UserId
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Kilde
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.brukere.FylkeRepository
-import no.roedt.ringesentralen.person.GroupID
-import no.roedt.ringesentralen.person.Person
-import no.roedt.ringesentralen.person.PersonRepository
-import no.roedt.ringesentralen.person.UserId
 import java.time.Instant
 import javax.enterprise.context.ApplicationScoped
 

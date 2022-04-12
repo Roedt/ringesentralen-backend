@@ -1,8 +1,8 @@
 package no.roedt.ringesentralen.statistikk
 
+import no.roedt.person.GroupID
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Roles
-import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import java.sql.Timestamp
 import java.time.Instant

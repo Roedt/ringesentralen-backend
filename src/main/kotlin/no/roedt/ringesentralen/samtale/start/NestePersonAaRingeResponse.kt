@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.samtale.start
 
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.ringesentralen.person.Person
+import no.roedt.person.Person
 import no.roedt.ringesentralen.samtale.Samtale
 
 @RegisterForReflection

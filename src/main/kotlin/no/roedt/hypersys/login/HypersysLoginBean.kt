@@ -5,10 +5,10 @@ import no.roedt.hypersys.ModelConverter
 import no.roedt.hypersys.Token
 import no.roedt.hypersys.UgyldigToken
 import no.roedt.hypersys.externalModel.Profile
-import no.roedt.ringesentralen.person.EpostValidator
-import no.roedt.ringesentralen.person.GroupID
-import no.roedt.ringesentralen.person.Person
-import no.roedt.ringesentralen.person.PersonRepository
+import no.roedt.person.EpostValidator
+import no.roedt.person.GroupID
+import no.roedt.person.Person
+import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.person.Ringer
 import no.roedt.ringesentralen.person.RingerIV1Repository
 import no.roedt.ringesentralen.person.RingerRepository
