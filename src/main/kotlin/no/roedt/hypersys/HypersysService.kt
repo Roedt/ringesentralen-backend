@@ -1,8 +1,8 @@
 package no.roedt.hypersys
 
+import no.roedt.hypersys.externalModel.Organisasjonsledd
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagRepository
-import no.roedt.ringesentralen.hypersys.externalModel.Organisasjonsledd
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
 import no.roedt.ringesentralen.person.UserId

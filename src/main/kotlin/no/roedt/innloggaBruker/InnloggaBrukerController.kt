@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.innloggaBruker
+package no.roedt.innloggaBruker
 
 import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.Roles

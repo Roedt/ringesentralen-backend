@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.verving
 
-import no.roedt.ringesentralen.hypersys.ModelConverter
+import no.roedt.hypersys.ModelConverter
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.PersonRepository
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement

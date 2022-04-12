@@ -1,10 +1,10 @@
 package no.roedt.ringesentralen.brukere
 
+import no.roedt.hypersys.HypersysService
+import no.roedt.hypersys.ModelConverter
+import no.roedt.lokallag.LokallagRepository
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Roles
-import no.roedt.ringesentralen.hypersys.HypersysService
-import no.roedt.ringesentralen.hypersys.ModelConverter
-import no.roedt.lokallag.LokallagRepository
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository

@@ -2,8 +2,8 @@
 import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
 import io.restassured.response.ValidatableResponseOptions
+import no.roedt.hypersys.login.LoginRequest
 import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.hypersys.login.LoginRequest
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.Valg21SpesifikkeResultat

@@ -1,11 +1,10 @@
 package no.roedt.hypersys.login
 
-import no.roedt.ringesentralen.hypersys.GyldigPersonToken
-import no.roedt.hypersys.HypersysProxy
-import no.roedt.ringesentralen.hypersys.ModelConverter
-import no.roedt.ringesentralen.hypersys.Token
-import no.roedt.ringesentralen.hypersys.UgyldigToken
-import no.roedt.ringesentralen.hypersys.externalModel.Profile
+import no.roedt.hypersys.GyldigPersonToken
+import no.roedt.hypersys.ModelConverter
+import no.roedt.hypersys.Token
+import no.roedt.hypersys.UgyldigToken
+import no.roedt.hypersys.externalModel.Profile
 import no.roedt.ringesentralen.person.EpostValidator
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
@@ -46,7 +45,12 @@ class HypersysLoginBean(
         val brukerSecret = secretFactory.getHypersysBrukerSecret()
         val brukarnamn = aesUtil.decrypt(loginRequest.brukarnamn).also { EpostValidator.validate(it) }
         val passord = aesUtil.decrypt(loginRequest.passord)
-        return hypersysProxy.post(brukerId, brukerSecret, "grant_type=password&username=$brukarnamn&password=$passord", loggingtekst = "brukarinnlogging")
+        return hypersysProxy.post(
+            brukerId,
+            brukerSecret,
+            "grant_type=password&username=$brukarnamn&password=$passord",
+            loggingtekst = "brukarinnlogging"
+        )
     }
 
     private fun oppdaterRingerFraaHypersys(token: GyldigPersonToken): Person {

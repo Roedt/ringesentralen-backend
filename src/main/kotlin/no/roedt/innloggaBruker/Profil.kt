@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.innloggaBruker
+package no.roedt.innloggaBruker
 
 import io.quarkus.runtime.annotations.RegisterForReflection
 

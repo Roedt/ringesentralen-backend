@@ -3,8 +3,8 @@ package no.roedt.ringesentralen.brukere
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.lokallag.LokallagRepository
+import no.roedt.ringesentralen.DatabaseUpdater
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
 import javax.persistence.Entity

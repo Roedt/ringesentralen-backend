@@ -1,10 +1,10 @@
 package no.roedt.hypersys
 
+import no.roedt.hypersys.externalModel.Membership
+import no.roedt.hypersys.externalModel.User
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.ringesentralen.Kilde
 import no.roedt.ringesentralen.brukere.FylkeRepository
-import no.roedt.ringesentralen.hypersys.externalModel.Membership
-import no.roedt.ringesentralen.hypersys.externalModel.User
 import no.roedt.ringesentralen.person.GroupID
 import no.roedt.ringesentralen.person.Person
 import no.roedt.ringesentralen.person.PersonRepository
