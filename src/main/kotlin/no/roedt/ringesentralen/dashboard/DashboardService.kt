@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.dashboard
 
 import io.quarkus.panache.common.Sort
+import no.roedt.brukere.FylkeRepository
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.GroupID
@@ -9,7 +10,6 @@ import no.roedt.person.PersonRepository
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
-import no.roedt.brukere.FylkeRepository
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped

@@ -28,7 +28,10 @@ import javax.ws.rs.core.SecurityContext
 @Path("/brukere")
 @Tag(name = "Brukere")
 @SecurityRequirement(name = "jwt")
-class BrukereController(val brukereService: BrukereService) : RingesentralenController {
+class BrukereController(
+    val brukereService: BrukereService,
+    val tilgangsendringService: TilgangsendringService
+) : RingesentralenController {
 
     @Inject
     lateinit var jwt: JsonWebToken
@@ -51,7 +54,7 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Bulkhead(3)
     @Retry
     @Transactional
-    fun aktiverRinger(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.aktiverRinger(
+    fun aktiverRinger(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = tilgangsendringService.aktiverRinger(
         AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
     )
 
@@ -64,7 +67,7 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Bulkhead(3)
     @Retry
     @Transactional
-    fun giTilgangTilAaRingeMedlemmer(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.giTilgangTilAaRingeMedlemmer(
+    fun giTilgangTilAaRingeMedlemmer(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = tilgangsendringService.giTilgangTilAaRingeMedlemmer(
         AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
     )
 
@@ -77,7 +80,7 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Bulkhead(3)
     @Retry
     @Transactional
-    fun fjernTilgangTilAaRingeMedlemmer(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.fjernTilgangTilAaRingeMedlemmer(
+    fun fjernTilgangTilAaRingeMedlemmer(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = tilgangsendringService.fjernTilgangTilAaRingeMedlemmer(
         AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
     )
 
@@ -90,7 +93,7 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Bulkhead(5)
     @Retry
     @Transactional
-    fun deaktiverRinger(@Context ctx: SecurityContext, deaktiverRequest: TilgangsendringsRequest): Brukerendring = brukereService.deaktiverRinger(
+    fun deaktiverRinger(@Context ctx: SecurityContext, deaktiverRequest: TilgangsendringsRequest): Brukerendring = tilgangsendringService.deaktiverRinger(
         AutentisertTilgangsendringRequest(ctx.userId(), deaktiverRequest, jwt)
     )
 
@@ -103,7 +106,7 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Bulkhead(5)
     @Retry
     @Transactional
-    fun gjoerRingerTilLokalGodkjenner(@Context ctx: SecurityContext, tilLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = brukereService.gjoerRingerTilLokalGodkjenner(
+    fun gjoerRingerTilLokalGodkjenner(@Context ctx: SecurityContext, tilLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = tilgangsendringService.gjoerRingerTilLokalGodkjenner(
         AutentisertTilgangsendringRequest(
             ctx.userId(),
             tilLokalGodkjennerRequest,
@@ -120,7 +123,7 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Bulkhead(5)
     @Retry
     @Transactional
-    fun fjernRingerSomLokalGodkjenner(@Context ctx: SecurityContext, fjernSomLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = brukereService.fjernRingerSomLokalGodkjenner(
+    fun fjernRingerSomLokalGodkjenner(@Context ctx: SecurityContext, fjernSomLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = tilgangsendringService.fjernRingerSomLokalGodkjenner(
         AutentisertTilgangsendringRequest(
             ctx.userId(),
             fjernSomLokalGodkjennerRequest,

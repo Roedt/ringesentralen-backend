@@ -7,18 +7,15 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.quarkus.hibernate.orm.panache.PanacheQuery
 import no.roedt.brukere.AutentisertTilgangsendringRequest
-import no.roedt.brukere.FylkeRepository
 import no.roedt.brukere.GodkjenningRepository
 import no.roedt.brukere.TilgangsendringsRequest
 import no.roedt.hypersys.HypersysService
 import no.roedt.hypersys.ModelConverter
-import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.GroupID
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.DatabaseUpdater
-import no.roedt.ringesentralen.person.RingerRepository
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.doReturn
@@ -26,28 +23,22 @@ import javax.ws.rs.ForbiddenException
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-internal class BrukereServiceBeanTest {
+internal class TilgangsendringServiceBeanTest {
 
     private val personRepository: PersonRepository = mock()
     private val databaseUpdater: DatabaseUpdater = mock()
-    private val fylkeRepository: FylkeRepository = mock()
-    private val lokallagRepository: LokallagRepository = mock()
     private val epostSender: RingesentralenEpostformulerer = mock()
     private val hypersysService: HypersysService = mock()
     private val godkjenningRepository: GodkjenningRepository = mock()
     private val modelConverter: ModelConverter = mock()
-    private val ringerRepository: RingerRepository = mock()
 
-    private val brukereService = BrukereServiceBean(
+    private val tilgangsendringService = TilgangsendringServiceBean(
         personRepository = personRepository,
         databaseUpdater = databaseUpdater,
-        fylkeRepository = fylkeRepository,
-        lokallagRepository = lokallagRepository,
         epostSender = epostSender,
         hypersysService = hypersysService,
         godkjenningRepository = godkjenningRepository,
-        modelConverter = modelConverter,
-        ringerRepository = ringerRepository
+        modelConverter = modelConverter
     )
 
     @Test
@@ -60,7 +51,7 @@ internal class BrukereServiceBeanTest {
 
         doReturn(listOf(1L)).whenever(databaseUpdater).getResultList(any())
 
-        val brukerendring = brukereService.aktiverRinger(
+        val brukerendring = tilgangsendringService.aktiverRinger(
             AutentisertTilgangsendringRequest(
                 userId = userId,
                 tilgangsendringRequest = TilgangsendringsRequest(personMedEndraTilgang = 2),
@@ -87,7 +78,7 @@ internal class BrukereServiceBeanTest {
         doReturn(listOf(1L)).whenever(databaseUpdater).getResultList(any())
 
         assertThrows<ForbiddenException> {
-            brukereService.aktiverRinger(
+            tilgangsendringService.aktiverRinger(
                 AutentisertTilgangsendringRequest(
                     userId = userId,
                     tilgangsendringRequest = TilgangsendringsRequest(personMedEndraTilgang = 2),

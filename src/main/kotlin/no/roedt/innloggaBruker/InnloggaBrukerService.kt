@@ -1,12 +1,12 @@
 package no.roedt.innloggaBruker
 
+import no.roedt.brukere.FylkeRepository
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.Roles
-import no.roedt.brukere.FylkeRepository
 import java.util.Optional
 import javax.enterprise.context.ApplicationScoped
 

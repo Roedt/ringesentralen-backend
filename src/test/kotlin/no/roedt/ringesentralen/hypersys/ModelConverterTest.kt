@@ -1,10 +1,10 @@
 package no.roedt.ringesentralen.hypersys
 
 import com.nhaarman.mockitokotlin2.mock
+import no.roedt.brukere.FylkeRepository
 import no.roedt.hypersys.ModelConverterBean
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.PersonRepository
-import no.roedt.brukere.FylkeRepository
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

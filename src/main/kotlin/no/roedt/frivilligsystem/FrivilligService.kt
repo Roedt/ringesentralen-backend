@@ -1,5 +1,6 @@
 package no.roedt.frivilligsystem
 
+import no.roedt.brukere.FylkeRepository
 import no.roedt.frivilligsystem.kontakt.AutentisertRegistrerKontaktRequest
 import no.roedt.frivilligsystem.kontakt.Kontakt
 import no.roedt.frivilligsystem.kontakt.KontaktRepository
@@ -19,7 +20,6 @@ import no.roedt.person.UserId
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Kilde
 import no.roedt.ringesentralen.Roles
-import no.roedt.brukere.FylkeRepository
 import java.time.Instant
 import javax.enterprise.context.ApplicationScoped
 
