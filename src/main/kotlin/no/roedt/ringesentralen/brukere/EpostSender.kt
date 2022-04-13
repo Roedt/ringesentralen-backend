@@ -8,8 +8,32 @@ import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
+abstract class AbstractEpostSender(open var mailer: Mailer) {
+    protected fun sendEpost(
+        person: Person,
+        epost: Epost,
+        mock: String
+    ) {
+        if (person.email == null || person.email == "") {
+            return
+        }
+        if (mock.toBoolean()) {
+            println("Epostutsending er avskrudd. Ville elles sendt ${epost.tekstAaLoggeHvisDeaktivert}")
+            return
+        }
+        println("Sender epost: ${epost.loggFoerSendingTekst}")
+        mailer.send(
+            Mail.withText(
+                "${person.email}",
+                epost.tittel,
+                epost.tekst
+            )
+        )
+    }
+}
+
 @ApplicationScoped
-class EpostSender(var mailer: Mailer) {
+class EpostSender(override var mailer: Mailer) : AbstractEpostSender(mailer) {
 
     @Inject
     @ConfigProperty(name = "quarkus.mailer.mock")
@@ -26,7 +50,8 @@ class EpostSender(var mailer: Mailer) {
                 tekstAaLoggeHvisDeaktivert = "${nyTilgang.name} til ${person.id}",
                 loggFoerSendingTekst = "Person med id ${person.id} har no fått ${nyTilgang.name}",
                 tittel = "E-post frå Raudts Ringesentral"
-            )
+            ),
+            mock
         )
     }
 
@@ -44,28 +69,8 @@ class EpostSender(var mailer: Mailer) {
                 loggFoerSendingTekst = "${person.fornavn} ${person.etternavn} er registrert som SoMe-frivillig",
                 tekstAaLoggeHvisDeaktivert = "$person er registrert som SoMe-frivillig",
                 tittel = "Du er nå registrert som sosiale media-aktivist"
-            )
-        )
-    }
-
-    private fun sendEpost(
-        person: Person,
-        epost: Epost
-    ) {
-        if (person.email == null || person.email == "") {
-            return
-        }
-        if (mock.toBoolean()) {
-            println("Epostutsending er avskrudd. Ville elles sendt ${epost.tekstAaLoggeHvisDeaktivert}")
-            return
-        }
-        println("Sender epost: ${epost.loggFoerSendingTekst}")
-        mailer.send(
-            Mail.withText(
-                "${person.email}",
-                epost.tittel,
-                epost.tekst
-            )
+            ),
+            mock
         )
     }
 }
