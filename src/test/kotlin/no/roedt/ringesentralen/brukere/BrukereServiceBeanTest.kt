@@ -32,7 +32,7 @@ internal class BrukereServiceBeanTest {
     private val databaseUpdater: DatabaseUpdater = mock()
     private val fylkeRepository: FylkeRepository = mock()
     private val lokallagRepository: LokallagRepository = mock()
-    private val epostSender: EpostSender = mock()
+    private val epostSender: RingesentralenEpostformulerer = mock()
     private val hypersysService: HypersysService = mock()
     private val godkjenningRepository: GodkjenningRepository = mock()
     private val modelConverter: ModelConverter = mock()

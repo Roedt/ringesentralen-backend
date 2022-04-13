@@ -11,7 +11,7 @@ import no.roedt.frivilligsystem.registrer.SoMeFrivilligRequest
 import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.Roles
-import no.roedt.ringesentralen.brukere.EpostSender
+import no.roedt.ringesentralen.brukere.RingesentralenEpostformulerer
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
@@ -37,7 +37,7 @@ import javax.ws.rs.core.SecurityContext
 class FrivilligController(
     val frivilligService: FrivilligService,
     val frivilligImporter: FrivilligImporter,
-    val epostSender: EpostSender,
+    val epostSender: RingesentralenEpostformulerer,
     val personRepository: PersonRepository
 ) :
     RingesentralenController {

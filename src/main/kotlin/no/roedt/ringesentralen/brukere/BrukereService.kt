@@ -37,7 +37,7 @@ class BrukereServiceBean(
     val databaseUpdater: DatabaseUpdater,
     val fylkeRepository: FylkeRepository,
     val lokallagRepository: LokallagRepository,
-    val epostSender: EpostSender,
+    val epostSender: RingesentralenEpostformulerer,
     val hypersysService: HypersysService,
     val godkjenningRepository: GodkjenningRepository,
     val modelConverter: ModelConverter,
