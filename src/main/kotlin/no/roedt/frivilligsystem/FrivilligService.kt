@@ -1,5 +1,6 @@
 package no.roedt.frivilligsystem
 
+import no.roedt.DatabaseUpdater
 import no.roedt.Emojifjerner
 import no.roedt.Kilde
 import no.roedt.brukere.FylkeRepository
@@ -19,7 +20,6 @@ import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.RingesentralenGroupID
 import no.roedt.person.UserId
-import no.roedt.DatabaseUpdater
 import no.roedt.ringesentralen.Roles
 import java.time.Instant
 import javax.enterprise.context.ApplicationScoped

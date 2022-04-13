@@ -20,7 +20,7 @@ import java.util.Optional
 import javax.enterprise.context.Dependent
 
 @Dependent
-class HypersysLoginBean(
+class HypersysLoginBean( // TODO: Gå over denne klassa og skil ut det ringespesifikke frå det generelle
     private val hypersysProxy: no.roedt.hypersys.HypersysProxy,
     private val modelConverter: ModelConverter,
     private val secretFactory: SecretFactory,

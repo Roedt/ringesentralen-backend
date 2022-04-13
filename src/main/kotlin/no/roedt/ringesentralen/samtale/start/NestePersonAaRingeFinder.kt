@@ -1,11 +1,11 @@
 package no.roedt.ringesentralen.samtale.start
 
+import no.roedt.DatabaseUpdater
 import no.roedt.brukere.GroupID
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.RingesentralenGroupID
-import no.roedt.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.samtale.OppfoelgingValg21Repository

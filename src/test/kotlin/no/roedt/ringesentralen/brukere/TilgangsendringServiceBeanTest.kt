@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.quarkus.hibernate.orm.panache.PanacheQuery
+import no.roedt.DatabaseUpdater
 import no.roedt.brukere.AutentisertTilgangsendringRequest
 import no.roedt.brukere.GodkjenningRepository
 import no.roedt.brukere.TilgangsendringsRequest
@@ -15,7 +16,6 @@ import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.RingesentralenGroupID
 import no.roedt.person.UserId
-import no.roedt.DatabaseUpdater
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.doReturn

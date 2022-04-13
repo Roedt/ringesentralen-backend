@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.historikk
 
-import no.roedt.person.UserId
 import no.roedt.DatabaseUpdater
+import no.roedt.person.UserId
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.samtale.OppfoelgingValg21Repository
 import no.roedt.ringesentralen.samtale.Samtale

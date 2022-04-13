@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.brukere
 
+import no.roedt.DatabaseUpdater
 import no.roedt.brukere.AutentisertTilgangsendringRequest
 import no.roedt.brukere.Brukerendring
 import no.roedt.brukere.Godkjenning
@@ -11,7 +12,6 @@ import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.RingesentralenGroupID
 import no.roedt.person.UserId
-import no.roedt.DatabaseUpdater
 import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.ForbiddenException
 

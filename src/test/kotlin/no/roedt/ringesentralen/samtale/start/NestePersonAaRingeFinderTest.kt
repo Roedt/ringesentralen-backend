@@ -6,11 +6,11 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import no.roedt.DatabaseUpdater
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.UserId
-import no.roedt.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.samtale.OppfoelgingValg21Repository
 import org.junit.jupiter.api.BeforeEach
