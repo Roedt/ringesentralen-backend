@@ -2,7 +2,7 @@ package no.roedt.ringesentralen.samtale
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.RingesentralenPanacheEntity
+import no.roedt.RoedtPanacheEntity
 import no.roedt.ringesentralen.Modus
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Column
@@ -22,7 +22,7 @@ data class PersistentSamtale(
     @Column(columnDefinition = "longtext")
     var kommentar: String?,
     @Enumerated(EnumType.STRING) var modus: Modus
-) : RingesentralenPanacheEntity() {
+) : RoedtPanacheEntity() {
     constructor() : this(
         ringt = 0,
         ringer = 0,

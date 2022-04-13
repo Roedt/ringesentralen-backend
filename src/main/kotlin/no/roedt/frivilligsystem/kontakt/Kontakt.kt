@@ -2,7 +2,7 @@ package no.roedt.frivilligsystem.kontakt
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.RingesentralenPanacheEntity
+import no.roedt.RoedtPanacheEntity
 import java.time.Instant
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
@@ -18,7 +18,7 @@ data class Kontakt(
     var tilbakemelding: String,
     var registrert_av: Int,
     var datetime: Instant
-) : RingesentralenPanacheEntity() {
+) : RoedtPanacheEntity() {
     constructor() : this(
         frivillig_id = 0,
         tilbakemelding = "",

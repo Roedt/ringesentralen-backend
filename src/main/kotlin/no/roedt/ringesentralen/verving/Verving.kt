@@ -2,7 +2,7 @@ package no.roedt.ringesentralen.verving
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.RingesentralenPanacheEntity
+import no.roedt.RoedtPanacheEntity
 import javax.enterprise.context.Dependent
 import javax.persistence.Cacheable
 import javax.persistence.Entity
@@ -18,7 +18,7 @@ data class Verving(
     var etternavn: String,
     var postnummer: Int,
     var verversNavn: String?
-) : RingesentralenPanacheEntity() {
+) : RoedtPanacheEntity() {
     constructor() : this(
         telefonnummer = "",
         fornavn = "",

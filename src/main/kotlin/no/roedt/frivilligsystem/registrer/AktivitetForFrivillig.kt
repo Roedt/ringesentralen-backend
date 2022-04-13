@@ -2,7 +2,7 @@ package no.roedt.frivilligsystem.registrer
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.RingesentralenPanacheEntity
+import no.roedt.RoedtPanacheEntity
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
 import javax.persistence.Entity
@@ -17,7 +17,7 @@ import javax.persistence.Table
 data class AktivitetForFrivillig(
     var frivillig_id: Int,
     @Enumerated(EnumType.STRING) var aktivitet: Aktivitet
-) : RingesentralenPanacheEntity() {
+) : RoedtPanacheEntity() {
     constructor() : this(
         0,
         Aktivitet.Bil

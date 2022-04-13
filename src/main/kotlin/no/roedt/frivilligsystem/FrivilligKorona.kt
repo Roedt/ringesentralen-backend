@@ -2,7 +2,7 @@ package no.roedt.frivilligsystem
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.RingesentralenPanacheEntity
+import no.roedt.RoedtPanacheEntity
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
 import javax.persistence.Entity
@@ -18,7 +18,7 @@ data class FrivilligKorona(
     var personlig: Boolean,
     var tydelig: String,
     var forslag: String
-) : RingesentralenPanacheEntity() {
+) : RoedtPanacheEntity() {
     constructor() : this(
         frivillig_id = 0,
         haandtering = "",

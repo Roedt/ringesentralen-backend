@@ -2,7 +2,7 @@ package no.roedt.frivilligsystem
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.RingesentralenPanacheEntity
+import no.roedt.RoedtPanacheEntity
 import no.roedt.frivilligsystem.registrer.ErMedlemStatus
 import java.time.Instant
 import javax.enterprise.context.ApplicationScoped
@@ -26,7 +26,7 @@ data class Frivillig(
     var spraak: String?,
     var fortellLittOmDegSelv: String?,
     var registrertTidspunkt: Instant
-) : RingesentralenPanacheEntity() {
+) : RoedtPanacheEntity() {
     constructor() : this(
         personId = 0,
         alleredeAktivILokallag = false,

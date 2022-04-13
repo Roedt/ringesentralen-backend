@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public abstract class RingesentralenPanacheEntity extends PanacheEntityBase {
+public abstract class RoedtPanacheEntity extends PanacheEntityBase {
     @Id
     @GeneratedValue
     public Integer id;

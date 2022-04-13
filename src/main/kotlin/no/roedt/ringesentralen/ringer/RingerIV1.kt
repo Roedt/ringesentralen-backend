@@ -2,7 +2,7 @@ package no.roedt.ringesentralen.person
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.RingesentralenPanacheEntity
+import no.roedt.RoedtPanacheEntity
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Entity
 import javax.persistence.Table
@@ -13,7 +13,7 @@ import javax.persistence.Table
 data class RingerIV1(
     var telefonnummer: String,
     var brukergruppe: Int
-) : RingesentralenPanacheEntity() {
+) : RoedtPanacheEntity() {
     constructor() : this(
         telefonnummer = "",
         brukergruppe = 0

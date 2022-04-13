@@ -2,7 +2,7 @@ package no.roedt.ringesentralen.samtale.start
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.RingesentralenPanacheEntity
+import no.roedt.RoedtPanacheEntity
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Entity
 import javax.persistence.Table
@@ -13,7 +13,7 @@ import javax.persistence.Table
 data class Oppslag(
     var ringt: Int,
     var ringerHypersysId: Int
-) : RingesentralenPanacheEntity() {
+) : RoedtPanacheEntity() {
     constructor() : this(
         ringt = 0,
         ringerHypersysId = 0

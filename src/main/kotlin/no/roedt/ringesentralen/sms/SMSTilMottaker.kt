@@ -2,7 +2,7 @@ package no.roedt.frivilligsystem.sms
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.RingesentralenPanacheEntity
+import no.roedt.RoedtPanacheEntity
 import no.roedt.ringesentralen.sms.Utsendingsstatus
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
@@ -19,7 +19,7 @@ data class SMSTilMottaker(
     var sms_id: Int,
     var mottaker_id: Int,
     @Enumerated(EnumType.STRING) var utsendingsstatus: Utsendingsstatus
-) : RingesentralenPanacheEntity() {
+) : RoedtPanacheEntity() {
     constructor() : this(
         sms_id = 0,
         mottaker_id = 0,

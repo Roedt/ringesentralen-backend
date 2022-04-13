@@ -2,7 +2,7 @@ package no.roedt.person
 
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.Kilde
-import no.roedt.RingesentralenPanacheEntity
+import no.roedt.RoedtPanacheEntity
 import no.roedt.brukere.GroupID
 import javax.persistence.Cacheable
 import javax.persistence.Entity
@@ -26,7 +26,7 @@ data class Person(
     private var groupID: Int,
     @Enumerated(EnumType.STRING) var kilde: Kilde,
     var iperID: Int?
-) : RingesentralenPanacheEntity() {
+) : RoedtPanacheEntity() {
     fun isSystembruker(): Boolean = fornavn == "Systembruker" && etternavn == "Frontend"
 
     constructor() : this(
