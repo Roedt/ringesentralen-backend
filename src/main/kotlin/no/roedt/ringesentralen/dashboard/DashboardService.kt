@@ -4,9 +4,9 @@ import io.quarkus.panache.common.Sort
 import no.roedt.brukere.FylkeRepository
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagRepository
-import no.roedt.person.GroupID
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.person.RingesentralenGroupID
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
@@ -26,9 +26,9 @@ class DashboardService(
 
         val hypersysID = if (modus == Modus.medlemmer) " is not null" else " is null"
 
-        val igjenAaRingePerLokallag = databaseUpdater.getResultList("SELECT lokallag from person where groupID=${GroupID.KlarTilAaRinges.nr} and hypersysID $hypersysID").filter { lokallagIDar.contains(it) }.groupBy { it }
+        val igjenAaRingePerLokallag = databaseUpdater.getResultList("SELECT lokallag from person where groupID=${RingesentralenGroupID.KlarTilAaRinges.nr} and hypersysID $hypersysID").filter { lokallagIDar.contains(it) }.groupBy { it }
         val personerSomKanRingesPerLokallag = databaseUpdater.getResultList("SELECT lokallag FROM v_personerSomKanRinges where hypersysID $hypersysID").filter { lokallagIDar.contains(it) }.groupBy { it }
-        val totaltInklRingtePerLokallag = databaseUpdater.getResultList("SELECT lokallag from person where groupID iN (${GroupID.Ferdigringt.nr}, ${GroupID.Slett.nr}) and hypersysID $hypersysID").filter { lokallagIDar.contains(it) }.groupBy { it }
+        val totaltInklRingtePerLokallag = databaseUpdater.getResultList("SELECT lokallag from person where groupID iN (${RingesentralenGroupID.Ferdigringt.nr}, ${RingesentralenGroupID.Slett.nr}) and hypersysID $hypersysID").filter { lokallagIDar.contains(it) }.groupBy { it }
 
         val statusliste: List<Lokallagsstatus> = mineLokallag
             .map { lokallag ->
@@ -46,8 +46,8 @@ class DashboardService(
     }
 
     private fun getMineLokallag(ringer: Person): List<Lokallag> = when {
-        GroupID.Admin.references(ringer.groupID()) -> lokallagRepository.findAll(Sort.ascending("navn")).list()
-        GroupID.LokalGodkjenner.references(ringer.groupID()) -> lokallagRepository.fromFylke(ringer.fylke)
+        RingesentralenGroupID.Admin.references(ringer.groupID()) -> lokallagRepository.findAll(Sort.ascending("navn")).list()
+        RingesentralenGroupID.LokalGodkjenner.references(ringer.groupID()) -> lokallagRepository.fromFylke(ringer.fylke)
         else -> lokallagRepository.list("id", ringer.lokallag.toLong())
     }
 

@@ -4,6 +4,7 @@ import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.GroupID
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.person.RingesentralenGroupID
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
@@ -70,9 +71,9 @@ class RingServiceBean(
     }
 
     private fun getNesteGroupID(request: ResultatFraSamtaleRequest): GroupID? = when {
-        request.vilIkkeBliRingt -> GroupID.Ferdigringt
+        request.vilIkkeBliRingt -> RingesentralenGroupID.Ferdigringt
         request.resultat.nesteGroupID != null -> request.resultat.nesteGroupID
-        erFleireEnnToIkkeSvar(request) -> GroupID.Ferdigringt
+        erFleireEnnToIkkeSvar(request) -> RingesentralenGroupID.Ferdigringt
         else -> null
     }
 
@@ -85,7 +86,7 @@ class RingServiceBean(
     }
 
     fun isBrukerEllerVenterPaaGodkjenning(ringer: Int) =
-        GroupID.isBrukerEllerVenter(
+        RingesentralenGroupID.isBrukerEllerVenter(
             ringerRepository.find("personId=?1", ringer).singleResultOptional<Ringer>()
                 .map { it.personId }
                 .map { personRepository.findById(it) }

@@ -9,6 +9,7 @@ import no.roedt.person.EpostValidator
 import no.roedt.person.GroupID
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.person.RingesentralenGroupID
 import no.roedt.ringesentralen.person.Ringer
 import no.roedt.ringesentralen.person.RingerIV1Repository
 import no.roedt.ringesentralen.person.RingerRepository
@@ -67,8 +68,8 @@ class HypersysLoginBean(
         val groupID: Optional<Int> = personRepository.find("hypersysID=?1", profile.user.id)
             .singleResultOptional<Person>()
             .map { it.groupID() }
-        if (!groupID.isPresent || GroupID.isIkkeRegistrertRinger(groupID.get())) {
-            return GroupID.UgodkjentRinger.nr
+        if (!groupID.isPresent || RingesentralenGroupID.isIkkeRegistrertRinger(groupID.get())) {
+            return RingesentralenGroupID.UgodkjentRinger.nr
         }
         return groupID.get()
     }
@@ -95,21 +96,22 @@ class HypersysLoginBean(
             ?.let { convertedPerson.setGroupID(maksBrukergruppe(it, convertedPerson.groupID())) }
     }
 
+    // TODO: Denne er malplassert, flytt
     private fun maksBrukergruppe(it: Int, groupID: Int): GroupID =
         when {
-            GroupID.AvslaattRinger.oneOf(it, groupID) -> GroupID.AvslaattRinger
-            GroupID.Admin.oneOf(it, groupID) -> GroupID.Admin
-            GroupID.LokalGodkjenner.oneOf(it, groupID) -> GroupID.LokalGodkjenner
-            GroupID.GodkjentRingerMedlemmer.oneOf(it, groupID) -> GroupID.GodkjentRingerMedlemmer
-            GroupID.GodkjentRinger.oneOf(it, groupID) -> GroupID.GodkjentRinger
-            GroupID.UgodkjentRinger.oneOf(it, groupID) -> GroupID.UgodkjentRinger
-            GroupID.Frivillig.oneOf(it, groupID) -> GroupID.Frivillig
-            GroupID.PrioritertAaRinge.oneOf(it, groupID) -> GroupID.PrioritertAaRinge
-            GroupID.TrengerOppfoelging.oneOf(it, groupID) -> GroupID.TrengerOppfoelging
-            GroupID.Slett.oneOf(it, groupID) -> GroupID.Slett
-            GroupID.Ferdigringt.oneOf(it, groupID) -> GroupID.Ferdigringt
-            GroupID.KlarTilAaRinges.oneOf(it, groupID) -> GroupID.KlarTilAaRinges
-            GroupID.ManglerSamtykke.oneOf(it, groupID) -> GroupID.ManglerSamtykke
-            else -> GroupID.ManglerSamtykke
+            RingesentralenGroupID.AvslaattRinger.oneOf(it, groupID) -> RingesentralenGroupID.AvslaattRinger
+            RingesentralenGroupID.Admin.oneOf(it, groupID) -> RingesentralenGroupID.Admin
+            RingesentralenGroupID.LokalGodkjenner.oneOf(it, groupID) -> RingesentralenGroupID.LokalGodkjenner
+            RingesentralenGroupID.GodkjentRingerMedlemmer.oneOf(it, groupID) -> RingesentralenGroupID.GodkjentRingerMedlemmer
+            RingesentralenGroupID.GodkjentRinger.oneOf(it, groupID) -> RingesentralenGroupID.GodkjentRinger
+            RingesentralenGroupID.UgodkjentRinger.oneOf(it, groupID) -> RingesentralenGroupID.UgodkjentRinger
+            RingesentralenGroupID.Frivillig.oneOf(it, groupID) -> RingesentralenGroupID.Frivillig
+            RingesentralenGroupID.PrioritertAaRinge.oneOf(it, groupID) -> RingesentralenGroupID.PrioritertAaRinge
+            RingesentralenGroupID.TrengerOppfoelging.oneOf(it, groupID) -> RingesentralenGroupID.TrengerOppfoelging
+            RingesentralenGroupID.Slett.oneOf(it, groupID) -> RingesentralenGroupID.Slett
+            RingesentralenGroupID.Ferdigringt.oneOf(it, groupID) -> RingesentralenGroupID.Ferdigringt
+            RingesentralenGroupID.KlarTilAaRinges.oneOf(it, groupID) -> RingesentralenGroupID.KlarTilAaRinges
+            RingesentralenGroupID.ManglerSamtykke.oneOf(it, groupID) -> RingesentralenGroupID.ManglerSamtykke
+            else -> RingesentralenGroupID.ManglerSamtykke
         }
 }

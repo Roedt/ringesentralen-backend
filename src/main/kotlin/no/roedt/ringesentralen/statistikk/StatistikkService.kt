@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.statistikk
 
-import no.roedt.person.GroupID
+import no.roedt.person.RingesentralenGroupID
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.samtale.resultat.Resultat
@@ -49,8 +49,8 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
             antallSomHarRingt = get("select distinct ringer from `samtale`").size,
             aktiveRingereDenSisteTimen = get("select distinct ringer from `samtale` where UNIX_TIMESTAMP(now()) - unix_timestamp(datetime) < 3600").size,
             aktiveRingereIDag = get("select distinct ringer from `samtale` where CURDATE() =  DATE(datetime)").size,
-            lokaleGodkjennere = get("select 1 FROM person WHERE groupID=${GroupID.LokalGodkjenner.nr}").size,
-            avvisteRingere = get("select 1 FROM person WHERE groupID=${GroupID.AvslaattRinger.nr}").size,
+            lokaleGodkjennere = get("select 1 FROM person WHERE groupID=${RingesentralenGroupID.LokalGodkjenner.nr}").size,
+            avvisteRingere = get("select 1 FROM person WHERE groupID=${RingesentralenGroupID.AvslaattRinger.nr}").size,
             antallLokallagRingtFraTotalt = get(
                 "select distinct ringer from `samtale` c " +
                     "inner join ringer ringer on c.ringer = ringer.id " +
@@ -61,10 +61,10 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
 
     private fun getPersonerStatistikkResponse(): PersonerStatistikkResponse = PersonerStatistikkResponse(
         antallPersonerISystemetTotalt = get("SELECT 1 FROM person").size,
-        ringere = get("SELECT 1 FROM person WHERE groupID in (${GroupID.GodkjentRinger.nr}, ${GroupID.GodkjentRingerMedlemmer.nr}, ${GroupID.LokalGodkjenner.nr}, ${GroupID.Admin.nr} )").size,
-        ferdigringte = get("select 1 FROM person WHERE groupID=${GroupID.Ferdigringt.nr} or groupID=${GroupID.Slett.nr}").size,
-        ringtUtenSvar = get("select 1 FROM person p inner join samtale s on s.ringt=p.id AND p.groupID=${GroupID.KlarTilAaRinges.nr}").size,
-        ikkeRingt = get("select 1 FROM person p where p.groupID < ${GroupID.UgodkjentRinger.nr} and not exists (select 1 from samtale s where s.ringt=p.id)").size,
+        ringere = get("SELECT 1 FROM person WHERE groupID in (${RingesentralenGroupID.GodkjentRinger.nr}, ${RingesentralenGroupID.GodkjentRingerMedlemmer.nr}, ${RingesentralenGroupID.LokalGodkjenner.nr}, ${RingesentralenGroupID.Admin.nr} )").size,
+        ferdigringte = get("select 1 FROM person WHERE groupID=${RingesentralenGroupID.Ferdigringt.nr} or groupID=${RingesentralenGroupID.Slett.nr}").size,
+        ringtUtenSvar = get("select 1 FROM person p inner join samtale s on s.ringt=p.id AND p.groupID=${RingesentralenGroupID.KlarTilAaRinges.nr}").size,
+        ikkeRingt = get("select 1 FROM person p where p.groupID < ${RingesentralenGroupID.UgodkjentRinger.nr} and not exists (select 1 from samtale s where s.ringt=p.id)").size,
         antallLokallagMedPersonerTilknytta = get("select distinct lokallag FROM person where lokallag is not null").size
     )
 

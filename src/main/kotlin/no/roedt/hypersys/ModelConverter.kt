@@ -5,9 +5,9 @@ import no.roedt.brukere.FylkeRepository
 import no.roedt.hypersys.externalModel.Membership
 import no.roedt.hypersys.externalModel.User
 import no.roedt.lokallag.LokallagRepository
-import no.roedt.person.GroupID
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.person.RingesentralenGroupID
 import javax.enterprise.context.Dependent
 
 interface ModelConverter {
@@ -53,7 +53,8 @@ class ModelConverterBean(
         val groupID = personRepository.find("telefonnummer", telefonnummer)
             .singleResultOptional<Person>()
             .map { it.groupID() }
-            .orElse(GroupID.KlarTilAaRinges.nr)
+            .orElse(RingesentralenGroupID.KlarTilAaRinges.nr)
+        // TODO: Finn på noko lurt her
 
         return Person(
             hypersysID = map["member_id"].toString().toInt(),

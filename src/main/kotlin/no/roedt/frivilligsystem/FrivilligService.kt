@@ -15,9 +15,9 @@ import no.roedt.frivilligsystem.registrer.AutentisertSoMeFrivilligRequest
 import no.roedt.frivilligsystem.registrer.ErMedlemStatus
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.lokallag.LokallagRepository
-import no.roedt.person.GroupID
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.person.RingesentralenGroupID
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Roles
@@ -135,13 +135,13 @@ class FrivilligService(
             postnummer = postnummer,
             fylke = fylkeRepository.getFylke(lokallag, postnummer),
             lokallag = lokallag,
-            groupID = GroupID.Frivillig.nr,
+            groupID = RingesentralenGroupID.Frivillig.nr,
             kilde = Kilde.Frivillig,
             iperID = null
         )
         val eksisterendePerson = personRepository.finnPerson(person = person)
-        if (!GroupID.isBrukerEllerVenter(eksisterendePerson?.groupID() ?: -1)) {
-            eksisterendePerson?.setGroupID(GroupID.Frivillig)
+        if (!RingesentralenGroupID.isBrukerEllerVenter(eksisterendePerson?.groupID() ?: -1)) {
+            eksisterendePerson?.setGroupID(RingesentralenGroupID.Frivillig)
         }
         return eksisterendePerson ?: person
     }

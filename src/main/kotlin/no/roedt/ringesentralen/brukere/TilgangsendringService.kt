@@ -9,6 +9,7 @@ import no.roedt.hypersys.ModelConverter
 import no.roedt.person.GroupID
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.person.RingesentralenGroupID
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.DatabaseUpdater
 import javax.enterprise.context.ApplicationScoped
@@ -34,22 +35,22 @@ class TilgangsendringServiceBean(
 ) : TilgangsendringService {
 
     override fun aktiverRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring =
-        endreTilgang(godkjennRequest, GroupID.GodkjentRinger)
+        endreTilgang(godkjennRequest, RingesentralenGroupID.GodkjentRinger)
 
     override fun giTilgangTilAaRingeMedlemmer(godkjennRequest: AutentisertTilgangsendringRequest) =
-        endreTilgang(godkjennRequest, GroupID.GodkjentRingerMedlemmer)
+        endreTilgang(godkjennRequest, RingesentralenGroupID.GodkjentRingerMedlemmer)
 
     override fun fjernTilgangTilAaRingeMedlemmer(request: AutentisertTilgangsendringRequest) =
-        endreTilgang(request, GroupID.GodkjentRinger)
+        endreTilgang(request, RingesentralenGroupID.GodkjentRinger)
 
     override fun deaktiverRinger(deaktiverRequest: AutentisertTilgangsendringRequest): Brukerendring =
-        endreTilgang(deaktiverRequest, GroupID.AvslaattRinger)
+        endreTilgang(deaktiverRequest, RingesentralenGroupID.AvslaattRinger)
 
     override fun gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring =
-        endreTilgang(tilLokalGodkjennerRequest, GroupID.LokalGodkjenner)
+        endreTilgang(tilLokalGodkjennerRequest, RingesentralenGroupID.LokalGodkjenner)
 
     override fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring =
-        endreTilgang(fjernSomLokalGodkjennerRequest, GroupID.GodkjentRingerMedlemmer)
+        endreTilgang(fjernSomLokalGodkjennerRequest, RingesentralenGroupID.GodkjentRingerMedlemmer)
 
     private fun endreTilgang(request: AutentisertTilgangsendringRequest, nyTilgang: GroupID): Brukerendring {
         assertAutorisert(request)
@@ -101,8 +102,8 @@ class TilgangsendringServiceBean(
         val groupID = personMedEndraTilgang.groupID()
 
         if (personMedEndraTilgang.isSystembruker()) throw ForbiddenException("Kan ikkje endre systembruker")
-        if (GroupID.Admin.references(groupID)) throw ForbiddenException("Kan ikkje endre admins")
-        if (GroupID.LokalGodkjenner.references(ringersBrukertype) && GroupID.LokalGodkjenner.references(groupID)) throw ForbiddenException(
+        if (RingesentralenGroupID.Admin.references(groupID)) throw ForbiddenException("Kan ikkje endre admins")
+        if (RingesentralenGroupID.LokalGodkjenner.references(ringersBrukertype) && RingesentralenGroupID.LokalGodkjenner.references(groupID)) throw ForbiddenException(
             "Godkjennere kan ikkje endre andre godjennere"
         )
     }

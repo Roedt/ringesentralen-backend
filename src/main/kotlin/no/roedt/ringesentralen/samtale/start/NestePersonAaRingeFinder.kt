@@ -4,6 +4,7 @@ import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.GroupID
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.person.RingesentralenGroupID
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.Roles
@@ -48,8 +49,8 @@ class NestePersonAaRingeFinder(
         val ringer = personRepository.getPerson(request.userId)
         if (ringer.lokallag != request.lokallag && !GroupID.referencesOneOf(
                 ringer.groupID(),
-                GroupID.LokalGodkjenner,
-                GroupID.Admin
+                RingesentralenGroupID.LokalGodkjenner,
+                RingesentralenGroupID.Admin
             )
         ) {
             throw NotAuthorizedException("Kun godkjennarar og admins kan ringe utanfor eiget lokallag", "")
@@ -63,7 +64,7 @@ class NestePersonAaRingeFinder(
                 AND hypersysID is null 
                 ORDER BY ABS(lokallag-'$lokallag') ASC, 
                 hypersysID DESC,
-                brukergruppe = ${GroupID.PrioritertAaRinge.nr} DESC,
+                brukergruppe = ${RingesentralenGroupID.PrioritertAaRinge.nr} DESC,
                 sisteSamtale ASC,
                 v.hypersysID DESC
         """

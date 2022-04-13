@@ -10,6 +10,7 @@ import no.roedt.hypersys.login.LoginRequest
 import no.roedt.person.GroupID
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.person.RingesentralenGroupID
 import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Duration
@@ -89,11 +90,11 @@ class TokenService(
             .also { i -> if (i.isEmpty()) println("Fann ingen roller for ${hypersysToken.user_id}") }
 
     private fun getRolle(hypersysToken: GyldigPersonToken, person: Person): GroupID {
-        var groupID = GroupID.from(getPersonFromHypersysID(hypersysToken).groupID())
-        if (GroupID.isIkkeRegistrertRinger(groupID.nr)) {
-            groupID = GroupID.from(person.groupID())
+        var groupID = RingesentralenGroupID.from(getPersonFromHypersysID(hypersysToken).groupID())
+        if (RingesentralenGroupID.isIkkeRegistrertRinger(groupID.nr)) {
+            groupID = RingesentralenGroupID.from(person.groupID())
         }
-        if (groupID.nr < GroupID.UgodkjentRinger.nr)
+        if (groupID.nr < RingesentralenGroupID.UgodkjentRinger.nr)
             throw NotAuthorizedException("${hypersysToken.user_id} har ikkje gyldig rolle for å bruke systemet.", "")
         return groupID
     }

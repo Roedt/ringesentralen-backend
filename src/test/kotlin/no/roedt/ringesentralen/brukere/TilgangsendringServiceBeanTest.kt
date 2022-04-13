@@ -11,9 +11,9 @@ import no.roedt.brukere.GodkjenningRepository
 import no.roedt.brukere.TilgangsendringsRequest
 import no.roedt.hypersys.HypersysService
 import no.roedt.hypersys.ModelConverter
-import no.roedt.person.GroupID
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.person.RingesentralenGroupID
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.DatabaseUpdater
 import org.junit.jupiter.api.Test
@@ -59,11 +59,11 @@ internal class TilgangsendringServiceBeanTest {
             )
         )
         assertEquals(2, brukerendring.personID)
-        assertEquals(GroupID.GodkjentRinger, brukerendring.nyGroupId)
+        assertEquals(RingesentralenGroupID.GodkjentRinger, brukerendring.nyGroupId)
         assertTrue { brukerendring.epostSendt }
-        verify(personRepository).update(any(), eq(GroupID.GodkjentRinger.nr), eq(2))
+        verify(personRepository).update(any(), eq(RingesentralenGroupID.GodkjentRinger.nr), eq(2))
         verify(hypersysService).hentFraMedlemslista(3)
-        verify(epostSender).sendEpostOmEndraStatus(person = eq(ringt), nyTilgang = eq(GroupID.GodkjentRinger))
+        verify(epostSender).sendEpostOmEndraStatus(person = eq(ringt), nyTilgang = eq(RingesentralenGroupID.GodkjentRinger))
     }
 
     @Test
@@ -72,7 +72,7 @@ internal class TilgangsendringServiceBeanTest {
 
         val ringt = Person()
         ringt.hypersysID = 3
-        ringt.setGroupID(GroupID.Admin)
+        ringt.setGroupID(RingesentralenGroupID.Admin)
         doReturn(ringt).whenever(personRepository).findById(2)
 
         doReturn(listOf(1L)).whenever(databaseUpdater).getResultList(any())
@@ -90,7 +90,7 @@ internal class TilgangsendringServiceBeanTest {
 
     private fun setupRinger(): UserId {
         val ringerPerson = Person()
-        ringerPerson.setGroupID(GroupID.LokalGodkjenner)
+        ringerPerson.setGroupID(RingesentralenGroupID.LokalGodkjenner)
         val userId = UserId(userId = 1)
         val panacheQuery: PanacheQuery<Person> = mock()
         doReturn(ringerPerson).whenever(panacheQuery).firstResult<Person>()

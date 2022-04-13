@@ -3,9 +3,9 @@ package no.roedt.ringesentralen.verving
 import no.roedt.Kilde
 import no.roedt.brukere.FylkeRepository
 import no.roedt.lokallag.LokallagRepository
-import no.roedt.person.GroupID
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.person.RingesentralenGroupID
 import javax.enterprise.context.Dependent
 
 @Dependent
@@ -40,7 +40,7 @@ class VervingService(
             postnummer = postnummer,
             fylke = fylkeRepository.toFylke(postnummer),
             lokallag = lokallagRepository.fromPostnummer(postnummer),
-            groupID = GroupID.ManglerSamtykke.nr,
+            groupID = RingesentralenGroupID.ManglerSamtykke.nr,
             kilde = Kilde.Verva,
             iperID = null
         )
@@ -53,10 +53,10 @@ class VervingService(
             .find("telefonnummer", request.request.telefonnummer)
             .firstResultOptional<Person>()
             .map { it.groupID() }
-            .filter { GroupID.isBrukerEllerVenter(it) }
+            .filter { RingesentralenGroupID.isBrukerEllerVenter(it) }
         if (erBruker.isPresent) return
 
-        val nextValue = if (request.request.svar) GroupID.PrioritertAaRinge else GroupID.Slett
+        val nextValue = if (request.request.svar) RingesentralenGroupID.PrioritertAaRinge else RingesentralenGroupID.Slett
         personRepository.update("groupID=?1 where telefonnummer=?2", nextValue.nr, request.request.telefonnummer)
     }
 }

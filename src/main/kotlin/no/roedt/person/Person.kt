@@ -45,7 +45,7 @@ data class Person(
     fun groupID() = groupID
 
     fun setGroupID(groupID: Int) {
-        if (GroupID.isBrukerEllerVenter(this.groupID) && GroupID.isIkkeRegistrertRinger(groupID)) {
+        if (RingesentralenGroupID.isBrukerEllerVenter(this.groupID) && RingesentralenGroupID.isIkkeRegistrertRinger(groupID)) {
             throw RuntimeException("$id er allerede ringer, og kan ikke settes til ei ikke-ringer-rolle.")
         }
         this.groupID = groupID

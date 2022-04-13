@@ -4,9 +4,9 @@ import no.roedt.brukere.AutentisertGetBrukereRequest
 import no.roedt.brukere.Brukerinformasjon
 import no.roedt.brukere.FylkeRepository
 import no.roedt.lokallag.LokallagRepository
-import no.roedt.person.GroupID
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.person.RingesentralenGroupID
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.person.Ringer
@@ -31,7 +31,7 @@ class BrukereServiceBean(
         val filtrerPaaFylke = if (request.groups.contains(Roles.admin)) "" else "and fylke=$brukersFylke"
         return personRepository.list(
             "(groupID=?1 or groupID=?2 or groupID=?3 or groupID=?4 or groupID=?5 or groupID=?6) $filtrerPaaFylke",
-            GroupID.UgodkjentRinger.nr, GroupID.AvslaattRinger.nr, GroupID.GodkjentRinger.nr, GroupID.GodkjentRingerMedlemmer.nr, GroupID.LokalGodkjenner.nr, GroupID.Admin.nr
+            RingesentralenGroupID.UgodkjentRinger.nr, RingesentralenGroupID.AvslaattRinger.nr, RingesentralenGroupID.GodkjentRinger.nr, RingesentralenGroupID.GodkjentRingerMedlemmer.nr, RingesentralenGroupID.LokalGodkjenner.nr, RingesentralenGroupID.Admin.nr
         )
             .filter { !it.isSystembruker() }
             .map(this::toBrukerinformasjon)
@@ -47,7 +47,7 @@ class BrukereServiceBean(
         epost = r.email ?: "",
         hypersysID = r.hypersysID ?: -1,
         lokallag = lokallagRepository.findById(r.lokallag),
-        rolle = GroupID.from(r.groupID()).roller,
+        rolle = RingesentralenGroupID.from(r.groupID()).roller,
         registreringstidspunkt = ringerRepository.find("personId", r.id.toInt()).firstResult<Ringer>().oppretta
     )
 }

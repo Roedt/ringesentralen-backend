@@ -1,8 +1,8 @@
 package no.roedt.ringesentralen.samtale.telefonsvarer
 
-import no.roedt.person.GroupID
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.person.RingesentralenGroupID
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.person.Ringer
 import no.roedt.ringesentralen.person.RingerRepository
@@ -38,7 +38,7 @@ class TelefonsvarerService(
             )
         )
 
-        if (GroupID.isBrukerEllerVenter(person.groupID())) return
+        if (RingesentralenGroupID.isBrukerEllerVenter(person.groupID())) return
         request.resultat().nesteGroupID?.nr?.let { personRepository.update("groupID=?1 where id=?2", it, person.id) }
     }
 }
