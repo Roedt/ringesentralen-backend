@@ -1,6 +1,5 @@
 package no.roedt.hypersys.login
 
-import no.roedt.brukere.GroupID
 import no.roedt.hypersys.GyldigPersonToken
 import no.roedt.hypersys.ModelConverter
 import no.roedt.hypersys.Token
@@ -93,25 +92,6 @@ class HypersysLoginBean( // TODO: Gå over denne klassa og skil ut det ringespes
         ringerIV1Repository.list("telefonnummer", convertedPerson.telefonnummer?.replace("+47", ""))
             .map { it.brukergruppe }
             .firstOrNull()
-            ?.let { convertedPerson.setGroupID(maksBrukergruppe(it, convertedPerson.groupID())) }
+            ?.let { convertedPerson.setGroupID(RingesentralenGroupID.maks(it, convertedPerson.groupID())) }
     }
-
-    // TODO: Denne er malplassert, flytt
-    private fun maksBrukergruppe(it: Int, groupID: Int): GroupID =
-        when {
-            RingesentralenGroupID.AvslaattRinger.oneOf(it, groupID) -> RingesentralenGroupID.AvslaattRinger
-            RingesentralenGroupID.Admin.oneOf(it, groupID) -> RingesentralenGroupID.Admin
-            RingesentralenGroupID.LokalGodkjenner.oneOf(it, groupID) -> RingesentralenGroupID.LokalGodkjenner
-            RingesentralenGroupID.GodkjentRingerMedlemmer.oneOf(it, groupID) -> RingesentralenGroupID.GodkjentRingerMedlemmer
-            RingesentralenGroupID.GodkjentRinger.oneOf(it, groupID) -> RingesentralenGroupID.GodkjentRinger
-            RingesentralenGroupID.UgodkjentRinger.oneOf(it, groupID) -> RingesentralenGroupID.UgodkjentRinger
-            RingesentralenGroupID.Frivillig.oneOf(it, groupID) -> RingesentralenGroupID.Frivillig
-            RingesentralenGroupID.PrioritertAaRinge.oneOf(it, groupID) -> RingesentralenGroupID.PrioritertAaRinge
-            RingesentralenGroupID.TrengerOppfoelging.oneOf(it, groupID) -> RingesentralenGroupID.TrengerOppfoelging
-            RingesentralenGroupID.Slett.oneOf(it, groupID) -> RingesentralenGroupID.Slett
-            RingesentralenGroupID.Ferdigringt.oneOf(it, groupID) -> RingesentralenGroupID.Ferdigringt
-            RingesentralenGroupID.KlarTilAaRinges.oneOf(it, groupID) -> RingesentralenGroupID.KlarTilAaRinges
-            RingesentralenGroupID.ManglerSamtykke.oneOf(it, groupID) -> RingesentralenGroupID.ManglerSamtykke
-            else -> RingesentralenGroupID.ManglerSamtykke
-        }
 }

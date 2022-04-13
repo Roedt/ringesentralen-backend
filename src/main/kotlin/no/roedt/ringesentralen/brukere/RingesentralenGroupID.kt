@@ -24,5 +24,22 @@ enum class RingesentralenGroupID(override val nr: Int, override val skildring: S
         fun from(value: Int): GroupID = values().first { it.nr == value }
         fun isBrukerEllerVenter(groupID: Int) = referencesOneOf(groupID, UgodkjentRinger, GodkjentRinger, GodkjentRingerMedlemmer, LokalGodkjenner, Admin)
         fun isIkkeRegistrertRinger(groupID: Int) = referencesOneOf(groupID, ManglerSamtykke, KlarTilAaRinges, Ferdigringt, Slett, PrioritertAaRinge, Frivillig)
+        fun maks(nyBrukergruppe: Int, eksisterendeBrukergruppe: Int): GroupID =
+            when {
+                AvslaattRinger.oneOf(nyBrukergruppe, eksisterendeBrukergruppe) -> AvslaattRinger
+                Admin.oneOf(nyBrukergruppe, eksisterendeBrukergruppe) -> Admin
+                LokalGodkjenner.oneOf(nyBrukergruppe, eksisterendeBrukergruppe) -> LokalGodkjenner
+                GodkjentRingerMedlemmer.oneOf(nyBrukergruppe, eksisterendeBrukergruppe) -> GodkjentRingerMedlemmer
+                GodkjentRinger.oneOf(nyBrukergruppe, eksisterendeBrukergruppe) -> GodkjentRinger
+                UgodkjentRinger.oneOf(nyBrukergruppe, eksisterendeBrukergruppe) -> UgodkjentRinger
+                Frivillig.oneOf(nyBrukergruppe, eksisterendeBrukergruppe) -> Frivillig
+                PrioritertAaRinge.oneOf(nyBrukergruppe, eksisterendeBrukergruppe) -> PrioritertAaRinge
+                TrengerOppfoelging.oneOf(nyBrukergruppe, eksisterendeBrukergruppe) -> TrengerOppfoelging
+                Slett.oneOf(nyBrukergruppe, eksisterendeBrukergruppe) -> Slett
+                Ferdigringt.oneOf(nyBrukergruppe, eksisterendeBrukergruppe) -> Ferdigringt
+                KlarTilAaRinges.oneOf(nyBrukergruppe, eksisterendeBrukergruppe) -> KlarTilAaRinges
+                ManglerSamtykke.oneOf(nyBrukergruppe, eksisterendeBrukergruppe) -> ManglerSamtykke
+                else -> ManglerSamtykke
+            }
     }
 }
