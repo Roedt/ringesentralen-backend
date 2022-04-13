@@ -1,12 +1,12 @@
 package no.roedt.ringesentralen.samtale.start
 
+import no.roedt.KommuneRepository
 import no.roedt.hypersys.HypersysService
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.DatabaseUpdater
-import no.roedt.ringesentralen.KommuneRepository
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime

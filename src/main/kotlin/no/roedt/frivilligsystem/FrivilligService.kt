@@ -1,5 +1,7 @@
 package no.roedt.frivilligsystem
 
+import no.roedt.Emojifjerner
+import no.roedt.Kilde
 import no.roedt.brukere.FylkeRepository
 import no.roedt.frivilligsystem.kontakt.AutentisertRegistrerKontaktRequest
 import no.roedt.frivilligsystem.kontakt.Kontakt
@@ -18,7 +20,6 @@ import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.DatabaseUpdater
-import no.roedt.ringesentralen.Kilde
 import no.roedt.ringesentralen.Roles
 import java.time.Instant
 import javax.enterprise.context.ApplicationScoped

@@ -1,8 +1,8 @@
 package no.roedt.person
 
 import io.quarkus.runtime.annotations.RegisterForReflection
+import no.roedt.Kilde
 import no.roedt.RingesentralenPanacheEntity
-import no.roedt.ringesentralen.Kilde
 import javax.persistence.Cacheable
 import javax.persistence.Entity
 import javax.persistence.EnumType

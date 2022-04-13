@@ -1,4 +1,4 @@
-package no.roedt.frivilligsystem
+package no.roedt
 
 import com.vdurmont.emoji.EmojiParser
 import javax.enterprise.context.ApplicationScoped

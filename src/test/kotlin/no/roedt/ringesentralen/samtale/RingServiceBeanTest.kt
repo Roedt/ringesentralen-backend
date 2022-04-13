@@ -6,12 +6,12 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.spy
 import com.nhaarman.mockitokotlin2.whenever
 import io.quarkus.hibernate.orm.panache.PanacheQuery
+import no.roedt.Kilde
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.DatabaseUpdater
-import no.roedt.ringesentralen.Kilde
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.person.RingerRepository
 import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest

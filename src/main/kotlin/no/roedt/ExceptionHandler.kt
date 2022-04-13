@@ -1,4 +1,4 @@
-package no.roedt.frivilligsystem
+package no.roedt
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import javax.ws.rs.core.Response

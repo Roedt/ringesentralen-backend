@@ -1,7 +1,7 @@
 package no.roedt.person
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
-import no.roedt.ringesentralen.Kilde
+import no.roedt.Kilde
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped

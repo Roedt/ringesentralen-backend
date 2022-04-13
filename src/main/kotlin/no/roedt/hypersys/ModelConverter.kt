@@ -1,5 +1,6 @@
 package no.roedt.hypersys
 
+import no.roedt.Kilde
 import no.roedt.brukere.FylkeRepository
 import no.roedt.hypersys.externalModel.Membership
 import no.roedt.hypersys.externalModel.User
@@ -7,7 +8,6 @@ import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.GroupID
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
-import no.roedt.ringesentralen.Kilde
 import javax.enterprise.context.Dependent
 
 interface ModelConverter {

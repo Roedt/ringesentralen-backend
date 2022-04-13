@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen
+package no.roedt
 
 enum class Kilde {
     Hypersys,
