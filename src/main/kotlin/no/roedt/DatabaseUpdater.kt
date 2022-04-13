@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen
+package no.roedt
 
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.EntityManager

@@ -6,7 +6,7 @@ import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
-import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.DatabaseUpdater
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime

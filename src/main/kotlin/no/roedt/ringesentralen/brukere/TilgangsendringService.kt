@@ -11,7 +11,7 @@ import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.RingesentralenGroupID
 import no.roedt.person.UserId
-import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.DatabaseUpdater
 import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.ForbiddenException
 

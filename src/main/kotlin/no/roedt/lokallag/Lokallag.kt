@@ -3,7 +3,7 @@ package no.roedt.lokallag
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.RoedtPanacheEntity
-import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.DatabaseUpdater
 import java.time.Instant
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable

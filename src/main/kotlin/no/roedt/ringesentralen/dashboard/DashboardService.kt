@@ -8,7 +8,7 @@ import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.RingesentralenGroupID
 import no.roedt.person.UserId
-import no.roedt.ringesentralen.DatabaseUpdater
+import no.roedt.DatabaseUpdater
 import no.roedt.ringesentralen.Modus
 import javax.enterprise.context.ApplicationScoped
 
