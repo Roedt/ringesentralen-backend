@@ -6,12 +6,12 @@ import no.roedt.hypersys.GyldigPersonToken
 import no.roedt.hypersys.Token
 import no.roedt.hypersys.UgyldigToken
 import no.roedt.hypersys.login.AESUtil
-import no.roedt.hypersys.login.HypersysLoginBean
 import no.roedt.hypersys.login.LoginRequest
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
-import no.roedt.ringesentralen.brukere.RingesentralenGroupID
+import no.roedt.ringesentralen.RingesentralenLoginBean
 import no.roedt.ringesentralen.Roles
+import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Duration
 import javax.enterprise.context.RequestScoped
@@ -24,7 +24,7 @@ class TokenService(
     private val personRepository: PersonRepository,
     private val privateKeyFactory: PrivateKeyFactory,
     private val secretFactory: SecretFactory,
-    private val hypersysLoginBean: HypersysLoginBean,
+    private val ringesentralenLoginBean: RingesentralenLoginBean,
     private val aesUtil: AESUtil
 ) {
 
@@ -57,7 +57,7 @@ class TokenService(
 
     private fun loginMotHypersys(loginRequest: LoginRequest): Pair<Token, Person?> {
         val hypersysToken: Pair<Token, Person?> = try {
-            hypersysLoginBean.login(loginRequest)
+            ringesentralenLoginBean.login(loginRequest)
         } catch (e: Exception) {
             e.printStackTrace()
             throw ServiceUnavailableException("Kunne ikke kontakte Hypersys")
