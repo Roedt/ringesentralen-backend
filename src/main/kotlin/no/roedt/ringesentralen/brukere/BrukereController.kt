@@ -1,5 +1,10 @@
 package no.roedt.ringesentralen.brukere
 
+import no.roedt.brukere.AutentisertGetBrukereRequest
+import no.roedt.brukere.AutentisertTilgangsendringRequest
+import no.roedt.brukere.Brukerendring
+import no.roedt.brukere.Brukerinformasjon
+import no.roedt.brukere.TilgangsendringsRequest
 import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.faulttolerance.Bulkhead
@@ -33,7 +38,9 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/brukere")
     @Operation(summary = "List ut brukere", description = Roles.godkjennerAdmin)
-    fun getBrukere(@Context ctx: SecurityContext): List<Brukerinformasjon> = brukereService.getBrukere(AutentisertGetBrukereRequest(ctx.userId(), jwt.groups))
+    fun getBrukere(@Context ctx: SecurityContext): List<Brukerinformasjon> = brukereService.getBrukere(
+        AutentisertGetBrukereRequest(ctx.userId(), jwt.groups)
+    )
 
     @RolesAllowed(Roles.godkjenner, Roles.admin)
     @PUT
@@ -44,7 +51,9 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Bulkhead(3)
     @Retry
     @Transactional
-    fun aktiverRinger(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.aktiverRinger(AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt))
+    fun aktiverRinger(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.aktiverRinger(
+        AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
+    )
 
     @RolesAllowed(Roles.godkjenner, Roles.admin)
     @PUT
@@ -55,7 +64,9 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Bulkhead(3)
     @Retry
     @Transactional
-    fun giTilgangTilAaRingeMedlemmer(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.giTilgangTilAaRingeMedlemmer(AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt))
+    fun giTilgangTilAaRingeMedlemmer(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.giTilgangTilAaRingeMedlemmer(
+        AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
+    )
 
     @RolesAllowed(Roles.godkjenner, Roles.admin)
     @PUT
@@ -66,7 +77,9 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Bulkhead(3)
     @Retry
     @Transactional
-    fun fjernTilgangTilAaRingeMedlemmer(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.fjernTilgangTilAaRingeMedlemmer(AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt))
+    fun fjernTilgangTilAaRingeMedlemmer(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = brukereService.fjernTilgangTilAaRingeMedlemmer(
+        AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
+    )
 
     @RolesAllowed(Roles.godkjenner, Roles.admin)
     @PUT
@@ -77,7 +90,9 @@ class BrukereController(val brukereService: BrukereService) : RingesentralenCont
     @Bulkhead(5)
     @Retry
     @Transactional
-    fun deaktiverRinger(@Context ctx: SecurityContext, deaktiverRequest: TilgangsendringsRequest): Brukerendring = brukereService.deaktiverRinger(AutentisertTilgangsendringRequest(ctx.userId(), deaktiverRequest, jwt))
+    fun deaktiverRinger(@Context ctx: SecurityContext, deaktiverRequest: TilgangsendringsRequest): Brukerendring = brukereService.deaktiverRinger(
+        AutentisertTilgangsendringRequest(ctx.userId(), deaktiverRequest, jwt)
+    )
 
     @RolesAllowed(Roles.admin)
     @PUT

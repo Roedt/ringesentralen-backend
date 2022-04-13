@@ -6,6 +6,10 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.quarkus.hibernate.orm.panache.PanacheQuery
+import no.roedt.brukere.AutentisertTilgangsendringRequest
+import no.roedt.brukere.FylkeRepository
+import no.roedt.brukere.GodkjenningRepository
+import no.roedt.brukere.TilgangsendringsRequest
 import no.roedt.hypersys.HypersysService
 import no.roedt.hypersys.ModelConverter
 import no.roedt.lokallag.LokallagRepository

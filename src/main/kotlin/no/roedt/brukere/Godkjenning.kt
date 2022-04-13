@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.brukere
+package no.roedt.brukere
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection

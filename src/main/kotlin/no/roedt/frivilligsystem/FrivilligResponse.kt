@@ -5,7 +5,7 @@ import no.roedt.frivilligsystem.kontakt.KontaktResponse
 import no.roedt.frivilligsystem.registrer.AktivitetForFrivillig
 import no.roedt.lokallag.Lokallag
 import no.roedt.person.Person
-import no.roedt.ringesentralen.brukere.Fylke
+import no.roedt.brukere.Fylke
 
 @RegisterForReflection
 data class FrivilligResponse(

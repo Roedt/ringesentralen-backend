@@ -19,7 +19,7 @@ import no.roedt.person.UserId
 import no.roedt.ringesentralen.DatabaseUpdater
 import no.roedt.ringesentralen.Kilde
 import no.roedt.ringesentralen.Roles
-import no.roedt.ringesentralen.brukere.FylkeRepository
+import no.roedt.brukere.FylkeRepository
 import java.time.Instant
 import javax.enterprise.context.ApplicationScoped
 

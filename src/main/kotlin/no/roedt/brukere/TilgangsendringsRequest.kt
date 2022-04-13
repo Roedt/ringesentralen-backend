@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.brukere
+package no.roedt.brukere
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.quarkus.runtime.annotations.RegisterForReflection

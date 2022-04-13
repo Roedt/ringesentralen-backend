@@ -2,7 +2,7 @@ package no.roedt.ringesentralen.dashboard
 
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.lokallag.Lokallag
-import no.roedt.ringesentralen.brukere.Fylke
+import no.roedt.brukere.Fylke
 
 @RegisterForReflection
 data class Lokallagsstatus(
