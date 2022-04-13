@@ -8,8 +8,8 @@ import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.AutentisertSoMeFrivilligRequest
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.SoMeFrivilligRequest
+import no.roedt.hypersys.HypersysIdProvider
 import no.roedt.person.PersonRepository
-import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.brukere.RingesentralenEpostformulerer
 import org.eclipse.microprofile.faulttolerance.Retry
@@ -40,7 +40,7 @@ class FrivilligController(
     val epostSender: RingesentralenEpostformulerer,
     val personRepository: PersonRepository
 ) :
-    RingesentralenController {
+    HypersysIdProvider {
 
     @Inject
     lateinit var jwt: JsonWebToken

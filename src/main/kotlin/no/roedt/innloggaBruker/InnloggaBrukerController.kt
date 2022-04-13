@@ -1,6 +1,6 @@
 package no.roedt.innloggaBruker
 
-import no.roedt.ringesentralen.RingesentralenController
+import no.roedt.hypersys.HypersysIdProvider
 import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
@@ -20,7 +20,7 @@ import javax.ws.rs.core.SecurityContext
 @Path("/profil")
 @Tag(name = "Profil")
 @SecurityRequirement(name = "jwt")
-class InnloggaBrukerController(val innloggaBrukerService: InnloggaBrukerService) : RingesentralenController {
+class InnloggaBrukerController(val innloggaBrukerService: InnloggaBrukerService) : HypersysIdProvider {
 
     @Inject
     lateinit var jwt: JsonWebToken

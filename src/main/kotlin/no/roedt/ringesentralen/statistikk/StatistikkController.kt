@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.statistikk
 
-import no.roedt.ringesentralen.RingesentralenController
+import no.roedt.hypersys.HypersysIdProvider
 import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
@@ -24,7 +24,7 @@ import javax.ws.rs.core.SecurityContext
 @Path("/statistikk")
 @Tag(name = "Statistikk")
 @SecurityRequirement(name = "jwt")
-class StatistikkController(val service: StatistikkService) : RingesentralenController {
+class StatistikkController(val service: StatistikkService) : HypersysIdProvider {
 
     @Inject
     lateinit var jwt: JsonWebToken

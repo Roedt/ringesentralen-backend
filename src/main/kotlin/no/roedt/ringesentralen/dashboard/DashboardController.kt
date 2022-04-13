@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.dashboard
 
+import no.roedt.hypersys.HypersysIdProvider
 import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
@@ -26,7 +26,7 @@ import javax.ws.rs.core.SecurityContext
 @Tag(name = "Dashboard")
 @RequestScoped
 @SecurityRequirement(name = "jwt")
-class DashboardController(val dashboardService: DashboardService) : RingesentralenController {
+class DashboardController(val dashboardService: DashboardService) : HypersysIdProvider {
 
     @Inject
     lateinit var jwt: JsonWebToken

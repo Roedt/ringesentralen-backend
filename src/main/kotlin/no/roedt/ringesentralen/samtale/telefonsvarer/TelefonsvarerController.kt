@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.samtale.telefonsvarer
 
-import no.roedt.ringesentralen.RingesentralenController
+import no.roedt.hypersys.HypersysIdProvider
 import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
@@ -21,7 +21,7 @@ import javax.ws.rs.core.SecurityContext
 @Path("/telefonsvar")
 @Tag(name = "Telefonsvar")
 @SecurityRequirement(name = "jwt")
-class TelefonsvarerController(val telefonsvarerService: TelefonsvarerService) : RingesentralenController {
+class TelefonsvarerController(val telefonsvarerService: TelefonsvarerService) : HypersysIdProvider {
 
     @Inject
     lateinit var jwt: JsonWebToken

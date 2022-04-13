@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.historikk
 
+import no.roedt.hypersys.HypersysIdProvider
 import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
@@ -23,7 +23,7 @@ import javax.ws.rs.core.SecurityContext
 @Path("/historikk")
 @Tag(name = "Historikk")
 @SecurityRequirement(name = "jwt")
-class HistorikkController(private val historikkService: HistorikkService) : RingesentralenController {
+class HistorikkController(private val historikkService: HistorikkService) : HypersysIdProvider {
 
     @Inject
     lateinit var jwt: JsonWebToken

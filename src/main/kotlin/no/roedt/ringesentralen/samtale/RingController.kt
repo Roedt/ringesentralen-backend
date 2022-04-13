@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.samtale
 
+import no.roedt.hypersys.HypersysIdProvider
 import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.RingesentralenController
 import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
@@ -33,7 +33,7 @@ import javax.ws.rs.core.SecurityContext
 @Path("/samtale")
 @Tag(name = "Ring")
 @SecurityRequirement(name = "jwt")
-class RingController(val ringService: RingService) : RingesentralenController {
+class RingController(val ringService: RingService) : HypersysIdProvider {
 
     @Inject
     lateinit var jwt: JsonWebToken
