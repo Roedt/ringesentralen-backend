@@ -1,30 +1,26 @@
 package no.roedt.token
 
-import io.smallrye.jwt.build.Jwt
+import io.smallrye.jwt.build.JwtClaimsBuilder
 import no.roedt.brukere.GroupID
 import no.roedt.hypersys.GyldigPersonToken
 import no.roedt.hypersys.Token
 import no.roedt.hypersys.UgyldigToken
 import no.roedt.hypersys.login.AESUtil
+import no.roedt.hypersys.login.HypersysLoginBean
 import no.roedt.hypersys.login.LoginRequest
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
-import no.roedt.ringesentralen.RingesentralenLoginBean
 import no.roedt.ringesentralen.Roles
-import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Duration
-import javax.enterprise.context.RequestScoped
 import javax.ws.rs.ForbiddenException
-import javax.ws.rs.NotAuthorizedException
 import javax.ws.rs.ServiceUnavailableException
 
-@RequestScoped
-class TokenService(
+abstract class TokenService(
     private val personRepository: PersonRepository,
     private val privateKeyFactory: PrivateKeyFactory,
     private val secretFactory: SecretFactory,
-    private val ringesentralenLoginBean: RingesentralenLoginBean,
+    private val hypersysLoginBean: HypersysLoginBean,
     private val aesUtil: AESUtil
 ) {
 
@@ -57,7 +53,7 @@ class TokenService(
 
     private fun loginMotHypersys(loginRequest: LoginRequest): Pair<Token, Person?> {
         val hypersysToken: Pair<Token, Person?> = try {
-            ringesentralenLoginBean.login(loginRequest)
+            hypersysLoginBean.login(loginRequest)
         } catch (e: Exception) {
             e.printStackTrace()
             throw ServiceUnavailableException("Kunne ikke kontakte Hypersys")
@@ -76,29 +72,12 @@ class TokenService(
         .claim("hypersys.user_id", hypersysToken.user_id)
         .sign(privateKeyFactory.readPrivateKey())
 
-    private fun generateBaseToken() = Jwt
-        .audience("ringer")
-        .issuer("https://ringesentralen.no")
-        .subject("Ringesentralen")
-        .upn("Ringesentralen")
-        .issuedAt(System.currentTimeMillis())
-        .expiresAt(System.currentTimeMillis() + tokenExpiryPeriod.toSeconds())
+    protected abstract fun generateBaseToken(): JwtClaimsBuilder
 
     private fun getGroups(hypersysToken: GyldigPersonToken, person: Person): Set<String> =
         getRolle(hypersysToken, person)
             .roller
             .also { i -> if (i.isEmpty()) println("Fann ingen roller for ${hypersysToken.user_id}") }
 
-    private fun getRolle(hypersysToken: GyldigPersonToken, person: Person): GroupID {
-        var groupID = RingesentralenGroupID.from(getPersonFromHypersysID(hypersysToken).groupID())
-        if (RingesentralenGroupID.isIkkeRegistrertRinger(groupID.nr)) {
-            groupID = RingesentralenGroupID.from(person.groupID())
-        }
-        if (groupID.nr < RingesentralenGroupID.UgodkjentRinger.nr)
-            throw NotAuthorizedException("${hypersysToken.user_id} har ikkje gyldig rolle for å bruke systemet.", "")
-        return groupID
-    }
-
-    private fun getPersonFromHypersysID(hypersysToken: GyldigPersonToken) =
-        personRepository.find("hypersysID", hypersysToken.user_id.toInt()).firstResult<Person>()
+    protected abstract fun getRolle(hypersysToken: GyldigPersonToken, person: Person): GroupID
 }

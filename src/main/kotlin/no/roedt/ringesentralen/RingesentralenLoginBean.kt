@@ -38,7 +38,7 @@ class RingesentralenLoginBean(
     personRepository,
     aesUtil
 ) {
-    fun login(loginRequest: LoginRequest): Pair<Token, Person?> {
+    override fun login(loginRequest: LoginRequest): Pair<Token, Person?> {
         val token = loginInternal(loginRequest)
         if (token is UgyldigToken) return Pair(token, null)
 

@@ -20,6 +20,7 @@ abstract class HypersysLoginBean(
     private val personRepository: PersonRepository,
     private val aesUtil: AESUtil
 ) {
+    abstract fun login(loginRequest: LoginRequest): Pair<Token, Person?>
 
     protected fun loginInternal(loginRequest: LoginRequest): Token {
         val response = postLogin(loginRequest)
