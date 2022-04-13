@@ -1,21 +1,11 @@
 package no.roedt.person
 
-import no.roedt.person.GroupID.Companion.referencesOneOf
+import no.roedt.brukere.GroupID
+import no.roedt.brukere.GroupID.Companion.referencesOneOf
 import no.roedt.ringesentralen.Roles
 
-interface GroupID {
-    val nr: Int
-    val name: String
-    val skildring: String
-    val roller: Set<String>
-    fun references(value: Int): Boolean = nr == value
-    fun oneOf(vararg value: Int): Boolean = value.contains(nr)
-    companion object {
-        fun referencesOneOf(groupID: Int, vararg groupIDs: GroupID) = groupIDs.map { it.nr }.any { it == groupID }
-    }
-}
-
-enum class RingesentralenGroupID(override val nr: Int, override val skildring: String, override val roller: Set<String>) : GroupID {
+enum class RingesentralenGroupID(override val nr: Int, override val skildring: String, override val roller: Set<String>) :
+    GroupID {
     ManglerSamtykke(0, "mangler info/samtykke før ringing", setOf()),
     KlarTilAaRinges(1, "klar til å ringes", setOf()),
     Ferdigringt(2, "ferdigringt", setOf()),

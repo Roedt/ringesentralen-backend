@@ -1,12 +1,12 @@
 package no.roedt.hypersys.login
 
+import no.roedt.brukere.GroupID
 import no.roedt.hypersys.GyldigPersonToken
 import no.roedt.hypersys.ModelConverter
 import no.roedt.hypersys.Token
 import no.roedt.hypersys.UgyldigToken
 import no.roedt.hypersys.externalModel.Profile
 import no.roedt.person.EpostValidator
-import no.roedt.person.GroupID
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.RingesentralenGroupID

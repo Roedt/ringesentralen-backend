@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.samtale
 
+import no.roedt.brukere.GroupID
 import no.roedt.lokallag.LokallagRepository
-import no.roedt.person.GroupID
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.RingesentralenGroupID

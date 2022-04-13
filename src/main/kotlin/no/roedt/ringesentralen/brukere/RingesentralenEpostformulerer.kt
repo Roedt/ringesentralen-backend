@@ -2,7 +2,7 @@ package no.roedt.ringesentralen.brukere
 
 import no.roedt.EpostSender
 import no.roedt.brukere.Epost
-import no.roedt.person.GroupID
+import no.roedt.brukere.GroupID
 import no.roedt.person.Person
 import javax.enterprise.context.ApplicationScoped
 

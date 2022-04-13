@@ -1,13 +1,13 @@
 package no.roedt.token
 
 import io.smallrye.jwt.build.Jwt
+import no.roedt.brukere.GroupID
 import no.roedt.hypersys.GyldigPersonToken
 import no.roedt.hypersys.Token
 import no.roedt.hypersys.UgyldigToken
 import no.roedt.hypersys.login.AESUtil
 import no.roedt.hypersys.login.HypersysLoginBean
 import no.roedt.hypersys.login.LoginRequest
-import no.roedt.person.GroupID
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.RingesentralenGroupID
