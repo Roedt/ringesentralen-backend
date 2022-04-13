@@ -7,6 +7,7 @@ import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.Roles
+import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import java.util.Optional
 import javax.enterprise.context.ApplicationScoped
 
@@ -30,7 +31,7 @@ class InnloggaBrukerService(
         postnummer = postnummer,
         fylke = fylke,
         lokallag = lokallag,
-        rolle = no.roedt.person.RingesentralenGroupID.from(groupID()).roller,
+        rolle = RingesentralenGroupID.from(groupID()).roller,
         fylkeNavn = fylkeRepository.findById(fylke).navn,
         lokallagNavn = lokallagRepository.findById(lokallag).navn
     )

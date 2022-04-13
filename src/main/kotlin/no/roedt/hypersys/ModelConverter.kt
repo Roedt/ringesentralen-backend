@@ -7,7 +7,7 @@ import no.roedt.hypersys.externalModel.User
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
-import no.roedt.person.RingesentralenGroupID
+import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import javax.enterprise.context.Dependent
 
 interface ModelConverter {

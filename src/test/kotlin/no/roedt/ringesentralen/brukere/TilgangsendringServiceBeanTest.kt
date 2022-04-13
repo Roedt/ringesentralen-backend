@@ -14,7 +14,6 @@ import no.roedt.hypersys.HypersysService
 import no.roedt.hypersys.ModelConverter
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
-import no.roedt.person.RingesentralenGroupID
 import no.roedt.person.UserId
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

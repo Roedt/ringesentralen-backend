@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.samtale.resultat
 
 import no.roedt.brukere.GroupID
-import no.roedt.person.RingesentralenGroupID
+import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 
 enum class Resultat(val nr: Int, val nesteGroupID: GroupID?) {
     Ikke_svar(0, null),

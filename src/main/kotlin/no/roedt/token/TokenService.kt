@@ -10,7 +10,7 @@ import no.roedt.hypersys.login.HypersysLoginBean
 import no.roedt.hypersys.login.LoginRequest
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
-import no.roedt.person.RingesentralenGroupID
+import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Duration

@@ -5,7 +5,7 @@ import no.roedt.brukere.GroupID
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
-import no.roedt.person.RingesentralenGroupID
+import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.Roles

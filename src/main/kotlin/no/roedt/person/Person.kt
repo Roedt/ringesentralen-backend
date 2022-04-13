@@ -4,6 +4,7 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.Kilde
 import no.roedt.RoedtPanacheEntity
 import no.roedt.brukere.GroupID
+import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import javax.persistence.Cacheable
 import javax.persistence.Entity
 import javax.persistence.EnumType

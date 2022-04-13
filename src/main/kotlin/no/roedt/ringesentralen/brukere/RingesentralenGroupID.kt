@@ -1,4 +1,4 @@
-package no.roedt.person
+package no.roedt.ringesentralen.brukere
 
 import no.roedt.brukere.GroupID
 import no.roedt.brukere.GroupID.Companion.referencesOneOf
