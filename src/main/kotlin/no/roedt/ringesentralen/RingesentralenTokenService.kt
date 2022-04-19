@@ -11,8 +11,10 @@ import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.token.PrivateKeyFactory
 import no.roedt.token.SecretFactory
 import no.roedt.token.TokenService
+import javax.inject.Singleton
 import javax.ws.rs.NotAuthorizedException
 
+@Singleton
 class RingesentralenTokenService(
     private val personRepository: PersonRepository,
     privateKeyFactory: PrivateKeyFactory,

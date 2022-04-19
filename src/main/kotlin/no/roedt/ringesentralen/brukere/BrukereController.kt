@@ -4,6 +4,7 @@ import no.roedt.brukere.AutentisertGetBrukereRequest
 import no.roedt.brukere.AutentisertTilgangsendringRequest
 import no.roedt.brukere.Brukerendring
 import no.roedt.brukere.Brukerinformasjon
+import no.roedt.brukere.GenerelleRoller
 import no.roedt.brukere.TilgangsendringsRequest
 import no.roedt.hypersys.HypersysIdProvider
 import no.roedt.ringesentralen.Roles
@@ -36,7 +37,7 @@ class BrukereController(
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(Roles.godkjenner, Roles.admin)
+    @RolesAllowed(Roles.godkjenner, GenerelleRoller.admin)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/brukere")
@@ -45,7 +46,7 @@ class BrukereController(
         AutentisertGetBrukereRequest(ctx.userId(), jwt.groups)
     )
 
-    @RolesAllowed(Roles.godkjenner, Roles.admin)
+    @RolesAllowed(Roles.godkjenner, GenerelleRoller.admin)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -58,7 +59,7 @@ class BrukereController(
         AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
     )
 
-    @RolesAllowed(Roles.godkjenner, Roles.admin)
+    @RolesAllowed(Roles.godkjenner, GenerelleRoller.admin)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -71,7 +72,7 @@ class BrukereController(
         AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
     )
 
-    @RolesAllowed(Roles.godkjenner, Roles.admin)
+    @RolesAllowed(Roles.godkjenner, GenerelleRoller.admin)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -84,7 +85,7 @@ class BrukereController(
         AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
     )
 
-    @RolesAllowed(Roles.godkjenner, Roles.admin)
+    @RolesAllowed(Roles.godkjenner, GenerelleRoller.admin)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -97,12 +98,12 @@ class BrukereController(
         AutentisertTilgangsendringRequest(ctx.userId(), deaktiverRequest, jwt)
     )
 
-    @RolesAllowed(Roles.admin)
+    @RolesAllowed(GenerelleRoller.admin)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/gjoerTilLokalGodkjenner")
-    @Operation(summary = "Gjør til lokal godkjenner", description = Roles.admin)
+    @Operation(summary = "Gjør til lokal godkjenner", description = GenerelleRoller.admin)
     @Bulkhead(5)
     @Retry
     @Transactional
@@ -114,12 +115,12 @@ class BrukereController(
         )
     )
 
-    @RolesAllowed(Roles.admin)
+    @RolesAllowed(GenerelleRoller.admin)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/fjernSomLokalGodkjenner")
-    @Operation(summary = "Fjern som lokal godkjenner", description = Roles.admin)
+    @Operation(summary = "Fjern som lokal godkjenner", description = GenerelleRoller.admin)
     @Bulkhead(5)
     @Retry
     @Transactional

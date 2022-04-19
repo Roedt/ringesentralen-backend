@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.historikk
 
+import no.roedt.brukere.GenerelleRoller
 import no.roedt.hypersys.HypersysIdProvider
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.Roles
@@ -28,16 +29,16 @@ class HistorikkController(private val historikkService: HistorikkService) : Hype
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(Roles.bruker)
+    @RolesAllowed(GenerelleRoller.bruker)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/meg")
-    @Operation(summary = "Historikk over mine samtaler", description = Roles.bruker)
+    @Operation(summary = "Historikk over mine samtaler", description = GenerelleRoller.bruker)
     @Bulkhead(5)
     @Retry
     fun getMineSamtaler(@Context ctx: SecurityContext, @QueryParam("modus") modus: Modus) = historikkService.getMineSamtaler(ctx.userId(), modus)
 
-    @RolesAllowed(Roles.godkjenner, Roles.admin)
+    @RolesAllowed(Roles.godkjenner, GenerelleRoller.admin)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/laget")

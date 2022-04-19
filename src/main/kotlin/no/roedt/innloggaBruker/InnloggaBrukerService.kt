@@ -1,6 +1,7 @@
 package no.roedt.innloggaBruker
 
 import no.roedt.brukere.FylkeRepository
+import no.roedt.brukere.GenerelleRoller
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
@@ -37,7 +38,7 @@ class InnloggaBrukerService(
     )
 
     fun getLokallag(userId: UserId, groups: Set<String>): List<Lokallag> = when {
-        groups.contains(Roles.admin) -> lokallagRepository.findAll().list()
+        groups.contains(GenerelleRoller.admin) -> lokallagRepository.findAll().list()
         groups.contains(Roles.godkjenner) -> lokallagRepository.fromFylke(
             fylkeRepository.getFylkeIdFraLokallag(
                 getPerson(userId).get().lokallag

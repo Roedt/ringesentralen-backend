@@ -1,6 +1,7 @@
 package no.roedt.token
 
 import io.smallrye.jwt.build.JwtClaimsBuilder
+import no.roedt.brukere.GenerelleRoller
 import no.roedt.brukere.GroupID
 import no.roedt.hypersys.GyldigPersonToken
 import no.roedt.hypersys.Token
@@ -10,7 +11,6 @@ import no.roedt.hypersys.login.HypersysLoginBean
 import no.roedt.hypersys.login.LoginRequest
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
-import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Duration
 import javax.ws.rs.ForbiddenException
@@ -46,7 +46,7 @@ abstract class TokenService(
             throw IllegalArgumentException("Ugyldig brukernavn eller passord")
         }
         return generateBaseToken()
-            .groups(Roles.systembrukerFrontend)
+            .groups(GenerelleRoller.systembrukerFrontend)
             .claim("hypersys.user_id", personRepository.find("fornavn='Systembruker' and etternavn='Frontend'").firstResult<Person>().hypersysID)
             .sign(privateKeyFactory.readPrivateKey())
     }

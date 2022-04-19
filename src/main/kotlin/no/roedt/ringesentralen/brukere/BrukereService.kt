@@ -4,10 +4,10 @@ import no.roedt.DatabaseUpdater
 import no.roedt.brukere.AutentisertGetBrukereRequest
 import no.roedt.brukere.Brukerinformasjon
 import no.roedt.brukere.FylkeRepository
+import no.roedt.brukere.GenerelleRoller
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
-import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.person.Ringer
 import no.roedt.ringesentralen.person.RingerRepository
 import javax.enterprise.context.ApplicationScoped
@@ -27,7 +27,7 @@ class BrukereServiceBean(
 
     override fun getBrukere(request: AutentisertGetBrukereRequest): List<Brukerinformasjon> {
         val brukersFylke = personRepository.find("hypersysID", request.userId.userId).firstResult<Person>().fylke
-        val filtrerPaaFylke = if (request.groups.contains(Roles.admin)) "" else "and fylke=$brukersFylke"
+        val filtrerPaaFylke = if (request.groups.contains(GenerelleRoller.admin)) "" else "and fylke=$brukersFylke"
         return personRepository.list(
             "(groupID=?1 or groupID=?2 or groupID=?3 or groupID=?4 or groupID=?5 or groupID=?6) $filtrerPaaFylke",
             RingesentralenGroupID.UgodkjentRinger.nr, RingesentralenGroupID.AvslaattRinger.nr, RingesentralenGroupID.GodkjentRinger.nr, RingesentralenGroupID.GodkjentRingerMedlemmer.nr, RingesentralenGroupID.LokalGodkjenner.nr, RingesentralenGroupID.Admin.nr

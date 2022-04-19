@@ -1,6 +1,7 @@
 package no.roedt.frivilligsystem
 
 import io.quarkus.narayana.jta.runtime.TransactionConfiguration
+import no.roedt.brukere.GenerelleRoller
 import no.roedt.frivilligsystem.kontakt.AutentisertRegistrerKontaktRequest
 import no.roedt.frivilligsystem.kontakt.RegistrerKontaktRequest
 import no.roedt.frivilligsystem.registrer.Aktivitet
@@ -45,7 +46,7 @@ class FrivilligController(
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(Roles.ringerMedlemmer, Roles.godkjenner, Roles.admin)
+    @RolesAllowed(Roles.ringerMedlemmer, Roles.godkjenner, GenerelleRoller.admin)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/alle")
@@ -53,7 +54,7 @@ class FrivilligController(
     @Retry
     fun hentAlle(@Context ctx: SecurityContext) = frivilligService.hentAlle(ctx.userId(), jwt.groups)
 
-    @RolesAllowed(Roles.ringerMedlemmer, Roles.godkjenner, Roles.admin)
+    @RolesAllowed(Roles.ringerMedlemmer, Roles.godkjenner, GenerelleRoller.admin)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/aktivitet")
@@ -65,12 +66,12 @@ class FrivilligController(
     fun hentAlleForAktivitet(@Context ctx: SecurityContext, aktivitet: Aktivitet) =
         frivilligService.hentAlleForAktivitet(ctx.userId(), jwt.groups, aktivitet)
 
-    @RolesAllowed(Roles.systembrukerFrontend)
+    @RolesAllowed(GenerelleRoller.systembrukerFrontend)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/registrer")
-    @Operation(summary = "Registrer ny frivillig", description = Roles.systembrukerFrontend)
+    @Operation(summary = "Registrer ny frivillig", description = GenerelleRoller.systembrukerFrontend)
     @Retry
     @Transactional
     fun registrerNyFrivillig(
@@ -90,7 +91,7 @@ class FrivilligController(
             throw e
         }
 
-    @RolesAllowed(Roles.ringerMedlemmer, Roles.godkjenner, Roles.admin)
+    @RolesAllowed(Roles.ringerMedlemmer, Roles.godkjenner, GenerelleRoller.admin)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -107,7 +108,7 @@ class FrivilligController(
     @Path("/importer")
     @Transactional
     @TransactionConfiguration(timeout = 3600)
-    @RolesAllowed(Roles.admin)
+    @RolesAllowed(GenerelleRoller.admin)
     @Operation(summary = "Importer frivillige frå csv-fil")
     fun import(@Context ctx: SecurityContext) = frivilligImporter.importer(
         ctx.userId(),
@@ -115,12 +116,12 @@ class FrivilligController(
         "frivillig-import"
     )
 
-    @RolesAllowed(Roles.systembrukerFrontend)
+    @RolesAllowed(GenerelleRoller.systembrukerFrontend)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/registrerSoMeFrivillig")
-    @Operation(summary = "Registrer ny SoMe-frivillig", description = Roles.systembrukerFrontend)
+    @Operation(summary = "Registrer ny SoMe-frivillig", description = GenerelleRoller.systembrukerFrontend)
     @Retry
     @Transactional
     fun soMeFrivilligregistrering(

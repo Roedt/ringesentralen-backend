@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.statistikk
 
+import no.roedt.brukere.GenerelleRoller
 import no.roedt.hypersys.HypersysIdProvider
 import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.jwt.JsonWebToken
@@ -29,14 +30,14 @@ class StatistikkController(val service: StatistikkService) : HypersysIdProvider 
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(Roles.ringer, Roles.godkjenner, Roles.admin)
+    @RolesAllowed(Roles.ringer, Roles.godkjenner, GenerelleRoller.admin)
     @GET
     @Path("/statistikk")
     @Operation(summary = "Hent statistikk", description = Roles.ringerGodkjennerAdmin)
     @Produces(MediaType.APPLICATION_JSON)
     fun getStatistikk(@Context ctx: SecurityContext): StatistikkResponse = service.getStatistikk(jwt.groups)
 
-    @RolesAllowed(Roles.ringer, Roles.godkjenner, Roles.admin)
+    @RolesAllowed(Roles.ringer, Roles.godkjenner, GenerelleRoller.admin)
     @GET
     @Path("/ringtFlest")
     @Operation(summary = "Hvem har ringt mest?", description = Roles.ringerGodkjennerAdmin)
@@ -44,10 +45,10 @@ class StatistikkController(val service: StatistikkService) : HypersysIdProvider 
     fun ringtFlestStatistikk(@Context ctx: SecurityContext): RingtFlestStatistikk =
         service.getRingtMest(ctx.userId().userId)
 
-    @RolesAllowed(Roles.admin)
+    @RolesAllowed(GenerelleRoller.admin)
     @GET
     @Path("/lodd")
-    @Operation(summary = "Hvem har ringt mest? Henter ut liste til loddtrekning", description = Roles.admin)
+    @Operation(summary = "Hvem har ringt mest? Henter ut liste til loddtrekning", description = GenerelleRoller.admin)
     @Produces(MediaType.APPLICATION_JSON)
     fun lodd(
         @Context ctx: SecurityContext,

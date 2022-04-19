@@ -15,6 +15,7 @@ import javax.persistence.Table
 @Table(name = "person")
 @Cacheable
 @RegisterForReflection
+// TODO: Utvid klassa med eit felt for sist oppdatert frå hypersys, og oppdater det ved oppdatering
 data class Person(
     var hypersysID: Int?,
     var fornavn: String,
@@ -24,7 +25,7 @@ data class Person(
     var postnummer: Int,
     var fylke: Int,
     var lokallag: Int,
-    private var groupID: Int,
+    private var groupID: Int, // TODO: Enumerated type number/ordinal
     @Enumerated(EnumType.STRING) var kilde: Kilde,
     var iperID: Int?
 ) : RoedtPanacheEntity() {
@@ -47,7 +48,10 @@ data class Person(
     fun groupID() = groupID
 
     fun setGroupID(groupID: Int) {
-        if (RingesentralenGroupID.isBrukerEllerVenter(this.groupID) && RingesentralenGroupID.isIkkeRegistrertRinger(groupID)) {
+        if (RingesentralenGroupID.isBrukerEllerVenter(this.groupID) && RingesentralenGroupID.isIkkeRegistrertRinger(
+                groupID
+            )
+        ) {
             throw RuntimeException("$id er allerede ringer, og kan ikke settes til ei ikke-ringer-rolle.")
         }
         this.groupID = groupID

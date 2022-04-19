@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.samtale.telefonsvarer
 
+import no.roedt.brukere.GenerelleRoller
 import no.roedt.hypersys.HypersysIdProvider
-import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
@@ -26,12 +26,12 @@ class TelefonsvarerController(val telefonsvarerService: TelefonsvarerService) : 
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(Roles.systembrukerFrontend)
+    @RolesAllowed(GenerelleRoller.systembrukerFrontend)
     @POST
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/")
-    @Operation(summary = "Registrere resultat frå telefonsvar", description = Roles.systembrukerFrontend)
+    @Operation(summary = "Registrere resultat frå telefonsvar", description = GenerelleRoller.systembrukerFrontend)
     @Bulkhead(5)
     @Retry
     fun postSvarFraTelefonsvarer(@Context ctx: SecurityContext, request: TelefonsvarerRequest) = telefonsvarerService.postSvarFraTelefonsvarer(AutentisertTelefonsvarerRequest(userId = ctx.userId(), request = request))

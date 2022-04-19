@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.sms
 
+import no.roedt.brukere.GenerelleRoller
 import no.roedt.hypersys.HypersysIdProvider
-import no.roedt.ringesentralen.Roles
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
@@ -29,23 +29,23 @@ class SMSController(val smsService: SMSService) : HypersysIdProvider {
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(Roles.admin)
+    @RolesAllowed(GenerelleRoller.admin)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/lagre")
-    @Operation(summary = "Registrer ny SMS som skal sendast ut", description = Roles.admin)
+    @Operation(summary = "Registrer ny SMS som skal sendast ut", description = GenerelleRoller.admin)
     @Retry
     @Transactional
     fun registrerSMSForUtsending(@Context ctx: SecurityContext, request: LagreSMSRequest) =
         smsService.registrerSMSForUtsending(AutentisertLagreSMSRequest(userId = ctx.userId(), request = request))
 
-    @RolesAllowed(Roles.admin)
+    @RolesAllowed(GenerelleRoller.admin)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/oppdater")
-    @Operation(summary = "Oppdater utsendingsstatus", description = Roles.admin)
+    @Operation(summary = "Oppdater utsendingsstatus", description = GenerelleRoller.admin)
     @Retry
     @Transactional
     fun oppdaterUtsendingsstatus(@Context ctx: SecurityContext, request: OppdaterSMSRequest) =

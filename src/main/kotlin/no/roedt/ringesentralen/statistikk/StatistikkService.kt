@@ -1,8 +1,8 @@
 package no.roedt.ringesentralen.statistikk
 
 import no.roedt.DatabaseUpdater
+import no.roedt.brukere.GenerelleRoller
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
-import no.roedt.ringesentralen.Roles
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import java.sql.Timestamp
 import java.time.Instant
@@ -12,7 +12,7 @@ import javax.enterprise.context.ApplicationScoped
 class StatistikkService(val databaseUpdater: DatabaseUpdater) {
 
     fun getStatistikk(groups: Set<String>): StatistikkResponse {
-        return if (groups.contains(Roles.admin)) {
+        return if (groups.contains(GenerelleRoller.admin)) {
             StatistikkResponse(
                 samtalerStatistikkResponse = getSamtalerStatistikkResponse(),
                 ringereStatistikkResponse = getRingereStatistikkResponse(),

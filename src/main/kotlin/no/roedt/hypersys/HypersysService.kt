@@ -96,6 +96,9 @@ class HypersysServiceBean(
             .map { modelConverter.convertMembershipToPerson(it) }
             .filter { it.telefonnummer != null }
             .forEach { personRepository.save(it) }
+        // TODO: Mekanisme ca her for å slette dei som ikkje lenger er med i laget
+        // Eventuelt noko lurt for å anonymisere eller noko
+        // Kanskje vi også eksplisitt skal sjekke dei mot HS for å sjå om dei berre har bytta lag
     }
 
     override fun hentFraMedlemslista(hypersysID: Int?): LinkedHashMap<*, *>? =
