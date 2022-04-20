@@ -16,7 +16,7 @@
     <quarkus.version>2.8.1.Final</quarkus.version>
     <surefire-plugin.version>3.0.0-M6</surefire-plugin.version>
     <poi.version>5.0.0</poi.version>
-    <googleCloudServicesVersion>0.11.0</googleCloudServicesVersion>
+    <googleCloudServicesVersion>1.0.0</googleCloudServicesVersion>
   </properties>
   <dependencyManagement>
     <dependencies>
