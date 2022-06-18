@@ -26,8 +26,6 @@ steps:
       '--platform=managed',
       '--region=europe-north1'
       ]
-options:
-  machineType: N1_HIGHCPU_32
 
 # Image name
 images: ['gcr.io/$PROJECT_ID/ringesentralen-backend']
