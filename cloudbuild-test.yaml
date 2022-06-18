@@ -1,12 +1,23 @@
 steps:
-
   # Create docker image
-  - name: gcr.io/cloud-builders/docker
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        docker pull gcr.io/$PROJECT_ID/ringesentralen-backend || exit 0
+  - name: 'gcr.io/cloud-builders/docker'
     entrypoint: "bash"
+    timeout: 1800s
     args:
       - "-c"
       - |
-        docker build --build-arg=DBUSER=$$DBUSER --build-arg=DBPASSWORD=$$DBPASSWORD --build-arg=QuarkusMailerUsername=$$QuarkusMailerUsername --build-arg=QuarkusMailerPassword=$$QuarkusMailerPassword -t gcr.io/$PROJECT_ID/ringesentralen-backend .
+        docker build --build-arg=DBUSER=$$DBUSER \
+        --build-arg=DBPASSWORD=$$DBPASSWORD \
+        --build-arg=QuarkusMailerUsername=$$QuarkusMailerUsername \
+        --build-arg=QuarkusMailerPassword=$$QuarkusMailerPassword \
+        --cache-from=gcr.io/$PROJECT_ID/ringesentralen-backend \
+        -t gcr.io/$PROJECT_ID/ringesentralen-backend .
     secretEnv: ['DBUSER', 'DBPASSWORD', 'QuarkusMailerUsername', 'QuarkusMailerPassword']
 
   # Push the container image to Container Registry
@@ -17,25 +28,29 @@ steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     args:
       [
-      'beta',
-      'run',
-      'deploy',
-      'ringesentralen-backend',
-      '--image', 'gcr.io/$PROJECT_ID/ringesentralen-backend',
-      '--allow-unauthenticated',
-      '--platform=managed',
-      '--region=europe-north1'
+        'beta',
+        'run',
+        'deploy',
+        'ringesentralen-backend',
+        '--image', 'gcr.io/$PROJECT_ID/ringesentralen-backend',
+        '--allow-unauthenticated',
+        '--platform=managed',
+        '--region=europe-north1',
+        '--cpu=2'
       ]
+options:
+  machineType: N1_HIGHCPU_32
 
+timeout: 1800s
 # Image name
 images: ['gcr.io/$PROJECT_ID/ringesentralen-backend']
 availableSecrets:
   secretManager:
-  - versionName: projects/$PROJECT_ID/secrets/DB_USER/versions/latest
-    env: 'DBUSER'
-  - versionName: projects/$PROJECT_ID/secrets/DB_PASSWORD/versions/latest
-    env: 'DBPASSWORD'
-  - versionName: projects/$PROJECT_ID/secrets/quarkus_mailer_username/versions/latest
-    env: 'QuarkusMailerUsername'
-  - versionName: projects/$PROJECT_ID/secrets/quarkus_mailer_password/versions/latest
-    env: 'QuarkusMailerPassword'
+    - versionName: projects/$PROJECT_ID/secrets/DB_USER/versions/latest
+      env: 'DBUSER'
+    - versionName: projects/$PROJECT_ID/secrets/DB_PASSWORD/versions/latest
+      env: 'DBPASSWORD'
+    - versionName: projects/$PROJECT_ID/secrets/quarkus_mailer_username/versions/latest
+      env: 'QuarkusMailerUsername'
+    - versionName: projects/$PROJECT_ID/secrets/quarkus_mailer_password/versions/latest
+      env: 'QuarkusMailerPassword'
