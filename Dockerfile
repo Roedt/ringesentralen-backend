@@ -15,7 +15,7 @@ FROM quay.io/quarkus/ubi-quarkus-mandrel:22.0-java11 AS native-build
 COPY --chown=quarkus:quarkus --from=maven /home/app/target/native-sources /build
 USER quarkus
 WORKDIR /build
-RUN native-image $(cat native-image.args) -J-Xmx8g
+RUN native-image $(cat native-image.args) -J-Xmx20g
 
 # Stage 3: Create the docker final image
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
