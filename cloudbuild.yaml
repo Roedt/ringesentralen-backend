@@ -23,6 +23,8 @@ steps:
         '--region=europe-north1',
       ]
 
+options:
+  machineType: N1_HIGHCPU_8
 timeout: 1800s
 availableSecrets:
   secretManager:
