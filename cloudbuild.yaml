@@ -4,8 +4,8 @@ steps:
     args:
       - --build-arg=DBUSER=$$DBUSER
       - --build-arg=DBPASSWORD=$$DBPASSWORD
-      - --build-arg=QuarkusMailerUsername=$$QuarkusMailerUsername \
-      - --build-arg=QuarkusMailerPassword=$$QuarkusMailerPassword \
+      - --build-arg=QuarkusMailerUsername=$$QuarkusMailerUsername
+      - --build-arg=QuarkusMailerPassword=$$QuarkusMailerPassword
       - --cache=true
       - --destination=gcr.io/$PROJECT_ID/ringesentralen-backend
     secretEnv: ['DBUSER', 'DBPASSWORD', 'QuarkusMailerUsername', 'QuarkusMailerPassword']
