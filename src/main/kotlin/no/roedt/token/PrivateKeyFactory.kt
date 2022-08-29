@@ -25,6 +25,7 @@ class PrivateKeyFactory(private val secretFactory: SecretFactory) {
         val privateKeyPEM = key
             .replace("-----BEGIN PRIVATE KEY-----", "")
             .replace(System.lineSeparator().toRegex(), "")
+            .replace("\n", "")
             .replace("-----END PRIVATE KEY-----", "")
         val encoded: ByteArray = Base64.getDecoder().decode(privateKeyPEM)
         val keyFactory = KeyFactory.getInstance("RSA")
