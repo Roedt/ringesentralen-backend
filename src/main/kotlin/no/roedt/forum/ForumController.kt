@@ -7,9 +7,10 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
-import javax.annotation.security.RolesAllowed
+import javax.annotation.security.PermitAll
 import javax.inject.Inject
 import javax.ws.rs.GET
+import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.Context
@@ -26,7 +27,8 @@ class ForumController(
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(ForumRolle.debattant)
+    @PermitAll
+//    @RolesAllowed(ForumRolle.debattant)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/underforum")
@@ -34,8 +36,9 @@ class ForumController(
     @Retry
     fun hentAlleUnderforum(@Context ctx: SecurityContext) = forumService.hentAlleUnderforum()
 
-    @RolesAllowed(ForumRolle.debattant)
-    @GET
+    @PermitAll
+//    @RolesAllowed(ForumRolle.debattant)
+    @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/underforum/traader")
     @Operation(summary = "Finn alle tråder i et underforum", description = ForumRolle.debattant)

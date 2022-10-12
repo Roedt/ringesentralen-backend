@@ -132,6 +132,11 @@
       <artifactId>quarkus-google-cloud-secret-manager</artifactId>
       <version>${googleCloudServicesVersion}</version>
     </dependency>
+    <dependency>
+      <groupId>io.quarkiverse.googlecloudservices</groupId>
+      <artifactId>quarkus-google-cloud-firestore</artifactId>
+      <version>${googleCloudServicesVersion}</version>
+    </dependency>
     <!-- https://mvnrepository.com/artifact/io.quarkus/quarkus-elytron-security -->
     <dependency>
       <groupId>io.quarkus</groupId>
