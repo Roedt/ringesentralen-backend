@@ -1,5 +1,6 @@
 package no.roedt.forum
 
+import no.roedt.forum.underforum.Underforum
 import no.roedt.hypersys.HypersysIdProvider
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
@@ -32,4 +33,13 @@ class ForumController(
     @Operation(summary = "Finn alle underforum i forumet", description = ForumRolle.debattant)
     @Retry
     fun hentAlleUnderforum(@Context ctx: SecurityContext) = forumService.hentAlleUnderforum()
+
+    @RolesAllowed(ForumRolle.debattant)
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/underforum/traader")
+    @Operation(summary = "Finn alle tråder i et underforum", description = ForumRolle.debattant)
+    @Retry
+    fun hentTraaderForUnderforum(@Context ctx: SecurityContext, underforum: Underforum, side: Int?) =
+        forumService.hentTraader(underforum)
 }
