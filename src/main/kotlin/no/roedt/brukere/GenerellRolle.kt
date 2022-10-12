@@ -1,7 +1,7 @@
 package no.roedt.brukere
 
 class GenerellRolle {
-    companion object {
+    companion object GenerellRolle {
         const val systembrukerFrontend = "systembrukerFrontend"
         const val sperret = "sperret"
         const val venterPaaGodkjenning = "venter_paa_godkjenning"
