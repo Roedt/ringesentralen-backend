@@ -135,8 +135,9 @@ class FrivilligController(
                     request = request
                 )
             )
-            return if (!frivillig.first) Response.noContent().build()
-            else {
+            return if (!frivillig.first) {
+                Response.noContent().build()
+            } else {
                 try {
                     epostSender.sendEpostOmRegistrertSoMeFrivillig(personRepository.findById(frivillig.second.personId))
                 } catch (e: Exception) {

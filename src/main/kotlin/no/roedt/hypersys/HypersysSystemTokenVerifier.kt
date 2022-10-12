@@ -18,8 +18,11 @@ class HypersysSystemTokenVerifier(
 
     fun getTokenFromHypersys(): Token {
         val response = hypersysProxy.post(secretFactory.getHypersysClientId(), secretFactory.getHypersysClientSecret(), "grant_type=client_credentials", loggingtekst = "systeminnlogging")
-        return if (response.statusCode() != 200) hypersysProxy.readResponse(response, UgyldigToken::class.java)
-        else hypersysProxy.readResponse(response, GyldigSystemToken::class.java)
+        return if (response.statusCode() != 200) {
+            hypersysProxy.readResponse(response, UgyldigToken::class.java)
+        } else {
+            hypersysProxy.readResponse(response, GyldigSystemToken::class.java)
+        }
     }
 
     fun assertGyldigSystemToken(): GyldigSystemToken {

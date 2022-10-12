@@ -8,7 +8,10 @@ class Emojifjerner {
 
     companion object Fjerner {
         fun fjernEmojis(input: String?): String? =
-            if (input == null) null
-            else EmojiParser.removeAllEmojis(input)
+            if (input == null) {
+                null
+            } else {
+                EmojiParser.removeAllEmojis(input)
+            }
     }
 }

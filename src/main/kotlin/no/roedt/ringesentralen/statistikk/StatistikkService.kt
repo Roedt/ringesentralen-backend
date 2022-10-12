@@ -18,11 +18,13 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
                 ringereStatistikkResponse = getRingereStatistikkResponse(),
                 personerStatistikkResponse = getPersonerStatistikkResponse()
             )
-        } else StatistikkResponse(
-            samtalerStatistikkResponse = getSamtalerStatistikkResponse(),
-            ringereStatistikkResponse = null,
-            personerStatistikkResponse = null
-        )
+        } else {
+            StatistikkResponse(
+                samtalerStatistikkResponse = getSamtalerStatistikkResponse(),
+                ringereStatistikkResponse = null,
+                personerStatistikkResponse = null
+            )
+        }
     }
 
     private fun getSamtalerStatistikkResponse(): SamtalerStatistikkResponse {

@@ -102,9 +102,11 @@ class TilgangsendringServiceBean(
 
         if (personMedEndraTilgang.isSystembruker()) throw ForbiddenException("Kan ikkje endre systembruker")
         if (RingesentralenGroupID.Admin.references(groupID)) throw ForbiddenException("Kan ikkje endre admins")
-        if (RingesentralenGroupID.LokalGodkjenner.references(ringersBrukertype) && RingesentralenGroupID.LokalGodkjenner.references(groupID)) throw ForbiddenException(
-            "Godkjennere kan ikkje endre andre godjennere"
-        )
+        if (RingesentralenGroupID.LokalGodkjenner.references(ringersBrukertype) && RingesentralenGroupID.LokalGodkjenner.references(groupID)) {
+            throw ForbiddenException(
+                "Godkjennere kan ikkje endre andre godjennere"
+            )
+        }
     }
 
     private fun hypersysIdTilPerson(hypersysId: UserId) =

@@ -39,5 +39,10 @@ class DashboardController(val dashboardService: DashboardService) : HypersysIdPr
     @Operation(summary = "Dashboard", description = GenerelleRoller.bruker)
     @Bulkhead(5)
     @Retry
-    fun getDashboard(@Context ctx: SecurityContext, @QueryParam("modus") @DefaultValue("Velger") modus: Modus): DashboardResponse = dashboardService.getDashboard(ctx.userId(), modus)
+    fun getDashboard(
+        @Context ctx: SecurityContext,
+        @QueryParam("modus")
+        @DefaultValue("Velger")
+        modus: Modus
+    ): DashboardResponse = dashboardService.getDashboard(ctx.userId(), modus)
 }

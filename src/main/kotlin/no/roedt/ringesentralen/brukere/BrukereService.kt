@@ -30,7 +30,12 @@ class BrukereServiceBean(
         val filtrerPaaFylke = if (request.groups.contains(GenerelleRoller.admin)) "" else "and fylke=$brukersFylke"
         return personRepository.list(
             "(groupID=?1 or groupID=?2 or groupID=?3 or groupID=?4 or groupID=?5 or groupID=?6) $filtrerPaaFylke",
-            RingesentralenGroupID.UgodkjentRinger.nr, RingesentralenGroupID.AvslaattRinger.nr, RingesentralenGroupID.GodkjentRinger.nr, RingesentralenGroupID.GodkjentRingerMedlemmer.nr, RingesentralenGroupID.LokalGodkjenner.nr, RingesentralenGroupID.Admin.nr
+            RingesentralenGroupID.UgodkjentRinger.nr,
+            RingesentralenGroupID.AvslaattRinger.nr,
+            RingesentralenGroupID.GodkjentRinger.nr,
+            RingesentralenGroupID.GodkjentRingerMedlemmer.nr,
+            RingesentralenGroupID.LokalGodkjenner.nr,
+            RingesentralenGroupID.Admin.nr
         )
             .filter { !it.isSystembruker() }
             .map(this::toBrukerinformasjon)

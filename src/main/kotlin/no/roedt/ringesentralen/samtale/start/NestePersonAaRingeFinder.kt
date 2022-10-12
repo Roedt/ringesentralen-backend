@@ -36,12 +36,16 @@ class NestePersonAaRingeFinder(
     }
 
     private fun hentNestePersonAaRingeIDenneModusen(request: AutentisertNestePersonAaRingeRequest): Int? =
-        if (request.modus == Modus.velgere) hentNesteVelgerAaRinge(request)
-        else hentNesteMedlemAaRinge(request)
+        if (request.modus == Modus.velgere) {
+            hentNesteVelgerAaRinge(request)
+        } else {
+            hentNesteMedlemAaRinge(request)
+        }
 
     private fun hentNesteMedlemAaRinge(request: AutentisertNestePersonAaRingeRequest): Int? {
-        if (!request.roller.contains(Roles.ringerMedlemmer))
+        if (!request.roller.contains(Roles.ringerMedlemmer)) {
             throw ForbiddenException("Kun dei godkjente for det kan ringe medlemmar")
+        }
         return nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(personRepository.getPerson(request.userId), request.lokallag)
     }
 

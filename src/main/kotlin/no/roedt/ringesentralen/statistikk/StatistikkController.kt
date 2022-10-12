@@ -55,11 +55,13 @@ class StatistikkController(val service: StatistikkService) : HypersysIdProvider 
         @QueryParam("fra") fra: String,
         @QueryParam("til") til: String
     ): List<LoddStatistikk> = service.lodd(
-        toInstant(fra), toInstant(til)
+        toInstant(fra),
+        toInstant(til)
     )
 
     private fun toInstant(tidspunkt: String): Instant = if (tidspunkt.contains("T")) {
         Instant.parse(tidspunkt)
-    } else
+    } else {
         Instant.from(ZonedDateTime.of(LocalDate.parse(tidspunkt), LocalTime.of(0, 0, 0, 0), ZoneId.of("Europe/Oslo")))
+    }
 }

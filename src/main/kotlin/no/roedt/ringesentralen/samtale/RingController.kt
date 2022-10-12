@@ -48,8 +48,12 @@ class RingController(val ringService: RingService) : HypersysIdProvider {
     @Transactional
     fun hentNestePersonAaRinge(
         @Context ctx: SecurityContext,
-        @QueryParam("modus") @DefaultValue("Velger") modus: Modus,
-        @QueryParam("lokallag") @DefaultValue("-1") lokallag: Int
+        @QueryParam("modus")
+        @DefaultValue("Velger")
+        modus: Modus,
+        @QueryParam("lokallag")
+        @DefaultValue("-1")
+        lokallag: Int
     ): NestePersonAaRingeResponse? =
         ringService.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(ctx.userId(), modus, lokallag, jwt.groups))
 

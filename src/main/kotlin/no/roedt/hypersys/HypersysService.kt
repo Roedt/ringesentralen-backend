@@ -28,22 +28,29 @@ class HypersysServiceBean(
 ) : HypersysService {
 
     override fun getMedlemmer(hypersysLokallagId: Int?): List<LinkedHashMap<String, *>> {
-        return if (hypersysLokallagId == null) listOf()
-        else hypersysProxy.get(
-            "/membership/api/membership/$hypersysLokallagId/${LocalDate.now().year}/",
-            hypersysSystemTokenVerifier.assertGyldigSystemToken(),
-            List::class.java
-        )
-            as List<LinkedHashMap<String, *>>
+        return if (hypersysLokallagId == null) {
+            listOf()
+        } else {
+            hypersysProxy.get(
+                "/membership/api/membership/$hypersysLokallagId/${LocalDate.now().year}/",
+                hypersysSystemTokenVerifier.assertGyldigSystemToken(),
+                List::class.java
+            )
+                as List<LinkedHashMap<String, *>>
+        }
     }
 
     override fun convertToHypersysLokallagId(lokallag: Int): Int? {
         if (lokallag == -1) return null
         val hypersysId = lokallagRepository.findById(lokallag)
             ?.let { mittLag ->
-                if (mittLag.hypersysID != null) mittLag.hypersysID!! else getLokallagIdFromHypersys(
-                    mittLag
-                )
+                if (mittLag.hypersysID != null) {
+                    mittLag.hypersysID!!
+                } else {
+                    getLokallagIdFromHypersys(
+                        mittLag
+                    )
+                }
             }
         if (hypersysId == null) println("Fann ikkje lokallag i hypersys for $lokallag")
         return hypersysId

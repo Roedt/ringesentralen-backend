@@ -121,7 +121,7 @@ class FrivilligImporter(
                 it.get(i++)
             ),
             Pair(OpptattAv.Reverseringavtvangssammenslaattefylkerogkommuner, it.get(i++)),
-            Pair(OpptattAv.Oekesosialstoenaden, it.get(i++)),
+            Pair(OpptattAv.Oekesosialstoenaden, it.get(i++))
 //            Pair(OpptattAv.Oektnorskselvforsyningavmat_medisinerogannet, if (it.size() > 63) it.get(i++) else "false")
         )
             .filter { it.second.toBoolean() }

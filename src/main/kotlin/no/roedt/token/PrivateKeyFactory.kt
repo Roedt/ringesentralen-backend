@@ -18,8 +18,11 @@ class PrivateKeyFactory(private val secretFactory: SecretFactory) {
     fun readPrivateKey(): RSAPrivateKey = readPrivateKey(getPrivateKey())
 
     private fun getPrivateKey(): String =
-        if (usePrivateKeyFromSecretManager.toBoolean()) secretFactory.getPrivateKey()
-        else Files.readString(Path.of("src/main/resources/META-INF/resources/privatekey.pem"))
+        if (usePrivateKeyFromSecretManager.toBoolean()) {
+            secretFactory.getPrivateKey()
+        } else {
+            Files.readString(Path.of("src/main/resources/META-INF/resources/privatekey.pem"))
+        }
 
     private fun readPrivateKey(key: String): RSAPrivateKey {
         val privateKeyPEM = key

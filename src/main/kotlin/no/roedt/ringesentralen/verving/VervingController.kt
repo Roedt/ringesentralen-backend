@@ -38,8 +38,11 @@ class VervingController(val service: VervingService) : HypersysIdProvider {
     @Retry
     fun postPersonSomSkalRinges(@Context ctx: SecurityContext, request: VervingRequest): Response {
         val person = service.postPersonSomSkalRinges(AutentisertVervingRequest(request = request))
-        return if (!person.first) Response.noContent().build()
-        else Response.created(URI.create(person.second.id.toString())).build()
+        return if (!person.first) {
+            Response.noContent().build()
+        } else {
+            Response.created(URI.create(person.second.id.toString())).build()
+        }
     }
 
     @RolesAllowed(GenerelleRoller.systembrukerFrontend)

@@ -35,8 +35,9 @@ class RingesentralenTokenService(
         if (RingesentralenGroupID.isIkkeRegistrertRinger(groupID.nr)) {
             groupID = RingesentralenGroupID.from(person.groupID())
         }
-        if (groupID.nr < RingesentralenGroupID.UgodkjentRinger.nr)
+        if (groupID.nr < RingesentralenGroupID.UgodkjentRinger.nr) {
             throw NotAuthorizedException("${hypersysToken.user_id} har ikkje gyldig rolle for å bruke systemet.", "")
+        }
         return groupID
     }
 

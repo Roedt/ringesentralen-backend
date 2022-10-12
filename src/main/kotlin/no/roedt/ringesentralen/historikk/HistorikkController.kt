@@ -48,7 +48,9 @@ class HistorikkController(private val historikkService: HistorikkService) : Hype
     fun getLagetsSamtaler(
         @Context ctx: SecurityContext,
         @QueryParam("modus") modus: Modus,
-        @QueryParam("lokallag") @DefaultValue("-1") lokallag: Int
+        @QueryParam("lokallag")
+        @DefaultValue("-1")
+        lokallag: Int
     ) = historikkService.getLagetsSamtaler(ctx.userId(), modus, lokallag)
 
     @RolesAllowed(Roles.ringer)

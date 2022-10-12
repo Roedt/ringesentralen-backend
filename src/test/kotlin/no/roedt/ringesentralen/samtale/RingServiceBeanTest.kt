@@ -35,9 +35,13 @@ internal class RingServiceBeanTest {
     private val nestePersonAaRingeFinder: NestePersonAaRingeFinder = mock()
 
     private var ringService = RingServiceBean(
-        personRepository = personRepository, databaseUpdater = databaseUpdater,
-        samtaleRepository = persistentSamtaleRepository, oppfoelgingValg21Repository = oppfoelgingValg21Repository,
-        lokallagRepository = lokallagRepository, ringerRepository = ringerRepository, nestePersonAaRingeFinder = nestePersonAaRingeFinder
+        personRepository = personRepository,
+        databaseUpdater = databaseUpdater,
+        samtaleRepository = persistentSamtaleRepository,
+        oppfoelgingValg21Repository = oppfoelgingValg21Repository,
+        lokallagRepository = lokallagRepository,
+        ringerRepository = ringerRepository,
+        nestePersonAaRingeFinder = nestePersonAaRingeFinder
     )
 
     @BeforeEach
