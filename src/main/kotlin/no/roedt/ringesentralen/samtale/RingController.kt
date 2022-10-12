@@ -2,7 +2,7 @@ package no.roedt.ringesentralen.samtale
 
 import no.roedt.hypersys.HypersysIdProvider
 import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.Roles
+import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.start.AutentisertNestePersonAaRingeRequest
@@ -38,12 +38,12 @@ class RingController(val ringService: RingService) : HypersysIdProvider {
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(Roles.ringer)
+    @RolesAllowed(RingespesifikkRolle.ringer)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/neste")
-    @Operation(summary = "Finn neste person å ringe", description = Roles.ringer)
+    @Operation(summary = "Finn neste person å ringe", description = RingespesifikkRolle.ringer)
     @Retry
     @Transactional
     fun hentNestePersonAaRinge(
@@ -57,23 +57,23 @@ class RingController(val ringService: RingService) : HypersysIdProvider {
     ): NestePersonAaRingeResponse? =
         ringService.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(ctx.userId(), modus, lokallag, jwt.groups))
 
-    @RolesAllowed(Roles.ringer)
+    @RolesAllowed(RingespesifikkRolle.ringer)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/startSamtale")
-    @Operation(summary = "Start samtale", description = Roles.ringer)
+    @Operation(summary = "Start samtale", description = RingespesifikkRolle.ringer)
     @Retry
     @Transactional
     fun startSamtale(@Context ctx: SecurityContext, startSamtaleRequest: StartSamtaleRequest, @QueryParam("modus") modus: Modus) =
         ringService.startSamtale(AutentisertStartSamtaleRequest(ctx.userId(), startSamtaleRequest, modus))
 
-    @RolesAllowed(Roles.ringer)
+    @RolesAllowed(RingespesifikkRolle.ringer)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/registrerResultatFraSamtale")
-    @Operation(summary = "Registrer resultat fra samtale", description = Roles.ringer)
+    @Operation(summary = "Registrer resultat fra samtale", description = RingespesifikkRolle.ringer)
     @Retry
     @Transactional
     fun registrerResultatFraSamtale(@Context ctx: SecurityContext, resultatFraSamtaleRequest: ResultatFraSamtaleRequest, @QueryParam("modus") modus: Modus) =
@@ -81,12 +81,12 @@ class RingController(val ringService: RingService) : HypersysIdProvider {
             AutentisertResultatFraSamtaleRequest(ctx.userId(), resultatFraSamtaleRequest, modus)
         )
 
-    @RolesAllowed(Roles.ringer)
+    @RolesAllowed(RingespesifikkRolle.ringer)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/noenRingerTilbake")
-    @Operation(summary = "Noen ringer tilbake", description = Roles.ringer)
+    @Operation(summary = "Noen ringer tilbake", description = RingespesifikkRolle.ringer)
     @Retry
     @Transactional
     fun noenRingerTilbake(@Context ctx: SecurityContext, request: RingerTilbakeRequest, @QueryParam("modus") modus: Modus): NestePersonAaRingeResponse =

@@ -1,7 +1,7 @@
 package no.roedt.frivilligsystem
 
 import io.quarkus.narayana.jta.runtime.TransactionConfiguration
-import no.roedt.brukere.GenerelleRoller
+import no.roedt.brukere.GenerellRolle
 import no.roedt.frivilligsystem.kontakt.AutentisertRegistrerKontaktRequest
 import no.roedt.frivilligsystem.kontakt.RegistrerKontaktRequest
 import no.roedt.frivilligsystem.registrer.Aktivitet
@@ -11,7 +11,7 @@ import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.SoMeFrivilligRequest
 import no.roedt.hypersys.HypersysIdProvider
 import no.roedt.person.PersonRepository
-import no.roedt.ringesentralen.Roles
+import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenEpostformulerer
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
@@ -46,32 +46,32 @@ class FrivilligController(
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(Roles.ringerMedlemmer, Roles.godkjenner, GenerelleRoller.admin)
+    @RolesAllowed(RingespesifikkRolle.ringerMedlemmer, RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/alle")
-    @Operation(summary = "Finn alle frivillige i laget", description = Roles.ringerForMedlemmerGodkjennerAdmin)
+    @Operation(summary = "Finn alle frivillige i laget", description = RingespesifikkRolle.ringerForMedlemmerGodkjennerAdmin)
     @Retry
     fun hentAlle(@Context ctx: SecurityContext) = frivilligService.hentAlle(ctx.userId(), jwt.groups)
 
-    @RolesAllowed(Roles.ringerMedlemmer, Roles.godkjenner, GenerelleRoller.admin)
+    @RolesAllowed(RingespesifikkRolle.ringerMedlemmer, RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/aktivitet")
     @Operation(
         summary = "Finn alle frivillige som kan bidra med en gitt aktivitet",
-        description = Roles.ringerForMedlemmerGodkjennerAdmin
+        description = RingespesifikkRolle.ringerForMedlemmerGodkjennerAdmin
     )
     @Retry
     fun hentAlleForAktivitet(@Context ctx: SecurityContext, aktivitet: Aktivitet) =
         frivilligService.hentAlleForAktivitet(ctx.userId(), jwt.groups, aktivitet)
 
-    @RolesAllowed(GenerelleRoller.systembrukerFrontend)
+    @RolesAllowed(GenerellRolle.systembrukerFrontend)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/registrer")
-    @Operation(summary = "Registrer ny frivillig", description = GenerelleRoller.systembrukerFrontend)
+    @Operation(summary = "Registrer ny frivillig", description = GenerellRolle.systembrukerFrontend)
     @Retry
     @Transactional
     fun registrerNyFrivillig(
@@ -91,12 +91,12 @@ class FrivilligController(
             throw e
         }
 
-    @RolesAllowed(Roles.ringerMedlemmer, Roles.godkjenner, GenerelleRoller.admin)
+    @RolesAllowed(RingespesifikkRolle.ringerMedlemmer, RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/registrerKontakt")
-    @Operation(summary = "Registrer kontakt med frivillig", description = Roles.ringerForMedlemmerGodkjennerAdmin)
+    @Operation(summary = "Registrer kontakt med frivillig", description = RingespesifikkRolle.ringerForMedlemmerGodkjennerAdmin)
     @Retry
     @Transactional
     fun registrerKontakt(@Context ctx: SecurityContext, registrerKontaktRequest: RegistrerKontaktRequest) =
@@ -108,7 +108,7 @@ class FrivilligController(
     @Path("/importer")
     @Transactional
     @TransactionConfiguration(timeout = 3600)
-    @RolesAllowed(GenerelleRoller.admin)
+    @RolesAllowed(GenerellRolle.admin)
     @Operation(summary = "Importer frivillige frå csv-fil")
     fun import(@Context ctx: SecurityContext) = frivilligImporter.importer(
         ctx.userId(),
@@ -116,12 +116,12 @@ class FrivilligController(
         "frivillig-import"
     )
 
-    @RolesAllowed(GenerelleRoller.systembrukerFrontend)
+    @RolesAllowed(GenerellRolle.systembrukerFrontend)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/registrerSoMeFrivillig")
-    @Operation(summary = "Registrer ny SoMe-frivillig", description = GenerelleRoller.systembrukerFrontend)
+    @Operation(summary = "Registrer ny SoMe-frivillig", description = GenerellRolle.systembrukerFrontend)
     @Retry
     @Transactional
     fun soMeFrivilligregistrering(

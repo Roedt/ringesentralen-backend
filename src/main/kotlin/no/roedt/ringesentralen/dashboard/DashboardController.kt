@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.dashboard
 
-import no.roedt.brukere.GenerelleRoller
+import no.roedt.brukere.GenerellRolle
 import no.roedt.hypersys.HypersysIdProvider
 import no.roedt.ringesentralen.Modus
 import org.eclipse.microprofile.faulttolerance.Bulkhead
@@ -31,12 +31,12 @@ class DashboardController(val dashboardService: DashboardService) : HypersysIdPr
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(GenerelleRoller.bruker)
+    @RolesAllowed(GenerellRolle.bruker)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.TEXT_PLAIN)
     @Path("/")
-    @Operation(summary = "Dashboard", description = GenerelleRoller.bruker)
+    @Operation(summary = "Dashboard", description = GenerellRolle.bruker)
     @Bulkhead(5)
     @Retry
     fun getDashboard(

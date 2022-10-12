@@ -4,7 +4,7 @@ import no.roedt.DatabaseUpdater
 import no.roedt.Emojifjerner
 import no.roedt.Kilde
 import no.roedt.brukere.FylkeRepository
-import no.roedt.brukere.GenerelleRoller
+import no.roedt.brukere.GenerellRolle
 import no.roedt.frivilligsystem.kontakt.AutentisertRegistrerKontaktRequest
 import no.roedt.frivilligsystem.kontakt.Kontakt
 import no.roedt.frivilligsystem.kontakt.KontaktRepository
@@ -20,7 +20,7 @@ import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.UserId
-import no.roedt.ringesentralen.Roles
+import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import java.time.Instant
 import javax.enterprise.context.ApplicationScoped
@@ -63,8 +63,8 @@ class FrivilligService(
             }
 
     private fun hentFrivilligeUtFraMinRolle(roller: Set<String>, ringer: Person): List<Frivillig> = when {
-        roller.contains(GenerelleRoller.admin) -> frivilligRepository.listAll()
-        roller.contains(Roles.godkjenner) -> {
+        roller.contains(GenerellRolle.admin) -> frivilligRepository.listAll()
+        roller.contains(RingespesifikkRolle.godkjenner) -> {
             databaseUpdater.getResultList("select f.id from frivillig f inner join person p on p.id = f.personId and p.fylke=${ringer.fylke} ORDER BY p.etternavn ASC")
                 .map { it as Int }
                 .map { frivilligRepository.findById(it) }

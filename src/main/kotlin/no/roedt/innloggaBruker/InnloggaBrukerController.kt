@@ -1,6 +1,6 @@
 package no.roedt.innloggaBruker
 
-import no.roedt.brukere.GenerelleRoller
+import no.roedt.brukere.GenerellRolle
 import no.roedt.hypersys.HypersysIdProvider
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
@@ -25,20 +25,20 @@ class InnloggaBrukerController(val innloggaBrukerService: InnloggaBrukerService)
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(GenerelleRoller.bruker, GenerelleRoller.venterPaaGodkjenning)
+    @RolesAllowed(GenerellRolle.bruker, GenerellRolle.venterPaaGodkjenning)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/")
-    @Operation(summary = "Hent informasjon om innlogga bruker", description = GenerelleRoller.brukerVenterPaaGodkjenning)
+    @Operation(summary = "Hent informasjon om innlogga bruker", description = GenerellRolle.brukerVenterPaaGodkjenning)
     @Bulkhead(5)
     @Retry
     fun getProfil(@Context ctx: SecurityContext) = innloggaBrukerService.getProfil(ctx.userId())
 
-    @RolesAllowed(GenerelleRoller.bruker)
+    @RolesAllowed(GenerellRolle.bruker)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/lokallag")
-    @Operation(summary = "Hent mine tilgjengelege lokallag", description = GenerelleRoller.bruker)
+    @Operation(summary = "Hent mine tilgjengelege lokallag", description = GenerellRolle.bruker)
     @Bulkhead(3)
     @Retry
     fun getLokallag(@Context ctx: SecurityContext) = innloggaBrukerService.getLokallag(ctx.userId(), jwt.groups)

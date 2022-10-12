@@ -1,8 +1,8 @@
 package no.roedt.ringesentralen.statistikk
 
-import no.roedt.brukere.GenerelleRoller
+import no.roedt.brukere.GenerellRolle
 import no.roedt.hypersys.HypersysIdProvider
-import no.roedt.ringesentralen.Roles
+import no.roedt.ringesentralen.RingespesifikkRolle
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
@@ -30,25 +30,25 @@ class StatistikkController(val service: StatistikkService) : HypersysIdProvider 
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(Roles.ringer, Roles.godkjenner, GenerelleRoller.admin)
+    @RolesAllowed(RingespesifikkRolle.ringer, RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @GET
     @Path("/statistikk")
-    @Operation(summary = "Hent statistikk", description = Roles.ringerGodkjennerAdmin)
+    @Operation(summary = "Hent statistikk", description = RingespesifikkRolle.ringerGodkjennerAdmin)
     @Produces(MediaType.APPLICATION_JSON)
     fun getStatistikk(@Context ctx: SecurityContext): StatistikkResponse = service.getStatistikk(jwt.groups)
 
-    @RolesAllowed(Roles.ringer, Roles.godkjenner, GenerelleRoller.admin)
+    @RolesAllowed(RingespesifikkRolle.ringer, RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @GET
     @Path("/ringtFlest")
-    @Operation(summary = "Hvem har ringt mest?", description = Roles.ringerGodkjennerAdmin)
+    @Operation(summary = "Hvem har ringt mest?", description = RingespesifikkRolle.ringerGodkjennerAdmin)
     @Produces(MediaType.APPLICATION_JSON)
     fun ringtFlestStatistikk(@Context ctx: SecurityContext): RingtFlestStatistikk =
         service.getRingtMest(ctx.userId().userId)
 
-    @RolesAllowed(GenerelleRoller.admin)
+    @RolesAllowed(GenerellRolle.admin)
     @GET
     @Path("/lodd")
-    @Operation(summary = "Hvem har ringt mest? Henter ut liste til loddtrekning", description = GenerelleRoller.admin)
+    @Operation(summary = "Hvem har ringt mest? Henter ut liste til loddtrekning", description = GenerellRolle.admin)
     @Produces(MediaType.APPLICATION_JSON)
     fun lodd(
         @Context ctx: SecurityContext,

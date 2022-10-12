@@ -1,13 +1,13 @@
 package no.roedt.innloggaBruker
 
 import no.roedt.brukere.FylkeRepository
-import no.roedt.brukere.GenerelleRoller
+import no.roedt.brukere.GenerellRolle
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.UserId
-import no.roedt.ringesentralen.Roles
+import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import java.util.Optional
 import javax.enterprise.context.ApplicationScoped
@@ -38,8 +38,8 @@ class InnloggaBrukerService(
     )
 
     fun getLokallag(userId: UserId, groups: Set<String>): List<Lokallag> = when {
-        groups.contains(GenerelleRoller.admin) -> lokallagRepository.findAll().list()
-        groups.contains(Roles.godkjenner) -> lokallagRepository.fromFylke(
+        groups.contains(GenerellRolle.admin) -> lokallagRepository.findAll().list()
+        groups.contains(RingespesifikkRolle.godkjenner) -> lokallagRepository.fromFylke(
             fylkeRepository.getFylkeIdFraLokallag(
                 getPerson(userId).get().lokallag
             )

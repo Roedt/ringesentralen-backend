@@ -1,6 +1,6 @@
 package no.roedt.ringesentralen.verving
 
-import no.roedt.brukere.GenerelleRoller
+import no.roedt.brukere.GenerellRolle
 import no.roedt.hypersys.HypersysIdProvider
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
@@ -28,12 +28,12 @@ class VervingController(val service: VervingService) : HypersysIdProvider {
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(GenerelleRoller.systembrukerFrontend)
+    @RolesAllowed(GenerellRolle.systembrukerFrontend)
     @POST
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/verv")
-    @Operation(summary = "Legg til person som skal ringes", description = GenerelleRoller.systembrukerFrontend)
+    @Operation(summary = "Legg til person som skal ringes", description = GenerellRolle.systembrukerFrontend)
     @Bulkhead(3)
     @Retry
     fun postPersonSomSkalRinges(@Context ctx: SecurityContext, request: VervingRequest): Response {
@@ -45,12 +45,12 @@ class VervingController(val service: VervingService) : HypersysIdProvider {
         }
     }
 
-    @RolesAllowed(GenerelleRoller.systembrukerFrontend)
+    @RolesAllowed(GenerellRolle.systembrukerFrontend)
     @POST
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/svar")
-    @Operation(summary = "Registrer svar fra personen på om hen vil ringes", description = GenerelleRoller.systembrukerFrontend)
+    @Operation(summary = "Registrer svar fra personen på om hen vil ringes", description = GenerellRolle.systembrukerFrontend)
     @Bulkhead(3)
     @Retry
     fun mottaSvar(@Context ctx: SecurityContext, request: MottaSvarRequest) = service.mottaSvar(

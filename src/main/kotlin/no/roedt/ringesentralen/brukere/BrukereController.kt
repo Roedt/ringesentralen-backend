@@ -4,10 +4,10 @@ import no.roedt.brukere.AutentisertGetBrukereRequest
 import no.roedt.brukere.AutentisertTilgangsendringRequest
 import no.roedt.brukere.Brukerendring
 import no.roedt.brukere.Brukerinformasjon
-import no.roedt.brukere.GenerelleRoller
+import no.roedt.brukere.GenerellRolle
 import no.roedt.brukere.TilgangsendringsRequest
 import no.roedt.hypersys.HypersysIdProvider
-import no.roedt.ringesentralen.Roles
+import no.roedt.ringesentralen.RingespesifikkRolle
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
@@ -37,21 +37,21 @@ class BrukereController(
     @Inject
     lateinit var jwt: JsonWebToken
 
-    @RolesAllowed(Roles.godkjenner, GenerelleRoller.admin)
+    @RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/brukere")
-    @Operation(summary = "List ut brukere", description = Roles.godkjennerAdmin)
+    @Operation(summary = "List ut brukere", description = RingespesifikkRolle.godkjennerAdmin)
     fun getBrukere(@Context ctx: SecurityContext): List<Brukerinformasjon> = brukereService.getBrukere(
         AutentisertGetBrukereRequest(ctx.userId(), jwt.groups)
     )
 
-    @RolesAllowed(Roles.godkjenner, GenerelleRoller.admin)
+    @RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/aktiver")
-    @Operation(summary = "Aktiver ringer", description = Roles.godkjennerAdmin)
+    @Operation(summary = "Aktiver ringer", description = RingespesifikkRolle.godkjennerAdmin)
     @Bulkhead(3)
     @Retry
     @Transactional
@@ -59,12 +59,12 @@ class BrukereController(
         AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
     )
 
-    @RolesAllowed(Roles.godkjenner, GenerelleRoller.admin)
+    @RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/giTilgangTilAaRingeMedlemmer")
-    @Operation(summary = "Gi tilgang til å ringe medlemmer", description = Roles.godkjennerAdmin)
+    @Operation(summary = "Gi tilgang til å ringe medlemmer", description = RingespesifikkRolle.godkjennerAdmin)
     @Bulkhead(3)
     @Retry
     @Transactional
@@ -72,12 +72,12 @@ class BrukereController(
         AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
     )
 
-    @RolesAllowed(Roles.godkjenner, GenerelleRoller.admin)
+    @RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/fjernTilgangTilAaRingeMedlemmer")
-    @Operation(summary = "Fjern tilgang til å ringe medlemmer", description = Roles.godkjennerAdmin)
+    @Operation(summary = "Fjern tilgang til å ringe medlemmer", description = RingespesifikkRolle.godkjennerAdmin)
     @Bulkhead(3)
     @Retry
     @Transactional
@@ -85,12 +85,12 @@ class BrukereController(
         AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
     )
 
-    @RolesAllowed(Roles.godkjenner, GenerelleRoller.admin)
+    @RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/deaktiver")
-    @Operation(summary = "Deaktiver ringer", description = Roles.godkjennerAdmin)
+    @Operation(summary = "Deaktiver ringer", description = RingespesifikkRolle.godkjennerAdmin)
     @Bulkhead(5)
     @Retry
     @Transactional
@@ -98,12 +98,12 @@ class BrukereController(
         AutentisertTilgangsendringRequest(ctx.userId(), deaktiverRequest, jwt)
     )
 
-    @RolesAllowed(GenerelleRoller.admin)
+    @RolesAllowed(GenerellRolle.admin)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/gjoerTilLokalGodkjenner")
-    @Operation(summary = "Gjør til lokal godkjenner", description = GenerelleRoller.admin)
+    @Operation(summary = "Gjør til lokal godkjenner", description = GenerellRolle.admin)
     @Bulkhead(5)
     @Retry
     @Transactional
@@ -115,12 +115,12 @@ class BrukereController(
         )
     )
 
-    @RolesAllowed(GenerelleRoller.admin)
+    @RolesAllowed(GenerellRolle.admin)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/fjernSomLokalGodkjenner")
-    @Operation(summary = "Fjern som lokal godkjenner", description = GenerelleRoller.admin)
+    @Operation(summary = "Fjern som lokal godkjenner", description = GenerellRolle.admin)
     @Bulkhead(5)
     @Retry
     @Transactional

@@ -7,7 +7,7 @@ import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.Roles
+import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.ringesentralen.person.Ringer
 import no.roedt.ringesentralen.person.RingerRepository
@@ -100,7 +100,7 @@ class RingServiceBean(
         var personSomRingerTilbake = personRepository.find("telefonnummer", oppringtNummer).firstResultOptional<Person>()
             .orElseGet { personRepository.find("telefonnummer", "-1").firstResult() }
         val modus = if (personSomRingerTilbake.hypersysID != null) Modus.medlemmer else Modus.velgere
-        if (modus == Modus.medlemmer && !request.groups.contains(Roles.ringerMedlemmer)) {
+        if (modus == Modus.medlemmer && !request.groups.contains(RingespesifikkRolle.ringerMedlemmer)) {
             personSomRingerTilbake = personRepository.find("telefonnummer", "-1").firstResult()
         }
 

@@ -1,9 +1,9 @@
 package no.roedt.ringesentralen
 
-import no.roedt.brukere.GenerelleRoller.GenerelleRoller.admin
+import no.roedt.brukere.GenerellRolle.GenerelleRoller.admin
 
-class Roles {
-    companion object Roles {
+class RingespesifikkRolle {
+    companion object {
         const val ringer = "ringer"
         const val ringerMedlemmer = "ringerForMedlemmer"
         const val godkjenner = "godkjenner"

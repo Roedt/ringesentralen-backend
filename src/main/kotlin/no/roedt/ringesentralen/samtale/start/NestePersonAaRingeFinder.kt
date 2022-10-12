@@ -6,7 +6,7 @@ import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.Roles
+import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.ringesentralen.samtale.OppfoelgingValg21Repository
 import no.roedt.ringesentralen.samtale.Samtale
@@ -43,7 +43,7 @@ class NestePersonAaRingeFinder(
         }
 
     private fun hentNesteMedlemAaRinge(request: AutentisertNestePersonAaRingeRequest): Int? {
-        if (!request.roller.contains(Roles.ringerMedlemmer)) {
+        if (!request.roller.contains(RingespesifikkRolle.ringerMedlemmer)) {
             throw ForbiddenException("Kun dei godkjente for det kan ringe medlemmar")
         }
         return nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(personRepository.getPerson(request.userId), request.lokallag)

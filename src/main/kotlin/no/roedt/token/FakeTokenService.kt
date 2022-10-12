@@ -1,7 +1,7 @@
 package no.roedt.token
 
 import io.smallrye.jwt.build.Jwt
-import no.roedt.brukere.GenerelleRoller
+import no.roedt.brukere.GenerellRolle
 import no.roedt.hypersys.login.AESUtil
 import no.roedt.hypersys.login.LoginRequest
 import no.roedt.person.EpostValidator
@@ -32,7 +32,7 @@ class FakeTokenService(
             .upn("FakeRingesentralen")
             .issuedAt(System.currentTimeMillis())
             .expiresAt(System.currentTimeMillis() + tokenExpiryPeriod.toSeconds())
-            .groups(setOf(GenerelleRoller.bruker))
+            .groups(setOf(GenerellRolle.bruker))
             .claim("hypersys.user_id", "15424") // Donald
             .sign(privateKeyFactory.readPrivateKey())
     }

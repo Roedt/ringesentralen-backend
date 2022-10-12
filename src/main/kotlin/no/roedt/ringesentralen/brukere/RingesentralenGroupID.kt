@@ -1,9 +1,9 @@
 package no.roedt.ringesentralen.brukere
 
-import no.roedt.brukere.GenerelleRoller
+import no.roedt.brukere.GenerellRolle
 import no.roedt.brukere.GroupID
 import no.roedt.brukere.GroupID.Companion.referencesOneOf
-import no.roedt.ringesentralen.Roles
+import no.roedt.ringesentralen.RingespesifikkRolle
 
 enum class RingesentralenGroupID(override val nr: Int, override val skildring: String, override val roller: Set<String>) :
     GroupID {
@@ -11,14 +11,14 @@ enum class RingesentralenGroupID(override val nr: Int, override val skildring: S
     KlarTilAaRinges(1, "klar til å ringes", setOf()),
     Ferdigringt(2, "ferdigringt", setOf()),
     Slett(3, "slett", setOf()),
-    UgodkjentRinger(4, "ugodkjent ringer for velgere", setOf(GenerelleRoller.venterPaaGodkjenning)),
-    AvslaattRinger(5, "ringer som aktivt ikke er godkjent", setOf(GenerelleRoller.sperret)),
-    GodkjentRinger(6, "godkjent ringer", setOf(GenerelleRoller.bruker, Roles.ringer)),
+    UgodkjentRinger(4, "ugodkjent ringer for velgere", setOf(GenerellRolle.venterPaaGodkjenning)),
+    AvslaattRinger(5, "ringer som aktivt ikke er godkjent", setOf(GenerellRolle.sperret)),
+    GodkjentRinger(6, "godkjent ringer", setOf(GenerellRolle.bruker, RingespesifikkRolle.ringer)),
     TrengerOppfoelging(7, "trenger oppfølging", setOf()),
-    LokalGodkjenner(8, "ringer som kan godkjenne ringere i sitt lokallag", setOf(GenerelleRoller.bruker, Roles.ringer, Roles.ringerMedlemmer, Roles.godkjenner)),
-    Admin(9, "admin", setOf(GenerelleRoller.bruker, Roles.ringer, Roles.ringerMedlemmer, Roles.godkjenner, GenerelleRoller.admin)),
+    LokalGodkjenner(8, "ringer som kan godkjenne ringere i sitt lokallag", setOf(GenerellRolle.bruker, RingespesifikkRolle.ringer, RingespesifikkRolle.ringerMedlemmer, RingespesifikkRolle.godkjenner)),
+    Admin(9, "admin", setOf(GenerellRolle.bruker, RingespesifikkRolle.ringer, RingespesifikkRolle.ringerMedlemmer, RingespesifikkRolle.godkjenner, GenerellRolle.admin)),
     PrioritertAaRinge(10, "prioritert å ringe", setOf()),
-    GodkjentRingerMedlemmer(11, "godkjent ringer for velgere og medlemmer", setOf(GenerelleRoller.bruker, Roles.ringer, Roles.ringerMedlemmer)),
+    GodkjentRingerMedlemmer(11, "godkjent ringer for velgere og medlemmer", setOf(GenerellRolle.bruker, RingespesifikkRolle.ringer, RingespesifikkRolle.ringerMedlemmer)),
     Frivillig(12, "har meldt seg som valgkampfrivillig", setOf());
 
     companion object {
