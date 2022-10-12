@@ -44,8 +44,8 @@ abstract class HypersysLoginBean(
     protected fun oppdaterPersoninformasjon(token: GyldigPersonToken): Pair<Long, Person> {
         val profile: Profile = hypersysProxy.get("actor/api/profile/", token, Profile::class.java)
         val convertedPerson = modelConverter.convert(profile.user, getRolle(profile))
-        loginAttemptRepository.persist(LoginAttempt(hypersysID = profile.user.id))
         return Pair(lagrePerson(convertedPerson), convertedPerson)
+            .also { loginAttemptRepository.persist(LoginAttempt(hypersysID = profile.user.id)) }
     }
 
     protected open fun getRolle(profile: Profile): Int {
