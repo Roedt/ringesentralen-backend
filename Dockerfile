@@ -8,6 +8,7 @@ COPY pom.xml /home/app/
 WORKDIR /home/app
 RUN mvn verify -B --fail-never
 COPY src /home/app/src
+COPY .editorconfig .editorconfig
 RUN mvn package -Dquarkus.package.type=native-sources -B -e -Dquarkus.datasource.username=${DBUSER} -Dquarkus.datasource.password=${DBPASSWORD} -Dquarkus.mailer.username=${QuarkusMailerUsername} -Dquarkus.mailer.password=${QuarkusMailerPassword}
 
 # Stage 2: Build the native image
