@@ -1,10 +1,6 @@
 package no.roedt.ringesentralen
 
-import no.roedt.hypersys.GyldigPersonToken
-import no.roedt.hypersys.HypersysProxy
-import no.roedt.hypersys.ModelConverter
-import no.roedt.hypersys.Token
-import no.roedt.hypersys.UgyldigToken
+import no.roedt.hypersys.*
 import no.roedt.hypersys.externalModel.Profile
 import no.roedt.hypersys.login.AESUtil
 import no.roedt.hypersys.login.HypersysLoginBean
@@ -16,7 +12,7 @@ import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.ringesentralen.person.Ringer
 import no.roedt.ringesentralen.person.RingerIV1Repository
 import no.roedt.ringesentralen.person.RingerRepository
-import no.roedt.token.SecretFactory
+import no.roedt.token.SecretFactoryProxy
 import java.time.Instant
 import javax.enterprise.context.Dependent
 
@@ -24,7 +20,7 @@ import javax.enterprise.context.Dependent
 class RingesentralenLoginBean(
     hypersysProxy: HypersysProxy,
     modelConverter: ModelConverter,
-    secretFactory: SecretFactory,
+    secretFactory: SecretFactoryProxy,
     loginAttemptRepository: LoginAttemptRepository,
     personRepository: PersonRepository,
     private val ringerRepository: RingerRepository,

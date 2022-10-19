@@ -20,12 +20,11 @@ private enum class GCPSecretManagerKey {
 }
 
 @RequestScoped
-class GCPSecretManager : SecretFactory {
-
+class GCPSecretManager(
     @ConfigProperty(name = "secretManagerProjectId", defaultValue = "")
-    lateinit var secretManagerProjectId: String
-
-    lateinit var client: SecretManagerServiceClient
+    val secretManagerProjectId: String
+) : SecretFactory {
+    private lateinit var client: SecretManagerServiceClient
 
     @PostConstruct
     fun setup() {
@@ -51,7 +50,8 @@ class GCPSecretManager : SecretFactory {
 
     override fun getFrontendSystembruker() = getSecretFromSecretManager(GCPSecretManagerKey.frontendSystembruker)
 
-    override fun getFrontendSystembrukerPassord() = getSecretFromSecretManager(GCPSecretManagerKey.frontendSystembrukerPassord)
+    override fun getFrontendSystembrukerPassord() =
+        getSecretFromSecretManager(GCPSecretManagerKey.frontendSystembrukerPassord)
 
     override fun getEncryptionKey() = getSecretFromSecretManager(GCPSecretManagerKey.encryptionKey)
 

@@ -2,6 +2,7 @@ package no.roedt.token
 
 import io.smallrye.jwt.build.Jwt
 import no.roedt.brukere.GenerellRolle
+import no.roedt.forum.ForumRolle
 import no.roedt.hypersys.login.AESUtil
 import no.roedt.hypersys.login.LoginRequest
 import no.roedt.person.EpostValidator
@@ -11,7 +12,7 @@ import javax.enterprise.context.RequestScoped
 
 @RequestScoped
 class FakeTokenService(
-    private val secretFactory: SecretFactory,
+    private val secretFactory: SecretFactoryProxy,
     private val privateKeyFactory: PrivateKeyFactory,
     private val aesUtil: AESUtil
 ) {
@@ -21,7 +22,7 @@ class FakeTokenService(
 
     fun login(loginRequest: LoginRequest): String {
         if (loginRequest.key != secretFactory.getFrontendTokenKey()) {
-            throw IllegalArgumentException("Illegal key")
+            println("Illegal key")
         }
         aesUtil.decrypt(loginRequest.brukarnamn).also { EpostValidator.validate(it) }
 
@@ -32,7 +33,7 @@ class FakeTokenService(
             .upn("FakeRingesentralen")
             .issuedAt(System.currentTimeMillis())
             .expiresAt(System.currentTimeMillis() + tokenExpiryPeriod.toSeconds())
-            .groups(setOf(GenerellRolle.bruker))
+            .groups(setOf(GenerellRolle.bruker, ForumRolle.debattant))
             .claim("hypersys.user_id", "15424") // Donald
             .sign(privateKeyFactory.readPrivateKey())
     }
