@@ -20,7 +20,7 @@ RUN native-image $(cat native-image.args) -J-Xmx20g
 COPY --chown=quarkus:quarkus --from=maven /home/app/src/main/resources/META-INF/resources/publickey.pem /build/publickey.pem
 
 # Stage 3: Create the docker final image
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
+FROM registry.access.redhat.com/ubi8/ubi-minimal:8.7-923.1669829893
 WORKDIR /work/
 COPY --from=native-build /build/*-runner /work/application
 COPY --from=native-build /build/publickey.pem /work/publickey.pem
