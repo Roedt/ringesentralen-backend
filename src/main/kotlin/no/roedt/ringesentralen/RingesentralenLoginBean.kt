@@ -1,6 +1,10 @@
 package no.roedt.ringesentralen
 
-import no.roedt.hypersys.*
+import no.roedt.hypersys.GyldigPersonToken
+import no.roedt.hypersys.HypersysProxy
+import no.roedt.hypersys.ModelConverter
+import no.roedt.hypersys.Token
+import no.roedt.hypersys.UgyldigToken
 import no.roedt.hypersys.externalModel.Profile
 import no.roedt.hypersys.login.AESUtil
 import no.roedt.hypersys.login.HypersysLoginBean
