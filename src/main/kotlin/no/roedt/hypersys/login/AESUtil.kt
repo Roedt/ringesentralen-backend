@@ -1,7 +1,7 @@
 package no.roedt.hypersys.login
 
-import no.roedt.token.SecretFactory
-import java.util.Base64
+import no.roedt.token.SecretFactoryProxy
+import java.util.*
 import javax.annotation.PostConstruct
 import javax.crypto.Cipher
 import javax.crypto.SecretKey
@@ -10,7 +10,7 @@ import javax.crypto.spec.SecretKeySpec
 import javax.enterprise.context.Dependent
 
 @Dependent
-class AESUtil(val secretFactory: SecretFactory) {
+class AESUtil(val secretFactory: SecretFactoryProxy) {
 
     val algorithm: String = "AES/CBC/PKCS5Padding"
     lateinit var key: SecretKey

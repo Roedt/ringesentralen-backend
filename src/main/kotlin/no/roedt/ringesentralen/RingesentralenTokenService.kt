@@ -9,7 +9,7 @@ import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.token.PrivateKeyFactory
-import no.roedt.token.SecretFactory
+import no.roedt.token.SecretFactoryProxy
 import no.roedt.token.TokenService
 import javax.inject.Singleton
 import javax.ws.rs.NotAuthorizedException
@@ -18,7 +18,7 @@ import javax.ws.rs.NotAuthorizedException
 class RingesentralenTokenService(
     private val personRepository: PersonRepository,
     privateKeyFactory: PrivateKeyFactory,
-    secretFactory: SecretFactory,
+    secretFactory: SecretFactoryProxy,
     hypersysLoginBean: HypersysLoginBean,
     aesUtil: AESUtil
 ) : TokenService(personRepository, privateKeyFactory, secretFactory, hypersysLoginBean, aesUtil) {

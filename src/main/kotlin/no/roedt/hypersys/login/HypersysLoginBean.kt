@@ -1,21 +1,17 @@
 package no.roedt.hypersys.login
 
-import no.roedt.hypersys.GyldigPersonToken
-import no.roedt.hypersys.HypersysProxy
-import no.roedt.hypersys.ModelConverter
-import no.roedt.hypersys.Token
-import no.roedt.hypersys.UgyldigToken
+import no.roedt.hypersys.*
 import no.roedt.hypersys.externalModel.Profile
 import no.roedt.person.EpostValidator
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
-import no.roedt.token.SecretFactory
+import no.roedt.token.SecretFactoryProxy
 import java.net.http.HttpResponse
 
 abstract class HypersysLoginBean(
     private val hypersysProxy: HypersysProxy,
     private val modelConverter: ModelConverter,
-    private val secretFactory: SecretFactory,
+    private val secretFactory: SecretFactoryProxy,
     private val loginAttemptRepository: LoginAttemptRepository,
     private val personRepository: PersonRepository,
     private val aesUtil: AESUtil

@@ -1,43 +1,35 @@
 package no.roedt.forum.database
 
-import com.google.cloud.firestore.CollectionReference
-import com.google.cloud.firestore.DocumentReference
-import com.google.cloud.firestore.FirestoreOptions
 import no.roedt.forum.underforum.Traad
+import no.roedt.forum.underforum.TraadMedInnhold
+import no.roedt.forum.underforum.TraadRequest
 import no.roedt.forum.underforum.Underforum
-import org.eclipse.microprofile.config.inject.ConfigProperty
-import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 
 @ApplicationScoped
-class ForumRepository {
+class ForumRepository(val firestoreCollections: FirestoreCollections) {
 
-    private var collections: List<CollectionReference>? = null
+    fun hentAlleUnderforum(): List<Underforum> = firestoreCollections.collections?.map { it.tilUnderforum() } ?: listOf()
 
-    @Inject
-    @ConfigProperty(name = "projectId")
-    var projectId: String? = null
+    fun hentTraader(underforum: String): List<Traad> =
+        finnUnderforum(underforum)?.listDocuments()?.map { it.tilTraad() } ?: listOf()
 
-    @PostConstruct
-    fun setup() {
-        val firestoreOptions = FirestoreOptions.getDefaultInstance()
-            .toBuilder()
-            .setProjectId(projectId)
-            .build()
-        collections = firestoreOptions.service.listCollections().toList()
+    fun hentTraad(traadId: Traad): TraadMedInnhold =
+        finnUnderforum(traadId.underforum)!!.document(traadId.tittel).tilTraadMedInnhold()
+
+    private fun finnUnderforum(id: String) = firestoreCollections.collections?.find { it.underforumnavn == id }
+    fun opprettTraad(traad: TraadRequest) {
+        finnUnderforum(traad.underforum)!!.document(traad.id).innhold = mutableMapOf(Pair("innhold", traad.node))
     }
-
-    fun hentAlleUnderforum(): List<Underforum> = collections?.map { it.tilUnderforum() } ?: listOf()
-
-    fun hentTraader(underforum: Underforum): List<Traad> =
-        collections?.find { it.id == underforum.id }?.listDocuments()?.map { it.tilTraad() } ?: listOf()
 }
 
-fun CollectionReference.tilUnderforum() = Underforum(
-    id = this.id
+fun FirestoreCollection.tilUnderforum() = Underforum(
+    id = this.underforumnavn
 )
 
-fun DocumentReference.tilTraad() = Traad(
-    tittel = this.id
+fun FirestoreDocument.tilTraad() = Traad(
+    tittel = this.tittel,
+    underforum = this.underforum
 )
+private fun FirestoreDocument.tilTraadMedInnhold(): TraadMedInnhold =
+    TraadMedInnhold(traad = this.tilTraad(), innhold = this.innhold)
