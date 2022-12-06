@@ -1,20 +1,25 @@
 package no.roedt.forum.database
 
-import com.google.cloud.firestore.Firestore
+import com.google.auth.oauth2.GoogleCredentials
+import com.google.firebase.FirebaseApp
+import com.google.firebase.FirebaseOptions
+import com.google.firebase.cloud.FirestoreClient
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 
 @ApplicationScoped
 class FirestoreCollections(
     @ConfigProperty(name = "brukHypersys", defaultValue = "true")
-    private val brukHypersys: Boolean
+    private val brukHypersys: Boolean,
+
+    @ConfigProperty(name = "projectId")
+    private val projectId: String
 ) {
     var collections: List<FirestoreCollection>? = null
 
-    @Inject
-    private lateinit var firestore: Firestore
+//    @Inject
+//    private lateinit var firestore: Firestore
 
     @PostConstruct
     fun setup() {
@@ -22,7 +27,18 @@ class FirestoreCollections(
             collections = lagFakeCollections()
             return
         }
-        collections = firestore.listCollections()
+//        collections = firestore.listCollections()
+//            .map { RealFirestoreCollection(underforumnavn = it.id, collectionReference = it) }
+//            .toList()
+        val credentials = GoogleCredentials.getApplicationDefault()
+        val options = FirebaseOptions.Builder()
+            .setCredentials(credentials)
+            .setProjectId(projectId)
+            .build()
+        FirebaseApp.initializeApp(options)
+
+        val db = FirestoreClient.getFirestore()
+        collections = db.listCollections()
             .map { RealFirestoreCollection(underforumnavn = it.id, collectionReference = it) }
             .toList()
     }
