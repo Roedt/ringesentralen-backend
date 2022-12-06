@@ -4,12 +4,10 @@ import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.CollectionReference
 import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.FirestoreOptions
-import com.google.firebase.FirebaseApp
-import com.google.firebase.FirebaseOptions
-import com.google.firebase.cloud.FirestoreClient
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
+import javax.inject.Inject
 
 @ApplicationScoped
 class FirestoreCollections(
@@ -24,20 +22,16 @@ class FirestoreCollections(
 ) {
     var collections: List<FirestoreCollection>? = null
 
+    @Inject
+    private lateinit var firestore: Firestore
+
     @PostConstruct
     fun setup() {
         if (!brukHypersys) {
             collections = lagFakeCollections()
             return
         }
-        FirebaseOptions.builder()
-            .setCredentials(GoogleCredentials.getApplicationDefault())
-            .setDatabaseUrl("https://ringesentralen-produksjon.firebaseio.com/")
-            .build()
-            .let { FirebaseApp.initializeApp(it) }
-        val db: Firestore = FirestoreClient.getFirestore()
-
-        val fs = if (usePrivateKeyFromSecretManager) localFirestoreconnection() else db.listCollections()
+        val fs = localFirestoreconnection()
         collections = fs
             .map { RealFirestoreCollection(underforumnavn = it.id, collectionReference = it) }
             .toList()
