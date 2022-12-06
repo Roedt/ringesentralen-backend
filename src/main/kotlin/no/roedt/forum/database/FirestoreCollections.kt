@@ -34,7 +34,7 @@ class FirestoreCollections(
             .setCredentials(GoogleCredentials.getApplicationDefault())
             .setDatabaseUrl("https://ringesentralen-produksjon.firebaseio.com/")
             .build()
-            .let { if (FirebaseApp.getApps().isEmpty()) FirebaseApp.initializeApp(it) }
+            .let { FirebaseApp.initializeApp(it) }
         val db: Firestore = FirestoreClient.getFirestore()
 
         val fs = if (usePrivateKeyFromSecretManager) localFirestoreconnection() else db.listCollections()
