@@ -22,8 +22,6 @@ class FirestoreCollections(
     private fun listCollections(firestore: Firestore): MutableIterable<CollectionReference> {
         val listCollections = firestore.listCollections()
         println(listCollections.count())
-        println(firestore.options.projectId)
-        println(firestore.options.databaseId)
         listCollections.map { it.id }.forEach { println(it) }
         return listCollections
     }
