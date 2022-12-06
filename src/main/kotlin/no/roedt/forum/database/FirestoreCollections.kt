@@ -38,7 +38,7 @@ class FirestoreCollections(
             .let { if (FirebaseApp.getApps().isEmpty()) FirebaseApp.initializeApp(it) }
         val db: Firestore = FirestoreClient.getFirestore()
 
-        val fs = if (usePrivateKeyFromSecretManager) localFirestoreconnection() else db.listCollections()
+        val fs = if (!usePrivateKeyFromSecretManager) localFirestoreconnection() else db.listCollections()
         collections = fs
             .map { RealFirestoreCollection(underforumnavn = it.id, collectionReference = it) }
             .toList()
