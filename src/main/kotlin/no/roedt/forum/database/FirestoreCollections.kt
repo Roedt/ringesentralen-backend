@@ -32,6 +32,7 @@ class FirestoreCollections(
         }
         FirebaseOptions.builder()
             .setCredentials(GoogleCredentials.getApplicationDefault())
+            .setProjectId(projectId)
             .setDatabaseUrl("https://ringesentralen-produksjon.firebaseio.com/")
             .build()
             .let { if (FirebaseApp.getApps().isEmpty()) FirebaseApp.initializeApp(it) }
