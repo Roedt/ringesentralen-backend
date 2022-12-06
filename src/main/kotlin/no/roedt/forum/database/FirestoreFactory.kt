@@ -12,5 +12,5 @@ class FirestoreFactory {
     @Alternative
     @Priority(1)
     @Produces
-    fun googleCredentials() = GoogleCredentials.getApplicationDefault()
+    fun googleCredentials() = GoogleCredentials.getApplicationDefault()!!
 }
