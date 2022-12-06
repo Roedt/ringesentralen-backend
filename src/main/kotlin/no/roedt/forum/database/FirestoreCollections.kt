@@ -1,7 +1,6 @@
 package no.roedt.forum.database
 
 import com.google.auth.oauth2.GoogleCredentials
-import com.google.cloud.firestore.CollectionReference
 import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.FirestoreOptions
 import org.eclipse.microprofile.config.inject.ConfigProperty
@@ -31,22 +30,20 @@ class FirestoreCollections(
             collections = lagFakeCollections()
             return
         }
-        val fs = localFirestoreconnection()
+        val fs = if (usePrivateKeyFromSecretManager) firestore.listCollections() else localFirestoreconnection()
         collections = fs
             .map { RealFirestoreCollection(underforumnavn = it.id, collectionReference = it) }
             .toList()
     }
 
-    private fun localFirestoreconnection(): MutableIterable<CollectionReference> {
-        val applicationDefault = GoogleCredentials.getApplicationDefault()
-        print(applicationDefault)
-        return FirestoreOptions.newBuilder()
+    private fun localFirestoreconnection() =
+        FirestoreOptions.getDefaultInstance()
+            .toBuilder()
             .setProjectId(projectId)
-            .setCredentials(applicationDefault)
+            .setCredentials(GoogleCredentials.getApplicationDefault())
             .build()
             .service
             .listCollections()
-    }
 
     private fun lagFakeCollections() = listOf(
         FakeFirestoreCollection(
