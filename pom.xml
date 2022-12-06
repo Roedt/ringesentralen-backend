@@ -137,6 +137,11 @@
       <artifactId>quarkus-google-cloud-firestore</artifactId>
       <version>${googleCloudServicesVersion}</version>
     </dependency>
+    <dependency>
+      <groupId>com.google.firebase</groupId>
+      <artifactId>firebase-admin</artifactId>
+      <version>9.1.1</version>
+    </dependency>
     <!-- https://mvnrepository.com/artifact/io.quarkus/quarkus-elytron-security -->
     <dependency>
       <groupId>io.quarkus</groupId>
