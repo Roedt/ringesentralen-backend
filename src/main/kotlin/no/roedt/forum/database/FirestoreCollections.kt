@@ -1,29 +1,30 @@
 package no.roedt.forum.database
 
-import com.google.cloud.firestore.CollectionReference
 import com.google.cloud.firestore.Firestore
 import org.eclipse.microprofile.config.inject.ConfigProperty
+import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
+import javax.inject.Inject
 
 @ApplicationScoped
 class FirestoreCollections(
     @ConfigProperty(name = "brukHypersys", defaultValue = "true")
-    private val brukHypersys: Boolean,
-    firestore: Firestore
+    private val brukHypersys: Boolean
 ) {
-    var collections = if (!brukHypersys) {
-        lagFakeCollections()
-    } else {
-        listCollections(firestore)
+    var collections: List<FirestoreCollection>? = null
+
+    @Inject
+    private lateinit var firestore: Firestore
+
+    @PostConstruct
+    fun setup() {
+        if (!brukHypersys) {
+            collections = lagFakeCollections()
+            return
+        }
+        collections = firestore.listCollections()
             .map { RealFirestoreCollection(underforumnavn = it.id, collectionReference = it) }
             .toList()
-    }
-
-    private fun listCollections(firestore: Firestore): MutableIterable<CollectionReference> {
-        val listCollections = firestore.listCollections()
-        println(listCollections.count())
-        listCollections.map { it.id }.forEach { println(it) }
-        return listCollections
     }
 
     private fun lagFakeCollections() = listOf(
