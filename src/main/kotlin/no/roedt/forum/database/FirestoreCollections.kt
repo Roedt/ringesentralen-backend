@@ -18,19 +18,27 @@ class FirestoreCollections(
 ) {
     var collections: List<FirestoreCollection>? = null
 
+//    @Inject
+//    private lateinit var firestore: Firestore
+
     @PostConstruct
     fun setup() {
         if (!brukHypersys) {
             collections = lagFakeCollections()
             return
         }
-        FirebaseOptions.Builder()
-            .setCredentials(GoogleCredentials.getApplicationDefault())
+//        collections = firestore.listCollections()
+//            .map { RealFirestoreCollection(underforumnavn = it.id, collectionReference = it) }
+//            .toList()
+        val credentials = GoogleCredentials.getApplicationDefault()
+        val options = FirebaseOptions.Builder()
+            .setCredentials(credentials)
             .setProjectId(projectId)
             .build()
-            .let { if (FirebaseApp.getApps().isEmpty()) FirebaseApp.initializeApp(it) }
+        FirebaseApp.initializeApp(options)
 
-        collections = FirestoreClient.getFirestore().listCollections()
+        val db = FirestoreClient.getFirestore()
+        collections = db.listCollections()
             .map { RealFirestoreCollection(underforumnavn = it.id, collectionReference = it) }
             .toList()
     }
