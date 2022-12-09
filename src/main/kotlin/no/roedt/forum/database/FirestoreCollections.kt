@@ -1,20 +1,21 @@
 package no.roedt.forum.database
 
+import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.Firestore
+import com.google.cloud.firestore.FirestoreOptions
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 
 @ApplicationScoped
 class FirestoreCollections(
     @ConfigProperty(name = "brukHypersys", defaultValue = "true")
-    private val brukHypersys: Boolean
+    private val brukHypersys: Boolean,
+
+    @ConfigProperty(name = "projectId")
+    private val projectId: String
 ) {
     var collections: List<FirestoreCollection>? = null
-
-    @Inject
-    private lateinit var firestore: Firestore
 
     @PostConstruct
     fun setup() {
@@ -22,9 +23,17 @@ class FirestoreCollections(
             collections = lagFakeCollections()
             return
         }
+        val firestore = lagFirestore()
         collections = firestore.listCollections()
             .map { RealFirestoreCollection(underforumnavn = it.id, collectionReference = it) }
             .toList()
+    }
+
+    private fun lagFirestore(): Firestore {
+        val builder = FirestoreOptions.newBuilder()
+            .setCredentials(GoogleCredentials.getApplicationDefault())
+            .setProjectId(projectId)
+        return builder.build().service
     }
 
     private fun lagFakeCollections() = listOf(
