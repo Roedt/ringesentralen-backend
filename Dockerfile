@@ -20,10 +20,11 @@ RUN native-image $(cat native-image.args) -J-Xmx20g
 COPY --chown=quarkus:quarkus --from=maven /home/app/src/main/resources/META-INF/resources/publickey.pem /build/publickey.pem
 
 # Stage 3: Create the docker final image
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
+FROM quay.io/quarkus/quarkus-micro-image:2.0
 WORKDIR /work/
 COPY --from=native-build /build/*-runner /work/application
 COPY --from=native-build /build/publickey.pem /work/publickey.pem
+RUN chmod 775 /work
 EXPOSE 8080
 ENTRYPOINT [ "/work/application" ]
 CMD ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dmp.jwt.verify.publickey.location=/work/publickey.pem"]
