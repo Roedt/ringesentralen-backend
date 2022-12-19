@@ -24,6 +24,7 @@ enum class RingesentralenGroupID(override val nr: Int, override val skildring: S
 
     companion object {
         fun from(value: Int): GroupID = values().first { it.nr == value }
+        fun erUgyldigRolleForAaBrukeSystemet(groupID: GroupID) = setOf(ManglerSamtykke, KlarTilAaRinges, Ferdigringt, Slett).contains(groupID)
         fun isBrukerEllerVenter(groupID: Int) = referencesOneOf(groupID, UgodkjentRinger, GodkjentRinger, GodkjentRingerMedlemmer, LokalGodkjenner, Admin)
         fun isIkkeRegistrertRinger(groupID: Int) = referencesOneOf(groupID, ManglerSamtykke, KlarTilAaRinges, Ferdigringt, Slett, PrioritertAaRinge, Frivillig)
         fun maks(nyBrukergruppe: Int, eksisterendeBrukergruppe: Int): GroupID =
