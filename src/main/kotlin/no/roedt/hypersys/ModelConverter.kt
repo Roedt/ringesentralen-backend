@@ -41,8 +41,7 @@ class ModelConverterBean(
             fylke = fylke,
             lokallag = lokallag,
             groupID = groupID,
-            kilde = Kilde.Hypersys,
-            iperID = null
+            kilde = Kilde.Hypersys
         )
     }
 
@@ -66,8 +65,7 @@ class ModelConverterBean(
             fylke = fylkeRepository.toFylke(postnummer),
             groupID = groupID,
             lokallag = lokallagRepository.fromOrganisationName(map["organisation"].toString()),
-            kilde = Kilde.Hypersys,
-            iperID = null
+            kilde = Kilde.Hypersys
         )
     }
 

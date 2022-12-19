@@ -109,7 +109,7 @@ internal class RingServiceBeanTest {
         val person = Person(
             hypersysID = hypersysID, fornavn = fornavn, etternavn = etternavn,
             telefonnummer = telefonnummer, email = "",
-            postnummer = 1234, fylke = 0, lokallag = 0, groupID = 0, kilde = Kilde.Mosaic, iperID = null
+            postnummer = 1234, fylke = 0, lokallag = 0, groupID = 0, kilde = Kilde.Mosaic
         )
         doReturn(person).whenever(personRepository).findById(id)
         val query: PanacheQuery<Person> = mock()

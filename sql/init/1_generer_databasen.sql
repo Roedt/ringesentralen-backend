@@ -6167,7 +6167,6 @@ CREATE TABLE IF NOT EXISTS `person` (
   `oppretta` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lokallag` int(3) DEFAULT -1 NOT NULL,
   `kilde` varchar(20) DEFAULT 'Ukjent' NOT NULL,
-  `IperID` int(10) DEFAULT NULL,
   FOREIGN KEY (`groupID`) REFERENCES `brukergruppe` (`id`),
   FOREIGN KEY(`fylke`) REFERENCES `fylker` (`id`),
   FOREIGN KEY(`lokallag`) REFERENCES `lokallag` (`id`),
@@ -6368,18 +6367,6 @@ INNER join `person` ringerPerson on ringerPerson.id = ringer.personId
 left outer join oppfoelgingValg21 oppfoelging on oppfoelging.samtaleId = samtale.id
 WHERE samtale.resultat != 9
 ORDER BY samtale.datetime ASC;
-
--- --------------------------------------------------------
-
-create or replace view v_slettaMosaic as
-SELECT distinct
-person.iperID
-FROM person person
-INNER JOIN samtale samtale on samtale.ringt = person.id
-INNER JOIN oppfoelgingValg21 oppfoelging on samtale.id = oppfoelging.samtaleId
-WHERE person.kilde = 'Mosaic'
-and oppfoelging.vilIkkeBliRingt=1
-and person.groupID in (select id from brukergruppe where navn = 'slett' or navn = 'ferdigringt');
 
 -- --------------------------------------------------------
 INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `email`, `fylke`, `groupID`, `lokallag`, `hypersysID`, `kilde`) VALUES

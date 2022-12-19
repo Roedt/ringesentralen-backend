@@ -137,8 +137,7 @@ class FrivilligService(
             fylke = fylkeRepository.getFylke(lokallag, postnummer),
             lokallag = lokallag,
             groupID = RingesentralenGroupID.Frivillig.nr,
-            kilde = Kilde.Frivillig,
-            iperID = null
+            kilde = Kilde.Frivillig
         )
         val eksisterendePerson = personRepository.finnPerson(person = person)
         if (!RingesentralenGroupID.isBrukerEllerVenter(eksisterendePerson?.groupID() ?: -1)) {

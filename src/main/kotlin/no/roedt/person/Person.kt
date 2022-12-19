@@ -26,8 +26,7 @@ data class Person(
     var fylke: Int,
     var lokallag: Int,
     private var groupID: Int, // TODO: Enumerated type number/ordinal
-    @Enumerated(EnumType.STRING) var kilde: Kilde,
-    var iperID: Int?
+    @Enumerated(EnumType.STRING) var kilde: Kilde
 ) : RoedtPanacheEntity() {
     fun isSystembruker(): Boolean = fornavn == "Systembruker" && etternavn == "Frontend"
 
@@ -41,8 +40,7 @@ data class Person(
         fylke = -1,
         groupID = 0,
         lokallag = 1,
-        kilde = Kilde.Verva,
-        iperID = null
+        kilde = Kilde.Verva
     )
 
     fun groupID() = groupID
