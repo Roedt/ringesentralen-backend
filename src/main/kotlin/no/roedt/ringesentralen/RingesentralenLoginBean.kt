@@ -14,7 +14,6 @@ import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.ringesentralen.person.Ringer
-import no.roedt.ringesentralen.person.RingerIV1Repository
 import no.roedt.ringesentralen.person.RingerRepository
 import no.roedt.token.SecretFactoryProxy
 import java.time.Instant
@@ -28,7 +27,6 @@ class RingesentralenLoginBean(
     loginAttemptRepository: LoginAttemptRepository,
     personRepository: PersonRepository,
     private val ringerRepository: RingerRepository,
-    private val ringerIV1Repository: RingerIV1Repository,
     aesUtil: AESUtil
 ) : HypersysLoginBean(
     hypersysProxy,
@@ -44,7 +42,6 @@ class RingesentralenLoginBean(
 
         val oppdatertPerson = oppdaterPersoninformasjon(token as GyldigPersonToken)
         lagreSomRinger(oppdatertPerson.first)
-        oppdaterBrukergruppeFraV1(oppdatertPerson.second)
         return Pair(token, oppdatertPerson.second)
     }
 
@@ -52,13 +49,6 @@ class RingesentralenLoginBean(
         if (ringerRepository.find("personId", id.toInt()).count() == 0L) {
             ringerRepository.persist(Ringer(oppretta = Instant.now(), personId = id.toInt()))
         }
-    }
-
-    private fun oppdaterBrukergruppeFraV1(convertedPerson: Person) {
-        ringerIV1Repository.list("telefonnummer", convertedPerson.telefonnummer?.replace("+47", ""))
-            .map { it.brukergruppe }
-            .firstOrNull()
-            ?.let { convertedPerson.setGroupID(RingesentralenGroupID.maks(it, convertedPerson.groupID())) }
     }
 
     override fun getRolle(profile: Profile): Int {

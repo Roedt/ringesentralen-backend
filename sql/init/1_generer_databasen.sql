@@ -6323,14 +6323,6 @@ CREATE TABLE IF NOT EXISTS `verving` (
 
 -- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `ringerIV1` (
-  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `telefonnummer` varchar(15) NOT NULL UNIQUE,
-  `brukergruppe` int(2) NOT NULL
-);
-
--- --------------------------------------------------------
-
 create or replace view v_mineSamtaler as
 select samtale.datetime as tidspunkt, ringt.telefonnummer as oppringtNummer, concat(ringt.fornavn, ' ', ringt.etternavn) as ringtNavn, r.displaytext as resultat,
 samtale.kommentar, oppfoelging.id as oppfoelgingId,
