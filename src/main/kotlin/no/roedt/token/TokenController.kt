@@ -44,6 +44,7 @@ class TokenController(private val tokenService: TokenService, private val fakeTo
     @PermitAll
     @POST
     @Path("/sendMFA")
+    @Transactional
     fun sendMFA(mfaRequest: MFARequest) =
         if (brukHypersys.toBoolean()) tokenService.sendMFA(mfaRequest) else fakeTokenService.sendMFA(mfaRequest)
 }

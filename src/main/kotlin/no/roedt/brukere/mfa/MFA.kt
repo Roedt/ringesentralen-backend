@@ -29,6 +29,6 @@ class MFARepository { // TODO: Arv frå panacherepositorybase her. Må berre få
         return true // TODO
     }
     fun settVerifisert(loginRequest: LoginRequest) {
-        TODO("Not yet implemented")
+        // update, lurer på om denne kan bruke panache-query-update, feks
     }
 }
