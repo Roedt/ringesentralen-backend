@@ -7,3 +7,9 @@ data class MFARequest(
     val enhetsid: String,
     val brukernavn: String
 )
+
+@RegisterForReflection
+data class DekryptertMFARequest(
+    val enhetsid: String,
+    val brukernavn: String
+)

@@ -6526,6 +6526,18 @@ INSERT INTO `aktivitetForFrivillig` (frivillig_id, aktivitet) VALUES
 
 -- --------------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS `mfa` (
+     `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+     `epost` varchar(100) NOT NULL,
+     `oppretta` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+     `engangskode` varchar(6) NOT NULL,
+     `verifisert` bit DEFAULT FALSE,
+     `enhetsid` varchar(150) NOT NULL,
+     INDEX(`epost`)
+);
+
+-- --------------------------------------------------------
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

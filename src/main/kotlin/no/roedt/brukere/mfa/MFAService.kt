@@ -12,22 +12,32 @@ class MFAService(
     private val epostSender: EpostSender,
     private val aesUtil: AESUtil
 ) {
-    fun trengerMFA(mfaRequest: MFARequest) = !mfaRepository.erVerifisert(mfaRequest)
+    fun trengerMFA(mfaRequest: MFARequest) = !mfaRepository.erVerifisert(dekrypter(mfaRequest))
+
+    private fun dekrypter(mfaRequest: MFARequest): DekryptertMFARequest = DekryptertMFARequest(
+        enhetsid = aesUtil.decrypt(mfaRequest.enhetsid),
+        brukernavn = aesUtil.decrypt(mfaRequest.brukernavn)
+    )
+    private fun dekrypter(loginRequest: LoginRequest): SettVerifisertRequest = SettVerifisertRequest(
+        enhetsid = aesUtil.decrypt(loginRequest.enhetsid),
+        brukarnamn = aesUtil.decrypt(loginRequest.brukarnamn),
+        engangskode = aesUtil.decrypt(loginRequest.engangskode!!)
+    )
 
     fun sendMFA(mfaRequest: MFARequest) {
         val mfa = MFA(
-            code = MFA.generer(),
+            engangskode = MFA.generer(),
             verifisert = false,
-            person = aesUtil.decrypt(mfaRequest.brukernavn),
+            epost = aesUtil.decrypt(mfaRequest.brukernavn),
             enhetsid = aesUtil.decrypt(mfaRequest.enhetsid)
         )
-        mfaRepository.persist(mfa)
-        epostSender.sendEpost(epost = lagEpost(mfa), mottaker = mfa.person)
+        mfaRepository.lagre(mfa)
+        epostSender.sendEpost(epost = lagEpost(mfa), mottaker = mfa.epost)
     }
 
     private fun lagEpost(mfa: MFA) =
         Epost(
-            tekst = "Din kode for Ringesentralen er ${mfa.code}" +
+            tekst = "Din kode for Ringesentralen er ${mfa.engangskode}" +
                 System.lineSeparator().repeat(3) +
                 "Dette er ein automatisk utsendt e-post.",
             tekstAaLoggeHvisDeaktivert = "MFA sendt til bruker",
@@ -38,20 +48,15 @@ class MFAService(
     fun verifiserEngangskode(loginRequest: LoginRequest) {
         val trengerMFA = trengerMFA(
             MFARequest(
-                enhetsid = aesUtil.decrypt(loginRequest.enhetsid),
-                brukernavn = aesUtil.decrypt(loginRequest.brukarnamn)
+                enhetsid = loginRequest.enhetsid,
+                brukernavn = loginRequest.brukarnamn
             )
         )
         if (!trengerMFA) {
             return
         }
-        if (mfaRepository.matcher(
-                enhetsid = aesUtil.decrypt(loginRequest.enhetsid),
-                epost = aesUtil.decrypt(loginRequest.brukarnamn),
-                engangskode = aesUtil.decrypt(loginRequest.engangskode!!)
-            )
-        ) {
-            mfaRepository.settVerifisert(loginRequest)
+        if (mfaRepository.matcher(dekrypter(loginRequest))) {
+            mfaRepository.settVerifisert(dekrypter(loginRequest))
             return
         }
         throw RuntimeException("Ugyldig engangskode")
