@@ -3,7 +3,6 @@ package no.roedt.brukere.mfa
 import no.roedt.EpostSender
 import no.roedt.brukere.Epost
 import no.roedt.hypersys.login.LoginRequest
-import no.roedt.person.Person
 import javax.enterprise.context.Dependent
 
 @Dependent
@@ -13,31 +12,29 @@ class MFAService(
 ) {
     fun trengerMFA(mfaRequest: MFARequest) = !mfaRepository.fins(mfaRequest)
 
-    fun trengerMFA(mfaRequest: MFARequest, epost: String) = !mfaRepository.finsForPerson(mfaRequest, epost)
-
-    fun lagreOgSend(person: Person, enhetsid: String) {
+    fun lagreOgSend(mfaRequest: MFARequest) {
         val mfa = MFA(
             code = MFA.generer(),
             verifisert = false,
-            person = person.email!!,
-            enhetsid = enhetsid
+            person = mfaRequest.brukernavn,
+            enhetsid = mfaRequest.enhetsid
         )
         mfaRepository.persist(mfa)
-        epostSender.sendEpost(person = person, epost = lagEpost(mfa, person))
+        epostSender.sendEpost(epost = lagEpost(mfa), mottaker = mfaRequest.brukernavn)
     }
 
-    private fun lagEpost(mfa: MFA, person: Person) =
+    private fun lagEpost(mfa: MFA) =
         Epost(
             tekst = "Din kode for Ringesentralen er ${mfa.code}" +
                 System.lineSeparator().repeat(3) +
                 "Dette er ein automatisk utsendt e-post.",
-            tekstAaLoggeHvisDeaktivert = "MFA til ${person.id}",
-            loggFoerSendingTekst = "Person med id ${person.id} har no fått MFA-kode tilsendt",
+            tekstAaLoggeHvisDeaktivert = "MFA sendt til bruker",
+            loggFoerSendingTekst = "Person har no fått MFA-kode tilsendt",
             tittel = "E-post frå Raudts Ringesentral"
         )
 
     fun verifiserEngangskode(loginRequest: LoginRequest) {
-        val trengerMFA = trengerMFA(MFARequest(enhetsid = loginRequest.enhetsid), epost = loginRequest.brukarnamn)
+        val trengerMFA = trengerMFA(MFARequest(enhetsid = loginRequest.enhetsid, brukernavn = loginRequest.brukarnamn))
         if (!trengerMFA) {
             return
         }
@@ -45,5 +42,9 @@ class MFAService(
             return
         }
         throw RuntimeException("Ugyldig engangskode")
+    }
+
+    fun sendMFA(mfaRequest: MFARequest) {
+        lagreOgSend(mfaRequest)
     }
 }

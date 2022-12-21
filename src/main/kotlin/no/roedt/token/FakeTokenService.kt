@@ -40,4 +40,5 @@ class FakeTokenService(
     }
 
     fun trengerMFA(mfaRequest: MFARequest) = false
+    fun sendMFA(mfaRequest: MFARequest) {}
 }

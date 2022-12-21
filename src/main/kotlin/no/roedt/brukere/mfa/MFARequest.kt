@@ -4,5 +4,6 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 
 @RegisterForReflection
 data class MFARequest(
-    val enhetsid: String
+    val enhetsid: String,
+    val brukernavn: String
 )

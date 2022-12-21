@@ -85,4 +85,7 @@ abstract class TokenService(
 
     protected abstract fun getRolle(hypersysToken: GyldigPersonToken, person: Person): GroupID
     fun trengerMFA(mfaRequest: MFARequest) = mfaService.trengerMFA(mfaRequest)
+    fun sendMFA(mfaRequest: MFARequest) {
+        mfaService.sendMFA(mfaRequest)
+    }
 }

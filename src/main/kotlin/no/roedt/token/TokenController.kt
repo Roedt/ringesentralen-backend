@@ -40,4 +40,10 @@ class TokenController(private val tokenService: TokenService, private val fakeTo
     @Produces(MediaType.TEXT_PLAIN)
     fun trengerMFA(mfaRequest: MFARequest) =
         if (brukHypersys.toBoolean()) tokenService.trengerMFA(mfaRequest) else fakeTokenService.trengerMFA(mfaRequest)
+
+    @PermitAll
+    @POST
+    @Path("/sendMFA")
+    fun sendMFA(mfaRequest: MFARequest) =
+        if (brukHypersys.toBoolean()) tokenService.sendMFA(mfaRequest) else fakeTokenService.sendMFA(mfaRequest)
 }
