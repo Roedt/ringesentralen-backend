@@ -4,7 +4,9 @@ import no.roedt.EpostSender
 import no.roedt.brukere.Epost
 import no.roedt.hypersys.login.AESUtil
 import no.roedt.hypersys.login.LoginRequest
+import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.enterprise.context.Dependent
+import javax.inject.Inject
 
 @Dependent
 class MFAService(
@@ -12,12 +14,16 @@ class MFAService(
     private val epostSender: EpostSender,
     private val aesUtil: AESUtil
 ) {
-    fun trengerMFA(mfaRequest: MFARequest) = !mfaRepository.erVerifisert(dekrypter(mfaRequest))
+    @Inject
+    @ConfigProperty(name = "quarkus.mailer.mock")
+    lateinit var mockEpost: String
+    fun trengerMFA(mfaRequest: MFARequest) = mockEpost.toBoolean() || !mfaRepository.erVerifisert(dekrypter(mfaRequest))
 
     private fun dekrypter(mfaRequest: MFARequest): DekryptertMFARequest = DekryptertMFARequest(
         enhetsid = aesUtil.decrypt(mfaRequest.enhetsid),
         brukernavn = aesUtil.decrypt(mfaRequest.brukernavn)
     )
+
     private fun dekrypter(loginRequest: LoginRequest): SettVerifisertRequest = SettVerifisertRequest(
         enhetsid = aesUtil.decrypt(loginRequest.enhetsid),
         brukarnamn = aesUtil.decrypt(loginRequest.brukarnamn),
