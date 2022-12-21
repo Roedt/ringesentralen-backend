@@ -2,13 +2,15 @@ package no.roedt.brukere.mfa
 
 import no.roedt.EpostSender
 import no.roedt.brukere.Epost
+import no.roedt.hypersys.login.AESUtil
 import no.roedt.hypersys.login.LoginRequest
 import javax.enterprise.context.Dependent
 
 @Dependent
 class MFAService(
     private val mfaRepository: MFARepository,
-    private val epostSender: EpostSender
+    private val epostSender: EpostSender,
+    private val aesUtil: AESUtil
 ) {
     fun trengerMFA(mfaRequest: MFARequest) = !mfaRepository.erVerifisert(mfaRequest)
 
@@ -34,11 +36,21 @@ class MFAService(
         )
 
     fun verifiserEngangskode(loginRequest: LoginRequest) {
-        val trengerMFA = trengerMFA(MFARequest(enhetsid = loginRequest.enhetsid, brukernavn = loginRequest.brukarnamn))
+        val trengerMFA = trengerMFA(
+            MFARequest(
+                enhetsid = aesUtil.decrypt(loginRequest.enhetsid),
+                brukernavn = aesUtil.decrypt(loginRequest.brukarnamn)
+            )
+        )
         if (!trengerMFA) {
             return
         }
-        if (mfaRepository.matcher(enhetsid = loginRequest.enhetsid, epost = loginRequest.brukarnamn, engangskode = loginRequest.engangskode!!)) {
+        if (mfaRepository.matcher(
+                enhetsid = aesUtil.decrypt(loginRequest.enhetsid),
+                epost = aesUtil.decrypt(loginRequest.brukarnamn),
+                engangskode = aesUtil.decrypt(loginRequest.engangskode!!)
+            )
+        ) {
             mfaRepository.settVerifisert(loginRequest)
             return
         }
