@@ -2,6 +2,7 @@ package no.roedt.ringesentralen
 
 import io.smallrye.jwt.build.Jwt
 import no.roedt.brukere.GroupID
+import no.roedt.brukere.mfa.MFAService
 import no.roedt.hypersys.GyldigPersonToken
 import no.roedt.hypersys.login.AESUtil
 import no.roedt.hypersys.login.HypersysLoginBean
@@ -20,8 +21,9 @@ class RingesentralenTokenService(
     privateKeyFactory: PrivateKeyFactory,
     secretFactory: SecretFactoryProxy,
     hypersysLoginBean: HypersysLoginBean,
-    aesUtil: AESUtil
-) : TokenService(personRepository, privateKeyFactory, secretFactory, hypersysLoginBean, aesUtil) {
+    aesUtil: AESUtil,
+    mfaService: MFAService
+) : TokenService(personRepository, privateKeyFactory, secretFactory, hypersysLoginBean, aesUtil, mfaService) {
     override fun generateBaseToken() = Jwt
         .audience("ringer")
         .issuer("https://ringesentralen.no")

@@ -2,6 +2,7 @@ package no.roedt.token
 
 import io.smallrye.jwt.build.Jwt
 import no.roedt.brukere.GenerellRolle
+import no.roedt.brukere.mfa.MFARequest
 import no.roedt.forum.ForumRolle
 import no.roedt.hypersys.login.AESUtil
 import no.roedt.hypersys.login.LoginRequest
@@ -37,4 +38,6 @@ class FakeTokenService(
             .claim("hypersys.user_id", "15424") // Donald
             .sign(privateKeyFactory.readPrivateKey())
     }
+
+    fun trengerMFA(mfaRequest: MFARequest) = false
 }

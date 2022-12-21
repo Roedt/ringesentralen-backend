@@ -1,5 +1,6 @@
 package no.roedt.token
 
+import no.roedt.brukere.mfa.MFARequest
 import no.roedt.hypersys.login.LoginRequest
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.eclipse.microprofile.jwt.JsonWebToken
@@ -32,4 +33,11 @@ class TokenController(private val tokenService: TokenService, private val fakeTo
     fun login(loginRequest: LoginRequest): String {
         return if (brukHypersys.toBoolean()) tokenService.login(loginRequest) else fakeTokenService.login(loginRequest)
     }
+
+    @PermitAll
+    @POST
+    @Path("/trengerMFA")
+    @Produces(MediaType.TEXT_PLAIN)
+    fun trengerMFA(mfaRequest: MFARequest) =
+        if (brukHypersys.toBoolean()) tokenService.trengerMFA(mfaRequest) else fakeTokenService.trengerMFA(mfaRequest)
 }

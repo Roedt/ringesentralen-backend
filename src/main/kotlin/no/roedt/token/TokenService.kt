@@ -3,6 +3,8 @@ package no.roedt.token
 import io.smallrye.jwt.build.JwtClaimsBuilder
 import no.roedt.brukere.GenerellRolle
 import no.roedt.brukere.GroupID
+import no.roedt.brukere.mfa.MFARequest
+import no.roedt.brukere.mfa.MFAService
 import no.roedt.hypersys.GyldigPersonToken
 import no.roedt.hypersys.Token
 import no.roedt.hypersys.UgyldigToken
@@ -21,7 +23,8 @@ abstract class TokenService(
     private val privateKeyFactory: PrivateKeyFactory,
     private val secretFactory: SecretFactoryProxy,
     private val hypersysLoginBean: HypersysLoginBean,
-    private val aesUtil: AESUtil
+    private val aesUtil: AESUtil,
+    private val mfaService: MFAService
 ) {
 
     @ConfigProperty(name = "token.expiryPeriod")
@@ -80,4 +83,5 @@ abstract class TokenService(
             .also { i -> if (i.isEmpty()) println("Fann ingen roller for ${hypersysToken.user_id}") }
 
     protected abstract fun getRolle(hypersysToken: GyldigPersonToken, person: Person): GroupID
+    fun trengerMFA(mfaRequest: MFARequest) = mfaService.trengerMFA(mfaRequest)
 }
