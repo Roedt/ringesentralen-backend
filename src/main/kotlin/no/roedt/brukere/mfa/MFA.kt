@@ -21,6 +21,8 @@ data class MFA(
 }
 
 @Dependent
-class MFARepository {
+class MFARepository { // TODO: Arv frå panacherepositorybase her. Må berre få laga databasetabellar etc først
     fun fins(mfaRequest: MFARequest) = false
+    fun persist(mfa: MFA) {
+    }
 }
