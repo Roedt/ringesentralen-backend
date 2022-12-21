@@ -39,6 +39,7 @@ abstract class TokenService(
             return loginSomSystembruker(loginRequest)
         }
 
+        mfaService.verifiserEngangskode(loginRequest)
         val hypersysToken: Pair<Token, Person?> = loginMotHypersys(loginRequest)
         return generateToken(hypersysToken.first as GyldigPersonToken, hypersysToken.second!!)
     }

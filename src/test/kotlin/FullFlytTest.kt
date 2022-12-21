@@ -57,7 +57,7 @@ class FullFlytTest {
     }
 
     private fun login(): String {
-        val loginRequest = LoginRequest(brukarnamn = "dittBrukarnamn", key = "dinKey", passord = "dittPassord", systembruker = false)
+        val loginRequest = LoginRequest(brukarnamn = "dittBrukarnamn", key = "dinKey", passord = "dittPassord", systembruker = false, enhetsid = "1234")
         val response = given()
             .body(loginRequest)
             .contentType(ContentType.JSON)
