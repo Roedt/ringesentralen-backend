@@ -18,11 +18,11 @@ class MFAService(
         val mfa = MFA(
             code = MFA.generer(),
             verifisert = false,
-            person = mfaRequest.brukernavn,
-            enhetsid = mfaRequest.enhetsid
+            person = aesUtil.decrypt(mfaRequest.brukernavn),
+            enhetsid = aesUtil.decrypt(mfaRequest.enhetsid)
         )
         mfaRepository.persist(mfa)
-        epostSender.sendEpost(epost = lagEpost(mfa), mottaker = mfaRequest.brukernavn)
+        epostSender.sendEpost(epost = lagEpost(mfa), mottaker = mfa.person)
     }
 
     private fun lagEpost(mfa: MFA) =
