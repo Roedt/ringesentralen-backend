@@ -14,7 +14,7 @@ class MFAService(
 ) {
     fun trengerMFA(mfaRequest: MFARequest) = !mfaRepository.erVerifisert(mfaRequest)
 
-    fun lagreOgSend(mfaRequest: MFARequest) {
+    fun sendMFA(mfaRequest: MFARequest) {
         val mfa = MFA(
             code = MFA.generer(),
             verifisert = false,
@@ -55,9 +55,5 @@ class MFAService(
             return
         }
         throw RuntimeException("Ugyldig engangskode")
-    }
-
-    fun sendMFA(mfaRequest: MFARequest) {
-        lagreOgSend(mfaRequest)
     }
 }
