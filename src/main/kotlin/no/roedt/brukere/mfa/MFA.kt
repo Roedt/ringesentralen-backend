@@ -1,6 +1,7 @@
 package no.roedt.brukere.mfa
 
 import io.quarkus.runtime.annotations.RegisterForReflection
+import no.roedt.person.Person
 import javax.enterprise.context.Dependent
 
 @RegisterForReflection
@@ -23,6 +24,6 @@ data class MFA(
 @Dependent
 class MFARepository { // TODO: Arv frå panacherepositorybase her. Må berre få laga databasetabellar etc først
     fun fins(mfaRequest: MFARequest) = false
-    fun persist(mfa: MFA) {
-    }
+    fun finsForPerson(mfaRequest: MFARequest, person: Person) = false
+    fun persist(mfa: MFA) {}
 }

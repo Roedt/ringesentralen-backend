@@ -12,6 +12,8 @@ class MFAService(
 ) {
     fun trengerMFA(mfaRequest: MFARequest) = !mfaRepository.fins(mfaRequest)
 
+    fun trengerMFA(mfaRequest: MFARequest, person: Person) = !mfaRepository.finsForPerson(mfaRequest, person)
+
     fun lagreOgSend(person: Person, enhetsid: String) {
         val mfa = MFA(
             code = MFA.generer(),
