@@ -10,7 +10,7 @@ class MFAService(
     private val mfaRepository: MFARepository,
     private val epostSender: EpostSender
 ) {
-    fun trengerMFA(mfaRequest: MFARequest) = !mfaRepository.fins(mfaRequest)
+    fun trengerMFA(mfaRequest: MFARequest) = !mfaRepository.erVerifisert(mfaRequest)
 
     fun lagreOgSend(mfaRequest: MFARequest) {
         val mfa = MFA(
@@ -39,6 +39,7 @@ class MFAService(
             return
         }
         if (mfaRepository.matcher(enhetsid = loginRequest.enhetsid, epost = loginRequest.brukarnamn, engangskode = loginRequest.engangskode!!)) {
+            mfaRepository.settVerifisert(loginRequest)
             return
         }
         throw RuntimeException("Ugyldig engangskode")
