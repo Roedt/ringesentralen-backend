@@ -14,7 +14,6 @@ import no.roedt.hypersys.login.LoginRequest
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
-import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Duration
 import javax.ws.rs.ForbiddenException
 import javax.ws.rs.NotAuthorizedException
@@ -26,11 +25,9 @@ class RealTokenService(
     private val secretFactory: SecretFactory,
     private val hypersysLoginBean: HypersysLoginBean,
     private val aesUtil: AESUtil,
-    private val mfaService: MFAService
+    private val mfaService: MFAService,
+    private val tokenExpiryPeriod: Duration
 ) : TokenService {
-
-    @ConfigProperty(name = "token.expiryPeriod")
-    lateinit var tokenExpiryPeriod: Duration
 
     override fun login(loginRequest: LoginRequest): String {
         if (loginRequest.key != secretFactory.getFrontendTokenKey()) {

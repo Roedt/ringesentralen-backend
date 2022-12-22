@@ -5,14 +5,13 @@ import io.quarkus.mailer.Mailer
 import no.roedt.brukere.Epost
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 
 @ApplicationScoped
-class EpostSender(val mailer: Mailer) {
-
-    @Inject
+class EpostSender(
+    val mailer: Mailer,
     @ConfigProperty(name = "quarkus.mailer.mock")
-    lateinit var mock: String
+    private val mock: Boolean
+) {
 
     fun sendEpost(
         epost: Epost,
@@ -21,7 +20,7 @@ class EpostSender(val mailer: Mailer) {
         if (mottaker == null || mottaker == "") {
             return
         }
-        if (mock.toBoolean()) {
+        if (mock) {
             println("Epostutsending er avskrudd. Ville elles sendt ${epost.tekstAaLoggeHvisDeaktivert}")
             return
         }

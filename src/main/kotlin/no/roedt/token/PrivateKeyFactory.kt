@@ -10,15 +10,16 @@ import java.util.Base64
 import javax.enterprise.context.RequestScoped
 
 @RequestScoped
-class PrivateKeyFactory(private val secretFactory: SecretFactory) {
-
-    @ConfigProperty(name = "usePrivateKeyFromSecretManager", defaultValue = "false")
-    lateinit var usePrivateKeyFromSecretManager: String
+class PrivateKeyFactory(
+    private val secretFactory: SecretFactory,
+    @ConfigProperty(name = "usePrivateKeyFromSecretManager")
+    private val usePrivateKeyFromSecretManager: Boolean
+) {
 
     fun readPrivateKey(): RSAPrivateKey = readPrivateKey(getPrivateKey())
 
     private fun getPrivateKey(): String =
-        if (usePrivateKeyFromSecretManager.toBoolean()) {
+        if (usePrivateKeyFromSecretManager) {
             secretFactory.getPrivateKey()
         } else {
             Files.readString(Path.of("src/main/resources/META-INF/resources/privatekey.pem"))

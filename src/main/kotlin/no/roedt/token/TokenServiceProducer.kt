@@ -32,7 +32,8 @@ class TokenServiceProducer(
             secretFactory = secretFactory,
             hypersysLoginBean = hypersysLoginBean,
             aesUtil = aesUtil,
-            mfaService = mfaService
+            mfaService = mfaService,
+            tokenExpiryPeriod = tokenExpiryPeriod
         )
     } else {
         FakeTokenService(

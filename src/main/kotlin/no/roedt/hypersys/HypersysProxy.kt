@@ -15,10 +15,10 @@ import java.util.Base64
 import javax.enterprise.context.Dependent
 
 @Dependent
-class HypersysProxy {
-
+class HypersysProxy(
     @ConfigProperty(name = "hypersysBaseUrl", defaultValue = "")
-    lateinit var baseURL: String
+    private val baseURL: String
+) {
 
     val kMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -38,18 +38,18 @@ class HypersysProxy {
     inline fun <reified T> readResponse(response: HttpResponse<String>?, responseType: Class<T>): T =
         kMapper.readValue(response?.body(), responseType)
 
-    inline fun <reified T> get(url: String, token: no.roedt.hypersys.GyldigToken, type: Class<T>) = readResponse(gjennomfoerGetkall(url, token), type)
+    inline fun <reified T> get(url: String, token: GyldigToken, type: Class<T>) = readResponse(gjennomfoerGetkall(url, token), type)
 
-    inline fun <reified T> get(url: String, token: no.roedt.hypersys.GyldigToken, typeReference: TypeReference<T>): T =
+    inline fun <reified T> get(url: String, token: GyldigToken, typeReference: TypeReference<T>): T =
         kMapper.readValue(gjennomfoerGetkall(url, token).body(), typeReference)
 
-    fun gjennomfoerGetkall(url: String, token: no.roedt.hypersys.GyldigToken): HttpResponse<String> {
+    fun gjennomfoerGetkall(url: String, token: GyldigToken): HttpResponse<String> {
         val response = httpCall(get("$baseURL/$url", token))
         assert(response.statusCode() == 200)
         return response
     }
 
-    private fun get(uri: String, token: no.roedt.hypersys.GyldigToken): HttpRequest =
+    private fun get(uri: String, token: GyldigToken): HttpRequest =
         HttpRequest.newBuilder()
             .GET()
             .header("Authorization", "Bearer ${token.access_token()}")
