@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType
 @Path("/token")
 @Tag(name = "Token")
 @SecurityRequirement(name = "jwt")
-class TokenController(private val tokenService: RealTokenService, private val fakeTokenService: FakeTokenService) {
+class TokenController(private val tokenService: TokenService) {
 
     @Inject
     lateinit var jwt: JsonWebToken
@@ -30,21 +30,17 @@ class TokenController(private val tokenService: RealTokenService, private val fa
     @Path("/login")
     @Produces(MediaType.TEXT_PLAIN)
     @Transactional
-    fun login(loginRequest: LoginRequest): String {
-        return if (brukHypersys.toBoolean()) tokenService.login(loginRequest) else fakeTokenService.login(loginRequest)
-    }
+    fun login(loginRequest: LoginRequest) = tokenService.login(loginRequest)
 
     @PermitAll
     @POST
     @Path("/trengerMFA")
     @Produces(MediaType.TEXT_PLAIN)
-    fun trengerMFA(mfaRequest: MFARequest) =
-        if (brukHypersys.toBoolean()) tokenService.trengerMFA(mfaRequest) else fakeTokenService.trengerMFA(mfaRequest)
+    fun trengerMFA(mfaRequest: MFARequest) = tokenService.trengerMFA(mfaRequest)
 
     @PermitAll
     @POST
     @Path("/sendMFA")
     @Transactional
-    fun sendMFA(mfaRequest: MFARequest) =
-        if (brukHypersys.toBoolean()) tokenService.sendMFA(mfaRequest) else fakeTokenService.sendMFA(mfaRequest)
+    fun sendMFA(mfaRequest: MFARequest) = tokenService.sendMFA(mfaRequest)
 }

@@ -16,12 +16,10 @@ import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Duration
-import javax.inject.Singleton
 import javax.ws.rs.ForbiddenException
 import javax.ws.rs.NotAuthorizedException
 import javax.ws.rs.ServiceUnavailableException
 
-@Singleton
 class RealTokenService(
     private val personRepository: PersonRepository,
     private val privateKeyFactory: PrivateKeyFactory,

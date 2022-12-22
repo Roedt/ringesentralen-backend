@@ -7,20 +7,14 @@ import no.roedt.forum.ForumRolle
 import no.roedt.hypersys.login.AESUtil
 import no.roedt.hypersys.login.LoginRequest
 import no.roedt.person.EpostValidator
-import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Duration
-import javax.enterprise.context.RequestScoped
 
-@RequestScoped
 class FakeTokenService(
     private val secretFactory: SecretFactory,
     private val privateKeyFactory: PrivateKeyFactory,
-    private val aesUtil: AESUtil
-): TokenService {
-
-    @ConfigProperty(name = "token.expiryPeriod")
-    lateinit var tokenExpiryPeriod: Duration
-
+    private val aesUtil: AESUtil,
+    private val tokenExpiryPeriod: Duration
+) : TokenService {
     override fun login(loginRequest: LoginRequest): String {
         if (loginRequest.key != secretFactory.getFrontendTokenKey()) {
             println("Illegal key")
