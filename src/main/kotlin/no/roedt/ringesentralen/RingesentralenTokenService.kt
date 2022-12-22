@@ -9,9 +9,9 @@ import no.roedt.hypersys.login.HypersysLoginBean
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
+import no.roedt.token.AbstractTokenService
 import no.roedt.token.PrivateKeyFactory
 import no.roedt.token.SecretFactory
-import no.roedt.token.TokenService
 import javax.inject.Singleton
 import javax.ws.rs.NotAuthorizedException
 
@@ -23,7 +23,7 @@ class RingesentralenTokenService(
     hypersysLoginBean: HypersysLoginBean,
     aesUtil: AESUtil,
     mfaService: MFAService
-) : TokenService(personRepository, privateKeyFactory, secretFactory, hypersysLoginBean, aesUtil, mfaService) {
+) : AbstractTokenService(personRepository, privateKeyFactory, secretFactory, hypersysLoginBean, aesUtil, mfaService) {
     override fun generateBaseToken() = Jwt
         .audience("ringer")
         .issuer("https://ringesentralen.no")

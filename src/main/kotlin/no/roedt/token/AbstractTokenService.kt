@@ -18,7 +18,7 @@ import java.time.Duration
 import javax.ws.rs.ForbiddenException
 import javax.ws.rs.ServiceUnavailableException
 
-abstract class TokenService(
+abstract class AbstractTokenService(
     private val personRepository: PersonRepository,
     private val privateKeyFactory: PrivateKeyFactory,
     private val secretFactory: SecretFactory,
