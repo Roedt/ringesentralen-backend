@@ -1,6 +1,6 @@
 package no.roedt.token
 
-import io.smallrye.jwt.build.JwtClaimsBuilder
+import io.smallrye.jwt.build.Jwt
 import no.roedt.brukere.GenerellRolle
 import no.roedt.brukere.GroupID
 import no.roedt.brukere.mfa.MFARequest
@@ -13,12 +13,16 @@ import no.roedt.hypersys.login.HypersysLoginBean
 import no.roedt.hypersys.login.LoginRequest
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Duration
+import javax.inject.Singleton
 import javax.ws.rs.ForbiddenException
+import javax.ws.rs.NotAuthorizedException
 import javax.ws.rs.ServiceUnavailableException
 
-abstract class AbstractTokenService(
+@Singleton
+class RealTokenService(
     private val personRepository: PersonRepository,
     private val privateKeyFactory: PrivateKeyFactory,
     private val secretFactory: SecretFactory,
@@ -76,14 +80,31 @@ abstract class AbstractTokenService(
         .claim("hypersys.user_id", hypersysToken.user_id)
         .sign(privateKeyFactory.readPrivateKey())
 
-    protected abstract fun generateBaseToken(): JwtClaimsBuilder
+    private fun generateBaseToken() = Jwt
+        .audience("ringer")
+        .issuer("https://ringesentralen.no")
+        .subject("Ringesentralen")
+        .upn("Ringesentralen")
+        .issuedAt(System.currentTimeMillis())
+        .expiresAt(System.currentTimeMillis() + tokenExpiryPeriod.toSeconds())
 
     private fun getGroups(hypersysToken: GyldigPersonToken, person: Person): Set<String> =
         getRolle(hypersysToken, person)
             .roller
             .also { i -> if (i.isEmpty()) println("Fann ingen roller for ${hypersysToken.user_id}") }
 
-    protected abstract fun getRolle(hypersysToken: GyldigPersonToken, person: Person): GroupID
+    fun getRolle(hypersysToken: GyldigPersonToken, person: Person): GroupID {
+        var groupID = RingesentralenGroupID.from(getPersonFromHypersysID(hypersysToken).groupID())
+        if (RingesentralenGroupID.isIkkeRegistrertRinger(groupID.nr)) {
+            groupID = RingesentralenGroupID.from(person.groupID())
+        }
+        if (RingesentralenGroupID.erUgyldigRolleForAaBrukeSystemet(groupID)) {
+            throw NotAuthorizedException("${hypersysToken.user_id} har ikkje gyldig rolle for å bruke systemet.", "")
+        }
+        return groupID
+    }
+    private fun getPersonFromHypersysID(hypersysToken: GyldigPersonToken) =
+        personRepository.find("hypersysID", hypersysToken.user_id.toInt()).firstResult<Person>()
     override fun trengerMFA(mfaRequest: MFARequest) = mfaService.trengerMFA(mfaRequest)
     override fun sendMFA(mfaRequest: MFARequest) {
         mfaService.sendMFA(mfaRequest)

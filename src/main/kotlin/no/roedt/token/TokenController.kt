@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType
 @Path("/token")
 @Tag(name = "Token")
 @SecurityRequirement(name = "jwt")
-class TokenController(private val tokenService: AbstractTokenService, private val fakeTokenService: FakeTokenService) {
+class TokenController(private val tokenService: RealTokenService, private val fakeTokenService: FakeTokenService) {
 
     @Inject
     lateinit var jwt: JsonWebToken
