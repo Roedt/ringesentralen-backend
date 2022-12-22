@@ -25,12 +25,12 @@ abstract class AbstractTokenService(
     private val hypersysLoginBean: HypersysLoginBean,
     private val aesUtil: AESUtil,
     private val mfaService: MFAService
-) {
+) : TokenService {
 
     @ConfigProperty(name = "token.expiryPeriod")
     lateinit var tokenExpiryPeriod: Duration
 
-    fun login(loginRequest: LoginRequest): String {
+    override fun login(loginRequest: LoginRequest): String {
         if (loginRequest.key != secretFactory.getFrontendTokenKey()) {
             throw IllegalArgumentException("Illegal key")
         }
@@ -84,8 +84,8 @@ abstract class AbstractTokenService(
             .also { i -> if (i.isEmpty()) println("Fann ingen roller for ${hypersysToken.user_id}") }
 
     protected abstract fun getRolle(hypersysToken: GyldigPersonToken, person: Person): GroupID
-    fun trengerMFA(mfaRequest: MFARequest) = mfaService.trengerMFA(mfaRequest)
-    fun sendMFA(mfaRequest: MFARequest) {
+    override fun trengerMFA(mfaRequest: MFARequest) = mfaService.trengerMFA(mfaRequest)
+    override fun sendMFA(mfaRequest: MFARequest) {
         mfaService.sendMFA(mfaRequest)
     }
 }

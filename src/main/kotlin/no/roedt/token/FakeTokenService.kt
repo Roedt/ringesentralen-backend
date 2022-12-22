@@ -16,12 +16,12 @@ class FakeTokenService(
     private val secretFactory: SecretFactory,
     private val privateKeyFactory: PrivateKeyFactory,
     private val aesUtil: AESUtil
-) {
+): TokenService {
 
     @ConfigProperty(name = "token.expiryPeriod")
     lateinit var tokenExpiryPeriod: Duration
 
-    fun login(loginRequest: LoginRequest): String {
+    override fun login(loginRequest: LoginRequest): String {
         if (loginRequest.key != secretFactory.getFrontendTokenKey()) {
             println("Illegal key")
         }
@@ -39,6 +39,6 @@ class FakeTokenService(
             .sign(privateKeyFactory.readPrivateKey())
     }
 
-    fun trengerMFA(mfaRequest: MFARequest) = false
-    fun sendMFA(mfaRequest: MFARequest) {}
+    override fun trengerMFA(mfaRequest: MFARequest) = false
+    override fun sendMFA(mfaRequest: MFARequest) {}
 }
