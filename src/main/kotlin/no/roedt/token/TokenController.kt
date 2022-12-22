@@ -2,7 +2,6 @@ package no.roedt.token
 
 import no.roedt.brukere.mfa.MFARequest
 import no.roedt.hypersys.login.LoginRequest
-import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
@@ -21,9 +20,6 @@ class TokenController(private val tokenService: TokenService) {
 
     @Inject
     lateinit var jwt: JsonWebToken
-
-    @ConfigProperty(name = "brukHypersys")
-    lateinit var brukHypersys: String
 
     @PermitAll
     @POST
