@@ -15,7 +15,7 @@ class SecretFactoryProducer(
     @Produces
     @ApplicationScoped
     fun secretFactory(): SecretFactory = if (brukHypersys) {
-        GCPSecretManager(secretManagerProjectId = secretManagerProjectId)
+        GCPSecretFactory(secretManagerProjectId = secretManagerProjectId)
     } else {
         FakeSecretFactory()
     }
