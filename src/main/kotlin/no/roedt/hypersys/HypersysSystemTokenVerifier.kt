@@ -1,13 +1,13 @@
 package no.roedt.hypersys
 
-import no.roedt.token.SecretFactoryProxy
+import no.roedt.token.SecretFactory
 import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class HypersysSystemTokenVerifier(
-    val hypersysProxy: no.roedt.hypersys.HypersysProxy,
-    val secretFactory: SecretFactoryProxy
+    val hypersysProxy: HypersysProxy,
+    val secretFactory: SecretFactory
 ) {
     lateinit var token: Token
 

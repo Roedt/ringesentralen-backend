@@ -13,7 +13,7 @@ import javax.enterprise.context.RequestScoped
 
 @RequestScoped
 class FakeTokenService(
-    private val secretFactory: SecretFactoryProxy,
+    private val secretFactory: SecretFactory,
     private val privateKeyFactory: PrivateKeyFactory,
     private val aesUtil: AESUtil
 ) {

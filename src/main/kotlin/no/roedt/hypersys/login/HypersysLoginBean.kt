@@ -9,13 +9,13 @@ import no.roedt.hypersys.externalModel.Profile
 import no.roedt.person.EpostValidator
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
-import no.roedt.token.SecretFactoryProxy
+import no.roedt.token.SecretFactory
 import java.net.http.HttpResponse
 
 abstract class HypersysLoginBean(
     private val hypersysProxy: HypersysProxy,
     private val modelConverter: ModelConverter,
-    private val secretFactory: SecretFactoryProxy,
+    private val secretFactory: SecretFactory,
     private val loginAttemptRepository: LoginAttemptRepository,
     private val personRepository: PersonRepository,
     private val aesUtil: AESUtil

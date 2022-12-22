@@ -15,7 +15,7 @@ import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.ringesentralen.person.Ringer
 import no.roedt.ringesentralen.person.RingerRepository
-import no.roedt.token.SecretFactoryProxy
+import no.roedt.token.SecretFactory
 import java.time.Instant
 import javax.enterprise.context.Dependent
 
@@ -23,7 +23,7 @@ import javax.enterprise.context.Dependent
 class RingesentralenLoginBean(
     hypersysProxy: HypersysProxy,
     modelConverter: ModelConverter,
-    secretFactory: SecretFactoryProxy,
+    secretFactory: SecretFactory,
     loginAttemptRepository: LoginAttemptRepository,
     personRepository: PersonRepository,
     private val ringerRepository: RingerRepository,

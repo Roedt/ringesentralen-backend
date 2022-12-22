@@ -6,11 +6,11 @@ import java.nio.file.Path
 import java.security.KeyFactory
 import java.security.interfaces.RSAPrivateKey
 import java.security.spec.PKCS8EncodedKeySpec
-import java.util.*
+import java.util.Base64
 import javax.enterprise.context.RequestScoped
 
 @RequestScoped
-class PrivateKeyFactory(private val secretFactory: SecretFactoryProxy) {
+class PrivateKeyFactory(private val secretFactory: SecretFactory) {
 
     @ConfigProperty(name = "usePrivateKeyFromSecretManager", defaultValue = "false")
     lateinit var usePrivateKeyFromSecretManager: String

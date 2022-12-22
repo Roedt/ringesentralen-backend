@@ -1,8 +1,5 @@
 package no.roedt.token
 
-import javax.enterprise.context.ApplicationScoped
-
-@ApplicationScoped
 class FakeSecretFactory : SecretFactory {
     override fun getPrivateKey() = "A"
 

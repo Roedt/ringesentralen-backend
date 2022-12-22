@@ -21,7 +21,7 @@ import javax.ws.rs.ServiceUnavailableException
 abstract class TokenService(
     private val personRepository: PersonRepository,
     private val privateKeyFactory: PrivateKeyFactory,
-    private val secretFactory: SecretFactoryProxy,
+    private val secretFactory: SecretFactory,
     private val hypersysLoginBean: HypersysLoginBean,
     private val aesUtil: AESUtil,
     private val mfaService: MFAService

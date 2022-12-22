@@ -5,6 +5,7 @@ import com.google.cloud.secretmanager.v1.SecretVersionName
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
+import javax.enterprise.context.Dependent
 import javax.enterprise.context.RequestScoped
 
 private enum class GCPSecretManagerKey {
@@ -19,7 +20,6 @@ private enum class GCPSecretManagerKey {
     encryptionKey
 }
 
-@RequestScoped
 class GCPSecretManager(
     @ConfigProperty(name = "secretManagerProjectId", defaultValue = "")
     val secretManagerProjectId: String
