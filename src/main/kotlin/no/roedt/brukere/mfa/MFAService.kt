@@ -59,7 +59,7 @@ class MFAService(
         if (!trengerMFA) {
             return
         }
-        if (mfaRepository.matcher(dekrypter(loginRequest))) {
+        if (!loginRequest.engangskode.isNullOrEmpty() && mfaRepository.matcher(dekrypter(loginRequest))) {
             mfaRepository.settVerifisert(dekrypter(loginRequest))
             return
         }
