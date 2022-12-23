@@ -29,6 +29,9 @@ class MFAService(
     )
 
     fun sendMFA(mfaRequest: MFARequest) {
+        if (mockMFA) {
+            return
+        }
         val mfa = MFA(
             engangskode = MFA.generer(),
             verifisert = false,
@@ -50,6 +53,9 @@ class MFAService(
         )
 
     fun verifiserEngangskode(loginRequest: LoginRequest) {
+        if (mockMFA) {
+            return
+        }
         val trengerMFA = trengerMFA(
             MFARequest(
                 enhetsid = loginRequest.enhetsid,
@@ -59,7 +65,7 @@ class MFAService(
         if (!trengerMFA) {
             return
         }
-        if (!loginRequest.engangskode.isNullOrEmpty() && mfaRepository.matcher(dekrypter(loginRequest))) {
+        if (mfaRepository.matcher(dekrypter(loginRequest))) {
             mfaRepository.settVerifisert(dekrypter(loginRequest))
             return
         }
