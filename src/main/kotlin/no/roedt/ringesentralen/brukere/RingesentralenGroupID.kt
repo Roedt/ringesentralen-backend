@@ -6,6 +6,7 @@ import no.roedt.brukere.GroupID.Companion.referencesOneOf
 import no.roedt.forum.ForumRolle
 import no.roedt.ringesentralen.RingespesifikkRolle
 
+@Suppress("ktlint:no-semi") // Remove when fixed in ktlint 0.48.1
 enum class RingesentralenGroupID(override val nr: Int, override val skildring: String, override val roller: Set<String>) :
     GroupID {
     ManglerSamtykke(0, "mangler info/samtykke før ringing", setOf()),
