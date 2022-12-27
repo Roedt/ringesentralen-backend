@@ -1,6 +1,5 @@
 package no.roedt.frivilligsystem
 
-import io.quarkus.narayana.jta.runtime.TransactionConfiguration
 import no.roedt.brukere.GenerellRolle
 import no.roedt.frivilligsystem.kontakt.AutentisertRegistrerKontaktRequest
 import no.roedt.frivilligsystem.kontakt.RegistrerKontaktRequest
@@ -37,7 +36,6 @@ import javax.ws.rs.core.SecurityContext
 @SecurityRequirement(name = "jwt")
 class FrivilligController(
     val frivilligService: FrivilligService,
-    val frivilligImporter: FrivilligImporter,
     val epostSender: RingesentralenEpostformulerer,
     val personRepository: PersonRepository
 ) :
@@ -103,18 +101,6 @@ class FrivilligController(
         frivilligService.registrerKontakt(
             AutentisertRegistrerKontaktRequest(userId = ctx.userId(), request = registrerKontaktRequest)
         )
-
-    @POST
-    @Path("/importer")
-    @Transactional
-    @TransactionConfiguration(timeout = 3600)
-    @RolesAllowed(GenerellRolle.admin)
-    @Operation(summary = "Importer frivillige frå csv-fil")
-    fun import(@Context ctx: SecurityContext) = frivilligImporter.importer(
-        ctx.userId(),
-        "frivillige.csv",
-        "frivillig-import"
-    )
 
     @RolesAllowed(GenerellRolle.systembrukerFrontend)
     @POST
