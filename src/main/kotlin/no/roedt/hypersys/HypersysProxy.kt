@@ -20,7 +20,7 @@ class HypersysProxy(
     private val baseURL: String
 ) {
 
-    val kMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
+    val kMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     fun post(id: String, secret: String, entity: String, loggingtekst: String): HttpResponse<String> {

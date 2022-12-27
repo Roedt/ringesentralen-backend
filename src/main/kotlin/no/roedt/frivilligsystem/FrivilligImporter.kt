@@ -36,7 +36,9 @@ class FrivilligImporter(
     }
 
     fun importer(userId: UserId, filnavn: String, bucketName: String) = CSVFormat.DEFAULT
-        .withFirstRecordAsHeader()
+        .builder()
+        .setSkipHeaderRecord(true)
+        .build()
         .parse(fil(filnavn, bucketName))
         .map { tilModellobjekt(it) }
         .map { AutentisertRegistrerNyFrivilligRequest(userId = userId, request = it) }
@@ -91,7 +93,10 @@ class FrivilligImporter(
             Pair(OpptattAv.Forbyprivatebemanningsselskaper, it.get(i++)),
             Pair(OpptattAv.Sikreatingenmisterarbeidsavklaringspengerfoerdeeravklart, it.get(i++)),
             Pair(OpptattAv.Gratistannhelse, it.get(i++)),
-            Pair(OpptattAv.Kutteiflateavgiftersomikketarhensyntilhvormyeduhar_hvorduborellerhvormyeduforbruker, it.get(i++)),
+            Pair(
+                OpptattAv.Kutteiflateavgiftersomikketarhensyntilhvormyeduhar_hvorduborellerhvormyeduforbruker,
+                it.get(i++)
+            ),
             Pair(OpptattAv.MeldeNorgeutavNATOogjobbeforennordiskforsvarsallianse, it.get(i++)),
             Pair(OpptattAv.Innfoeringavdynastiskatt_enrettferdigogprogressivskattpaaluksusarv, it.get(i++)),
             Pair(OpptattAv.Sekstimersnormalarbeidsdag_30timersarbeidsuke, it.get(i++)),
@@ -141,7 +146,10 @@ class FrivilligImporter(
         val aktiviteter = tilAktiviteter(stand, some, doerbanking, ringing, sms, postkasseutdeling, morgenaksjon, bil)
 
         return RegistrerNyFrivilligRequest(
-            tidspunkt = LocalDateTime.parse(date.uppercase(), DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm:ss a", Locale.ENGLISH)).toInstant(
+            tidspunkt = LocalDateTime.parse(
+                date.uppercase(),
+                DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm:ss a", Locale.ENGLISH)
+            ).toInstant(
                 ZoneOffset.UTC
             ),
             fornavn = fornavn,

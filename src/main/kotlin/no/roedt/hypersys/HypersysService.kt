@@ -20,7 +20,7 @@ interface HypersysService {
 
 @ApplicationScoped
 class HypersysServiceBean(
-    val hypersysProxy: no.roedt.hypersys.HypersysProxy,
+    val hypersysProxy: HypersysProxy,
     val hypersysSystemTokenVerifier: HypersysSystemTokenVerifier,
     val personRepository: PersonRepository,
     private val modelConverter: ModelConverter,
