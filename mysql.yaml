@@ -15,8 +15,6 @@ services:
       TZ: Europe/Oslo
     ports:
       - 3306:3306
-    volumes:
-      - ./sql/init:/docker-entrypoint-initdb.d
 
   adminer:
     image: adminer
