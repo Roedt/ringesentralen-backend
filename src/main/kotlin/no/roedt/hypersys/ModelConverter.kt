@@ -8,6 +8,7 @@ import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
+import java.time.Instant
 import javax.enterprise.context.Dependent
 
 interface ModelConverter {
@@ -41,7 +42,8 @@ class ModelConverterBean(
             fylke = fylke,
             lokallag = lokallag,
             groupID = groupID,
-            kilde = Kilde.Hypersys
+            kilde = Kilde.Hypersys,
+            sistOppdatert = Instant.now()
         )
     }
 
@@ -65,7 +67,8 @@ class ModelConverterBean(
             fylke = fylkeRepository.toFylke(postnummer),
             groupID = groupID,
             lokallag = lokallagRepository.fromOrganisationName(map["organisation"].toString()),
-            kilde = Kilde.Hypersys
+            kilde = Kilde.Hypersys,
+            sistOppdatert = Instant.now()
         )
     }
 

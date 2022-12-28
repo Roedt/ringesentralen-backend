@@ -5,6 +5,7 @@ import no.roedt.Kilde
 import no.roedt.RoedtPanacheEntity
 import no.roedt.brukere.GroupID
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
+import java.time.Instant
 import javax.persistence.Cacheable
 import javax.persistence.Entity
 import javax.persistence.EnumType
@@ -26,7 +27,8 @@ data class Person(
     var fylke: Int,
     var lokallag: Int,
     private var groupID: Int, // TODO: Enumerated type number/ordinal
-    @Enumerated(EnumType.STRING) var kilde: Kilde
+    @Enumerated(EnumType.STRING) var kilde: Kilde,
+    var sistOppdatert: Instant?
 ) : RoedtPanacheEntity() {
     fun isSystembruker(): Boolean = fornavn == "Systembruker" && etternavn == "Frontend"
 
@@ -40,7 +42,8 @@ data class Person(
         fylke = -1,
         groupID = 0,
         lokallag = 1,
-        kilde = Kilde.Verva
+        kilde = Kilde.Verva,
+        sistOppdatert = null
     )
 
     fun groupID() = groupID
