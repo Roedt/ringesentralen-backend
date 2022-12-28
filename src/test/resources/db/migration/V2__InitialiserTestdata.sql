@@ -44,7 +44,7 @@ INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `em
 -- --------------------------------------------------------
 
 INSERT INTO `frivillig` (personId, registrertTidspunkt, alleredeAktivILokallag, medlemIRoedt, spesiellKompetanse, andreTingDuVilBidraMed, fortellLittOmDegSelv) VALUES
-((SELECT id from person where fornavn='Aster' and etternavn='ix'), '2022-03-06 14:59:38', true, 'ja', 'rask og effektiv', 'bidrar med alt mogleg', 'frå Gallia'),
+((SELECT id from person where fornavn='Aster' and etternavn='ix'), '2022-03-06 14:59:38', true, 'Ja', 'rask og effektiv', 'bidrar med alt mogleg', 'frå Gallia'),
 ((SELECT id from person where fornavn='Obel' and etternavn='ix'), '2022-03-06 14:59:38', true, 'Vilbli', 'stor og sterk', 'rydde veg', 'også frå Gallia');
 
 INSERT INTO `aktivitetForFrivillig` (frivillig_id, aktivitet) VALUES
