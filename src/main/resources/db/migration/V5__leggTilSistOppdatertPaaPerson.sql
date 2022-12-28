@@ -1,1 +1,1 @@
-ALTER TABLE person ADD sistOppdatert datetime;
+ALTER TABLE person ADD sistOppdatert timestamp;
