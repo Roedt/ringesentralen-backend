@@ -41,7 +41,7 @@ open class NesteMedlemAaRingeFinder(
     private fun oppdaterMedlemsliste(lokallagID: Int): Set<Lokallag> {
         val lokallag = lokallagRepository.findById(lokallagID)
         val sistOppdatert = lokallag.sistOppdatert?.atZone(ZoneId.of("UTC"))
-        if (lokallag != null && (sistOppdatert.erILøpetAvSisteUka() || sistOppdatert == null)) {
+        if (lokallag != null && (sistOppdatert.erSistOppdatertFørDenSisteUka() || sistOppdatert == null)) {
             try {
                 hypersysService.oppdaterLokallag()
             } catch (e: Exception) {
@@ -68,6 +68,6 @@ open class NesteMedlemAaRingeFinder(
         .firstOrNull()
 }
 
-private fun ZonedDateTime?.erILøpetAvSisteUka(): Boolean = this?.isBefore(
+private fun ZonedDateTime?.erSistOppdatertFørDenSisteUka(): Boolean = this?.isBefore(
     ZonedDateTime.now().minusDays(7)
 ) == true
