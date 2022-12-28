@@ -16,7 +16,6 @@ import javax.persistence.Table
 @Table(name = "person")
 @Cacheable
 @RegisterForReflection
-// TODO: Utvid klassa med eit felt for sist oppdatert frå hypersys, og oppdater det ved oppdatering
 data class Person(
     var hypersysID: Int?,
     var fornavn: String,
