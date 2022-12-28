@@ -16,7 +16,7 @@ import javax.ws.rs.core.Application
         version = "1.0.0",
         contact = Contact(
             name = "Mads Opheim",
-            url = "http://github.com/roedt/ringesentralen-backend"
+            url = "https://github.com/roedt/ringesentralen-backend"
         ),
         license = License(
             name = "MIT License",

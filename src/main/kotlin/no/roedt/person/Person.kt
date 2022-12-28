@@ -45,7 +45,7 @@ data class Person(
 
     fun groupID() = groupID
 
-    fun setGroupID(groupID: Int) {
+    private fun setGroupID(groupID: Int) {
         if (RingesentralenGroupID.isBrukerEllerVenter(this.groupID) && RingesentralenGroupID.isIkkeRegistrertRinger(
                 groupID
             )

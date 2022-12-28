@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.hypersys
+package no.roedt.ringesentralen.hypersys.login
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock

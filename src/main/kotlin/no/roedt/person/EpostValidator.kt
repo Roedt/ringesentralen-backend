@@ -7,7 +7,7 @@ class EpostValidator {
 
     companion object {
         @JvmStatic
-        private val pattern: Pattern = Pattern.compile("^[A-Za-z](.*)([@]{1})(.+)(\\.)(.+)")
+        private val pattern: Pattern = Pattern.compile("^[A-Za-z](.*)(@)(.+)(\\.)(.+)")
 
         fun validate(epost: String) {
             if (!pattern.matcher(epost).matches()) {

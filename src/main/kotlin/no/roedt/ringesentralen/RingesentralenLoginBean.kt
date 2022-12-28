@@ -13,8 +13,8 @@ import no.roedt.hypersys.login.LoginRequest
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
-import no.roedt.ringesentralen.person.Ringer
-import no.roedt.ringesentralen.person.RingerRepository
+import no.roedt.ringesentralen.ringer.Ringer
+import no.roedt.ringesentralen.ringer.RingerRepository
 import no.roedt.token.SecretFactory
 import java.time.Instant
 import javax.enterprise.context.Dependent

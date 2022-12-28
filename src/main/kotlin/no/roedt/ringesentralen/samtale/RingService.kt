@@ -9,8 +9,8 @@ import no.roedt.person.UserId
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
-import no.roedt.ringesentralen.person.Ringer
-import no.roedt.ringesentralen.person.RingerRepository
+import no.roedt.ringesentralen.ringer.Ringer
+import no.roedt.ringesentralen.ringer.RingerRepository
 import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
@@ -125,8 +125,8 @@ class RingServiceBean(
 
     private fun erFleireEnnToIkkeSvar(request: ResultatFraSamtaleRequest): Boolean {
         val resultat: List<Int> = samtaleRepository.list("ringt=?1 and resultat=${Resultat.Ikke_svar.nr}", request.ringtID.toInt()).map { it.resultat }.map { it }
-        val fleireEnnToIkkeSvar: Boolean = resultat.filter { it == 0 }.count() > 2
-        val ingenSvar: Boolean = resultat.filter { it != Resultat.Ikke_svar.nr && it != Resultat.Samtale_startet.nr }.count() == 0
+        val fleireEnnToIkkeSvar: Boolean = resultat.count { it == 0 } > 2
+        val ingenSvar: Boolean = resultat.none { it != Resultat.Ikke_svar.nr && it != Resultat.Samtale_startet.nr }
         return ingenSvar && fleireEnnToIkkeSvar && request.resultat == Resultat.Ikke_svar
     }
 

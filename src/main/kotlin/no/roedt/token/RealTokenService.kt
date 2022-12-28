@@ -88,7 +88,7 @@ class RealTokenService(
             .roller
             .also { i -> if (i.isEmpty()) println("Fann ingen roller for ${hypersysToken.user_id}") }
 
-    fun getRolle(hypersysToken: GyldigPersonToken, person: Person): GroupID {
+    private fun getRolle(hypersysToken: GyldigPersonToken, person: Person): GroupID {
         var groupID = RingesentralenGroupID.from(getPersonFromHypersysID(hypersysToken).groupID())
         if (RingesentralenGroupID.isIkkeRegistrertRinger(groupID.nr)) {
             groupID = RingesentralenGroupID.from(person.groupID())

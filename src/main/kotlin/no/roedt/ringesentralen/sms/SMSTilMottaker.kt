@@ -1,9 +1,8 @@
-package no.roedt.frivilligsystem.sms
+package no.roedt.ringesentralen.sms
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.RoedtPanacheEntity
-import no.roedt.ringesentralen.sms.Utsendingsstatus
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
 import javax.persistence.Entity

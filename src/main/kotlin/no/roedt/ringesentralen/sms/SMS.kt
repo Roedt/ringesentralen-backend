@@ -1,4 +1,4 @@
-package no.roedt.frivilligsystem.sms
+package no.roedt.ringesentralen.sms
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection

@@ -14,12 +14,12 @@ services:
       MYSQL_DATABASE: ringesentralen_test
       TZ: Europe/Oslo
     ports:
-      - 3306:3306
+      - "3306:3306"
 
   adminer:
     image: adminer
     restart: always
     ports:
-      - 9080:8080
+      - "9080:8080"
     environment:
       TZ: Europe/Oslo
