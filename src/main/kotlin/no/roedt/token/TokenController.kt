@@ -6,7 +6,6 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.annotation.security.PermitAll
-import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.ws.rs.POST
 import javax.ws.rs.Path
@@ -16,10 +15,7 @@ import javax.ws.rs.core.MediaType
 @Path("/token")
 @Tag(name = "Token")
 @SecurityRequirement(name = "jwt")
-class TokenController(private val tokenService: TokenService) {
-
-    @Inject
-    lateinit var jwt: JsonWebToken
+class TokenController(private val tokenService: TokenService, val jwt: JsonWebToken) {
 
     @PermitAll
     @POST

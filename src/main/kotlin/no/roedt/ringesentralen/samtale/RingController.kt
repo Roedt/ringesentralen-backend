@@ -17,7 +17,6 @@ import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.annotation.security.RolesAllowed
-import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.ws.rs.Consumes
 import javax.ws.rs.DefaultValue
@@ -33,10 +32,7 @@ import javax.ws.rs.core.SecurityContext
 @Path("/samtale")
 @Tag(name = "Ring")
 @SecurityRequirement(name = "jwt")
-class RingController(val ringService: RingService) : HypersysIdProvider {
-
-    @Inject
-    lateinit var jwt: JsonWebToken
+class RingController(val ringService: RingService, val jwt: JsonWebToken) : HypersysIdProvider {
 
     @RolesAllowed(RingespesifikkRolle.ringer)
     @GET

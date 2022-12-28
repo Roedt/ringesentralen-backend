@@ -9,7 +9,7 @@ class HypersysSystemTokenVerifier(
     val hypersysProxy: HypersysProxy,
     val secretFactory: SecretFactory
 ) {
-    lateinit var token: Token
+    private lateinit var token: Token
 
     @PostConstruct
     fun fetchToken() {

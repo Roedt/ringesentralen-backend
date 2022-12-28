@@ -15,7 +15,6 @@ import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.annotation.security.RolesAllowed
-import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.ws.rs.Consumes
 import javax.ws.rs.GET
@@ -31,11 +30,9 @@ import javax.ws.rs.core.SecurityContext
 @SecurityRequirement(name = "jwt")
 class BrukereController(
     val brukereService: BrukereService,
-    val tilgangsendringService: TilgangsendringService
+    val tilgangsendringService: TilgangsendringService,
+    val jwt: JsonWebToken
 ) : HypersysIdProvider {
-
-    @Inject
-    lateinit var jwt: JsonWebToken
 
     @RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @GET
@@ -55,9 +52,10 @@ class BrukereController(
     @Bulkhead(3)
     @Retry
     @Transactional
-    fun aktiverRinger(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = tilgangsendringService.aktiverRinger(
-        AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
-    )
+    fun aktiverRinger(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring =
+        tilgangsendringService.aktiverRinger(
+            AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
+        )
 
     @RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @PUT
@@ -68,7 +66,10 @@ class BrukereController(
     @Bulkhead(3)
     @Retry
     @Transactional
-    fun giTilgangTilAaRingeMedlemmer(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = tilgangsendringService.giTilgangTilAaRingeMedlemmer(
+    fun giTilgangTilAaRingeMedlemmer(
+        @Context ctx: SecurityContext,
+        godkjennRequest: TilgangsendringsRequest
+    ): Brukerendring = tilgangsendringService.giTilgangTilAaRingeMedlemmer(
         AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
     )
 
@@ -81,7 +82,10 @@ class BrukereController(
     @Bulkhead(3)
     @Retry
     @Transactional
-    fun fjernTilgangTilAaRingeMedlemmer(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring = tilgangsendringService.fjernTilgangTilAaRingeMedlemmer(
+    fun fjernTilgangTilAaRingeMedlemmer(
+        @Context ctx: SecurityContext,
+        godkjennRequest: TilgangsendringsRequest
+    ): Brukerendring = tilgangsendringService.fjernTilgangTilAaRingeMedlemmer(
         AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
     )
 
@@ -94,9 +98,10 @@ class BrukereController(
     @Bulkhead(5)
     @Retry
     @Transactional
-    fun deaktiverRinger(@Context ctx: SecurityContext, deaktiverRequest: TilgangsendringsRequest): Brukerendring = tilgangsendringService.deaktiverRinger(
-        AutentisertTilgangsendringRequest(ctx.userId(), deaktiverRequest, jwt)
-    )
+    fun deaktiverRinger(@Context ctx: SecurityContext, deaktiverRequest: TilgangsendringsRequest): Brukerendring =
+        tilgangsendringService.deaktiverRinger(
+            AutentisertTilgangsendringRequest(ctx.userId(), deaktiverRequest, jwt)
+        )
 
     @RolesAllowed(GenerellRolle.admin)
     @PUT
@@ -107,7 +112,10 @@ class BrukereController(
     @Bulkhead(5)
     @Retry
     @Transactional
-    fun gjoerRingerTilLokalGodkjenner(@Context ctx: SecurityContext, tilLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = tilgangsendringService.gjoerRingerTilLokalGodkjenner(
+    fun gjoerRingerTilLokalGodkjenner(
+        @Context ctx: SecurityContext,
+        tilLokalGodkjennerRequest: TilgangsendringsRequest
+    ): Brukerendring = tilgangsendringService.gjoerRingerTilLokalGodkjenner(
         AutentisertTilgangsendringRequest(
             ctx.userId(),
             tilLokalGodkjennerRequest,
@@ -124,7 +132,10 @@ class BrukereController(
     @Bulkhead(5)
     @Retry
     @Transactional
-    fun fjernRingerSomLokalGodkjenner(@Context ctx: SecurityContext, fjernSomLokalGodkjennerRequest: TilgangsendringsRequest): Brukerendring = tilgangsendringService.fjernRingerSomLokalGodkjenner(
+    fun fjernRingerSomLokalGodkjenner(
+        @Context ctx: SecurityContext,
+        fjernSomLokalGodkjennerRequest: TilgangsendringsRequest
+    ): Brukerendring = tilgangsendringService.fjernRingerSomLokalGodkjenner(
         AutentisertTilgangsendringRequest(
             ctx.userId(),
             fjernSomLokalGodkjennerRequest,

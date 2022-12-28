@@ -11,7 +11,6 @@ import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.annotation.security.RolesAllowed
-import javax.inject.Inject
 import javax.ws.rs.DefaultValue
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -24,10 +23,7 @@ import javax.ws.rs.core.SecurityContext
 @Path("/historikk")
 @Tag(name = "Historikk")
 @SecurityRequirement(name = "jwt")
-class HistorikkController(private val historikkService: HistorikkService) : HypersysIdProvider {
-
-    @Inject
-    lateinit var jwt: JsonWebToken
+class HistorikkController(private val historikkService: HistorikkService, val jwt: JsonWebToken) : HypersysIdProvider {
 
     @RolesAllowed(GenerellRolle.bruker)
     @GET
@@ -36,7 +32,8 @@ class HistorikkController(private val historikkService: HistorikkService) : Hype
     @Operation(summary = "Historikk over mine samtaler", description = GenerellRolle.bruker)
     @Bulkhead(5)
     @Retry
-    fun getMineSamtaler(@Context ctx: SecurityContext, @QueryParam("modus") modus: Modus) = historikkService.getMineSamtaler(ctx.userId(), modus)
+    fun getMineSamtaler(@Context ctx: SecurityContext, @QueryParam("modus") modus: Modus) =
+        historikkService.getMineSamtaler(ctx.userId(), modus)
 
     @RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @GET

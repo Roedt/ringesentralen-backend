@@ -1,9 +1,5 @@
 package no.roedt.ringesentralen.sms
 
-import no.roedt.frivilligsystem.sms.SMS
-import no.roedt.frivilligsystem.sms.SMSRepository
-import no.roedt.frivilligsystem.sms.SMSTilMottaker
-import no.roedt.frivilligsystem.sms.SMSTilMottakerRepository
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped

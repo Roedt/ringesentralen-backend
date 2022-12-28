@@ -13,7 +13,7 @@ import javax.enterprise.context.Dependent
 class AESUtil(val secretFactory: SecretFactory) {
 
     val algorithm: String = "AES/CBC/PKCS5Padding"
-    lateinit var key: SecretKey
+    private lateinit var key: SecretKey
 
     @PostConstruct
     fun setKey() {

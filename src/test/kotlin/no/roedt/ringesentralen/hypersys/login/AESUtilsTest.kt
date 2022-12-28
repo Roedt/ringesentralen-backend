@@ -12,6 +12,7 @@ import java.util.Base64
 import javax.crypto.Cipher
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
 
 internal class AESUtilsTest {
 
@@ -19,13 +20,14 @@ internal class AESUtilsTest {
 
     @Test
     fun `kan kryptere og saa dekryptere og faa den teksten vi starta med`() {
-        doReturn("FfZdV0Cu13lscPPVjYjJGRZmp0afpY3h").whenever(secretFactory).getEncryptionKey()
+        val encryptionKey = "FfZdV0Cu13lscPPVjYjJGRZmp0afpY3h"
+        doReturn(encryptionKey).whenever(secretFactory).getEncryptionKey()
 
         val input = "her er min veldig kryptiske tekst"
 
         val aesUtil = AESUtil(secretFactory).also { it.setKey() }
 
-        val cipherText = encrypt(input = input, algorithm = aesUtil.algorithm, key = aesUtil.key)
+        val cipherText = encrypt(input = input, algorithm = aesUtil.algorithm, key = SecretKeySpec(encryptionKey.encodeToByteArray(), "AES"))
         val plainText = aesUtil.decrypt(cipherText)
 
         Assertions.assertEquals(input, plainText)

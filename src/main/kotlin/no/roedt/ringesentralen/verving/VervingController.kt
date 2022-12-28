@@ -10,7 +10,6 @@ import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import java.net.URI
 import javax.annotation.security.RolesAllowed
-import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.ws.rs.POST
 import javax.ws.rs.Path
@@ -23,10 +22,7 @@ import javax.ws.rs.core.SecurityContext
 @Path("/verving")
 @Tag(name = "Verving")
 @SecurityRequirement(name = "jwt")
-class VervingController(val service: VervingService) : HypersysIdProvider {
-
-    @Inject
-    lateinit var jwt: JsonWebToken
+class VervingController(val service: VervingService, val jwt: JsonWebToken) : HypersysIdProvider {
 
     @RolesAllowed(GenerellRolle.systembrukerFrontend)
     @POST

@@ -19,7 +19,6 @@ import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import java.net.URI
 import javax.annotation.security.RolesAllowed
-import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.ws.rs.Consumes
 import javax.ws.rs.GET
@@ -37,12 +36,10 @@ import javax.ws.rs.core.SecurityContext
 class FrivilligController(
     val frivilligService: FrivilligService,
     val epostSender: RingesentralenEpostformulerer,
-    val personRepository: PersonRepository
+    val personRepository: PersonRepository,
+    val jwt: JsonWebToken
 ) :
     HypersysIdProvider {
-
-    @Inject
-    lateinit var jwt: JsonWebToken
 
     @RolesAllowed(RingespesifikkRolle.ringerMedlemmer, RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @GET

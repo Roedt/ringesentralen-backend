@@ -4,16 +4,13 @@ import com.google.cloud.firestore.Firestore
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import javax.enterprise.context.ApplicationScoped
 import javax.enterprise.context.RequestScoped
-import javax.inject.Inject
 import javax.ws.rs.Produces
 
 interface FirestoreCollectionFactory {
     fun listCollections(): List<FirestoreCollection>?
 }
 
-class RealFirestoreCollectionFactory : FirestoreCollectionFactory {
-    @Inject
-    private lateinit var firestore: Firestore
+class RealFirestoreCollectionFactory(private val firestore: Firestore) : FirestoreCollectionFactory {
 
     override fun listCollections() = firestore.listCollections()
         .map { RealFirestoreCollection(underforumnavn = it.id, collectionReference = it) }
@@ -42,13 +39,14 @@ class FakeFirestoreCollectionFactory : FirestoreCollectionFactory {
 @ApplicationScoped
 class FirestoreProducer(
     @ConfigProperty(name = "brukHypersys", defaultValue = "true")
-    private val brukHypersys: Boolean
+    private val brukHypersys: Boolean,
+    private val firestore: Firestore
 ) {
 
     @Produces
     @RequestScoped
     fun lagFirestoreCollections() = if (brukHypersys) {
-        RealFirestoreCollectionFactory()
+        RealFirestoreCollectionFactory(firestore)
     } else {
         FakeFirestoreCollectionFactory()
     }

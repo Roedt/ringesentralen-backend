@@ -9,7 +9,6 @@ import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.ws.rs.Consumes
 import javax.ws.rs.POST
@@ -24,10 +23,7 @@ import javax.ws.rs.core.SecurityContext
 @Tag(name = "SMS")
 @SecurityRequirement(name = "jwt")
 @ApplicationScoped
-class SMSController(val smsService: SMSService) : HypersysIdProvider {
-
-    @Inject
-    lateinit var jwt: JsonWebToken
+class SMSController(val smsService: SMSService, val jwt: JsonWebToken) : HypersysIdProvider {
 
     @RolesAllowed(GenerellRolle.admin)
     @POST

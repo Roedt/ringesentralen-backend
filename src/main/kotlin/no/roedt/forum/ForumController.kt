@@ -9,7 +9,6 @@ import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.annotation.security.RolesAllowed
-import javax.inject.Inject
 import javax.ws.rs.Consumes
 import javax.ws.rs.GET
 import javax.ws.rs.POST
@@ -24,11 +23,9 @@ import javax.ws.rs.core.SecurityContext
 @Tag(name = "Forum")
 @SecurityRequirement(name = "jwt")
 class ForumController(
-    val forumService: ForumService
+    val forumService: ForumService,
+    val jwt: JsonWebToken
 ) : HypersysIdProvider {
-
-    @Inject
-    lateinit var jwt: JsonWebToken
 
     @RolesAllowed(ForumRolle.debattant)
     @GET

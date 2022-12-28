@@ -9,7 +9,6 @@ import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.annotation.security.RolesAllowed
-import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.ws.rs.POST
 import javax.ws.rs.Path
@@ -21,10 +20,8 @@ import javax.ws.rs.core.SecurityContext
 @Path("/telefonsvar")
 @Tag(name = "Telefonsvar")
 @SecurityRequirement(name = "jwt")
-class TelefonsvarerController(val telefonsvarerService: TelefonsvarerService) : HypersysIdProvider {
-
-    @Inject
-    lateinit var jwt: JsonWebToken
+class TelefonsvarerController(val telefonsvarerService: TelefonsvarerService, val jwt: JsonWebToken) :
+    HypersysIdProvider {
 
     @RolesAllowed(GenerellRolle.systembrukerFrontend)
     @POST
@@ -34,5 +31,11 @@ class TelefonsvarerController(val telefonsvarerService: TelefonsvarerService) : 
     @Operation(summary = "Registrere resultat frå telefonsvar", description = GenerellRolle.systembrukerFrontend)
     @Bulkhead(5)
     @Retry
-    fun postSvarFraTelefonsvarer(@Context ctx: SecurityContext, request: TelefonsvarerRequest) = telefonsvarerService.postSvarFraTelefonsvarer(AutentisertTelefonsvarerRequest(userId = ctx.userId(), request = request))
+    fun postSvarFraTelefonsvarer(@Context ctx: SecurityContext, request: TelefonsvarerRequest) =
+        telefonsvarerService.postSvarFraTelefonsvarer(
+            AutentisertTelefonsvarerRequest(
+                userId = ctx.userId(),
+                request = request
+            )
+        )
 }
