@@ -118,11 +118,13 @@ class HypersysServiceBean(
     ) {
         partitionNyEksisterende
             .second
+            .map { Pair(it, personRepository.find("hypersysID", it["member_id"])) }
+            .filter { it.second.count() > 0 }
             .map {
                 modelConverter.konverterTilOppdatering(
-                    it,
+                    it.first,
                     lokallag,
-                    personRepository.find("hypersysID", it["member_id"]).firstResult()
+                    it.second.firstResult()
                 )
             }
             .forEach { personRepository.oppdater(it) }
