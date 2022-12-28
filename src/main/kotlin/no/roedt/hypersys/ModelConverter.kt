@@ -4,8 +4,10 @@ import no.roedt.Kilde
 import no.roedt.brukere.FylkeRepository
 import no.roedt.hypersys.externalModel.Membership
 import no.roedt.hypersys.externalModel.User
+import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
+import no.roedt.person.PersonOppdatering
 import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import java.time.Instant
@@ -16,6 +18,7 @@ interface ModelConverter {
     fun convertMembershipToPerson(map: Map<*, *>): Person
     fun toFylke(postnummer: Int): Int
     fun finnPostnummer(map: Map<*, *>): Int
+    fun konverterTilOppdatering(map: Map<String, *>, lokallag: Lokallag, person: Person): PersonOppdatering
 }
 
 @Dependent
@@ -72,6 +75,23 @@ class ModelConverterBean(
         )
     }
 
+    override fun konverterTilOppdatering(map: Map<String, *>, lokallag: Lokallag, person: Person): PersonOppdatering {
+        val postnummer = finnPostnummer(map)
+        return PersonOppdatering(
+            hypersysID = map["member_id"].toString().toInt(),
+            fornavn = map["first_name"].toString(),
+            etternavn = map["last_name"].toString(),
+            telefonnummer = itOrNull(map["mobile"])?.let { toTelefonnummer(it) },
+            email = itOrNull(map["email"]),
+            postnummer = postnummer,
+            fylke = fylkeRepository.toFylke(postnummer),
+            lokallag = lokallag.id,
+            sistOppdatert = Instant.now(),
+            groupID = person.groupID(),
+            kilde = person.kilde
+        )
+    }
+
     override fun finnPostnummer(map: Map<*, *>): Int =
         (map["postal_address"] as Map<*, *>)
             .takeIf { it["country"]?.equals("Norway") ?: false }
@@ -91,7 +111,8 @@ class ModelConverterBean(
 
     override fun toFylke(postnummer: Int): Int = fylkeRepository.toFylke(postnummer)
 
-    fun toLokallag(memberships: List<Membership>): Int = getOrganisationName(memberships)?.let { lokallagRepository.fromOrganisationName(it) } ?: -1
+    fun toLokallag(memberships: List<Membership>): Int =
+        getOrganisationName(memberships)?.let { lokallagRepository.fromOrganisationName(it) } ?: -1
 
     private fun getOrganisationName(memberships: List<Membership>) =
         memberships

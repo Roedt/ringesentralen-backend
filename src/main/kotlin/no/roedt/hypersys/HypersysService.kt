@@ -98,11 +98,34 @@ class HypersysServiceBean(
     override fun oppdaterMedlemmerILokallag(lokallag: Lokallag) {
         val hypersysLokallagId =
             if (lokallag.hypersysID != null) lokallag.hypersysID else convertToHypersysLokallagId(lokallag.id)
-        getMedlemmer(hypersysLokallagId)
-            .filter { medlem -> personRepository.find("hypersysID", medlem["member_id"]).count() == 0L }
+        val partitionNyEksisterende = getMedlemmer(hypersysLokallagId)
+            .partition { medlem -> personRepository.find("hypersysID", medlem["member_id"]).count() == 0L }
+        leggTilNyMedlemFraHypersys(partitionNyEksisterende)
+        oppdaterEksisterendeMedlemmer(partitionNyEksisterende, lokallag)
+    }
+
+    private fun leggTilNyMedlemFraHypersys(partitionNyEksisterende: Pair<List<LinkedHashMap<String, *>>, List<LinkedHashMap<String, *>>>) {
+        partitionNyEksisterende
+            .first
             .map { modelConverter.convertMembershipToPerson(it) }
             .filter { it.telefonnummer != null }
             .forEach { personRepository.save(it) }
+    }
+
+    private fun oppdaterEksisterendeMedlemmer(
+        partitionNyEksisterende: Pair<List<LinkedHashMap<String, *>>, List<LinkedHashMap<String, *>>>,
+        lokallag: Lokallag
+    ) {
+        partitionNyEksisterende
+            .second
+            .map {
+                modelConverter.konverterTilOppdatering(
+                    it,
+                    lokallag,
+                    personRepository.find("hypersysID", it["member_id"]).firstResult()
+                )
+            }
+            .forEach { personRepository.oppdater(it) }
         // TODO: Mekanisme ca her for å slette dei som ikkje lenger er med i laget
         // Eventuelt noko lurt for å anonymisere eller noko
         // Kanskje vi også eksplisitt skal sjekke dei mot HS for å sjå om dei berre har bytta lag
