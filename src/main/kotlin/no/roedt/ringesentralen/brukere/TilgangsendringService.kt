@@ -88,8 +88,8 @@ class TilgangsendringServiceBean(
             val nyttPostnr = modelConverter.finnPostnummer(it).takeIf { i -> i > -1 } ?: naavaerendePostnummer
             personRepository.update(
                 "fornavn = ?1, etternavn = ?2, postnummer = ?3 where hypersysID = ?4",
-                it["first_name"],
-                it["last_name"],
+                it.first_name,
+                it.last_name,
                 nyttPostnr,
                 hypersysID
             )

@@ -10,7 +10,7 @@ class LokallagConverter(val lokallagRepository: LokallagRepository) {
     fun tilLokallag(memberships: List<Membership>): Int =
         getOrganisationName(memberships)?.let { lokallagRepository.fromOrganisationName(it) } ?: -1
 
-    fun tilLokallag(map: Map<*, *>) = lokallagRepository.fromOrganisationName(map["organisation"].toString())
+    fun tilLokallag(organisasjon: String) = lokallagRepository.fromOrganisationName(organisasjon)
 
     private fun getOrganisationName(memberships: List<Membership>) =
         memberships

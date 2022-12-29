@@ -3,6 +3,7 @@ package no.roedt.hypersys.konvertering
 import no.roedt.Kilde
 import no.roedt.brukere.FylkeRepository
 import no.roedt.hypersys.externalModel.User
+import no.roedt.hypersys.externalModel.membership.Membership
 import no.roedt.lokallag.Lokallag
 import no.roedt.person.Person
 import no.roedt.person.PersonOppdatering
@@ -13,9 +14,9 @@ import javax.enterprise.context.Dependent
 
 interface ModelConverter {
     fun convert(user: User, groupID: Int): Person
-    fun convertMembershipToPerson(map: Map<*, *>): Person
-    fun finnPostnummer(map: Map<*, *>): Int
-    fun konverterTilOppdatering(map: Map<String, *>, lokallag: Lokallag, person: Person): PersonOppdatering
+    fun convertMembershipToPerson(medlemskap: Membership): Person
+    fun finnPostnummer(medlemskap: Membership): Int
+    fun konverterTilOppdatering(medlemskap: Membership, lokallag: Lokallag, person: Person): PersonOppdatering
 }
 
 @Dependent
@@ -47,10 +48,10 @@ class ModelConverterBean(
         )
     }
 
-    override fun convertMembershipToPerson(map: Map<*, *>): Person {
-        val postnummer = finnPostnummer(map)
+    override fun convertMembershipToPerson(medlemskap: Membership): Person {
+        val postnummer = finnPostnummer(medlemskap)
 
-        val telefonnummer = itOrNull(map["mobile"])?.let { toTelefonnummer(it) }
+        val telefonnummer = itOrNull(medlemskap.mobile)?.let { toTelefonnummer(it) }
         val groupID = personRepository.find("telefonnummer", telefonnummer)
             .singleResultOptional<Person>()
             .map { it.groupID() }
@@ -58,28 +59,28 @@ class ModelConverterBean(
         // TODO: Finn på noko lurt her
 
         return Person(
-            hypersysID = map["member_id"].toString().toInt(),
-            fornavn = map["first_name"].toString(),
-            etternavn = map["last_name"].toString(),
+            hypersysID = medlemskap.member_id.toString().toInt(),
+            fornavn = medlemskap.first_name,
+            etternavn = medlemskap.last_name,
             telefonnummer = telefonnummer,
-            email = itOrNull(map["email"]),
+            email = itOrNull(medlemskap.email),
             postnummer = postnummer,
             fylke = fylkeRepository.toFylke(postnummer),
             groupID = groupID,
-            lokallag = lokallagConverter.tilLokallag(map),
+            lokallag = lokallagConverter.tilLokallag(medlemskap.organisation),
             kilde = Kilde.Hypersys,
             sistOppdatert = Instant.now()
         )
     }
 
-    override fun konverterTilOppdatering(map: Map<String, *>, lokallag: Lokallag, person: Person): PersonOppdatering {
-        val postnummer = finnPostnummer(map)
+    override fun konverterTilOppdatering(medlemskap: Membership, lokallag: Lokallag, person: Person): PersonOppdatering {
+        val postnummer = finnPostnummer(medlemskap)
         return PersonOppdatering(
-            hypersysID = map["member_id"].toString().toInt(),
-            fornavn = map["first_name"].toString(),
-            etternavn = map["last_name"].toString(),
-            telefonnummer = itOrNull(map["mobile"])?.let { toTelefonnummer(it) },
-            email = itOrNull(map["email"]),
+            hypersysID = medlemskap.member_id,
+            fornavn = medlemskap.first_name,
+            etternavn = medlemskap.last_name,
+            telefonnummer = itOrNull(medlemskap.mobile)?.let { toTelefonnummer(it) },
+            email = itOrNull(medlemskap.email),
             postnummer = postnummer,
             fylke = fylkeRepository.toFylke(postnummer),
             lokallag = lokallag.id,
@@ -89,11 +90,10 @@ class ModelConverterBean(
         )
     }
 
-    override fun finnPostnummer(map: Map<*, *>): Int =
-        (map["postal_address"] as Map<*, *>)
+    override fun finnPostnummer(medlemskap: Membership): Int =
+        medlemskap.postal_address
             .takeIf { it["country"]?.equals("Norway") ?: false }
             ?.get("postal_code")
-            ?.toString()
             ?.let { listOf(it) }
             ?.firstOrNull { i -> i != "null" }
             ?.toString()

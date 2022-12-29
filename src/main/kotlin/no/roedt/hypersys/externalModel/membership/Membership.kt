@@ -1,6 +1,7 @@
 package no.roedt.hypersys.externalModel.membership
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.core.type.TypeReference
 import io.quarkus.runtime.annotations.RegisterForReflection
 
 @RegisterForReflection
@@ -18,6 +19,8 @@ data class Membership(
     @JsonProperty("postal_address") val postal_address: Map<String, String?>,
 
     @JsonProperty("mobile") val mobile: String,
-    @JsonProperty("role") val role: String
-
+    @JsonProperty("last_paid_year") val last_paid_year: String,
+    @JsonProperty("status") val status: String
 )
+
+class ListMembershipTypeReference : TypeReference<List<Membership>>()

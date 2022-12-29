@@ -1,6 +1,8 @@
 package no.roedt.hypersys
 
 import no.roedt.hypersys.externalModel.Organisasjonsledd
+import no.roedt.hypersys.externalModel.membership.ListMembershipTypeReference
+import no.roedt.hypersys.externalModel.membership.Membership
 import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagRepository
@@ -12,7 +14,7 @@ import java.time.LocalDate
 import javax.enterprise.context.ApplicationScoped
 
 interface HypersysService {
-    fun hentFraMedlemslista(hypersysID: Int?): LinkedHashMap<*, *>?
+    fun hentFraMedlemslista(hypersysID: Int?): Membership?
     fun oppdaterMedlemmerILokallag(lokallag: Lokallag)
     fun oppdaterLokallag()
 }
@@ -26,16 +28,15 @@ class HypersysServiceBean(
     val lokallagRepository: LokallagRepository
 ) : HypersysService {
 
-    private fun getMedlemmer(hypersysLokallagId: Int?): List<LinkedHashMap<String, *>> {
+    private fun getMedlemmer(hypersysLokallagId: Int?): List<Membership> {
         return if (hypersysLokallagId == null) {
             listOf()
         } else {
             hypersysProxy.get(
                 "/membership/api/membership/$hypersysLokallagId/${LocalDate.now().year}/",
                 hypersysSystemTokenVerifier.assertGyldigSystemToken(),
-                List::class.java
+                ListMembershipTypeReference()
             )
-                as List<LinkedHashMap<String, *>>
         }
     }
 
@@ -98,12 +99,12 @@ class HypersysServiceBean(
         val hypersysLokallagId =
             if (lokallag.hypersysID != null) lokallag.hypersysID else convertToHypersysLokallagId(lokallag.id)
         val partitionNyEksisterende = getMedlemmer(hypersysLokallagId)
-            .partition { medlem -> personRepository.find("hypersysID", medlem["member_id"]).count() == 0L }
+            .partition { medlem -> personRepository.find("hypersysID", medlem.member_id).count() == 0L }
         leggTilNyMedlemFraHypersys(partitionNyEksisterende)
         oppdaterEksisterendeMedlemmer(partitionNyEksisterende, lokallag)
     }
 
-    private fun leggTilNyMedlemFraHypersys(partitionNyEksisterende: Pair<List<LinkedHashMap<String, *>>, List<LinkedHashMap<String, *>>>) {
+    private fun leggTilNyMedlemFraHypersys(partitionNyEksisterende: Pair<List<Membership>, List<Membership>>) {
         partitionNyEksisterende
             .first
             .map { modelConverter.convertMembershipToPerson(it) }
@@ -112,12 +113,12 @@ class HypersysServiceBean(
     }
 
     private fun oppdaterEksisterendeMedlemmer(
-        partitionNyEksisterende: Pair<List<LinkedHashMap<String, *>>, List<LinkedHashMap<String, *>>>,
+        partitionNyEksisterende: Pair<List<Membership>, List<Membership>>,
         lokallag: Lokallag
     ) {
         partitionNyEksisterende
             .second
-            .map { Pair(it, personRepository.find("hypersysID", it["member_id"])) }
+            .map { Pair(it, personRepository.find("hypersysID", it.member_id)) }
             .filter { it.second.count() > 0 }
             .map {
                 modelConverter.konverterTilOppdatering(
@@ -132,11 +133,11 @@ class HypersysServiceBean(
         // Kanskje vi også eksplisitt skal sjekke dei mot HS for å sjå om dei berre har bytta lag
     }
 
-    override fun hentFraMedlemslista(hypersysID: Int?): LinkedHashMap<*, *>? =
+    override fun hentFraMedlemslista(hypersysID: Int?): Membership? =
         hypersysID
             ?.let { UserId(userId = it) }
             ?.let { getLokallag(userId = it) }
             ?.let { convertToHypersysLokallagId(it) }
             ?.let { getMedlemmer(it) }
-            ?.firstOrNull { it["member_id"] == hypersysID }
+            ?.firstOrNull { it.member_id == hypersysID }
 }
