@@ -16,7 +16,7 @@ data class Membership(
     @JsonProperty("organisation") val organisation: String,
     @JsonProperty("organisation_shortname") val organisation_shortname: String,
     @JsonProperty("organisation_id") val organisation_id: Int,
-    @JsonProperty("postal_address") val postal_address: Map<String, String?>,
+    @JsonProperty("postal_address") val postal_address: PostalAddress?,
 
     @JsonProperty("mobile") val mobile: String,
     @JsonProperty("last_paid_year") val last_paid_year: String,

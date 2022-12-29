@@ -92,8 +92,8 @@ class ModelConverterBean(
 
     override fun finnPostnummer(medlemskap: Membership): Int =
         medlemskap.postal_address
-            .takeIf { it["country"]?.equals("Norway") ?: false }
-            ?.get("postal_code")
+            .takeIf { it?.country?.equals("Norway") ?: false }
+            ?.postal_code
             ?.let { listOf(it) }
             ?.firstOrNull { i -> i != "null" }
             ?.toString()
