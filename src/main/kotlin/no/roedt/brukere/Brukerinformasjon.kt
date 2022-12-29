@@ -12,7 +12,7 @@ data class Brukerinformasjon(
     val etternavn: String,
     val epost: String,
     val telefonnummer: String?,
-    val postnummer: Int,
+    val postnummer: String,
     val fylke: Fylke,
     val lokallag: Lokallag?,
     var rolle: Set<String>,

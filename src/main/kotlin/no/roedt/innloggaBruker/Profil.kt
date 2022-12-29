@@ -9,7 +9,7 @@ data class Profil(
     var etternavn: String,
     var telefonnummer: String?,
     var email: String?,
-    var postnummer: Int,
+    var postnummer: String,
     var fylke: Int,
     var lokallag: Int,
     var rolle: Set<String>,
