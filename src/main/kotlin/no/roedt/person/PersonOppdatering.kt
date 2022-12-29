@@ -16,5 +16,13 @@ data class PersonOppdatering(
     val kilde: Kilde,
     var lokallag: Int,
     var sistOppdatert: Instant?,
-    var groupID: Int
+    var groupID: Int,
+    var oppdateringskilde: Oppdateringskilde
 )
+
+@RegisterForReflection
+enum class Oppdateringskilde {
+    Hypersys,
+    Ukjent,
+    RegistrertFrivillig
+}

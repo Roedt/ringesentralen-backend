@@ -10,7 +10,7 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 class PersonRepository : PanacheRepositoryBase<Person, Int> {
 
-    fun save(person: Person): Long {
+    fun save(person: Person, oppdateringskilde: Oppdateringskilde): Long {
         val eksisterendePerson: Person? = finnPerson(person)
         if (eksisterendePerson != null) {
             oppdaterEksisterendePerson(
@@ -25,7 +25,8 @@ class PersonRepository : PanacheRepositoryBase<Person, Int> {
                     fylke = person.fylke,
                     lokallag = person.lokallag,
                     sistOppdatert = person.sistOppdatert,
-                    groupID = person.groupID()
+                    groupID = person.groupID(),
+                    oppdateringskilde = oppdateringskilde
                 ),
                 eksisterendePerson.id
             )
@@ -44,7 +45,8 @@ class PersonRepository : PanacheRepositoryBase<Person, Int> {
         val hypersysID = if (person.hypersysID != null) "hypersysID = ${person.hypersysID}, " else ""
         val tid = ZonedDateTime.ofInstant(person.sistOppdatert, ZoneId.of("Europe/Oslo"))
             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-        val oppdatertFraHypersys = if (person.kilde == Kilde.Hypersys) ", sistOppdatert='$tid' " else ""
+        val oppdatertFraHypersys =
+            if (person.oppdateringskilde == Oppdateringskilde.Hypersys) ", sistOppdatert='$tid' " else ""
         update(
             """fornavn = '${person.fornavn}', 
                             etternavn = '${person.etternavn}', 

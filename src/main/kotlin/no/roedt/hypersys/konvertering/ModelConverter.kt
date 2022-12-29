@@ -5,6 +5,7 @@ import no.roedt.brukere.FylkeRepository
 import no.roedt.hypersys.externalModel.User
 import no.roedt.hypersys.externalModel.membership.Membership
 import no.roedt.lokallag.Lokallag
+import no.roedt.person.Oppdateringskilde
 import no.roedt.person.Person
 import no.roedt.person.PersonOppdatering
 import no.roedt.person.PersonRepository
@@ -93,7 +94,8 @@ class ModelConverterBean(
             lokallag = lokallag.id,
             sistOppdatert = Instant.now(),
             groupID = person.groupID(),
-            kilde = person.kilde
+            kilde = person.kilde,
+            oppdateringskilde = Oppdateringskilde.Hypersys
         )
     }
 

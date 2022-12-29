@@ -6,6 +6,7 @@ import no.roedt.hypersys.externalModel.membership.Membership
 import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagRepository
+import no.roedt.person.Oppdateringskilde
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.UserId
@@ -104,7 +105,7 @@ class HypersysServiceBean(
             .first
             .map { modelConverter.convertMembershipToPerson(it) }
             .filter { it.telefonnummer != null }
-            .forEach { personRepository.save(it) }
+            .forEach { personRepository.save(it, Oppdateringskilde.Hypersys) }
     }
 
     private fun oppdaterEksisterendeMedlemmer(

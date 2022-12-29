@@ -17,6 +17,7 @@ import no.roedt.frivilligsystem.registrer.AutentisertSoMeFrivilligRequest
 import no.roedt.frivilligsystem.registrer.ErMedlemStatus
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.lokallag.LokallagRepository
+import no.roedt.person.Oppdateringskilde
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.PostnummerRepository
@@ -79,7 +80,7 @@ class FrivilligService(
     fun registrerNyFrivillig(autentisertRequest: AutentisertRegistrerNyFrivilligRequest): Pair<Boolean, Frivillig> {
         val request = autentisertRequest.request
         val person = request.toPerson()
-        val id = personRepository.save(person)
+        val id = personRepository.save(person, Oppdateringskilde.RegistrertFrivillig)
         val personId = person.id?.toInt() ?: id.toInt()
         if (frivilligRepository.count("personId", personId) > 0L) {
             return Pair(false, frivilligRepository.find("personId", personId).firstResult())

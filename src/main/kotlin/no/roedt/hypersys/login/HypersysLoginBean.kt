@@ -7,6 +7,7 @@ import no.roedt.hypersys.UgyldigToken
 import no.roedt.hypersys.externalModel.Profile
 import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.person.EpostValidator
+import no.roedt.person.Oppdateringskilde
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.token.SecretFactory
@@ -56,7 +57,7 @@ abstract class HypersysLoginBean(
     }
 
     private fun lagrePerson(convertedPerson: Person): Long {
-        personRepository.save(convertedPerson)
+        personRepository.save(convertedPerson, Oppdateringskilde.Hypersys)
         var id = convertedPerson.id
         if (id == null) personRepository.find("email", convertedPerson.email).firstResult<Person>().id.also { id = it }
         return id.toLong()
