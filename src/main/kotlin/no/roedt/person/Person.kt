@@ -44,7 +44,7 @@ data class Person(
         etternavn = "",
         telefonnummer = "",
         email = null,
-        postnummer = Postnummer(""),
+        postnummer = Postnummer("", "", 0),
         fylke = -1,
         groupID = 0,
         lokallag = 1,

@@ -15,12 +15,16 @@ import javax.persistence.Table
 @RegisterForReflection
 data class Postnummer(
     @Id
-    val Postnummer: String
+    val Postnummer: String,
+    val Poststed: String,
+    val KommuneKode: Int
 ) : PanacheEntityBase() {
     fun erUkjent() = Postnummer != "-1"
 
     constructor() : this(
-        Postnummer = ""
+        Postnummer = "",
+        Poststed = "",
+        KommuneKode = 0
     )
 }
 
