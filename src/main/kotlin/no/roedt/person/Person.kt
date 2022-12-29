@@ -11,6 +11,9 @@ import javax.persistence.Cacheable
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
+import javax.persistence.FetchType
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
 import javax.persistence.Table
 
 @Entity
@@ -23,7 +26,9 @@ data class Person(
     var etternavn: String,
     var telefonnummer: String?,
     var email: String?,
-    var postnummer: Int,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "postnummer", nullable = false)
+    var postnummer: Postnummer,
     var fylke: Int,
     var lokallag: Int,
     private var groupID: Int, // TODO: Enumerated type number/ordinal
@@ -39,7 +44,7 @@ data class Person(
         etternavn = "",
         telefonnummer = "",
         email = null,
-        postnummer = 0,
+        postnummer = Postnummer(""),
         fylke = -1,
         groupID = 0,
         lokallag = 1,

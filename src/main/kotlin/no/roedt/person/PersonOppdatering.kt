@@ -11,7 +11,7 @@ data class PersonOppdatering(
     var etternavn: String,
     var telefonnummer: String?,
     var email: String?,
-    var postnummer: Int,
+    var postnummer: Postnummer,
     var fylke: Int,
     val kilde: Kilde,
     var lokallag: Int,

@@ -46,7 +46,7 @@ class BrukereServiceBean(
         fornavn = r.fornavn,
         etternavn = r.etternavn,
         telefonnummer = r.telefonnummer,
-        postnummer = r.postnummer,
+        postnummer = r.postnummer.Postnummer.toInt(),
         fylke = fylkeRepository.findById(r.fylke),
         epost = r.email ?: "",
         hypersysID = r.hypersysID ?: -1,

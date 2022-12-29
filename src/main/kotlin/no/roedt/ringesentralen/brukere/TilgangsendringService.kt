@@ -10,6 +10,7 @@ import no.roedt.hypersys.HypersysService
 import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.person.Postnummer
 import no.roedt.person.UserId
 import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.ForbiddenException
@@ -83,14 +84,14 @@ class TilgangsendringServiceBean(
         }
     }
 
-    private fun oppdaterNavnFraHypersys(naavaerendePostnummer: Int, hypersysID: Int?) =
+    private fun oppdaterNavnFraHypersys(naavaerendePostnummer: Postnummer, hypersysID: Int?) =
         hypersysService.hentFraMedlemslista(hypersysID)?.let {
-            val nyttPostnr = modelConverter.finnPostnummer(it).takeIf { i -> i > -1 } ?: naavaerendePostnummer
+            val nyttPostnr = modelConverter.finnPostnummer(it).takeIf { i -> !i.erUkjent() } ?: naavaerendePostnummer
             personRepository.update(
                 "fornavn = ?1, etternavn = ?2, postnummer = ?3 where hypersysID = ?4",
                 it.first_name,
                 it.last_name,
-                nyttPostnr,
+                nyttPostnr.Postnummer,
                 hypersysID
             )
         }

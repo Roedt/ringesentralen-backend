@@ -8,6 +8,7 @@ import no.roedt.lokallag.Lokallag
 import no.roedt.person.Person
 import no.roedt.person.PersonOppdatering
 import no.roedt.person.PersonRepository
+import no.roedt.person.Postnummer
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import java.time.Instant
 import javax.enterprise.context.Dependent
@@ -15,7 +16,7 @@ import javax.enterprise.context.Dependent
 interface ModelConverter {
     fun convert(user: User, groupID: Int): Person
     fun convertMembershipToPerson(medlemskap: Membership): Person
-    fun finnPostnummer(medlemskap: Membership): Int
+    fun finnPostnummer(medlemskap: Membership): Postnummer
     fun konverterTilOppdatering(medlemskap: Membership, lokallag: Lokallag, person: Person): PersonOppdatering
 }
 
@@ -94,19 +95,24 @@ class ModelConverterBean(
         )
     }
 
-    override fun finnPostnummer(medlemskap: Membership): Int =
+    override fun finnPostnummer(medlemskap: Membership): Postnummer =
         medlemskap.postal_address
             .takeIf { it?.country?.equals("Norway") ?: false }
             ?.postal_code
             ?.let { if (it != "null") it else null }
-            ?.toInt()
-            ?: -1
+            ?.let { Postnummer(it) }
+            ?: Postnummer("-1")
 
     fun toTelefonnummer(telefonnummer: String): String? =
         telefonnummer.replace(" ", "").takeIf { it != "" }
 
-    private fun toPostnummer(user: User): Int =
-        user.addresses.map { it.postalCode }.map { it[1] }.map { it.toInt() }.maxByOrNull { it != 1 } ?: -1
+    private fun toPostnummer(user: User): Postnummer =
+        user.addresses
+            .map { it.postalCode }
+            .map { it[1] }
+            .map { Postnummer(it) }
+            .firstOrNull { !it.erUkjent() }
+            ?: Postnummer("-1")
 
     private fun itOrNull(any: Any?): String? = if (any.toString() != "") any.toString() else null
 }

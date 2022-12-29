@@ -5,6 +5,7 @@ import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.DatabaseUpdater
 import no.roedt.lokallag.LokallagRepository
+import no.roedt.person.Postnummer
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
 import javax.persistence.Entity
@@ -32,16 +33,16 @@ class FylkeRepository(
     private val lokallagRepository: LokallagRepository
 ) : PanacheRepositoryBase<Fylke, Int> {
 
-    fun getFylke(lokallag: Int, postnummer: Int): Int =
-        if (postnummer == -1 && lokallag != -1) getFylkeIdFraLokallag(lokallag) else toFylke(postnummer)
+    fun getFylke(lokallag: Int, postnummer: Postnummer): Int =
+        if (!postnummer.erUkjent() && lokallag != -1) getFylkeIdFraLokallag(lokallag) else toFylke(postnummer)
 
     fun getFylkeIdFraLokallag(lokallag: Int): Int = lokallagRepository.findById(lokallag).fylke
 
-    fun toFylke(postnummer: Int): Int =
+    fun toFylke(postnummer: Postnummer): Int =
         databaseUpdater.getResultList(
             "select fylke.id from `postnummer` p " +
                 "inner join kommune kommune on p.KommuneKode = kommune.nummer " +
-                "inner join `fylker` fylke on fylke.id=kommune.fylke_id where postnummer = $postnummer"
+                "inner join `fylker` fylke on fylke.id=kommune.fylke_id where postnummer = ${postnummer.Postnummer}"
         )
             .map { it as Int }
             .firstOrNull()

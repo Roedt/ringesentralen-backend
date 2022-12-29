@@ -40,7 +40,7 @@ class PersonRepository : PanacheRepositoryBase<Person, Int> {
         val telefonnummer = person.telefonnummer?.let { "'$it'" }
         val kilde =
             if (person.kilde == Kilde.Hypersys || person.kilde == Kilde.Frivillig) ", kilde='${person.kilde}'" else ""
-        val postnummer = if (person.postnummer != -1) "postnummer = ${person.postnummer}," else ""
+        val postnummer = if (person.postnummer.erUkjent()) "postnummer = ${person.postnummer.Postnummer}," else ""
         val hypersysID = if (person.hypersysID != null) "hypersysID = ${person.hypersysID}, " else ""
         val tid = ZonedDateTime.ofInstant(person.sistOppdatert, ZoneId.of("Europe/Oslo"))
             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))

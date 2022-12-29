@@ -29,7 +29,7 @@ class InnloggaBrukerService(
         etternavn = etternavn,
         telefonnummer = telefonnummer,
         email = email,
-        postnummer = postnummer,
+        postnummer = postnummer.Postnummer.toInt(),
         fylke = fylke,
         lokallag = lokallag,
         rolle = RingesentralenGroupID.from(groupID()).roller,
