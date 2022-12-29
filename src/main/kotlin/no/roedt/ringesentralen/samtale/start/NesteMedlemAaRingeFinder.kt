@@ -69,5 +69,5 @@ open class NesteMedlemAaRingeFinder(
 }
 
 private fun ZonedDateTime?.erSistOppdatertFørDenSisteUka(): Boolean = this?.isBefore(
-    ZonedDateTime.now().minusWeeks(1)
+    ZonedDateTime.now()
 ) == true

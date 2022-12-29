@@ -9,6 +9,7 @@ import no.roedt.person.PersonRepository
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
+import no.roedt.token.TokenService
 import java.util.Optional
 import javax.enterprise.context.ApplicationScoped
 
@@ -16,7 +17,8 @@ import javax.enterprise.context.ApplicationScoped
 class InnloggaBrukerService(
     private val personRepository: PersonRepository,
     private val fylkeRepository: FylkeRepository,
-    private val lokallagRepository: LokallagRepository
+    private val lokallagRepository: LokallagRepository,
+    private val tokenService: TokenService
 ) {
     fun getProfil(userId: UserId): Profil? = getPerson(userId).map { it.toProfil() }.orElse(null)
 
@@ -47,4 +49,6 @@ class InnloggaBrukerService(
         getProfil(userId) == null -> listOf()
         else -> listOf(lokallagRepository.findById(getPerson(userId).get().lokallag))
     }
+
+    fun getRoller(userId: UserId): Set<String> = tokenService.hentRoller(userId)
 }

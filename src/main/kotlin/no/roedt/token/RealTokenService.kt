@@ -13,8 +13,10 @@ import no.roedt.hypersys.login.HypersysLoginBean
 import no.roedt.hypersys.login.LoginRequest
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.person.UserId
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import java.time.Duration
+import java.util.function.Supplier
 import javax.ws.rs.ForbiddenException
 import javax.ws.rs.NotAuthorizedException
 import javax.ws.rs.ServiceUnavailableException
@@ -44,13 +46,20 @@ class RealTokenService(
     }
 
     private fun loginSomSystembruker(loginRequest: LoginRequest): String {
-        if (aesUtil.decrypt(loginRequest.brukarnamn) != secretFactory.getFrontendSystembruker() || aesUtil.decrypt(loginRequest.passord) != secretFactory.getFrontendSystembrukerPassord()) {
+        if (aesUtil.decrypt(loginRequest.brukarnamn) != secretFactory.getFrontendSystembruker() || aesUtil.decrypt(
+                loginRequest.passord
+            ) != secretFactory.getFrontendSystembrukerPassord()
+        ) {
             System.err.println(loginRequest)
             throw IllegalArgumentException("Ugyldig brukernavn eller passord")
         }
         return generateBaseToken()
             .groups(GenerellRolle.systembrukerFrontend)
-            .claim("hypersys.user_id", personRepository.find("fornavn='Systembruker' and etternavn='Frontend'").firstResult<Person>().hypersysID)
+            .claim(
+                "hypersys.user_id",
+                personRepository.find("fornavn='Systembruker' and etternavn='Frontend'")
+                    .firstResult<Person>().hypersysID
+            )
             .sign(privateKeyFactory.readPrivateKey())
     }
 
@@ -66,7 +75,7 @@ class RealTokenService(
     }
 
     private fun generateToken(hypersysToken: GyldigPersonToken, person: Person): String = generateBaseToken()
-        .groups(getGroups(hypersysToken, person))
+        .groups(getGroups(person::groupID, hypersysToken.user_id))
         .claim("hypersys.token_type", hypersysToken.token_type)
         .claim("hypersys.scope", hypersysToken.scope)
         .claim("hypersys.access_token", hypersysToken.access_token)
@@ -83,23 +92,28 @@ class RealTokenService(
         .issuedAt(System.currentTimeMillis())
         .expiresAt(System.currentTimeMillis() + tokenExpiryPeriod.toSeconds())
 
-    private fun getGroups(hypersysToken: GyldigPersonToken, person: Person): Set<String> =
-        getRolle(hypersysToken, person)
-            .roller
-            .also { i -> if (i.isEmpty()) println("Fann ingen roller for ${hypersysToken.user_id}") }
+    override fun hentRoller(userId: UserId): Set<String> =
+        getGroups({ RingesentralenGroupID.UgodkjentRinger.nr }, userId.userId.toString())
 
-    private fun getRolle(hypersysToken: GyldigPersonToken, person: Person): GroupID {
-        var groupID = RingesentralenGroupID.from(getPersonFromHypersysID(hypersysToken).groupID())
+    private fun getGroups(fallbackSupplier: Supplier<Int>, userId: String): Set<String> =
+        getRolle(fallbackSupplier, userId)
+            .roller
+            .also { i -> if (i.isEmpty()) println("Fann ingen roller for $userId") }
+
+    private fun getRolle(fallbackSupplier: Supplier<Int>, userId: String): GroupID {
+        var groupID = RingesentralenGroupID.from(getPersonFromHypersysID(userId).groupID())
         if (RingesentralenGroupID.isIkkeRegistrertRinger(groupID.nr)) {
-            groupID = RingesentralenGroupID.from(person.groupID())
+            groupID = RingesentralenGroupID.from(fallbackSupplier.get())
         }
         if (RingesentralenGroupID.erUgyldigRolleForAaBrukeSystemet(groupID)) {
-            throw NotAuthorizedException("${hypersysToken.user_id} har ikkje gyldig rolle for å bruke systemet.", "")
+            throw NotAuthorizedException("$userId har ikkje gyldig rolle for å bruke systemet.", "")
         }
         return groupID
     }
-    private fun getPersonFromHypersysID(hypersysToken: GyldigPersonToken) =
-        personRepository.find("hypersysID", hypersysToken.user_id.toInt()).firstResult<Person>()
+
+    private fun getPersonFromHypersysID(userId: String) =
+        personRepository.find("hypersysID", userId.toInt()).firstResult<Person>()
+
     override fun trengerMFA(mfaRequest: MFARequest) = mfaService.trengerMFA(mfaRequest)
     override fun sendMFA(mfaRequest: MFARequest) {
         mfaService.sendMFA(mfaRequest)

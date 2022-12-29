@@ -7,6 +7,7 @@ import no.roedt.forum.ForumRolle
 import no.roedt.hypersys.login.AESUtil
 import no.roedt.hypersys.login.LoginRequest
 import no.roedt.person.EpostValidator
+import no.roedt.person.UserId
 import java.time.Duration
 
 class FakeTokenService(
@@ -35,4 +36,6 @@ class FakeTokenService(
 
     override fun trengerMFA(mfaRequest: MFARequest) = false
     override fun sendMFA(mfaRequest: MFARequest) {}
+
+    override fun hentRoller(userId: UserId): Set<String> = setOf()
 }
