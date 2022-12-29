@@ -14,7 +14,6 @@ import javax.enterprise.context.Dependent
 interface ModelConverter {
     fun convert(user: User, groupID: Int): Person
     fun convertMembershipToPerson(map: Map<*, *>): Person
-    fun toFylke(postnummer: Int): Int
     fun finnPostnummer(map: Map<*, *>): Int
     fun konverterTilOppdatering(map: Map<String, *>, lokallag: Lokallag, person: Person): PersonOppdatering
 }
@@ -106,8 +105,6 @@ class ModelConverterBean(
 
     private fun toPostnummer(user: User): Int =
         user.addresses.map { it.postalCode }.map { it[1] }.map { it.toInt() }.maxByOrNull { it != 1 } ?: -1
-
-    override fun toFylke(postnummer: Int): Int = fylkeRepository.toFylke(postnummer)
 
     private fun itOrNull(any: Any?): String? = if (any.toString() != "") any.toString() else null
 }
