@@ -19,6 +19,7 @@ import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.person.PostnummerRepository
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
@@ -35,7 +36,8 @@ class FrivilligService(
     val fylkeRepository: FylkeRepository,
     val aktivitetForFrivilligRepository: AktivitetForFrivilligRepository,
     val frivilligOpptattAvRepository: FrivilligOpptattAvRepository,
-    val frivilligKoronaRepository: FrivilligKoronaRepository
+    val frivilligKoronaRepository: FrivilligKoronaRepository,
+    val postnummerRepository: PostnummerRepository
 ) {
     fun hentAlle(userId: UserId, roller: Set<String>) =
         hentFrivilligeUtFraMinRolle(roller, personRepository.getPerson(userId))
@@ -126,15 +128,16 @@ class FrivilligService(
     }
 
     private fun RegistrerNyFrivilligRequest.toPerson(): Person {
-        val lokallag = lokallagRepository.fromPostnummer(postnummer)
+        val postnr = postnummerRepository.findById(postnummer)
+        val lokallag = lokallagRepository.fromPostnummer(postnr)
         val person = Person(
             hypersysID = null,
             fornavn = fornavn,
             etternavn = etternavn,
             telefonnummer = telefonnummer,
             email = epost,
-            postnummer = postnummer,
-            fylke = fylkeRepository.getFylke(lokallag, postnummer),
+            postnummer = postnr,
+            fylke = fylkeRepository.getFylke(lokallag, postnr),
             lokallag = lokallag,
             groupID = RingesentralenGroupID.Frivillig.nr,
             kilde = Kilde.Frivillig,

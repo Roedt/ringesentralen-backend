@@ -14,7 +14,7 @@ data class RegistrerNyFrivilligRequest(
     @JsonProperty("etternavn") var etternavn: String,
     @JsonProperty("epost") var epost: String,
     @JsonProperty("telefonnummer") var telefonnummer: String,
-    @JsonProperty("postnummer") var postnummer: Int,
+    @JsonProperty("postnummer") var postnummer: String,
     @JsonProperty("alleredeAktivILokallag") var alleredeAktivILokallag: Boolean,
     @JsonProperty("medlemIRoedt") var medlemIRoedt: ErMedlemStatus,
     @JsonProperty("kanTenkeSegAaBidraMedAktiviteter") var kanTenkeSegAaBidraMedAktiviteter: List<Aktivitet>,

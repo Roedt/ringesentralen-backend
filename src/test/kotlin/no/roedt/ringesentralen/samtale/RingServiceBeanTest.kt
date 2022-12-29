@@ -11,6 +11,7 @@ import no.roedt.Kilde
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.person.Postnummer
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.ringer.RingerRepository
@@ -109,7 +110,7 @@ internal class RingServiceBeanTest {
         val person = Person(
             hypersysID = hypersysID, fornavn = fornavn, etternavn = etternavn,
             telefonnummer = telefonnummer, email = "",
-            postnummer = 1234, fylke = 0, lokallag = 0, groupID = 0, kilde = Kilde.Hypersys, sistOppdatert = null
+            postnummer = Postnummer("1234"), fylke = 0, lokallag = 0, groupID = 0, kilde = Kilde.Hypersys, sistOppdatert = null
         )
         doReturn(person).whenever(personRepository).findById(id)
         val query: PanacheQuery<Person> = mock()

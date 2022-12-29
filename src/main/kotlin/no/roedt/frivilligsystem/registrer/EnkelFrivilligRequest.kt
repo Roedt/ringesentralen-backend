@@ -11,7 +11,7 @@ data class SoMeFrivilligRequest(
     @JsonProperty("fornavn") var fornavn: String,
     @JsonProperty("etternavn") var etternavn: String,
     @JsonProperty("telefonnummer") var telefonnummer: String,
-    @JsonProperty("postnummer") var postnummer: Int,
+    @JsonProperty("postnummer") var postnummer: String,
     @JsonProperty("email") var email: String?
 )
 

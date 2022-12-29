@@ -16,14 +16,14 @@ data class Verving(
     var telefonnummer: String,
     var fornavn: String,
     var etternavn: String,
-    var postnummer: Int,
+    var postnummer: String,
     var verversNavn: String?
 ) : RoedtPanacheEntity() {
     constructor() : this(
         telefonnummer = "",
         fornavn = "",
         etternavn = "",
-        postnummer = 0,
+        postnummer = "",
         verversNavn = null
     )
 }

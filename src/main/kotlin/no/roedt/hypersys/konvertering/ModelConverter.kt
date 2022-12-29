@@ -9,6 +9,7 @@ import no.roedt.person.Person
 import no.roedt.person.PersonOppdatering
 import no.roedt.person.PersonRepository
 import no.roedt.person.Postnummer
+import no.roedt.person.PostnummerRepository
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import java.time.Instant
 import javax.enterprise.context.Dependent
@@ -24,7 +25,8 @@ interface ModelConverter {
 class ModelConverterBean(
     private val lokallagConverter: LokallagConverter,
     private val personRepository: PersonRepository,
-    private val fylkeRepository: FylkeRepository
+    private val fylkeRepository: FylkeRepository,
+    private val postnummerRepository: PostnummerRepository
 ) : ModelConverter {
 
     override fun convert(user: User, groupID: Int): Person {
@@ -100,8 +102,8 @@ class ModelConverterBean(
             .takeIf { it?.country?.equals("Norway") ?: false }
             ?.postal_code
             ?.let { if (it != "null") it else null }
-            ?.let { Postnummer(it) }
-            ?: Postnummer("-1")
+            ?.let { postnummerRepository.findById(it) }
+            ?: postnummerRepository.ukjent()
 
     fun toTelefonnummer(telefonnummer: String): String? =
         telefonnummer.replace(" ", "").takeIf { it != "" }
@@ -110,9 +112,9 @@ class ModelConverterBean(
         user.addresses
             .map { it.postalCode }
             .map { it[1] }
-            .map { Postnummer(it) }
+            .map { postnummerRepository.findById(it) }
             .firstOrNull { !it.erUkjent() }
-            ?: Postnummer("-1")
+            ?: postnummerRepository.ukjent()
 
     private fun itOrNull(any: Any?): String? = if (any.toString() != "") any.toString() else null
 }

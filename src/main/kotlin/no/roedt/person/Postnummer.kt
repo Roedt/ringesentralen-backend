@@ -1,8 +1,9 @@
 package no.roedt.person
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
-import org.jboss.resteasy.spi.metadata.ResourceBuilder.constructor
+import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -21,4 +22,9 @@ data class Postnummer(
     constructor() : this(
         Postnummer = ""
     )
+}
+
+@ApplicationScoped
+class PostnummerRepository : PanacheRepositoryBase<Postnummer, String> {
+    fun ukjent(): Postnummer = findById("-1")
 }
