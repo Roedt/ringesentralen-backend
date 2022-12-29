@@ -9,7 +9,7 @@ import kotlin.test.assertNull
 
 internal class ModelConverterTest {
 
-    private val lokallagConverter: LokallagConverter = mock()
+    private val lokallagConverter: LokallagConverter = LokallagConverter(mock())
     private val personRepository: PersonRepository = mock()
     private val fylkeRepository: FylkeRepository = mock()
 

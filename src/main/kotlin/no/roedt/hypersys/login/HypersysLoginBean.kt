@@ -2,10 +2,10 @@ package no.roedt.hypersys.login
 
 import no.roedt.hypersys.GyldigPersonToken
 import no.roedt.hypersys.HypersysProxy
-import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.hypersys.Token
 import no.roedt.hypersys.UgyldigToken
 import no.roedt.hypersys.externalModel.Profile
+import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.person.EpostValidator
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
