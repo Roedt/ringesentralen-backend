@@ -2,10 +2,8 @@ package no.roedt.hypersys
 
 import no.roedt.Kilde
 import no.roedt.brukere.FylkeRepository
-import no.roedt.hypersys.externalModel.Membership
 import no.roedt.hypersys.externalModel.User
 import no.roedt.lokallag.Lokallag
-import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonOppdatering
 import no.roedt.person.PersonRepository
@@ -23,7 +21,7 @@ interface ModelConverter {
 
 @Dependent
 class ModelConverterBean(
-    private val lokallagRepository: LokallagRepository,
+    private val lokallagConverter: LokallagConverter,
     private val personRepository: PersonRepository,
     private val fylkeRepository: FylkeRepository
 ) : ModelConverter {
@@ -33,7 +31,7 @@ class ModelConverterBean(
         val fornavn = user.name.substring(0, sisteMellomrom)
         val etternavn = user.name.substring(sisteMellomrom + 1)
         val postnummer = toPostnummer(user)
-        val lokallag = toLokallag(user.memberships)
+        val lokallag = lokallagConverter.tilLokallag(user.memberships)
         val fylke = fylkeRepository.getFylke(lokallag, postnummer)
         return Person(
             hypersysID = user.id,
@@ -69,7 +67,7 @@ class ModelConverterBean(
             postnummer = postnummer,
             fylke = fylkeRepository.toFylke(postnummer),
             groupID = groupID,
-            lokallag = lokallagRepository.fromOrganisationName(map["organisation"].toString()),
+            lokallag = lokallagConverter.tilLokallag(map),
             kilde = Kilde.Hypersys,
             sistOppdatert = Instant.now()
         )
@@ -110,16 +108,6 @@ class ModelConverterBean(
         user.addresses.map { it.postalCode }.map { it[1] }.map { it.toInt() }.maxByOrNull { it != 1 } ?: -1
 
     override fun toFylke(postnummer: Int): Int = fylkeRepository.toFylke(postnummer)
-
-    fun toLokallag(memberships: List<Membership>): Int =
-        getOrganisationName(memberships)?.let { lokallagRepository.fromOrganisationName(it) } ?: -1
-
-    private fun getOrganisationName(memberships: List<Membership>) =
-        memberships
-            .asSequence()
-            .sortedByDescending { it.startDate }
-            .map { it.organisationName }
-            .firstOrNull()
 
     private fun itOrNull(any: Any?): String? = if (any.toString() != "") any.toString() else null
 }
