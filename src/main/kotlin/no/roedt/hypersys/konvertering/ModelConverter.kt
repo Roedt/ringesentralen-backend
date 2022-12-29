@@ -59,7 +59,7 @@ class ModelConverterBean(
         // TODO: Finn på noko lurt her
 
         return Person(
-            hypersysID = medlemskap.member_id.toString().toInt(),
+            hypersysID = medlemskap.member_id,
             fornavn = medlemskap.first_name,
             etternavn = medlemskap.last_name,
             telefonnummer = telefonnummer,
