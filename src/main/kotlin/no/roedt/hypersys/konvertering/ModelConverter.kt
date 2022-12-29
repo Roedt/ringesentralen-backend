@@ -73,7 +73,11 @@ class ModelConverterBean(
         )
     }
 
-    override fun konverterTilOppdatering(medlemskap: Membership, lokallag: Lokallag, person: Person): PersonOppdatering {
+    override fun konverterTilOppdatering(
+        medlemskap: Membership,
+        lokallag: Lokallag,
+        person: Person
+    ): PersonOppdatering {
         val postnummer = finnPostnummer(medlemskap)
         return PersonOppdatering(
             hypersysID = medlemskap.member_id,
@@ -94,9 +98,7 @@ class ModelConverterBean(
         medlemskap.postal_address
             .takeIf { it?.country?.equals("Norway") ?: false }
             ?.postal_code
-            ?.let { listOf(it) }
-            ?.firstOrNull { i -> i != "null" }
-            ?.toString()
+            ?.let { if (it != "null") it else null }
             ?.toInt()
             ?: -1
 

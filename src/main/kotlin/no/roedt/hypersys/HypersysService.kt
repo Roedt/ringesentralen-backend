@@ -24,20 +24,18 @@ class HypersysServiceBean(
     val hypersysProxy: HypersysProxy,
     val hypersysSystemTokenVerifier: HypersysSystemTokenVerifier,
     val personRepository: PersonRepository,
-    private val modelConverter: ModelConverter,
+    val modelConverter: ModelConverter,
     val lokallagRepository: LokallagRepository
 ) : HypersysService {
 
-    private fun getMedlemmer(hypersysLokallagId: Int?): List<Membership> {
-        return if (hypersysLokallagId == null) {
-            listOf()
-        } else {
-            hypersysProxy.get(
-                "/membership/api/membership/$hypersysLokallagId/${LocalDate.now().year}/",
-                hypersysSystemTokenVerifier.assertGyldigSystemToken(),
-                ListMembershipTypeReference()
-            )
-        }
+    private fun getMedlemmer(hypersysLokallagId: Int?): List<Membership> = if (hypersysLokallagId == null) {
+        listOf()
+    } else {
+        hypersysProxy.get(
+            "/membership/api/membership/$hypersysLokallagId/${LocalDate.now().year}/",
+            hypersysSystemTokenVerifier.assertGyldigSystemToken(),
+            ListMembershipTypeReference()
+        )
     }
 
     private fun convertToHypersysLokallagId(lokallag: Int): Int? {
@@ -59,17 +57,14 @@ class HypersysServiceBean(
     private fun getLokallag(userId: UserId) =
         personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag
 
-    private fun getLokallagIdFromHypersys(mittLag: Lokallag): Int {
-        val alleLokallag = getAlleLokallag()
-        val lag = alleLokallag.first { mittLag.navn == it.name }
-        lokallagRepository.update("hypersysID=?1, navn=?2 where id=?3", lag.id, lag.name, mittLag.id)
-        return lag.id
-    }
+    private fun getLokallagIdFromHypersys(mittLag: Lokallag) =
+        getAlleLokallag().first { mittLag.navn == it.name }
+            .also { lokallagRepository.update("hypersysID=?1, navn=?2 where id=?3", it.id, it.name, mittLag.id) }
+            .id
 
     override fun oppdaterLokallag() {
         var lokallagAaLeggeTil: Set<Lokallag> = setOf()
-        val alleLokallag = getAlleLokallag()
-        alleLokallag.forEach { lag ->
+        getAlleLokallag().forEach { lag ->
             if (lokallagRepository.find("hypersysID", lag.id).count() > 0) {
                 lokallagRepository.update("navn=?1 where hypersysID=?2", lag.name, lag.id)
             } else if (lokallagRepository.find("navn", lag.name).count() > 0) {
