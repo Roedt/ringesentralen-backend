@@ -1,4 +1,3 @@
-start transaction;
 ALTER TABLE person DROP CONSTRAINT fk_person_postnummer;
 ALTER TABLE person DROP INDEX ix_person_postnummer;
 ALTER TABLE verving DROP CONSTRAINT fk_verving_postnummer;
@@ -12,5 +11,3 @@ ALTER TABLE verving ADD CONSTRAINT fk_verving_postnummer FOREIGN KEY (postnummer
 ALTER TABLE verving ADD INDEX ix_verving_postnummer (postnummer);
 ALTER TABLE person ADD CONSTRAINT fk_person_postnummer FOREIGN KEY (postnummer) REFERENCES postnummer(Postnummer);
 ALTER TABLE person ADD INDEX ix_person_postnummer (postnummer);
-
-commit;
