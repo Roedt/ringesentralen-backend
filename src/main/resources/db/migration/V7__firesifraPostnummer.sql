@@ -1,6 +1,6 @@
-ALTER TABLE person DROP CONSTRAINT fk_person_postnummer;
+ALTER TABLE person DROP FOREIGN KEY fk_person_postnummer;
 ALTER TABLE person DROP INDEX ix_person_postnummer;
-ALTER TABLE verving DROP CONSTRAINT fk_verving_postnummer;
+ALTER TABLE verving DROP FOREIGN KEY fk_verving_postnummer;
 ALTER TABLE verving DROP INDEX ix_verving_postnummer;
 
 UPDATE postnummer SET postnummer = LPAD(Postnummer, 4, '0') WHERE postnummer != -1;

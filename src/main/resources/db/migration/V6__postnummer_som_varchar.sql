@@ -1,6 +1,6 @@
-ALTER TABLE person DROP CONSTRAINT person_ibfk_4;
+ALTER TABLE person DROP FOREIGN KEY person_ibfk_4;
 ALTER TABLE person DROP INDEX postnummer;
-ALTER TABLE verving DROP CONSTRAINT verving_ibfk_1;
+ALTER TABLE verving DROP FOREIGN KEY verving_ibfk_1;
 ALTER TABLE verving DROP INDEX postnummer;
 
 ALTER TABLE postnummer CHANGE Postnummer Postnummer varchar(11);
