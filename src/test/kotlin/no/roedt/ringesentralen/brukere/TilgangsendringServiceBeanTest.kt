@@ -11,7 +11,7 @@ import no.roedt.brukere.AutentisertTilgangsendringRequest
 import no.roedt.brukere.GodkjenningRepository
 import no.roedt.brukere.TilgangsendringsRequest
 import no.roedt.hypersys.HypersysService
-import no.roedt.hypersys.ModelConverter
+import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.UserId

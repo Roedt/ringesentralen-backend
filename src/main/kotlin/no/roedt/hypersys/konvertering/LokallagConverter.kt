@@ -1,4 +1,4 @@
-package no.roedt.hypersys
+package no.roedt.hypersys.konvertering
 
 import no.roedt.hypersys.externalModel.Membership
 import no.roedt.lokallag.LokallagRepository

@@ -1,4 +1,4 @@
-package no.roedt.hypersys
+package no.roedt.hypersys.konvertering
 
 import com.nhaarman.mockitokotlin2.mock
 import no.roedt.lokallag.LokallagRepository

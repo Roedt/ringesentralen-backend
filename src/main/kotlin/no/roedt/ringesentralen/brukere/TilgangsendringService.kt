@@ -7,7 +7,7 @@ import no.roedt.brukere.Godkjenning
 import no.roedt.brukere.GodkjenningRepository
 import no.roedt.brukere.GroupID
 import no.roedt.hypersys.HypersysService
-import no.roedt.hypersys.ModelConverter
+import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.UserId

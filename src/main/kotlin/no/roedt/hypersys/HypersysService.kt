@@ -1,6 +1,7 @@
 package no.roedt.hypersys
 
 import no.roedt.hypersys.externalModel.Organisasjonsledd
+import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person

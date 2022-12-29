@@ -1,4 +1,4 @@
-package no.roedt.hypersys
+package no.roedt.hypersys.konvertering
 
 import no.roedt.Kilde
 import no.roedt.brukere.FylkeRepository
