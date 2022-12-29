@@ -35,7 +35,7 @@ class LokallagRepository(
 ) : PanacheRepositoryBase<Lokallag, Int> {
 
     fun fromPostnummer(postnummer: Postnummer): Int =
-        toLokallagId("select lokallag from postnummerIKommunerMedFleireLag where postnummerFra <= $postnummer and postnummerTil >= $postnummer")
+        toLokallagId("select lokallag from postnummerIKommunerMedFleireLag where postnummerFra <= ${postnummer.Postnummer.toInt()} and postnummerTil >= ${postnummer.Postnummer.toInt()}")
             ?: toLokallagId("select l.id from lokallag l inner join kommune k on k.lokallag_id = l.id inner join postnummer  p on p.kommunekode = k.nummer where p.postnummer = $postnummer")
             ?: -1
 
