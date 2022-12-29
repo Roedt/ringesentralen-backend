@@ -1,9 +1,8 @@
-package no.roedt.ringesentralen.hypersys.login
+package no.roedt.hypersys.login
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import no.roedt.hypersys.login.AESUtil
 import no.roedt.token.SecretFactory
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
