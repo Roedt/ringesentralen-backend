@@ -11,8 +11,6 @@ import java.time.LocalDate
 import javax.enterprise.context.ApplicationScoped
 
 interface HypersysService {
-    fun getMedlemmer(hypersysLokallagId: Int?): List<LinkedHashMap<String, *>>
-    fun convertToHypersysLokallagId(lokallag: Int): Int?
     fun hentFraMedlemslista(hypersysID: Int?): LinkedHashMap<*, *>?
     fun oppdaterMedlemmerILokallag(lokallag: Lokallag)
     fun oppdaterLokallag()
@@ -27,7 +25,7 @@ class HypersysServiceBean(
     val lokallagRepository: LokallagRepository
 ) : HypersysService {
 
-    override fun getMedlemmer(hypersysLokallagId: Int?): List<LinkedHashMap<String, *>> {
+    private fun getMedlemmer(hypersysLokallagId: Int?): List<LinkedHashMap<String, *>> {
         return if (hypersysLokallagId == null) {
             listOf()
         } else {
@@ -40,7 +38,7 @@ class HypersysServiceBean(
         }
     }
 
-    override fun convertToHypersysLokallagId(lokallag: Int): Int? {
+    private fun convertToHypersysLokallagId(lokallag: Int): Int? {
         if (lokallag == -1) return null
         val hypersysId = lokallagRepository.findById(lokallag)
             ?.let { mittLag ->
