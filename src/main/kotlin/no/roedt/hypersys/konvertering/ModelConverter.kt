@@ -64,10 +64,10 @@ class ModelConverterBean(
 
         return Person(
             hypersysID = medlemskap.member_id,
-            fornavn = medlemskap.first_name,
-            etternavn = medlemskap.last_name,
-            telefonnummer = telefonnummer,
-            email = itOrNull(medlemskap.email),
+            fornavn = medlemskap.first_name.vask(),
+            etternavn = medlemskap.last_name.vask(),
+            telefonnummer = telefonnummer?.vask(),
+            email = itOrNull(medlemskap.email)?.vask(),
             postnummer = postnummer,
             fylke = fylkeRepository.toFylke(postnummer),
             groupID = groupID,
@@ -85,10 +85,10 @@ class ModelConverterBean(
         val postnummer = finnPostnummer(medlemskap)
         return PersonOppdatering(
             hypersysID = medlemskap.member_id,
-            fornavn = medlemskap.first_name.replace("&amp;#39;", "'"),
-            etternavn = medlemskap.last_name.replace("&amp;#39;", "'"),
-            telefonnummer = itOrNull(medlemskap.mobile)?.let { toTelefonnummer(it) },
-            email = itOrNull(medlemskap.email),
+            fornavn = medlemskap.first_name.vask(),
+            etternavn = medlemskap.last_name.vask(),
+            telefonnummer = itOrNull(medlemskap.mobile)?.let { toTelefonnummer(it) }?.vask(),
+            email = itOrNull(medlemskap.email?.vask()),
             postnummer = postnummer,
             fylke = fylkeRepository.toFylke(postnummer),
             lokallag = lokallag.id,
@@ -119,4 +119,6 @@ class ModelConverterBean(
             ?: postnummerRepository.ukjent()
 
     private fun itOrNull(any: Any?): String? = if (any.toString() != "") any.toString() else null
+
+    private fun String.vask() = replace("&amp;#39;", "'").trim()
 }
