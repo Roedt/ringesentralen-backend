@@ -1,5 +1,6 @@
 package no.roedt.hypersys
 
+import no.roedt.hypersys.externalModel.IsMember
 import no.roedt.hypersys.externalModel.Organisasjonsledd
 import no.roedt.hypersys.externalModel.membership.ListMembershipTypeReference
 import no.roedt.hypersys.externalModel.membership.Membership
@@ -97,5 +98,13 @@ class HypersysService(
 
     fun convertMembershipToPerson(membership: Membership) = modelConverter.convertMembershipToPerson(membership)
 
-    fun konverterTilOppdatering(medlemskap: Membership, lokallag: Lokallag, person: Person) = modelConverter.konverterTilOppdatering(medlemskap, lokallag, person)
+    fun konverterTilOppdatering(medlemskap: Membership, lokallag: Lokallag, person: Person) =
+        modelConverter.konverterTilOppdatering(medlemskap, lokallag, person)
+
+    fun hentPerson(it: Person) =
+        hypersysProxy.post(
+            "/membership/api/is_member/${it.hypersysID}/",
+            hypersysSystemTokenVerifier.assertGyldigSystemToken(),
+            IsMember::class.java
+        )
 }

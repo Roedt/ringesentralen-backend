@@ -1,10 +1,13 @@
 package no.roedt.brukere
 
+import no.roedt.Kilde
 import no.roedt.hypersys.HypersysService
+import no.roedt.hypersys.externalModel.IsMember
 import no.roedt.hypersys.externalModel.membership.Membership
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Oppdateringskilde
+import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.tidssone
 import java.time.Instant
@@ -15,7 +18,8 @@ import javax.enterprise.context.Dependent
 class MedlemslisteOppdaterer(
     private val lokallagRepository: LokallagRepository,
     private val hypersysService: HypersysService,
-    private val personRepository: PersonRepository
+    private val personRepository: PersonRepository,
+    private val tidligereMedlemSletter: TidligereMedlemSletter
 ) {
 
     fun oppdaterMedlemsliste(lokallagID: Int): Set<Lokallag> {
@@ -40,6 +44,7 @@ class MedlemslisteOppdaterer(
             .partition { medlem -> personRepository.find("hypersysID", medlem.member_id).count() == 0L }
         leggTilNyMedlemFraHypersys(partitionNyEksisterende)
         oppdaterEksisterendeMedlemmer(partitionNyEksisterende, lokallag)
+        oppdaterMedlemmerSomIkkeErILagetIHypersysLenger(partitionNyEksisterende, lokallag)
     }
 
     private fun leggTilNyMedlemFraHypersys(partitionNyEksisterende: Pair<List<Membership>, List<Membership>>) {
@@ -69,6 +74,35 @@ class MedlemslisteOppdaterer(
         // TODO: Mekanisme ca her for å slette dei som ikkje lenger er med i laget
         // Eventuelt noko lurt for å anonymisere eller noko
         // Kanskje vi også eksplisitt skal sjekke dei mot HS for å sjå om dei berre har bytta lag
+    }
+
+    private fun oppdaterMedlemmerSomIkkeErILagetIHypersysLenger(
+        partitionNyEksisterende: Pair<List<Membership>, List<Membership>>,
+        lokallag: Lokallag
+    ) {
+        val ikkeIDetteLagetIHypersys = personRepository.list("lokallag", lokallag.id)
+            .filterNot { it.hypersysID == null }
+            .filterNot { it.kilde == Kilde.Systembruker }
+            .filter {
+                !partitionNyEksisterende.first.filter { i -> i.organisation == lokallag.navn }.map { i -> i.member_id }
+                    .contains(it.hypersysID)
+            }
+            .filter {
+                !partitionNyEksisterende.second.filter { i -> i.organisation == lokallag.navn }.map { i -> i.member_id }
+                    .contains(it.hypersysID)
+            }
+        val deltIMedlemIkkeMedlem = ikkeIDetteLagetIHypersys
+            .map { Pair(it, hypersysService.hentPerson(it)) }
+            .partition { it.second.is_member }
+        // Medlemmer i andre lag blir automatisk flytta over når vi hentar inn medlemslista for det nye laget deira.
+        // Før den tid er det ikkje heilt godt å seie kva vi bør gjera, for HS har tilsynelatande ikkje noko endepunkt som gir lag gitt brukarid, og å iterere gjennom alt blir for tullete
+        // Kanskje vi kan lage eit "jukse-lokallag" som heiter noko a la "Har bytta lokallag i Hypersys, men ikkje oppdatert her enno"
+        val medlemmerIAndreLag = deltIMedlemIkkeMedlem.first
+        deltIMedlemIkkeMedlem.second.forEach { haandterIkkeMedlemLenger(it) }
+    }
+
+    private fun haandterIkkeMedlemLenger(ikkeMedlemLenger: Pair<Person, IsMember>) {
+        tidligereMedlemSletter.slett(ikkeMedlemLenger)
     }
 }
 
