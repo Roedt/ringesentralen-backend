@@ -13,8 +13,6 @@ import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.ringer.Ringer
 import no.roedt.ringesentralen.ringer.RingerRepository
-import no.roedt.ringesentralen.samtale.OppfoelgingValg21Repository
-import no.roedt.ringesentralen.samtale.PersistentSamtale
 import no.roedt.ringesentralen.samtale.PersistentSamtaleRepository
 import no.roedt.ringesentralen.samtale.start.OppslagRepository
 import no.roedt.ringesentralen.sms.SMSTilMottakerRepository
@@ -28,7 +26,6 @@ class TidligereMedlemSletter(
     private val frivilligKoronaRepository: FrivilligKoronaRepository,
     private val aktivitetForFrivilligRepository: AktivitetForFrivilligRepository,
     private val kontaktRepository: KontaktRepository,
-    private val oppfoelgingValg21Repository: OppfoelgingValg21Repository,
     private val frivilligRepository: FrivilligRepository,
     private val godkjenningRepository: GodkjenningRepository,
     private val loginAttemptRepository: LoginAttemptRepository,
@@ -45,9 +42,47 @@ class TidligereMedlemSletter(
         val tidligereMedlemRinger =
             ringerRepository.find("personId", tidligereMedlemPerson.id).firstResult<Ringer>()
 
-        val tidligereMedlemFrivillig =
-            frivilligRepository.find("personId", personId).firstResultOptional<Frivillig>()
-        tidligereMedlemFrivillig.ifPresent {
+        flyttSamtalerOgKontaktTilGeneriskTidligereMedlem(
+            tidligereMedlemPerson,
+            personId,
+            tidligereMedlemRinger,
+            ikkeMedlemLenger
+        )
+        slettPersonenSomFrivilligSomRingerOgSomPersonISystemet(personId, ikkeMedlemLenger)
+    }
+
+    private fun flyttSamtalerOgKontaktTilGeneriskTidligereMedlem(
+        tidligereMedlemPerson: Person,
+        personId: Int,
+        tidligereMedlemRinger: Ringer,
+        ikkeMedlemLenger: Pair<Person, IsMember>
+    ) {
+        kontaktRepository.update("registrert_av=?1 where registrert_av=?2", tidligereMedlemPerson.id, personId)
+
+        godkjenningRepository.update("godkjentPerson=?1 where godkjentPerson=?2", tidligereMedlemPerson.id, personId)
+
+        samtaleRepository.update("ringt=?1 where ringt=?2", tidligereMedlemPerson.id, personId)
+
+        val ikkeMedlemLengerRinger =
+            ringerRepository.find("personId", personId).firstResultOptional<Ringer>()
+        ikkeMedlemLengerRinger.ifPresent {
+            godkjenningRepository.update("godkjenner=?1 where godkjenner=?2", tidligereMedlemRinger.id, it.id)
+            samtaleRepository.update("ringer=?1 where ringer=?2", tidligereMedlemRinger.id, it.id)
+        }
+
+        oppslagRepository.update("ringt=?1 where ringt=?2", tidligereMedlemPerson.id, personId)
+        oppslagRepository.update(
+            "ringerHypersysId=?1 where ringerHypersysId=?2",
+            tidligereMedlemPerson.hypersysID,
+            ikkeMedlemLenger.first.hypersysID
+        )
+    }
+
+    private fun slettPersonenSomFrivilligSomRingerOgSomPersonISystemet(
+        personId: Int,
+        ikkeMedlemLenger: Pair<Person, IsMember>
+    ) {
+        frivilligRepository.find("personId", personId).firstResultOptional<Frivillig>().ifPresent {
             aktivitetForFrivilligRepository.delete("frivillig_id=?1", it.id)
             frivilligKoronaRepository.delete("frivillig_id=?1", it.id)
             frivilligOpptattAvRepository.delete("frivillig_id=?1", it.id)
@@ -55,32 +90,9 @@ class TidligereMedlemSletter(
             smsTilMottakerRepository.delete("mottaker_id=?1", it.id)
             frivilligRepository.deleteById(it.id)
         }
-        kontaktRepository.delete("registrert_av=?1", personId)
-
-        godkjenningRepository.delete("godkjentPerson=?1", personId)
-
         loginAttemptRepository.delete("hypersysID=?1", ikkeMedlemLenger.first.hypersysID)
         mfaRepository.delete("epost=?1", ikkeMedlemLenger.first.email)
-        val ringt = samtaleRepository.find("ringt=?1", personId).list<PersistentSamtale>()
-        ringt.forEach { slettSamtale(it) }
-
-        val ikkeMedlemLengerRinger =
-            ringerRepository.find("personId", personId).firstResultOptional<Ringer>()
-        ikkeMedlemLengerRinger.ifPresent {
-            godkjenningRepository.delete("godkjenner=?1", it.id)
-            val ringer = samtaleRepository.find("ringer=?1", it.id).list<PersistentSamtale>()
-            ringer.forEach { i -> slettSamtale(i) }
-        }
-
-        oppslagRepository.delete("ringt=?1", personId)
-        oppslagRepository.delete("ringerHypersysId=?1", ikkeMedlemLenger.first.hypersysID)
-
         ringerRepository.delete("personId=?1", personId)
         personRepository.deleteById(personId)
-    }
-
-    private fun slettSamtale(it: PersistentSamtale) {
-        oppfoelgingValg21Repository.delete("samtaleId", it.id)
-        samtaleRepository.deleteById(it.id)
     }
 }
