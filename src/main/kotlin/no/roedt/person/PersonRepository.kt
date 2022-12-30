@@ -1,12 +1,7 @@
 package no.roedt.person
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
-import no.roedt.Kilde
-import no.roedt.tidssone
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import javax.enterprise.context.ApplicationScoped
-import javax.persistence.PersistenceException
 
 @ApplicationScoped
 class PersonRepository : PanacheRepositoryBase<Person, Int> {
@@ -39,32 +34,23 @@ class PersonRepository : PanacheRepositoryBase<Person, Int> {
     }
 
     private fun oppdaterEksisterendePerson(person: PersonOppdatering, id: Int?) {
-        val telefonnummer = person.telefonnummer?.let { "'$it'" }
-        val kilde =
-            if (person.kilde == Kilde.Hypersys || person.kilde == Kilde.Frivillig) ", kilde='${person.kilde}'" else ""
-        val postnummer = if (person.postnummer.erUkjent()) "postnummer = '${person.postnummer.Postnummer.trim()}'," else ""
-        val hypersysID = if (person.hypersysID != null) "hypersysID = ${person.hypersysID}, " else ""
-        val tid = ZonedDateTime.ofInstant(person.sistOppdatert, tidssone())
-            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-        val oppdatertFraHypersys =
-            if (person.oppdateringskilde == Oppdateringskilde.Hypersys) ", sistOppdatert='$tid' " else ""
         try {
             update(
-                """fornavn = '${person.fornavn}', 
-                            etternavn = '${person.etternavn}', 
-                            $hypersysID
-                            telefonnummer = $telefonnummer,
-                            $postnummer
-                            lokallag = ${person.lokallag},
-                            groupID = ${person.groupID},
-                            email = '${person.email}'
-                            $oppdatertFraHypersys
-                            $kilde
-                            where id=$id
-                    """
+                "fornavn=?1, etternavn=?2, hypersysID=?3, telefonnummer=?4, postnummer=?5, lokallag=?6, groupID=?7, email=?8, sistOppdatert=?9, kilde=?10 where id=?11",
+                person.fornavn,
+                person.etternavn,
+                person.hypersysID,
+                person.telefonnummer,
+                person.postnummer,
+                person.lokallag,
+                person.groupID,
+                person.email,
+                person.sistOppdatert,
+                person.kilde,
+                id
             )
-        } catch (e: PersistenceException) {
-            println("Kunne ikke lagre person med hypersysid $hypersysID, fylke ${person.fylke}, lokallag ${person.lokallag} og postnummer $postnummer i lokallag ${person.lokallag}")
+        } catch (e: Exception) {
+            println("Kunne ikke lagre person med hypersysid ${person.hypersysID}, fylke ${person.fylke}, lokallag ${person.lokallag} og postnummer ${person.postnummer} i lokallag ${person.lokallag}")
             throw e
         }
     }

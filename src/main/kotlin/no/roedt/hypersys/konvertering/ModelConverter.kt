@@ -85,8 +85,8 @@ class ModelConverterBean(
         val postnummer = finnPostnummer(medlemskap)
         return PersonOppdatering(
             hypersysID = medlemskap.member_id,
-            fornavn = medlemskap.first_name,
-            etternavn = medlemskap.last_name,
+            fornavn = medlemskap.first_name.replace("&amp;#39;", "'"),
+            etternavn = medlemskap.last_name.replace("&amp;#39;", "'"),
             telefonnummer = itOrNull(medlemskap.mobile)?.let { toTelefonnummer(it) },
             email = itOrNull(medlemskap.email),
             postnummer = postnummer,
