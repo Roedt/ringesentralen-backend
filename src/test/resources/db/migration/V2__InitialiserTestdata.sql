@@ -13,8 +13,10 @@ INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `em
 ('Telefonnummer som ikke', 'Er inne i systemet', '-1',	-1,	NULL,	-1,	1,	'2020-08-22 23:29:09', -1, 'Systembruker');
 
 
+INSERT INTO `person` (`fornavn`, `etternavn`, `hypersysID`, `telefonnummer`, `postnummer`, `email`, `fylke`, `groupID`, `oppretta`, `lokallag`, `kilde`) VALUES
+('Donald', ' Duck',	15424, '+4712345678',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 99999, 'Hypersys');
+
 INSERT INTO `person` (`fornavn`, `etternavn`, `telefonnummer`, `postnummer`, `email`, `fylke`, `groupID`, `oppretta`, `lokallag`, `kilde`) VALUES
-('Donald', ' Duck',	'+4712345678',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 99999, 'Verva'),
 ('Hetti', ' Duck',	'+4712345677',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 99999, 'Verva'),
 ('Letti', ' Duck',	'+4712345679',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1, 'Verva'),
 ('Netti', ' Duck',	'+4712345676',	1,	NULL,	-1,	1,	'2020-08-22 23:29:09', 1, 'Verva'),
