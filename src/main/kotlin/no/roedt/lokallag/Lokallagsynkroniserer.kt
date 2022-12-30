@@ -12,7 +12,9 @@ class Lokallagsynkroniserer(val hypersysService: HypersysService, val lokallagRe
         val alleLokallagISystemet = lokallagRepository.listAll()
         val iHypersysMenIkkeIDatabasen =
             alleLokallagFraHypersys.filterNot { alleLokallagISystemet.map { i -> i.navn }.contains(it.name) }
-        println("Lokallag som er i Hypersys, men ikkje i databasen:")
-        println(iHypersysMenIkkeIDatabasen)
+        if (iHypersysMenIkkeIDatabasen.isNotEmpty()) {
+            println("Lokallag som er i Hypersys, men ikkje i databasen:")
+            println(iHypersysMenIkkeIDatabasen)
+        }
     }
 }
