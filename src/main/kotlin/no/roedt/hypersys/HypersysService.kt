@@ -113,9 +113,9 @@ class HypersysService(
                 val somString = hypersysProxy.post(
                     "/membership/api/is_member/${it.hypersysID}/",
                     hypersysSystemTokenVerifier.assertGyldigSystemToken(),
-                    String::class.java
+                    Object::class.java
                 )
-                if (somString.contains("Ikke funnet")) {
+                if (somString.toString().contains("Ikke funnet")) {
                     println("Fant ikke person med personid ${it.id} i Hypersys")
                     IsMember(user_id = it.hypersysID ?: -1, name = "Ikke funnet", paid = false, is_member = false)
                 } else {
