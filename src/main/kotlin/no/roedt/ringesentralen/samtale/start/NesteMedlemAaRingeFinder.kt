@@ -2,23 +2,19 @@ package no.roedt.ringesentralen.samtale.start
 
 import no.roedt.DatabaseUpdater
 import no.roedt.KommuneRepository
-import no.roedt.hypersys.HypersysService
-import no.roedt.lokallag.Lokallag
+import no.roedt.brukere.MedlemslisteOppdaterer
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
-import no.roedt.tidssone
-import java.time.Instant
-import java.time.ZonedDateTime
 import javax.enterprise.context.Dependent
 
 @Dependent
 open class NesteMedlemAaRingeFinder(
     val personRepository: PersonRepository,
     val databaseUpdater: DatabaseUpdater,
-    private val hypersysService: HypersysService,
     private val kommuneRepository: KommuneRepository,
-    private val lokallagRepository: LokallagRepository
+    private val lokallagRepository: LokallagRepository,
+    private val medlemslisteOppdaterer: MedlemslisteOppdaterer
 ) {
 
     fun hentIDForNesteMedlemAaRinge(ringer: Person, lokallag: Int): Int? =
@@ -28,7 +24,7 @@ open class NesteMedlemAaRingeFinder(
             .firstOrNull { hentNestePersonAaRingeIDetteLokallaget(ringer, it) != null }
 
     private fun hentNestePersonAaRingeIDetteLokallaget(ringer: Person, lokallag: Int): Int? {
-        val oppdaterteLokallag = oppdaterMedlemsliste(lokallag)
+        val oppdaterteLokallag = medlemslisteOppdaterer.oppdaterMedlemsliste(lokallag)
 
         val nestePersonFraDatabasen = hentNestePerson(ringer, lokallag)
         if (nestePersonFraDatabasen != null) return nestePersonFraDatabasen
@@ -36,22 +32,6 @@ open class NesteMedlemAaRingeFinder(
         oppdaterteLokallag.forEach { lokallagRepository.persist(it) }
 
         return hentNestePerson(ringer, lokallag)
-    }
-
-    private fun oppdaterMedlemsliste(lokallagID: Int): Set<Lokallag> {
-        val lokallag = lokallagRepository.findById(lokallagID)
-        val sistOppdatert = lokallag.sistOppdatert?.atZone(tidssone())
-        if (lokallag != null && (sistOppdatert.erSistOppdatertFørDenSisteUka() || sistOppdatert == null)) {
-            try {
-                hypersysService.oppdaterLokallag()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            hypersysService.oppdaterMedlemmerILokallag(lokallag)
-            lokallag.sistOppdatert = Instant.now()
-            return setOf(lokallag)
-        }
-        return setOf()
     }
 
     private fun hentNestePerson(ringer: Person, lokallag: Int) = databaseUpdater.getResultList(
@@ -67,7 +47,3 @@ open class NesteMedlemAaRingeFinder(
         .map { it as Int }
         .firstOrNull()
 }
-
-private fun ZonedDateTime?.erSistOppdatertFørDenSisteUka(): Boolean = this?.isBefore(
-    ZonedDateTime.now().minusWeeks(1)
-) == true
