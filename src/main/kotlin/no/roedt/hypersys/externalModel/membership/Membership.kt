@@ -10,7 +10,7 @@ data class Membership(
     @JsonProperty("name") val name: String,
     @JsonProperty("first_name") val first_name: String,
     @JsonProperty("last_name") val last_name: String,
-    @JsonProperty("birth") val birth: String,
+    @JsonProperty("birth") val birth: String?,
     @JsonProperty("email") val email: String?,
     @JsonProperty("gender") val gender: String,
     @JsonProperty("organisation") val organisation: String,
