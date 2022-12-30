@@ -3,6 +3,7 @@ package no.roedt.ringesentralen.statistikk
 import no.roedt.brukere.GenerellRolle
 import no.roedt.hypersys.HypersysIdProvider
 import no.roedt.ringesentralen.RingespesifikkRolle
+import no.roedt.tidssone
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
@@ -10,7 +11,6 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.ZoneId
 import java.time.ZonedDateTime
 import javax.annotation.security.RolesAllowed
 import javax.ws.rs.GET
@@ -58,6 +58,6 @@ class StatistikkController(val service: StatistikkService, val jwt: JsonWebToken
     private fun toInstant(tidspunkt: String): Instant = if (tidspunkt.contains("T")) {
         Instant.parse(tidspunkt)
     } else {
-        Instant.from(ZonedDateTime.of(LocalDate.parse(tidspunkt), LocalTime.of(0, 0, 0, 0), ZoneId.of("Europe/Oslo")))
+        Instant.from(ZonedDateTime.of(LocalDate.parse(tidspunkt), LocalTime.MIN, tidssone()))
     }
 }

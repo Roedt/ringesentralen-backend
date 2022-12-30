@@ -7,8 +7,8 @@ import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.tidssone
 import java.time.Instant
-import java.time.ZoneId
 import java.time.ZonedDateTime
 import javax.enterprise.context.Dependent
 
@@ -40,7 +40,7 @@ open class NesteMedlemAaRingeFinder(
 
     private fun oppdaterMedlemsliste(lokallagID: Int): Set<Lokallag> {
         val lokallag = lokallagRepository.findById(lokallagID)
-        val sistOppdatert = lokallag.sistOppdatert?.atZone(ZoneId.of("UTC"))
+        val sistOppdatert = lokallag.sistOppdatert?.atZone(tidssone())
         if (lokallag != null && (sistOppdatert.erSistOppdatertFørDenSisteUka() || sistOppdatert == null)) {
             try {
                 hypersysService.oppdaterLokallag()

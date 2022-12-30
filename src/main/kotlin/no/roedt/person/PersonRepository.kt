@@ -2,7 +2,7 @@ package no.roedt.person
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import no.roedt.Kilde
-import java.time.ZoneId
+import no.roedt.tidssone
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import javax.enterprise.context.ApplicationScoped
@@ -43,7 +43,7 @@ class PersonRepository : PanacheRepositoryBase<Person, Int> {
             if (person.kilde == Kilde.Hypersys || person.kilde == Kilde.Frivillig) ", kilde='${person.kilde}'" else ""
         val postnummer = if (person.postnummer.erUkjent()) "postnummer = ${person.postnummer.Postnummer}," else ""
         val hypersysID = if (person.hypersysID != null) "hypersysID = ${person.hypersysID}, " else ""
-        val tid = ZonedDateTime.ofInstant(person.sistOppdatert, ZoneId.of("Europe/Oslo"))
+        val tid = ZonedDateTime.ofInstant(person.sistOppdatert, tidssone())
             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
         val oppdatertFraHypersys =
             if (person.oppdateringskilde == Oppdateringskilde.Hypersys) ", sistOppdatert='$tid' " else ""

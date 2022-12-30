@@ -12,7 +12,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: example
       MYSQL_DATABASE: ringesentralen_test
-      TZ: Europe/Oslo
+      TZ: UTC
     ports:
       - "3306:3306"
 
@@ -22,4 +22,4 @@ services:
     ports:
       - "9080:8080"
     environment:
-      TZ: Europe/Oslo
+      TZ: UTC
