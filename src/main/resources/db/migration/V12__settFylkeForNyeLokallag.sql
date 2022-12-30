@@ -1,0 +1,15 @@
+UPDATE lokallag SET fylke = 2 where navn = 'Rødt Rælingen';
+UPDATE lokallag SET fylke = 2 where navn = 'Rødt Akershus';
+UPDATE lokallag SET fylke = 14 where navn = 'Raudt Sogndal';
+UPDATE lokallag SET fylke = 6 where navn = 'Rødt Buskerud';
+UPDATE lokallag SET fylke = 9 where navn = 'Rødt Gjerstad';
+UPDATE lokallag SET fylke = 4 where navn = 'Rødt Stor-Elvdal';
+UPDATE lokallag SET fylke = 4 where navn = 'Rødt Nord-Østerdal';
+UPDATE lokallag SET fylke = 11 where navn = 'Rødt Randaberg';
+UPDATE lokallag SET fylke = 1 where navn = 'Rødt Østfold';
+UPDATE lokallag SET fylke = 12 where navn = 'Rødt Bergen Årstad';
+UPDATE lokallag SET fylke = 9 where navn = 'Rødt Birkenes';
+UPDATE lokallag SET fylke = 18 where navn = 'Rødt Grane';
+UPDATE lokallag SET fylke = 19 where navn = 'Rødt Karlsøy';
+UPDATE lokallag SET fylke = 18 where navn = 'Rødt Meløy';
+UPDATE lokallag SET fylke = 15 where navn = 'Surnadal';
