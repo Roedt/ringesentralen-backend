@@ -95,9 +95,9 @@ class MedlemslisteOppdaterer(
         // Før den tid er det ikkje heilt godt å seie kva vi bør gjera, for HS har tilsynelatande ikkje noko endepunkt som gir lag gitt brukarid, og å iterere gjennom alt blir for tullete
         // Kanskje vi kan lage eit "jukse-lokallag" som heiter noko a la "Har bytta lokallag i Hypersys, men ikkje oppdatert her enno"
 //        val medlemmerIAndreLag = deltIMedlemIkkeMedlem.first
-        println("Fant ${deltIMedlemIkkeMedlem.second.size} tidligere medlemmer som ikke lenger er medlem")
+        println("Fant ${deltIMedlemIkkeMedlem.second.size} tidligere medlemmer i ${lokallag.id} som ikke lenger er medlem")
         if (slettIkkeLengerMedlemmer) {
-            deltIMedlemIkkeMedlem.second.forEach { tidligereMedlemSletter.slett(it) }
+            deltIMedlemIkkeMedlem.second.map { it.first }.forEach { tidligereMedlemSletter.slett(it) }
         }
     }
 }

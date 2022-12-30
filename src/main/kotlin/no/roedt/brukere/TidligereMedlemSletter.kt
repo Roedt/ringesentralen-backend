@@ -7,7 +7,6 @@ import no.roedt.frivilligsystem.FrivilligOpptattAvRepository
 import no.roedt.frivilligsystem.FrivilligRepository
 import no.roedt.frivilligsystem.kontakt.KontaktRepository
 import no.roedt.frivilligsystem.registrer.AktivitetForFrivilligRepository
-import no.roedt.hypersys.externalModel.IsMember
 import no.roedt.hypersys.login.LoginAttemptRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
@@ -34,8 +33,11 @@ class TidligereMedlemSletter(
     private val oppslagRepository: OppslagRepository,
     private val smsTilMottakerRepository: SMSTilMottakerRepository
 ) {
-    fun slett(ikkeMedlemLenger: Pair<Person, IsMember>) {
-        val personId = ikkeMedlemLenger.first.id
+    fun slett(ikkeMedlemLenger: Person?) {
+        if (ikkeMedlemLenger == null) {
+            return
+        }
+        val personId = ikkeMedlemLenger.id
 
         val tidligereMedlemPerson =
             personRepository.find("fornavn=?1 and etternavn=?2", "Tidligere", "Medlem").firstResult<Person>()
@@ -55,7 +57,7 @@ class TidligereMedlemSletter(
         tidligereMedlemPerson: Person,
         personId: Int,
         tidligereMedlemRinger: Ringer,
-        ikkeMedlemLenger: Pair<Person, IsMember>
+        ikkeMedlemLenger: Person
     ) {
         kontaktRepository.update("registrert_av=?1 where registrert_av=?2", tidligereMedlemPerson.id, personId)
 
@@ -74,13 +76,13 @@ class TidligereMedlemSletter(
         oppslagRepository.update(
             "ringerHypersysId=?1 where ringerHypersysId=?2",
             tidligereMedlemPerson.hypersysID,
-            ikkeMedlemLenger.first.hypersysID
+            ikkeMedlemLenger.hypersysID
         )
     }
 
     private fun slettPersonenSomFrivilligSomRingerOgSomPersonISystemet(
         personId: Int,
-        ikkeMedlemLenger: Pair<Person, IsMember>
+        ikkeMedlemLenger: Person
     ) {
         frivilligRepository.find("personId", personId).firstResultOptional<Frivillig>().ifPresent {
             aktivitetForFrivilligRepository.delete("frivillig_id=?1", it.id)
@@ -90,8 +92,8 @@ class TidligereMedlemSletter(
             smsTilMottakerRepository.delete("mottaker_id=?1", it.id)
             frivilligRepository.deleteById(it.id)
         }
-        loginAttemptRepository.delete("hypersysID=?1", ikkeMedlemLenger.first.hypersysID)
-        mfaRepository.delete("epost=?1", ikkeMedlemLenger.first.email)
+        loginAttemptRepository.delete("hypersysID=?1", ikkeMedlemLenger.hypersysID)
+        mfaRepository.delete("epost=?1", ikkeMedlemLenger.email)
         ringerRepository.delete("personId=?1", personId)
         personRepository.deleteById(personId)
     }
