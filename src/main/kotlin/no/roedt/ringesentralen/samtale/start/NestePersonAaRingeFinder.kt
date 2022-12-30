@@ -10,6 +10,7 @@ import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.ringesentralen.samtale.OppfoelgingValg21Repository
 import no.roedt.ringesentralen.samtale.Samtale
+import no.roedt.skrivUt
 import java.sql.Timestamp
 import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.ForbiddenException
@@ -90,7 +91,7 @@ class NestePersonAaRingeFinder(
                 Samtale(
                     resultat = it[0] as String,
                     ringer = it[1] as String,
-                    tidspunkt = (it[2] as Timestamp).toString(),
+                    tidspunkt = (it[2] as Timestamp).skrivUt(),
                     kommentar = (it[3] ?: "") as String,
                     ringtNummer = oppringtNummer,
                     ringtNavn = it[4] as String,

@@ -5,6 +5,7 @@ import no.roedt.person.UserId
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.samtale.OppfoelgingValg21Repository
 import no.roedt.ringesentralen.samtale.Samtale
+import no.roedt.skrivUt
 import java.math.BigInteger
 import java.sql.Timestamp
 import javax.enterprise.context.ApplicationScoped
@@ -29,7 +30,7 @@ class HistorikkService(
                 Samtale(
                     resultat = it[0] as String,
                     ringer = it[1] as String,
-                    tidspunkt = (it[2] as Timestamp).toString(),
+                    tidspunkt = (it[2] as Timestamp).skrivUt(),
                     kommentar = (it[3] ?: "") as String,
                     ringtNummer = (it[4] ?: "Ukjent") as String,
                     ringtNavn = it[5] as String,

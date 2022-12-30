@@ -10,6 +10,7 @@ import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.ringer.Ringer
 import no.roedt.ringesentralen.ringer.RingerRepository
+import no.roedt.tilNorskTid
 import javax.enterprise.context.ApplicationScoped
 
 interface BrukereService {
@@ -52,6 +53,6 @@ class BrukereServiceBean(
         hypersysID = r.hypersysID ?: -1,
         lokallag = lokallagRepository.findById(r.lokallag),
         rolle = RingesentralenGroupID.from(r.groupID()).roller,
-        registreringstidspunkt = ringerRepository.find("personId", r.id.toInt()).firstResult<Ringer>().oppretta
+        registreringstidspunkt = ringerRepository.find("personId", r.id.toInt()).firstResult<Ringer>().oppretta.tilNorskTid()
     )
 }
