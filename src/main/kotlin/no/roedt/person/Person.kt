@@ -26,7 +26,7 @@ data class Person(
     var etternavn: String,
     var telefonnummer: String?,
     var email: String?,
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "postnummer", nullable = false)
     var postnummer: Postnummer,
     var fylke: Int,
