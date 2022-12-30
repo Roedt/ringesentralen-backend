@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.quarkus.hibernate.orm.panache.PanacheQuery
 import no.roedt.DatabaseUpdater
 import no.roedt.Kilde
+import no.roedt.Kommune
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
@@ -110,7 +111,7 @@ internal class RingServiceBeanTest {
         val person = Person(
             hypersysID = hypersysID, fornavn = fornavn, etternavn = etternavn,
             telefonnummer = telefonnummer, email = "",
-            postnummer = Postnummer("1234", "Lillevik", -1), fylke = 0, lokallag = 0, groupID = 0, kilde = Kilde.Hypersys, sistOppdatert = null
+            postnummer = Postnummer("1234", "Lillevik", Kommune("", "", 0, 0)), fylke = 0, lokallag = 0, groupID = 0, kilde = Kilde.Hypersys, sistOppdatert = null
         )
         doReturn(person).whenever(personRepository).findById(id)
         val query: PanacheQuery<Person> = mock()

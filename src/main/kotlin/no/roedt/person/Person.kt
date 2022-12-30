@@ -2,6 +2,7 @@ package no.roedt.person
 
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.Kilde
+import no.roedt.Kommune
 import no.roedt.RoedtPanacheEntity
 import no.roedt.brukere.GroupID
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
@@ -44,7 +45,7 @@ data class Person(
         etternavn = "",
         telefonnummer = "",
         email = null,
-        postnummer = Postnummer("", "", 0),
+        postnummer = Postnummer("", "", Kommune("", "", 0, 0)),
         fylke = -1,
         groupID = 0,
         lokallag = 1,

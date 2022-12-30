@@ -16,13 +16,13 @@ import javax.persistence.Table
 data class Kommune(
     var navn: String,
     @Id
-    var nummer: Int,
+    var nummer: String,
     var lokallag_id: Int?,
     var fylke_id: Int
 ) : PanacheEntityBase() {
     constructor() : this(
         navn = "",
-        nummer = 0,
+        nummer = "",
         lokallag_id = 0,
         fylke_id = 0
     )
