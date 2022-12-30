@@ -14,20 +14,14 @@ import java.time.Instant
 import java.time.LocalDate
 import javax.enterprise.context.ApplicationScoped
 
-interface HypersysService {
-    fun hentFraMedlemslista(hypersysID: Int?): Membership?
-    fun oppdaterMedlemmerILokallag(lokallag: Lokallag)
-    fun oppdaterLokallag()
-}
-
 @ApplicationScoped
-class HypersysServiceBean(
+class HypersysService(
     val hypersysProxy: HypersysProxy,
     val hypersysSystemTokenVerifier: HypersysSystemTokenVerifier,
     val personRepository: PersonRepository,
     val modelConverter: ModelConverter,
     val lokallagRepository: LokallagRepository
-) : HypersysService {
+) {
 
     private fun getMedlemmer(hypersysLokallagId: Int?): List<Membership> = if (hypersysLokallagId == null) {
         listOf()
@@ -63,7 +57,7 @@ class HypersysServiceBean(
             .also { lokallagRepository.update("hypersysID=?1, navn=?2 where id=?3", it.id, it.name, mittLag.id) }
             .id
 
-    override fun oppdaterLokallag() {
+    fun oppdaterLokallag() {
         var lokallagAaLeggeTil: Set<Lokallag> = setOf()
         getAlleLokallag().forEach { lag ->
             if (lokallagRepository.find("hypersysID", lag.id).count() > 0) {
@@ -91,7 +85,7 @@ class HypersysServiceBean(
             ListOrganisasjonsleddTypeReference()
         )
 
-    override fun oppdaterMedlemmerILokallag(lokallag: Lokallag) {
+    fun oppdaterMedlemmerILokallag(lokallag: Lokallag) {
         val hypersysLokallagId =
             if (lokallag.hypersysID != null) lokallag.hypersysID else convertToHypersysLokallagId(lokallag.id)
         val partitionNyEksisterende = getMedlemmer(hypersysLokallagId)
@@ -129,7 +123,7 @@ class HypersysServiceBean(
         // Kanskje vi også eksplisitt skal sjekke dei mot HS for å sjå om dei berre har bytta lag
     }
 
-    override fun hentFraMedlemslista(hypersysID: Int?): Membership? =
+    fun hentFraMedlemslista(hypersysID: Int?): Membership? =
         hypersysID
             ?.let { UserId(userId = it) }
             ?.let { getLokallag(userId = it) }
