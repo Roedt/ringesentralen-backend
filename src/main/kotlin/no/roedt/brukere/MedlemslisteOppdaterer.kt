@@ -8,7 +8,6 @@ import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Oppdateringskilde
 import no.roedt.person.PersonRepository
 import no.roedt.tidssone
-import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Instant
 import java.time.ZonedDateTime
 import javax.enterprise.context.Dependent
@@ -18,8 +17,7 @@ class MedlemslisteOppdaterer(
     private val lokallagRepository: LokallagRepository,
     private val hypersysService: HypersysService,
     private val personRepository: PersonRepository,
-    private val tidligereMedlemSletter: TidligereMedlemSletter,
-    @ConfigProperty(name = "slettIkkeLengerMedlemmer", defaultValue = "false") val slettIkkeLengerMedlemmer: Boolean
+    private val tidligereMedlemSletter: TidligereMedlemSletter
 ) {
 
     fun oppdaterMedlemsliste(lokallagID: Int): Set<Lokallag> {
@@ -96,9 +94,7 @@ class MedlemslisteOppdaterer(
         // Kanskje vi kan lage eit "jukse-lokallag" som heiter noko a la "Har bytta lokallag i Hypersys, men ikkje oppdatert her enno"
 //        val medlemmerIAndreLag = deltIMedlemIkkeMedlem.first
         println("Fant ${deltIMedlemIkkeMedlem.second.size} tidligere medlemmer i ${lokallag.id} som ikke lenger er medlem")
-        if (slettIkkeLengerMedlemmer) {
-            deltIMedlemIkkeMedlem.second.map { it.first }.forEach { tidligereMedlemSletter.slett(it) }
-        }
+        deltIMedlemIkkeMedlem.second.map { it.first }.forEach { tidligereMedlemSletter.slett(it) }
     }
 }
 
