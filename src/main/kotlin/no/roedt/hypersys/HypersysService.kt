@@ -78,7 +78,7 @@ class HypersysService(
         lokallagAaLeggeTil.forEach { lokallagRepository.persist(it) }
     }
 
-    private fun getAlleLokallag(): List<Organisasjonsledd> =
+    fun getAlleLokallag(): List<Organisasjonsledd> =
         hypersysProxy.get(
             "/org/api/",
             hypersysSystemTokenVerifier.assertGyldigSystemToken(),

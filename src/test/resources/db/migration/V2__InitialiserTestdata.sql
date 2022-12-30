@@ -51,3 +51,18 @@ INSERT INTO `aktivitetForFrivillig` (frivillig_id, aktivitet) VALUES
 ((SELECT id from frivillig where spesiellKompetanse='rask og effektiv'), 'Ringing'),
 ((SELECT id from frivillig where spesiellKompetanse='rask og effektiv'), 'SoMe'),
 ((SELECT id from frivillig where spesiellKompetanse='stor og sterk'), 'Doerbanking');
+
+-- --------------------------------------------------------
+
+INSERT INTO `lokallag` (id, navn, hypersysID, fylke, sistOppdatert) VALUES (1000,'Organisasjon 1 Agder',23,-1,NULL),
+(1001,'Organisasjon 1 Arendal',25,-1,NULL),(1002,'Organisasjon 1 Bergen',27,-1,NULL),(1003,'Organisasjon 1 Bodø',15,-1,NULL),
+(1004,'Organisasjon 1 Gamle Oslo',7,-1,NULL),(1005,'Organisasjon 1 Grorud',6,-1,NULL),(1006,'Organisasjon 1 Hamar',18,-1,NULL),
+(1007,'Organisasjon1 Harstad',34,-1,NULL),(1008,'Organisasjon 1 Innlandet',17,-1,NULL),(1009,'Organisasjon 1 Kristiansand',24,-1,NULL),
+(1010,'Organisasjon1 Kristiansund',13,-1,NULL),(1011,'Organisasjon 1 Lillehammer',19,-1,NULL),(1012,'Organisasjon 1 Mo i Rana',16,-1,NULL),
+(1013,'Organisasjon 1 Molde',12,-1,NULL),(1014,'Organisasjon 1 Møre og Romsdal',11,-1,NULL),(1015,'Organisasjon1 Moss',4,-1,NULL),
+(1016,'Organisasjon1 Nittedal',3,-1,NULL),(1017,'Organisasjon 1 Nordland',14,-1,NULL),(1018,'Organisasjon1 Oslo',5,-1,NULL),
+(1019,'Organisasjon 1 Rennebu',31,-1,NULL),(1020,'Organisasjon1 Rogaland',8,-1,NULL),(1021,'Organisasjon 1 Sandnes',10,-1,NULL),
+(1022,'Organisasjon 1 Skien',21,-1,NULL),(1023,'Organisasjon 1 Sogndal',28,-1,NULL),(1024,'Organisasjon 1 Stavanger',9,-1,NULL),
+(1025,'Organisasjon1 Telemark og Vestfold',20,-1,NULL),(1026,'Organisasjon 1 Tønsberg',22,-1,NULL),(1027,'Organisasjon 1 Tromsø',33,-1,NULL),
+(1028,'Organisasjon 1 Troms og Finnmark',32,-1,NULL),(1029,'Organisasjon 1 Trøndelag',29,-1,NULL),(1030,'Organisasjon 1 Trondheim',30,-1,NULL),
+(1031,'Organisasjon 1 Vestland',26,-1,NULL),(1032,'Organisasjon1 Viken',2,-1,NULL);
