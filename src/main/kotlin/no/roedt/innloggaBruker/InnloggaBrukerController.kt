@@ -10,7 +10,6 @@ import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import javax.annotation.security.RolesAllowed
 import javax.ws.rs.GET
-import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.Context
@@ -41,11 +40,11 @@ class InnloggaBrukerController(val innloggaBrukerService: InnloggaBrukerService,
     @Retry
     fun getLokallag(@Context ctx: SecurityContext) = innloggaBrukerService.getLokallag(ctx.userId(), jwt.groups)
 
-    @RolesAllowed(GenerellRolle.bruker)
-    @POST
+    @RolesAllowed(GenerellRolle.venterPaaGodkjenning, GenerellRolle.bruker)
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/roller")
-    @Operation(summary = "Hent mine oppdaterte roller", description = GenerellRolle.bruker)
+    @Operation(summary = "Hent mine oppdaterte roller", description = GenerellRolle.brukerVenterPaaGodkjenning)
     @Bulkhead(3)
     @Retry
     fun hentOppdaterteRoller(@Context ctx: SecurityContext) = innloggaBrukerService.getRoller(ctx.userId())
