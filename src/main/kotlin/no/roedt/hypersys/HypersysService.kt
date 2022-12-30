@@ -6,7 +6,6 @@ import no.roedt.hypersys.externalModel.membership.Membership
 import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagRepository
-import no.roedt.person.Oppdateringskilde
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.UserId
@@ -85,44 +84,6 @@ class HypersysService(
             ListOrganisasjonsleddTypeReference()
         )
 
-    fun oppdaterMedlemmerILokallag(lokallag: Lokallag) {
-        val hypersysLokallagId =
-            if (lokallag.hypersysID != null) lokallag.hypersysID else convertToHypersysLokallagId(lokallag.id)
-        val partitionNyEksisterende = getMedlemmer(hypersysLokallagId)
-            .partition { medlem -> personRepository.find("hypersysID", medlem.member_id).count() == 0L }
-        leggTilNyMedlemFraHypersys(partitionNyEksisterende)
-        oppdaterEksisterendeMedlemmer(partitionNyEksisterende, lokallag)
-    }
-
-    private fun leggTilNyMedlemFraHypersys(partitionNyEksisterende: Pair<List<Membership>, List<Membership>>) {
-        partitionNyEksisterende
-            .first
-            .map { modelConverter.convertMembershipToPerson(it) }
-            .filter { it.telefonnummer != null }
-            .forEach { personRepository.save(it, Oppdateringskilde.Hypersys) }
-    }
-
-    private fun oppdaterEksisterendeMedlemmer(
-        partitionNyEksisterende: Pair<List<Membership>, List<Membership>>,
-        lokallag: Lokallag
-    ) {
-        partitionNyEksisterende
-            .second
-            .map { Pair(it, personRepository.find("hypersysID", it.member_id)) }
-            .filter { it.second.count() > 0 }
-            .map {
-                modelConverter.konverterTilOppdatering(
-                    it.first,
-                    lokallag,
-                    it.second.firstResult()
-                )
-            }
-            .forEach { personRepository.oppdater(it) }
-        // TODO: Mekanisme ca her for å slette dei som ikkje lenger er med i laget
-        // Eventuelt noko lurt for å anonymisere eller noko
-        // Kanskje vi også eksplisitt skal sjekke dei mot HS for å sjå om dei berre har bytta lag
-    }
-
     fun hentFraMedlemslista(hypersysID: Int?): Membership? =
         hypersysID
             ?.let { UserId(userId = it) }
@@ -130,4 +91,11 @@ class HypersysService(
             ?.let { convertToHypersysLokallagId(it) }
             ?.let { getMedlemmer(it) }
             ?.firstOrNull { it.member_id == hypersysID }
+
+    fun hentOppdatertMedlemslisteForLokallag(lokallag: Lokallag): Collection<Membership> =
+        getMedlemmer(if (lokallag.hypersysID != null) lokallag.hypersysID else convertToHypersysLokallagId(lokallag.id))
+
+    fun convertMembershipToPerson(membership: Membership) = modelConverter.convertMembershipToPerson(membership)
+
+    fun konverterTilOppdatering(medlemskap: Membership, lokallag: Lokallag, person: Person) = modelConverter.konverterTilOppdatering(medlemskap, lokallag, person)
 }
