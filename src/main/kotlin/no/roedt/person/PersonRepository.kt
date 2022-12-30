@@ -42,7 +42,7 @@ class PersonRepository : PanacheRepositoryBase<Person, Int> {
         val telefonnummer = person.telefonnummer?.let { "'$it'" }
         val kilde =
             if (person.kilde == Kilde.Hypersys || person.kilde == Kilde.Frivillig) ", kilde='${person.kilde}'" else ""
-        val postnummer = if (person.postnummer.erUkjent()) "postnummer = ${person.postnummer.Postnummer}," else ""
+        val postnummer = if (person.postnummer.erUkjent()) "postnummer = '${person.postnummer.Postnummer.trim()}'," else ""
         val hypersysID = if (person.hypersysID != null) "hypersysID = ${person.hypersysID}, " else ""
         val tid = ZonedDateTime.ofInstant(person.sistOppdatert, tidssone())
             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
@@ -64,7 +64,7 @@ class PersonRepository : PanacheRepositoryBase<Person, Int> {
                     """
             )
         } catch (e: PersistenceException) {
-            println("Kunne ikke lagre person med hypersysid $hypersysID og postnummer $postnummer i lokallag ${person.lokallag}")
+            println("Kunne ikke lagre person med hypersysid $hypersysID, fylke ${person.fylke}, lokallag ${person.lokallag} og postnummer $postnummer i lokallag ${person.lokallag}")
             throw e
         }
     }
