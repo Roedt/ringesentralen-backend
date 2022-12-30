@@ -6,6 +6,7 @@ import no.roedt.tidssone
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import javax.enterprise.context.ApplicationScoped
+import javax.persistence.PersistenceException
 
 @ApplicationScoped
 class PersonRepository : PanacheRepositoryBase<Person, Int> {
@@ -47,8 +48,9 @@ class PersonRepository : PanacheRepositoryBase<Person, Int> {
             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
         val oppdatertFraHypersys =
             if (person.oppdateringskilde == Oppdateringskilde.Hypersys) ", sistOppdatert='$tid' " else ""
-        update(
-            """fornavn = '${person.fornavn}', 
+        try {
+            update(
+                """fornavn = '${person.fornavn}', 
                             etternavn = '${person.etternavn}', 
                             $hypersysID
                             telefonnummer = $telefonnummer,
@@ -60,7 +62,11 @@ class PersonRepository : PanacheRepositoryBase<Person, Int> {
                             $kilde
                             where id=$id
                     """
-        )
+            )
+        } catch (e: PersistenceException) {
+            println("Kunne ikke lagre person med hypersysid $hypersysID og postnummer $postnummer i lokallag ${person.lokallag}")
+            throw e
+        }
     }
 
     fun finnPerson(person: Person): Person? =
