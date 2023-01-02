@@ -38,7 +38,7 @@ data class MFA(
 @Dependent
 class MFARepository : PanacheRepositoryBase<MFA, Int> {
     private fun erLagraPaaDenneEnheten(mfaRequest: DekryptertMFARequest) =
-        find("epost=?1 and enhetsid=?2", mfaRequest.brukernavn, mfaRequest.enhetsid).count() > 0
+        find("epost=?1 and enhetsid=?2 and verifisert=?3", mfaRequest.brukernavn, mfaRequest.enhetsid, true).count() > 0
     fun erVerifisert(mfaRequest: DekryptertMFARequest) =
         find("verifisert=?1 and epost=?2 and enhetsid=?3", true, mfaRequest.brukernavn, mfaRequest.enhetsid).count() > 0
 
@@ -54,6 +54,7 @@ class MFARepository : PanacheRepositoryBase<MFA, Int> {
         if (erLagra) {
             return
         }
+        delete("epost=?1 and enhetsid=?2 and verifisert=?3", mfa.epost, mfa.enhetsid, false)
         persist(mfa)
     }
 }
