@@ -12,7 +12,7 @@ class MFAService(
     private val mfaRepository: MFARepository,
     private val epostSender: EpostSender,
     private val aesUtil: AESUtil,
-    @ConfigProperty(name = "aktiverMFA", defaultValue = "true")
+    @ConfigProperty(name = "deaktiverMFA", defaultValue = "true")
     private val mockMFA: Boolean
 ) {
     fun trengerMFA(mfaRequest: MFARequest) = !mockMFA || !mfaRepository.erVerifisert(dekrypter(mfaRequest))
