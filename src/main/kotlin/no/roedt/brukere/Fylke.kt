@@ -6,6 +6,7 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.DatabaseUpdater
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Postnummer
+import org.hibernate.Hibernate
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
 import javax.persistence.Entity
@@ -20,7 +21,18 @@ data class Fylke(
     @Id
     var id: Int,
     var navn: String
-) : PanacheEntityBase()
+) : PanacheEntityBase() {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as Fylke
+
+        return id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+    override fun toString(): String = "Fylke(id=$id, navn='$navn')"
+}
 
 @ApplicationScoped
 class FylkeRepository(
