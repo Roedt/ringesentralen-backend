@@ -14,12 +14,7 @@ import javax.persistence.Table
 data class Ringer(
     var oppretta: Instant,
     var personId: Int
-) : RoedtPanacheEntity() {
-    constructor() : this(
-        oppretta = Instant.MIN,
-        personId = 0
-    )
-}
+) : RoedtPanacheEntity()
 
 @ApplicationScoped
 class RingerRepository : PanacheRepositoryBase<Ringer, Int>

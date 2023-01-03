@@ -14,11 +14,7 @@ import javax.persistence.Table
 @Cacheable
 data class SMS(
     var tekst: String
-) : RoedtPanacheEntity() {
-    constructor() : this(
-        tekst = ""
-    )
-}
+) : RoedtPanacheEntity()
 
 @ApplicationScoped
 class SMSRepository : PanacheRepositoryBase<SMS, Int>

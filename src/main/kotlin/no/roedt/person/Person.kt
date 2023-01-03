@@ -2,7 +2,6 @@ package no.roedt.person
 
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.Kilde
-import no.roedt.Kommune
 import no.roedt.RoedtPanacheEntity
 import no.roedt.brukere.GroupID
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
@@ -38,21 +37,6 @@ data class Person(
     var sistOppdatert: Instant?
 ) : RoedtPanacheEntity() {
     fun isSystembruker(): Boolean = fornavn == "Systembruker" && etternavn == "Frontend"
-
-    constructor() : this(
-        hypersysID = null,
-        fornavn = "",
-        etternavn = "",
-        telefonnummer = "",
-        email = null,
-        postnummer = Postnummer("", "", Kommune("", "", 0, 0)),
-        fylke = -1,
-        groupID = 0,
-        lokallag = 1,
-        kilde = Kilde.Verva,
-        sistOppdatert = null
-    )
-
     fun groupID() = groupID
 
     private fun setGroupID(groupID: Int) {

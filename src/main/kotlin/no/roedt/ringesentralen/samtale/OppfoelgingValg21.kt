@@ -18,17 +18,7 @@ data class OppfoelgingValg21(
     var vilHaMedlemsLink: Boolean,
     var vilHaFellesskapLink: Boolean,
     var vilBliRingtAugust: Boolean
-) : RoedtPanacheEntity() {
-    constructor() : this(
-        samtaleId = 0,
-        vilBliMerAktiv = false,
-        vilPolitikkLink = false,
-        vilIkkeBliRingt = false,
-        vilHaMedlemsLink = false,
-        vilHaFellesskapLink = false,
-        vilBliRingtAugust = false
-    )
-}
+) : RoedtPanacheEntity()
 
 @ApplicationScoped
 class OppfoelgingValg21Repository : PanacheRepositoryBase<OppfoelgingValg21, Int>

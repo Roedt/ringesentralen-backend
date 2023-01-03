@@ -7,9 +7,12 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import no.roedt.DatabaseUpdater
+import no.roedt.Kilde
+import no.roedt.Kommune
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.person.Postnummer
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.samtale.OppfoelgingValg21Repository
@@ -37,7 +40,7 @@ internal class NestePersonAaRingeFinderTest {
 
     @BeforeEach
     fun setup() {
-        doReturn(Person()).whenever(personRepository).getPerson(any())
+        doReturn(lagPerson("Peder", "Ås", "123")).whenever(personRepository).getPerson(any())
     }
 
     @Test
@@ -73,4 +76,18 @@ internal class NestePersonAaRingeFinderTest {
         )
         verify(databaseUpdater).getResultList(any())
     }
+
+    private fun lagPerson(fornavn: String, etternavn: String, telefonnummer: String) = Person(
+        hypersysID = 123,
+        fornavn = fornavn,
+        etternavn = etternavn,
+        telefonnummer = telefonnummer,
+        email = "",
+        postnummer = Postnummer("1234", "Lillevik", Kommune("", "", 0, 0)),
+        fylke = 0,
+        lokallag = 1,
+        groupID = 0,
+        kilde = Kilde.Hypersys,
+        sistOppdatert = null
+    )
 }

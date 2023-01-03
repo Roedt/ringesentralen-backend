@@ -18,13 +18,7 @@ data class SMSTilMottaker(
     var sms_id: Int,
     var mottaker_id: Int,
     @Enumerated(EnumType.STRING) var utsendingsstatus: Utsendingsstatus
-) : RoedtPanacheEntity() {
-    constructor() : this(
-        sms_id = 0,
-        mottaker_id = 0,
-        utsendingsstatus = Utsendingsstatus.KlarTilUtsending
-    )
-}
+) : RoedtPanacheEntity()
 
 @ApplicationScoped
 class SMSTilMottakerRepository : PanacheRepositoryBase<SMSTilMottaker, Int>

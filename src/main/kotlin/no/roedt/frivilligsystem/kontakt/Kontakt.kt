@@ -18,14 +18,7 @@ data class Kontakt(
     var tilbakemelding: String,
     var registrert_av: Int,
     var datetime: Instant
-) : RoedtPanacheEntity() {
-    constructor() : this(
-        frivillig_id = 0,
-        tilbakemelding = "",
-        registrert_av = 0,
-        datetime = Instant.MIN
-    )
-}
+) : RoedtPanacheEntity()
 
 @ApplicationScoped
 class KontaktRepository : PanacheRepositoryBase<Kontakt, Int>

@@ -13,12 +13,7 @@ import javax.persistence.Table
 data class Oppslag(
     var ringt: Int,
     var ringerHypersysId: Int
-) : RoedtPanacheEntity() {
-    constructor() : this(
-        ringt = 0,
-        ringerHypersysId = 0
-    )
-}
+) : RoedtPanacheEntity()
 
 @ApplicationScoped
 class OppslagRepository : PanacheRepositoryBase<Oppslag, Int>

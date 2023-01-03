@@ -20,14 +20,7 @@ data class Lokallag(
     var hypersysID: Int?,
     var fylke: Int,
     var sistOppdatert: Instant?
-) : RoedtPanacheEntity() {
-    constructor() : this(
-        navn = "",
-        hypersysID = 0,
-        fylke = 0,
-        sistOppdatert = Instant.now()
-    )
-}
+) : RoedtPanacheEntity()
 
 @ApplicationScoped
 class LokallagRepository(

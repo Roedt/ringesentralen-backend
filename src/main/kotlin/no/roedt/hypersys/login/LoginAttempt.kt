@@ -12,11 +12,7 @@ import javax.persistence.Table
 @Table(name = "login_attempts")
 data class LoginAttempt(
     var hypersysID: Int
-) : RoedtPanacheEntity() {
-    constructor() : this(
-        hypersysID = 0
-    )
-}
+) : RoedtPanacheEntity()
 
 @ApplicationScoped
 class LoginAttemptRepository : PanacheRepositoryBase<LoginAttempt, Int>

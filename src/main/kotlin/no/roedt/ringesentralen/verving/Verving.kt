@@ -18,15 +18,7 @@ data class Verving(
     var etternavn: String,
     var postnummer: String,
     var verversNavn: String?
-) : RoedtPanacheEntity() {
-    constructor() : this(
-        telefonnummer = "",
-        fornavn = "",
-        etternavn = "",
-        postnummer = "",
-        verversNavn = null
-    )
-}
+) : RoedtPanacheEntity()
 
 @Dependent
 class VervingRepository : PanacheRepositoryBase<Verving, Int>

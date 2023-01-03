@@ -26,18 +26,7 @@ data class Frivillig(
     var spraak: String?,
     var fortellLittOmDegSelv: String?,
     var registrertTidspunkt: Instant
-) : RoedtPanacheEntity() {
-    constructor() : this(
-        personId = 0,
-        alleredeAktivILokallag = false,
-        medlemIRoedt = ErMedlemStatus.Nei,
-        spesiellKompetanse = null,
-        andreTingDuVilBidraMed = null,
-        spraak = null,
-        fortellLittOmDegSelv = null,
-        Instant.MIN
-    )
-}
+) : RoedtPanacheEntity()
 
 @ApplicationScoped
 class FrivilligRepository : PanacheRepositoryBase<Frivillig, Int>

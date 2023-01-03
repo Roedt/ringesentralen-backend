@@ -7,6 +7,8 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.quarkus.hibernate.orm.panache.PanacheQuery
 import no.roedt.DatabaseUpdater
+import no.roedt.Kilde
+import no.roedt.Kommune
 import no.roedt.brukere.AutentisertTilgangsendringRequest
 import no.roedt.brukere.GodkjenningRepository
 import no.roedt.brukere.TilgangsendringsRequest
@@ -14,6 +16,7 @@ import no.roedt.hypersys.HypersysService
 import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
+import no.roedt.person.Postnummer
 import no.roedt.person.UserId
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -44,7 +47,7 @@ internal class TilgangsendringServiceBeanTest {
     fun `godkjenner kan godkjenne brukar`() {
         val userId = setupRinger()
 
-        val ringt = Person()
+        val ringt = lagPerson("Lars", "Holm", "+4792345678")
         ringt.hypersysID = 3
         doReturn(ringt).whenever(personRepository).findById(2)
 
@@ -69,7 +72,7 @@ internal class TilgangsendringServiceBeanTest {
     fun `godkjenner kan ikkje endre admin`() {
         val userId = setupRinger()
 
-        val ringt = Person()
+        val ringt = lagPerson("Lars", "Holm", "+4792345678")
         ringt.hypersysID = 3
         ringt.setGroupID(RingesentralenGroupID.Admin)
         doReturn(ringt).whenever(personRepository).findById(2)
@@ -88,7 +91,7 @@ internal class TilgangsendringServiceBeanTest {
     }
 
     private fun setupRinger(): UserId {
-        val ringerPerson = Person()
+        val ringerPerson = lagPerson("Peder", "Ås", "+4712345678")
         ringerPerson.setGroupID(RingesentralenGroupID.LokalGodkjenner)
         val userId = UserId(userId = 1)
         val panacheQuery: PanacheQuery<Person> = mock()
@@ -96,4 +99,18 @@ internal class TilgangsendringServiceBeanTest {
         doReturn(panacheQuery).whenever(personRepository).find("hypersysID", 1)
         return userId
     }
+
+    private fun lagPerson(fornavn: String, etternavn: String, telefonnummer: String) = Person(
+        hypersysID = 123,
+        fornavn = fornavn,
+        etternavn = etternavn,
+        telefonnummer = telefonnummer,
+        email = "",
+        postnummer = Postnummer("1234", "Lillevik", Kommune("", "", 0, 0)),
+        fylke = 0,
+        lokallag = 0,
+        groupID = 0,
+        kilde = Kilde.Hypersys,
+        sistOppdatert = null
+    )
 }

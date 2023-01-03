@@ -18,12 +18,6 @@ data class MFA(
     var epost: String,
     var enhetsid: String
 ) : RoedtPanacheEntity() {
-    constructor() : this(
-        engangskode = "",
-        verifisert = false,
-        epost = "",
-        enhetsid = ""
-    )
 
     companion object {
         fun generer(): String {

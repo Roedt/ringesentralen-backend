@@ -26,12 +26,6 @@ data class Postnummer(
     val KommuneKode: Kommune
 ) : PanacheEntityBase() {
     fun erUkjent() = Postnummer != "-1"
-
-    constructor() : this(
-        Postnummer = "",
-        Poststed = "",
-        KommuneKode = Kommune("", "", 0, 0)
-    )
 }
 
 @ApplicationScoped

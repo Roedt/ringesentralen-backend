@@ -20,12 +20,7 @@ data class Fylke(
     @Id
     var id: Int,
     var navn: String
-) : PanacheEntityBase() {
-    constructor() : this(
-        id = 0,
-        navn = ""
-    )
-}
+) : PanacheEntityBase()
 
 @ApplicationScoped
 class FylkeRepository(

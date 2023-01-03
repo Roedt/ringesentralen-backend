@@ -224,12 +224,18 @@
             <artifactId>kotlin-maven-allopen</artifactId>
             <version>${kotlin.version}</version>
           </dependency>
+          <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-noarg</artifactId>
+            <version>${kotlin.version}</version>
+          </dependency>
         </dependencies>
         <configuration>
           <javaParameters>true</javaParameters>
           <jvmTarget>11</jvmTarget>
           <compilerPlugins>
             <plugin>all-open</plugin>
+            <plugin>jpa</plugin>
           </compilerPlugins>
           <pluginOptions>
             <option>all-open:annotation=javax.ws.rs.Path</option>

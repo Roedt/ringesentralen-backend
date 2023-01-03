@@ -19,14 +19,7 @@ data class Kommune(
     var nummer: String,
     var lokallag_id: Int?,
     var fylke_id: Int
-) : PanacheEntityBase() {
-    constructor() : this(
-        navn = "",
-        nummer = "",
-        lokallag_id = 0,
-        fylke_id = 0
-    )
-}
+) : PanacheEntityBase()
 
 @ApplicationScoped
 class KommuneRepository : PanacheRepositoryBase<Kommune, Int>

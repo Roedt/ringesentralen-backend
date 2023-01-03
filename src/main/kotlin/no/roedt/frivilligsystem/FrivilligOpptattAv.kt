@@ -17,12 +17,7 @@ import javax.persistence.Table
 data class FrivilligOpptattAv(
     var frivillig_id: Int,
     @Enumerated(EnumType.STRING) var opptattAv: OpptattAv
-) : RoedtPanacheEntity() {
-    constructor() : this(
-        frivillig_id = 0,
-        opptattAv = OpptattAv.Atasylsoekereskalfaajobbemensdeventerpaasvar
-    )
-}
+) : RoedtPanacheEntity()
 
 @ApplicationScoped
 class FrivilligOpptattAvRepository : PanacheRepositoryBase<FrivilligOpptattAv, Int>

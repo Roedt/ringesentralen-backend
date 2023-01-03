@@ -18,15 +18,7 @@ data class FrivilligKorona(
     var personlig: Boolean,
     var tydelig: String,
     var forslag: String
-) : RoedtPanacheEntity() {
-    constructor() : this(
-        frivillig_id = 0,
-        haandtering = "",
-        personlig = true,
-        tydelig = "",
-        forslag = ""
-    )
-}
+) : RoedtPanacheEntity()
 
 @ApplicationScoped
 class FrivilligKoronaRepository : PanacheRepositoryBase<FrivilligKorona, Int>

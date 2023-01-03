@@ -22,16 +22,7 @@ data class PersistentSamtale(
     @Column(columnDefinition = "longtext")
     var kommentar: String?,
     @Enumerated(EnumType.STRING) var modus: Modus
-) : RoedtPanacheEntity() {
-    constructor() : this(
-        ringt = 0,
-        ringer = 0,
-        resultat = 0,
-        ringesesjon = 0,
-        kommentar = null,
-        modus = Modus.velgere
-    )
-}
+) : RoedtPanacheEntity()
 
 @ApplicationScoped
 class PersistentSamtaleRepository : PanacheRepositoryBase<PersistentSamtale, Int>
