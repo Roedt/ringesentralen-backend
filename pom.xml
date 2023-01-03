@@ -204,7 +204,7 @@
         <version>${kotlin.version}</version>
         <executions>
           <execution>
-            <id>comßßßpile</id>
+            <id>compile</id>
             <phase>process-sources</phase>
             <goals>
               <goal>compile</goal>
@@ -235,6 +235,9 @@
             <option>all-open:annotation=javax.ws.rs.Path</option>
             <option>all-open:annotation=javax.enterprise.context.ApplicationScoped</option>
             <option>all-open:annotation=io.quarkus.test.junit.QuarkusTest</option>
+            <option>all-open:annotation=javax.persistence.Entity</option>
+            <option>all-open:annotation=javax.persistence.MappedSuperclass</option>
+            <option>all-open:annotation=javax.persistence.Embeddable</option>
           </pluginOptions>
         </configuration>
       </plugin>
