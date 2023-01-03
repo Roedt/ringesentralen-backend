@@ -5,6 +5,7 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.DatabaseUpdater
 import no.roedt.RoedtPanacheEntity
 import no.roedt.person.Postnummer
+import org.hibernate.Hibernate
 import java.time.Instant
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Cacheable
@@ -20,7 +21,19 @@ data class Lokallag(
     var hypersysID: Int?,
     var fylke: Int,
     var sistOppdatert: Instant?
-) : RoedtPanacheEntity()
+) : RoedtPanacheEntity() {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as Lokallag
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+    override fun toString(): String =
+        "Lokallag(id=$id, navn='$navn', hypersysID=$hypersysID, fylke=$fylke, sistOppdatert=$sistOppdatert)"
+}
 
 @ApplicationScoped
 class LokallagRepository(

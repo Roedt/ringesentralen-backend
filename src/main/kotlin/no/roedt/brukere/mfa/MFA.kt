@@ -3,6 +3,7 @@ package no.roedt.brukere.mfa
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.RoedtPanacheEntity
+import org.hibernate.Hibernate
 import javax.enterprise.context.Dependent
 import javax.persistence.Cacheable
 import javax.persistence.Entity
@@ -27,20 +28,43 @@ data class MFA(
                 .joinToString("")
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as MFA
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+    override fun toString(): String =
+        "MFA(id=$id, engangskode='$engangskode', verifisert=$verifisert, epost='$epost', enhetsid='$enhetsid')"
 }
 
 @Dependent
 class MFARepository : PanacheRepositoryBase<MFA, Int> {
     private fun erLagraPaaDenneEnheten(mfaRequest: DekryptertMFARequest) =
         find("epost=?1 and enhetsid=?2 and verifisert=?3", mfaRequest.brukernavn, mfaRequest.enhetsid, true).count() > 0
+
     fun erVerifisert(mfaRequest: DekryptertMFARequest) =
         find("verifisert=?1 and epost=?2 and enhetsid=?3", true, mfaRequest.brukernavn, mfaRequest.enhetsid).count() > 0
 
     fun matcher(request: SettVerifisertRequest) =
-        find("epost=?1 and enhetsid=?2 and engangskode=?3", request.brukarnamn, request.enhetsid, request.engangskode).count() > 0
+        find(
+            "epost=?1 and enhetsid=?2 and engangskode=?3",
+            request.brukarnamn,
+            request.enhetsid,
+            request.engangskode
+        ).count() > 0
 
     fun settVerifisert(request: SettVerifisertRequest) {
-        update("verifisert=true where epost=?1 and enhetsid=?2 and engangskode=?3", request.brukarnamn, request.enhetsid, request.engangskode)
+        update(
+            "verifisert=true where epost=?1 and enhetsid=?2 and engangskode=?3",
+            request.brukarnamn,
+            request.enhetsid,
+            request.engangskode
+        )
     }
 
     fun lagre(mfa: MFA) {

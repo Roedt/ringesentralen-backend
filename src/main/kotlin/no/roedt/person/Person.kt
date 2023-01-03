@@ -5,6 +5,7 @@ import no.roedt.Kilde
 import no.roedt.RoedtPanacheEntity
 import no.roedt.brukere.GroupID
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
+import org.hibernate.Hibernate
 import java.time.Instant
 import javax.persistence.Basic
 import javax.persistence.Cacheable
@@ -50,4 +51,15 @@ data class Person(
     }
 
     fun setGroupID(groupID: GroupID) = setGroupID(groupID.nr)
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as Person
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+    override fun toString(): String =
+        "Person(id=$id, hypersysID=$hypersysID, fornavn='$fornavn', etternavn='$etternavn', telefonnummer=$telefonnummer, email=$email, fylke=$fylke, lokallag=$lokallag, groupID=$groupID, kilde=$kilde, sistOppdatert=$sistOppdatert)"
 }

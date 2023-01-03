@@ -3,6 +3,7 @@ package no.roedt.ringesentralen.samtale
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.RoedtPanacheEntity
+import org.hibernate.Hibernate
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.Entity
 import javax.persistence.Table
@@ -18,7 +19,19 @@ data class OppfoelgingValg21(
     var vilHaMedlemsLink: Boolean,
     var vilHaFellesskapLink: Boolean,
     var vilBliRingtAugust: Boolean
-) : RoedtPanacheEntity()
+) : RoedtPanacheEntity() {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as OppfoelgingValg21
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+    override fun toString(): String =
+        "OppfoelgingValg21(id=$id, samtaleId=$samtaleId, vilBliMerAktiv=$vilBliMerAktiv, vilPolitikkLink=$vilPolitikkLink, vilIkkeBliRingt=$vilIkkeBliRingt, vilHaMedlemsLink=$vilHaMedlemsLink, vilHaFellesskapLink=$vilHaFellesskapLink, vilBliRingtAugust=$vilBliRingtAugust)"
+}
 
 @ApplicationScoped
 class OppfoelgingValg21Repository : PanacheRepositoryBase<OppfoelgingValg21, Int>
