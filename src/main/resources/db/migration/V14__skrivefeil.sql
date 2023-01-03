@@ -1,0 +1,1 @@
+UPDATE lokallag SET fylke = 18 where navn = 'Rødt Rødøy';
