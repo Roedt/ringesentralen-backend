@@ -19,6 +19,7 @@ import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Oppdateringskilde
 import no.roedt.person.Person
+import no.roedt.person.PersonDTO
 import no.roedt.person.PersonRepository
 import no.roedt.person.PostnummerRepository
 import no.roedt.person.UserId
@@ -46,7 +47,7 @@ class FrivilligService(
             .map {
                 FrivilligResponse(
                     frivillig = it.first,
-                    person = it.second,
+                    person = PersonDTO.fra(it.second),
                     aktiviteter = aktivitetForFrivilligRepository.list("frivillig_id", it.first.id),
                     fylke = fylkeRepository.findById(it.second.fylke),
                     lokallag = lokallagRepository.findById(it.second.lokallag),

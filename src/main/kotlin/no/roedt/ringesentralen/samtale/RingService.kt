@@ -4,6 +4,7 @@ import no.roedt.DatabaseUpdater
 import no.roedt.brukere.GroupID
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
+import no.roedt.person.PersonDTO
 import no.roedt.person.PersonRepository
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.Modus
@@ -118,7 +119,7 @@ class RingServiceBean(
 
     private fun toResponse(it: Person) =
         NestePersonAaRingeResponse(
-            person = it,
+            person = PersonDTO.fra(it),
             lokallagNavn = lokallagRepository.findById(it.lokallag).navn,
             tidlegareSamtalar = nestePersonAaRingeFinder.getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1")
         )

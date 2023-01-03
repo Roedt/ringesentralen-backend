@@ -4,6 +4,7 @@ import no.roedt.DatabaseUpdater
 import no.roedt.brukere.GroupID
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
+import no.roedt.person.PersonDTO
 import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.RingespesifikkRolle
@@ -32,7 +33,7 @@ class NestePersonAaRingeFinder(
         return hentNestePersonAaRingeIDenneModusen(request)
             ?.let { personRepository.findById(it) }
             ?.let { toResponse(it) }
-            ?.also { oppslagRepository.persist(Oppslag(ringt = it.person.id.toInt(), ringerHypersysId = request.userId())) }
+            ?.also { oppslagRepository.persist(Oppslag(ringt = it.person.id, ringerHypersysId = request.userId())) }
             ?.also { nyligeOppslagCache.remove(request.lokallag) }
     }
 
@@ -79,7 +80,7 @@ class NestePersonAaRingeFinder(
 
     private fun toResponse(it: Person) =
         NestePersonAaRingeResponse(
-            person = it,
+            person = PersonDTO.fra(it),
             lokallagNavn = lokallagRepository.findById(it.lokallag).navn,
             tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1")
         )
