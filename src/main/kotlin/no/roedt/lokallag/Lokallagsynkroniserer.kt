@@ -44,7 +44,7 @@ class Lokallagsynkroniserer(val hypersysService: HypersysService, val lokallagRe
         }
     }
 
-    private fun hoppOverSynkronisering() {
+    private fun hoppOverSynkronisering(event: StartupEvent) {
         println("Oppkopling mot Hypersys tok for lang tid, så hoppar over å sjekke om alle lokallag er med.")
     }
 }
