@@ -29,7 +29,7 @@ timeout: 1800s
 availableSecrets:
   secretManager:
     - versionName: projects/$PROJECT_ID/secrets/DB_USER/versions/latest
-      env: 'DBUSER'
+      env: 'DBUSER123'
     - versionName: projects/$PROJECT_ID/secrets/DB_PASSWORD/versions/latest
       env: 'DBPASSWORD'
     - versionName: projects/$PROJECT_ID/secrets/quarkus_mailer_username/versions/latest
