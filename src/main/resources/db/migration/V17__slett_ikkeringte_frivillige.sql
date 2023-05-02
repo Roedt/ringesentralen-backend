@@ -1,0 +1,1 @@
+DELETE FROM person p where p.kilde = 'Frivillig' and not exists (select 1 from samtale s where s.ringt = p.id)
