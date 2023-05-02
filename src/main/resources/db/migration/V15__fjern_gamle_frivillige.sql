@@ -4,4 +4,3 @@ DELETE FROM frivilligOpptattAv;
 DELETE FROM smsTilMottaker;
 DELETE FROM kontakt;
 DELETE FROM frivillig;
-DELETE FROM person where kilde = 'Frivillig';
