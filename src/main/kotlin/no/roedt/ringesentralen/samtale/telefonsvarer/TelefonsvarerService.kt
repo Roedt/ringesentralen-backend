@@ -32,7 +32,7 @@ class TelefonsvarerService(
                 ringt = person.id.toInt(),
                 ringer = ringerRepository.find("personId", systembruker.id.toInt()).firstResult<Ringer>().id.toInt(),
                 kommentar = "Resultat frå telefonsvar",
-                ringesesjon = Ringesesjon.Ringing2022.id,
+                ringesesjon = Ringesesjon.Valkamp2023.id,
                 resultat = request.resultat().nr,
                 modus = if (person.hypersysID != null) Modus.medlemmer else Modus.velgere
             )

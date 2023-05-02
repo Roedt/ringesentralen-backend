@@ -49,7 +49,7 @@ class RingServiceBean(
             ringt = request.skalRingesID().toInt(),
             ringer = hypersysIDTilRingerId(request.userId).toString().toInt(),
             resultat = Resultat.Samtale_startet.nr,
-            ringesesjon = Ringesesjon.Ringing2022.id,
+            ringesesjon = Ringesesjon.Valkamp2023.id,
             kommentar = "Starter samtale",
             modus = request.modus
         )
@@ -63,7 +63,7 @@ class RingServiceBean(
             ringt = request.ringtID.toInt(),
             ringer = ringer,
             resultat = request.resultat.nr,
-            ringesesjon = Ringesesjon.Ringing2022.id,
+            ringesesjon = Ringesesjon.Valkamp2023.id,
             kommentar = request.kommentar,
             modus = autentisertRequest.modus
         )

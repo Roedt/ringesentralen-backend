@@ -1,0 +1,1 @@
+INSERT INTO `ringesesjon` VALUES(3, 'Valkamp 2023')
