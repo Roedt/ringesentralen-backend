@@ -1,10 +1,10 @@
 package no.roedt.ringesentralen.brukere
 
+import jakarta.enterprise.context.ApplicationScoped
 import no.roedt.EpostSender
 import no.roedt.brukere.Epost
 import no.roedt.brukere.GroupID
 import no.roedt.person.Person
-import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class RingesentralenEpostformulerer(val epostSender: EpostSender) {

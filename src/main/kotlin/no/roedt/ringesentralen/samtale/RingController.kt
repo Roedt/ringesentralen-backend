@@ -1,5 +1,17 @@
 package no.roedt.ringesentralen.samtale
 
+import jakarta.annotation.security.RolesAllowed
+import jakarta.transaction.Transactional
+import jakarta.ws.rs.Consumes
+import jakarta.ws.rs.DefaultValue
+import jakarta.ws.rs.GET
+import jakarta.ws.rs.POST
+import jakarta.ws.rs.Path
+import jakarta.ws.rs.Produces
+import jakarta.ws.rs.QueryParam
+import jakarta.ws.rs.core.Context
+import jakarta.ws.rs.core.MediaType
+import jakarta.ws.rs.core.SecurityContext
 import no.roedt.hypersys.HypersysIdProvider
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.RingespesifikkRolle
@@ -16,25 +28,13 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
-import javax.annotation.security.RolesAllowed
-import javax.transaction.Transactional
-import javax.ws.rs.Consumes
-import javax.ws.rs.DefaultValue
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.QueryParam
-import javax.ws.rs.core.Context
-import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.SecurityContext
 
 @Path("/samtale")
 @Tag(name = "Ring")
 @SecurityRequirement(name = "jwt")
 class RingController(val ringService: RingService, val jwt: JsonWebToken) : HypersysIdProvider {
 
-    @RolesAllowed(RingespesifikkRolle.ringer)
+    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.ringer)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -51,9 +51,16 @@ class RingController(val ringService: RingService, val jwt: JsonWebToken) : Hype
         @DefaultValue("-1")
         lokallag: Int
     ): NestePersonAaRingeResponse? =
-        ringService.hentNestePersonAaRinge(AutentisertNestePersonAaRingeRequest(ctx.userId(), modus, lokallag, jwt.groups))
+        ringService.hentNestePersonAaRinge(
+            AutentisertNestePersonAaRingeRequest(
+                ctx.userId(),
+                modus,
+                lokallag,
+                jwt.groups
+            )
+        )
 
-    @RolesAllowed(RingespesifikkRolle.ringer)
+    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.ringer)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -61,10 +68,14 @@ class RingController(val ringService: RingService, val jwt: JsonWebToken) : Hype
     @Operation(summary = "Start samtale", description = RingespesifikkRolle.ringer)
     @Retry
     @Transactional
-    fun startSamtale(@Context ctx: SecurityContext, startSamtaleRequest: StartSamtaleRequest, @QueryParam("modus") modus: Modus) =
+    fun startSamtale(
+        @Context ctx: SecurityContext,
+        startSamtaleRequest: StartSamtaleRequest,
+        @QueryParam("modus") modus: Modus
+    ) =
         ringService.startSamtale(AutentisertStartSamtaleRequest(ctx.userId(), startSamtaleRequest, modus))
 
-    @RolesAllowed(RingespesifikkRolle.ringer)
+    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.ringer)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -72,7 +83,11 @@ class RingController(val ringService: RingService, val jwt: JsonWebToken) : Hype
     @Operation(summary = "Registrer resultat fra samtale", description = RingespesifikkRolle.ringer)
     @Retry
     @Transactional
-    fun registrerResultatFraSamtale(@Context ctx: SecurityContext, resultatFraSamtaleRequest: ResultatFraSamtaleRequest, @QueryParam("modus") modus: Modus) =
+    fun registrerResultatFraSamtale(
+        @Context ctx: SecurityContext,
+        resultatFraSamtaleRequest: ResultatFraSamtaleRequest,
+        @QueryParam("modus") modus: Modus
+    ) =
         ringService.registrerResultatFraSamtale(
             AutentisertResultatFraSamtaleRequest(ctx.userId(), resultatFraSamtaleRequest, modus)
         )
@@ -85,6 +100,10 @@ class RingController(val ringService: RingService, val jwt: JsonWebToken) : Hype
     @Operation(summary = "Noen ringer tilbake", description = RingespesifikkRolle.ringer)
     @Retry
     @Transactional
-    fun noenRingerTilbake(@Context ctx: SecurityContext, request: RingerTilbakeRequest, @QueryParam("modus") modus: Modus): NestePersonAaRingeResponse =
+    fun noenRingerTilbake(
+        @Context ctx: SecurityContext,
+        request: RingerTilbakeRequest,
+        @QueryParam("modus") modus: Modus
+    ): NestePersonAaRingeResponse =
         ringService.noenRingerTilbake(AutentisertRingerTilbakeRequest(ctx.userId(), request, modus, jwt.groups))
 }

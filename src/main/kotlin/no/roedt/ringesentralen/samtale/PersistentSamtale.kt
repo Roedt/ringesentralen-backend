@@ -2,15 +2,15 @@ package no.roedt.ringesentralen.samtale
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.Table
 import no.roedt.RoedtPanacheEntity
 import no.roedt.ringesentralen.Modus
 import org.hibernate.Hibernate
-import javax.enterprise.context.ApplicationScoped
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.Table
 
 @Table(name = "samtale")
 @Entity

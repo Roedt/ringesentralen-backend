@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.samtale
 
+import jakarta.enterprise.context.ApplicationScoped
 import no.roedt.DatabaseUpdater
 import no.roedt.brukere.GroupID
 import no.roedt.lokallag.LokallagRepository
@@ -22,7 +23,6 @@ import no.roedt.ringesentralen.samtale.start.AutentisertStartSamtaleRequest
 import no.roedt.ringesentralen.samtale.start.NestePersonAaRingeFinder
 import no.roedt.ringesentralen.samtale.start.NestePersonAaRingeResponse
 import no.roedt.ringesentralen.samtale.start.StartSamtaleRequest
-import javax.enterprise.context.ApplicationScoped
 
 interface RingService {
     fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse?
@@ -42,7 +42,8 @@ class RingServiceBean(
     val nestePersonAaRingeFinder: NestePersonAaRingeFinder
 ) : RingService {
 
-    override fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest) = nestePersonAaRingeFinder.hentNestePersonAaRinge(request)
+    override fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest) =
+        nestePersonAaRingeFinder.hentNestePersonAaRinge(request)
 
     override fun startSamtale(request: AutentisertStartSamtaleRequest) = samtaleRepository.persist(
         PersistentSamtale(
@@ -98,8 +99,9 @@ class RingServiceBean(
     override fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): NestePersonAaRingeResponse {
         request.validate()
         val oppringtNummer = request.ringtNummer()
-        var personSomRingerTilbake = personRepository.find("telefonnummer", oppringtNummer).firstResultOptional<Person>()
-            .orElseGet { personRepository.find("telefonnummer", "-1").firstResult() }
+        var personSomRingerTilbake =
+            personRepository.find("telefonnummer", oppringtNummer).firstResultOptional<Person>()
+                .orElseGet { personRepository.find("telefonnummer", "-1").firstResult() }
         val modus = if (personSomRingerTilbake.hypersysID != null) Modus.medlemmer else Modus.velgere
         if (modus == Modus.medlemmer && !request.groups.contains(RingespesifikkRolle.ringerMedlemmer)) {
             personSomRingerTilbake = personRepository.find("telefonnummer", "-1").firstResult()
@@ -125,7 +127,9 @@ class RingServiceBean(
         )
 
     private fun erFleireEnnToIkkeSvar(request: ResultatFraSamtaleRequest): Boolean {
-        val resultat: List<Int> = samtaleRepository.list("ringt=?1 and resultat=${Resultat.Ikke_svar.nr}", request.ringtID.toInt()).map { it.resultat }.map { it }
+        val resultat: List<Int> =
+            samtaleRepository.list("ringt=?1 and resultat=${Resultat.Ikke_svar.nr}", request.ringtID.toInt())
+                .map { it.resultat }.map { it }
         val fleireEnnToIkkeSvar: Boolean = resultat.count { it == 0 } > 2
         val ingenSvar: Boolean = resultat.none { it != Resultat.Ikke_svar.nr && it != Resultat.Samtale_startet.nr }
         return ingenSvar && fleireEnnToIkkeSvar && request.resultat == Resultat.Ikke_svar

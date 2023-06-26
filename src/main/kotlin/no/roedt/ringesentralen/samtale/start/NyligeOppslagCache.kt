@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.samtale.start
 
+import jakarta.enterprise.context.ApplicationScoped
 import java.util.concurrent.ConcurrentHashMap
-import javax.enterprise.context.ApplicationScoped
 
 const val cacheTimeValidityInMillis: Long = 5000
 

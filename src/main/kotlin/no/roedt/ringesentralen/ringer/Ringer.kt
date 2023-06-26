@@ -2,12 +2,12 @@ package no.roedt.ringesentralen.ringer
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 import no.roedt.RoedtPanacheEntity
 import org.hibernate.Hibernate
 import java.time.Instant
-import javax.enterprise.context.ApplicationScoped
-import javax.persistence.Entity
-import javax.persistence.Table
 
 @Table(name = "ringer")
 @Entity

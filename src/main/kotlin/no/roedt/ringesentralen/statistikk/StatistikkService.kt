@@ -1,12 +1,12 @@
 package no.roedt.ringesentralen.statistikk
 
+import jakarta.enterprise.context.ApplicationScoped
 import no.roedt.DatabaseUpdater
 import no.roedt.brukere.GenerellRolle
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import java.sql.Timestamp
 import java.time.Instant
-import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class StatistikkService(val databaseUpdater: DatabaseUpdater) {

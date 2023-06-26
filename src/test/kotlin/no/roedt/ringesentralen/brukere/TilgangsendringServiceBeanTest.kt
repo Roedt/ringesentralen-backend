@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.quarkus.hibernate.orm.panache.PanacheQuery
+import jakarta.ws.rs.ForbiddenException
 import no.roedt.DatabaseUpdater
 import no.roedt.Kilde
 import no.roedt.Kommune
@@ -21,7 +22,6 @@ import no.roedt.person.UserId
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.doReturn
-import javax.ws.rs.ForbiddenException
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -65,7 +65,10 @@ internal class TilgangsendringServiceBeanTest {
         assertTrue { brukerendring.epostSendt }
         verify(personRepository).update(any(), eq(RingesentralenGroupID.GodkjentRinger.nr), eq(2))
         verify(hypersysService).hentFraMedlemslista(3)
-        verify(epostSender).sendEpostOmEndraStatus(person = eq(ringt), nyTilgang = eq(RingesentralenGroupID.GodkjentRinger))
+        verify(epostSender).sendEpostOmEndraStatus(
+            person = eq(ringt),
+            nyTilgang = eq(RingesentralenGroupID.GodkjentRinger)
+        )
     }
 
     @Test

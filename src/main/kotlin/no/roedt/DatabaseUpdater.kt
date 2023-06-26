@@ -1,7 +1,7 @@
 package no.roedt
 
-import javax.enterprise.context.ApplicationScoped
-import javax.persistence.EntityManager
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.persistence.EntityManager
 
 @ApplicationScoped
 class DatabaseUpdater(private val entityManager: EntityManager) {

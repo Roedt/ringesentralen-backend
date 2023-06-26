@@ -2,15 +2,15 @@ package no.roedt.lokallag
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.persistence.Cacheable
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 import no.roedt.DatabaseUpdater
 import no.roedt.RoedtPanacheEntity
 import no.roedt.person.Postnummer
 import org.hibernate.Hibernate
 import java.time.Instant
-import javax.enterprise.context.ApplicationScoped
-import javax.persistence.Cacheable
-import javax.persistence.Entity
-import javax.persistence.Table
 
 @Entity
 @Table(name = "lokallag")

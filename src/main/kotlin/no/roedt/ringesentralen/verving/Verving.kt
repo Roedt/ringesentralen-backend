@@ -2,12 +2,12 @@ package no.roedt.ringesentralen.verving
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
+import jakarta.enterprise.context.Dependent
+import jakarta.persistence.Cacheable
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 import no.roedt.RoedtPanacheEntity
 import org.hibernate.Hibernate
-import javax.enterprise.context.Dependent
-import javax.persistence.Cacheable
-import javax.persistence.Entity
-import javax.persistence.Table
 
 @Entity
 @Table(name = "verving")

@@ -1,11 +1,11 @@
 package no.roedt.lokallag
 
 import io.quarkus.runtime.StartupEvent
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.enterprise.event.Observes
 import no.roedt.hypersys.HypersysService
 import org.eclipse.microprofile.faulttolerance.Fallback
 import org.eclipse.microprofile.faulttolerance.Timeout
-import javax.enterprise.context.ApplicationScoped
-import javax.enterprise.event.Observes
 
 @ApplicationScoped
 class Lokallagsynkroniserer(val hypersysService: HypersysService, val lokallagRepository: LokallagRepository) {

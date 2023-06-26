@@ -1,21 +1,21 @@
 package no.roedt.person
 
 import io.quarkus.runtime.annotations.RegisterForReflection
+import jakarta.persistence.Basic
+import jakarta.persistence.Cacheable
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 import no.roedt.Kilde
 import no.roedt.RoedtPanacheEntity
 import no.roedt.brukere.GroupID
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import org.hibernate.Hibernate
 import java.time.Instant
-import javax.persistence.Basic
-import javax.persistence.Cacheable
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.FetchType
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.Table
 
 @Entity
 @Table(name = "person")

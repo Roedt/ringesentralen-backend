@@ -1,5 +1,7 @@
 package no.roedt.ringesentralen.brukere
 
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.ws.rs.ForbiddenException
 import no.roedt.DatabaseUpdater
 import no.roedt.brukere.AutentisertTilgangsendringRequest
 import no.roedt.brukere.Brukerendring
@@ -12,8 +14,6 @@ import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.Postnummer
 import no.roedt.person.UserId
-import javax.enterprise.context.ApplicationScoped
-import javax.ws.rs.ForbiddenException
 
 interface TilgangsendringService {
     fun aktiverRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring
@@ -103,7 +103,10 @@ class TilgangsendringServiceBean(
 
         if (personMedEndraTilgang.isSystembruker()) throw ForbiddenException("Kan ikkje endre systembruker")
         if (RingesentralenGroupID.Admin.references(groupID)) throw ForbiddenException("Kan ikkje endre admins")
-        if (RingesentralenGroupID.LokalGodkjenner.references(ringersBrukertype) && RingesentralenGroupID.LokalGodkjenner.references(groupID)) {
+        if (RingesentralenGroupID.LokalGodkjenner.references(ringersBrukertype) && RingesentralenGroupID.LokalGodkjenner.references(
+                groupID
+            )
+        ) {
             throw ForbiddenException(
                 "Godkjennere kan ikkje endre andre godjennere"
             )

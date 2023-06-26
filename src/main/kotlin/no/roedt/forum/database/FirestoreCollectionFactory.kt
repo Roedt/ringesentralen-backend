@@ -1,10 +1,10 @@
 package no.roedt.forum.database
 
 import com.google.cloud.firestore.Firestore
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.enterprise.context.RequestScoped
+import jakarta.ws.rs.Produces
 import org.eclipse.microprofile.config.inject.ConfigProperty
-import javax.enterprise.context.ApplicationScoped
-import javax.enterprise.context.RequestScoped
-import javax.ws.rs.Produces
 
 interface FirestoreCollectionFactory {
     fun listCollections(): List<FirestoreCollection>?

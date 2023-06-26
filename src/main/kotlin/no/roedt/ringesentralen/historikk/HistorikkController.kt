@@ -1,5 +1,14 @@
 package no.roedt.ringesentralen.historikk
 
+import jakarta.annotation.security.RolesAllowed
+import jakarta.ws.rs.DefaultValue
+import jakarta.ws.rs.GET
+import jakarta.ws.rs.Path
+import jakarta.ws.rs.Produces
+import jakarta.ws.rs.QueryParam
+import jakarta.ws.rs.core.Context
+import jakarta.ws.rs.core.MediaType
+import jakarta.ws.rs.core.SecurityContext
 import no.roedt.brukere.GenerellRolle
 import no.roedt.hypersys.HypersysIdProvider
 import no.roedt.ringesentralen.Modus
@@ -10,22 +19,13 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
-import javax.annotation.security.RolesAllowed
-import javax.ws.rs.DefaultValue
-import javax.ws.rs.GET
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.QueryParam
-import javax.ws.rs.core.Context
-import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.SecurityContext
 
 @Path("/historikk")
 @Tag(name = "Historikk")
 @SecurityRequirement(name = "jwt")
 class HistorikkController(private val historikkService: HistorikkService, val jwt: JsonWebToken) : HypersysIdProvider {
 
-    @RolesAllowed(GenerellRolle.bruker)
+    @jakarta.annotation.security.RolesAllowed(GenerellRolle.bruker)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/meg")
@@ -35,7 +35,7 @@ class HistorikkController(private val historikkService: HistorikkService, val jw
     fun getMineSamtaler(@Context ctx: SecurityContext, @QueryParam("modus") modus: Modus) =
         historikkService.getMineSamtaler(ctx.userId(), modus)
 
-    @RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
+    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/laget")
@@ -50,7 +50,7 @@ class HistorikkController(private val historikkService: HistorikkService, val jw
         lokallag: Int
     ) = historikkService.getLagetsSamtaler(ctx.userId(), modus, lokallag)
 
-    @RolesAllowed(RingespesifikkRolle.ringer)
+    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.ringer)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/meg/antall")

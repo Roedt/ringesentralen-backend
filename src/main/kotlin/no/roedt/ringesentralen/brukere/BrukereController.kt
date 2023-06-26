@@ -1,5 +1,15 @@
 package no.roedt.ringesentralen.brukere
 
+import jakarta.annotation.security.RolesAllowed
+import jakarta.transaction.Transactional
+import jakarta.ws.rs.Consumes
+import jakarta.ws.rs.GET
+import jakarta.ws.rs.PUT
+import jakarta.ws.rs.Path
+import jakarta.ws.rs.Produces
+import jakarta.ws.rs.core.Context
+import jakarta.ws.rs.core.MediaType
+import jakarta.ws.rs.core.SecurityContext
 import no.roedt.brukere.AutentisertGetBrukereRequest
 import no.roedt.brukere.AutentisertTilgangsendringRequest
 import no.roedt.brukere.Brukerendring
@@ -14,16 +24,6 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
-import javax.annotation.security.RolesAllowed
-import javax.transaction.Transactional
-import javax.ws.rs.Consumes
-import javax.ws.rs.GET
-import javax.ws.rs.PUT
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.core.Context
-import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.SecurityContext
 
 @Path("/brukere")
 @Tag(name = "Brukere")
@@ -57,7 +57,7 @@ class BrukereController(
             AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
         )
 
-    @RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
+    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -73,7 +73,7 @@ class BrukereController(
         AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
     )
 
-    @RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
+    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -89,7 +89,7 @@ class BrukereController(
         AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
     )
 
-    @RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
+    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -123,7 +123,7 @@ class BrukereController(
         )
     )
 
-    @RolesAllowed(GenerellRolle.admin)
+    @jakarta.annotation.security.RolesAllowed(GenerellRolle.admin)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

@@ -3,12 +3,12 @@ package no.roedt
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.persistence.Cacheable
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import org.hibernate.Hibernate
-import javax.enterprise.context.ApplicationScoped
-import javax.persistence.Cacheable
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
 
 @Entity
 @Table(name = "kommune")

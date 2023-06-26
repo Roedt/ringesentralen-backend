@@ -1,5 +1,6 @@
 package no.roedt.token
 
+import jakarta.enterprise.context.RequestScoped
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.nio.file.Files
 import java.nio.file.Path
@@ -7,7 +8,6 @@ import java.security.KeyFactory
 import java.security.interfaces.RSAPrivateKey
 import java.security.spec.PKCS8EncodedKeySpec
 import java.util.Base64
-import javax.enterprise.context.RequestScoped
 
 @RequestScoped
 class PrivateKeyFactory(

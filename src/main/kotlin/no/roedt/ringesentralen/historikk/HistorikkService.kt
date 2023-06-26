@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.historikk
 
+import jakarta.enterprise.context.ApplicationScoped
 import no.roedt.DatabaseUpdater
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.Modus
@@ -8,7 +9,6 @@ import no.roedt.ringesentralen.samtale.Samtale
 import no.roedt.skrivUt
 import java.math.BigInteger
 import java.sql.Timestamp
-import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class HistorikkService(
@@ -16,9 +16,11 @@ class HistorikkService(
     private val oppfoelgingValg21Repository: OppfoelgingValg21Repository
 ) {
 
-    fun getMineSamtaler(userId: UserId, modus: Modus): List<Samtale> = getSamtaler(modus, "where hypersysID='${userId.userId}'")
+    fun getMineSamtaler(userId: UserId, modus: Modus): List<Samtale> =
+        getSamtaler(modus, "where hypersysID='${userId.userId}'")
 
-    fun getLagetsSamtaler(userId: UserId, modus: Modus, lokallag: Int): List<Samtale> = getSamtaler(modus, "where lokallag = $lokallag")
+    fun getLagetsSamtaler(userId: UserId, modus: Modus, lokallag: Int): List<Samtale> =
+        getSamtaler(modus, "where lokallag = $lokallag")
 
     private fun getSamtaler(modus: Modus, whereklausul: String): List<Samtale> {
         val sql =
@@ -34,7 +36,8 @@ class HistorikkService(
                     kommentar = (it[3] ?: "") as String,
                     ringtNummer = (it[4] ?: "Ukjent") as String,
                     ringtNavn = it[5] as String,
-                    oppfoelging = it[6]?.toString()?.let { i -> if (i != "null") oppfoelgingValg21Repository.findById(i.toInt()) else null }
+                    oppfoelging = it[6]?.toString()
+                        ?.let { i -> if (i != "null") oppfoelgingValg21Repository.findById(i.toInt()) else null }
                 )
             }
     }

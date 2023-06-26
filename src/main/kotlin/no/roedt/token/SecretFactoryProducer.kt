@@ -1,8 +1,8 @@
 package no.roedt.token
 
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.ws.rs.Produces
 import org.eclipse.microprofile.config.inject.ConfigProperty
-import javax.enterprise.context.ApplicationScoped
-import javax.ws.rs.Produces
 
 @ApplicationScoped
 class SecretFactoryProducer(

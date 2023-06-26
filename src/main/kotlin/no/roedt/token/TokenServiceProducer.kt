@@ -1,13 +1,13 @@
 package no.roedt.token
 
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.ws.rs.Produces
 import no.roedt.brukere.mfa.MFAService
 import no.roedt.hypersys.login.AESUtil
 import no.roedt.hypersys.login.HypersysLoginBean
 import no.roedt.person.PersonRepository
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Duration
-import javax.enterprise.context.ApplicationScoped
-import javax.ws.rs.Produces
 
 @ApplicationScoped
 class TokenServiceProducer(

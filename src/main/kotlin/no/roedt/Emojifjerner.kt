@@ -1,7 +1,7 @@
 package no.roedt
 
 import com.vdurmont.emoji.EmojiParser
-import javax.enterprise.context.ApplicationScoped
+import jakarta.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class Emojifjerner {

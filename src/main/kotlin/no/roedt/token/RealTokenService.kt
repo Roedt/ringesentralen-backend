@@ -1,6 +1,9 @@
 package no.roedt.token
 
 import io.smallrye.jwt.build.Jwt
+import jakarta.ws.rs.ForbiddenException
+import jakarta.ws.rs.NotAuthorizedException
+import jakarta.ws.rs.ServiceUnavailableException
 import no.roedt.brukere.GenerellRolle
 import no.roedt.brukere.GroupID
 import no.roedt.brukere.mfa.MFARequest
@@ -17,9 +20,6 @@ import no.roedt.person.UserId
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import java.time.Duration
 import java.util.function.Supplier
-import javax.ws.rs.ForbiddenException
-import javax.ws.rs.NotAuthorizedException
-import javax.ws.rs.ServiceUnavailableException
 
 class RealTokenService(
     private val personRepository: PersonRepository,

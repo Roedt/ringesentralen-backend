@@ -2,9 +2,9 @@ package no.roedt
 
 import io.quarkus.mailer.Mail
 import io.quarkus.mailer.Mailer
+import jakarta.enterprise.context.ApplicationScoped
 import no.roedt.brukere.Epost
 import org.eclipse.microprofile.config.inject.ConfigProperty
-import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class EpostSender(

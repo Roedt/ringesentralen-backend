@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen
 
+import jakarta.enterprise.context.Dependent
 import no.roedt.hypersys.GyldigPersonToken
 import no.roedt.hypersys.HypersysProxy
 import no.roedt.hypersys.Token
@@ -17,7 +18,6 @@ import no.roedt.ringesentralen.ringer.Ringer
 import no.roedt.ringesentralen.ringer.RingerRepository
 import no.roedt.token.SecretFactory
 import java.time.Instant
-import javax.enterprise.context.Dependent
 
 @Dependent
 class RingesentralenLoginBean(

@@ -1,5 +1,6 @@
 package no.roedt.innloggaBruker
 
+import jakarta.enterprise.context.ApplicationScoped
 import no.roedt.brukere.FylkeRepository
 import no.roedt.brukere.GenerellRolle
 import no.roedt.lokallag.Lokallag
@@ -11,7 +12,6 @@ import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.token.TokenService
 import java.util.Optional
-import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class InnloggaBrukerService(
@@ -46,6 +46,7 @@ class InnloggaBrukerService(
                 getPerson(userId).get().lokallag
             )
         )
+
         getProfil(userId) == null -> listOf()
         else -> listOf(lokallagRepository.findById(getPerson(userId).get().lokallag))
     }

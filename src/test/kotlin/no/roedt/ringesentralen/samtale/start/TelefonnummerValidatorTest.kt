@@ -1,9 +1,9 @@
 package no.roedt.ringesentralen.samtale.start
 
+import jakarta.ws.rs.BadRequestException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import javax.ws.rs.BadRequestException
 
 internal class TelefonnummerValidatorTest {
 

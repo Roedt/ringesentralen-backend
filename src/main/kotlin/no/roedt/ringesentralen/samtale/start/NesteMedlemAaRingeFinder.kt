@@ -1,12 +1,12 @@
 package no.roedt.ringesentralen.samtale.start
 
+import jakarta.enterprise.context.Dependent
 import no.roedt.DatabaseUpdater
 import no.roedt.KommuneRepository
 import no.roedt.brukere.MedlemslisteOppdaterer
 import no.roedt.lokallag.LokallagRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
-import javax.enterprise.context.Dependent
 
 @Dependent
 open class NesteMedlemAaRingeFinder(

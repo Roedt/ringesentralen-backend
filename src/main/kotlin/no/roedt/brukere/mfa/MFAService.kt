@@ -1,11 +1,11 @@
 package no.roedt.brukere.mfa
 
+import jakarta.enterprise.context.Dependent
 import no.roedt.EpostSender
 import no.roedt.brukere.Epost
 import no.roedt.hypersys.login.AESUtil
 import no.roedt.hypersys.login.LoginRequest
 import org.eclipse.microprofile.config.inject.ConfigProperty
-import javax.enterprise.context.Dependent
 
 @Dependent
 class MFAService(

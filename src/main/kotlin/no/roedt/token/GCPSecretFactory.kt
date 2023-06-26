@@ -2,9 +2,9 @@ package no.roedt.token
 
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient
 import com.google.cloud.secretmanager.v1.SecretVersionName
+import jakarta.annotation.PostConstruct
+import jakarta.annotation.PreDestroy
 import org.eclipse.microprofile.config.inject.ConfigProperty
-import javax.annotation.PostConstruct
-import javax.annotation.PreDestroy
 
 private enum class GCPSecretManagerKey {
     privatekey,
@@ -24,7 +24,7 @@ class GCPSecretFactory(
 ) : SecretFactory {
     private lateinit var client: SecretManagerServiceClient
 
-    @PostConstruct
+    @jakarta.annotation.PostConstruct
     fun setup() {
         client = SecretManagerServiceClient.create()
     }

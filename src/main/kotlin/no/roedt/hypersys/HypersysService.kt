@@ -1,5 +1,6 @@
 package no.roedt.hypersys
 
+import jakarta.enterprise.context.ApplicationScoped
 import no.roedt.hypersys.externalModel.IsMember
 import no.roedt.hypersys.externalModel.Organisasjonsledd
 import no.roedt.hypersys.externalModel.membership.ListMembershipTypeReference
@@ -12,7 +13,6 @@ import no.roedt.person.PersonRepository
 import no.roedt.person.UserId
 import java.time.Instant
 import java.time.LocalDate
-import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class HypersysService(

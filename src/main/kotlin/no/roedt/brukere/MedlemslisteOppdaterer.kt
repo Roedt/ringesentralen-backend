@@ -1,5 +1,6 @@
 package no.roedt.brukere
 
+import jakarta.enterprise.context.Dependent
 import no.roedt.Kilde
 import no.roedt.hypersys.HypersysService
 import no.roedt.hypersys.externalModel.membership.Membership
@@ -11,7 +12,6 @@ import no.roedt.tidssone
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Instant
 import java.time.ZonedDateTime
-import javax.enterprise.context.Dependent
 
 @Dependent
 class MedlemslisteOppdaterer(

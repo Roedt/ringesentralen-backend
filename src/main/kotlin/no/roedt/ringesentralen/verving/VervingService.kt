@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.verving
 
+import jakarta.enterprise.context.Dependent
 import no.roedt.Kilde
 import no.roedt.brukere.FylkeRepository
 import no.roedt.lokallag.LokallagRepository
@@ -7,7 +8,6 @@ import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.PostnummerRepository
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
-import javax.enterprise.context.Dependent
 
 @Dependent
 class VervingService(
@@ -30,7 +30,8 @@ class VervingService(
             )
         )
 
-        val vervaFraFoer = personRepository.find("telefonnummer=?1", request.request.telefonnummer).singleResultOptional<Person>()
+        val vervaFraFoer =
+            personRepository.find("telefonnummer=?1", request.request.telefonnummer).singleResultOptional<Person>()
         if (vervaFraFoer.isPresent) return Pair(false, vervaFraFoer.get())
 
         val person = Person(
@@ -58,7 +59,8 @@ class VervingService(
             .filter { RingesentralenGroupID.isBrukerEllerVenter(it) }
         if (erBruker.isPresent) return
 
-        val nextValue = if (request.request.svar) RingesentralenGroupID.PrioritertAaRinge else RingesentralenGroupID.Slett
+        val nextValue =
+            if (request.request.svar) RingesentralenGroupID.PrioritertAaRinge else RingesentralenGroupID.Slett
         personRepository.update("groupID=?1 where telefonnummer=?2", nextValue.nr, request.request.telefonnummer)
     }
 }

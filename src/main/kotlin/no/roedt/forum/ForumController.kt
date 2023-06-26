@@ -1,5 +1,15 @@
 package no.roedt.forum
 
+import jakarta.annotation.security.RolesAllowed
+import jakarta.ws.rs.Consumes
+import jakarta.ws.rs.GET
+import jakarta.ws.rs.POST
+import jakarta.ws.rs.Path
+import jakarta.ws.rs.PathParam
+import jakarta.ws.rs.Produces
+import jakarta.ws.rs.core.Context
+import jakarta.ws.rs.core.MediaType
+import jakarta.ws.rs.core.SecurityContext
 import no.roedt.forum.underforum.Traad
 import no.roedt.forum.underforum.TraadRequest
 import no.roedt.hypersys.HypersysIdProvider
@@ -8,16 +18,6 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
-import javax.annotation.security.RolesAllowed
-import javax.ws.rs.Consumes
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
-import javax.ws.rs.Produces
-import javax.ws.rs.core.Context
-import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.SecurityContext
 
 @Path("/forum")
 @Tag(name = "Forum")
@@ -57,7 +57,7 @@ class ForumController(
         @PathParam("tittel") tittel: String
     ) = forumService.hentTraad(Traad(tittel = tittel, underforum = underforum))
 
-    @RolesAllowed(ForumRolle.debattant)
+    @jakarta.annotation.security.RolesAllowed(ForumRolle.debattant)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

@@ -1,5 +1,6 @@
 package no.roedt.brukere
 
+import jakarta.enterprise.context.Dependent
 import no.roedt.brukere.mfa.MFARepository
 import no.roedt.frivilligsystem.Frivillig
 import no.roedt.frivilligsystem.FrivilligKoronaRepository
@@ -15,7 +16,6 @@ import no.roedt.ringesentralen.ringer.RingerRepository
 import no.roedt.ringesentralen.samtale.PersistentSamtaleRepository
 import no.roedt.ringesentralen.samtale.start.OppslagRepository
 import no.roedt.ringesentralen.sms.SMSTilMottakerRepository
-import javax.enterprise.context.Dependent
 
 @Dependent
 class TidligereMedlemSletter(

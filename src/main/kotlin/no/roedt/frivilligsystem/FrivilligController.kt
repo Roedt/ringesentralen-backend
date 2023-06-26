@@ -1,5 +1,16 @@
 package no.roedt.frivilligsystem
 
+import jakarta.annotation.security.RolesAllowed
+import jakarta.transaction.Transactional
+import jakarta.ws.rs.Consumes
+import jakarta.ws.rs.GET
+import jakarta.ws.rs.POST
+import jakarta.ws.rs.Path
+import jakarta.ws.rs.Produces
+import jakarta.ws.rs.core.Context
+import jakarta.ws.rs.core.MediaType
+import jakarta.ws.rs.core.Response
+import jakarta.ws.rs.core.SecurityContext
 import no.roedt.brukere.GenerellRolle
 import no.roedt.frivilligsystem.kontakt.AutentisertRegistrerKontaktRequest
 import no.roedt.frivilligsystem.kontakt.RegistrerKontaktRequest
@@ -18,17 +29,6 @@ import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import java.net.URI
-import javax.annotation.security.RolesAllowed
-import javax.transaction.Transactional
-import javax.ws.rs.Consumes
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.core.Context
-import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.Response
-import javax.ws.rs.core.SecurityContext
 
 @Path("/frivillig")
 @Tag(name = "Frivilligsystem")
@@ -41,15 +41,26 @@ class FrivilligController(
 ) :
     HypersysIdProvider {
 
-    @RolesAllowed(RingespesifikkRolle.ringerMedlemmer, RingespesifikkRolle.godkjenner, GenerellRolle.admin)
+    @jakarta.annotation.security.RolesAllowed(
+        RingespesifikkRolle.ringerMedlemmer,
+        RingespesifikkRolle.godkjenner,
+        GenerellRolle.admin
+    )
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/alle")
-    @Operation(summary = "Finn alle frivillige i laget", description = RingespesifikkRolle.ringerForMedlemmerGodkjennerAdmin)
+    @Operation(
+        summary = "Finn alle frivillige i laget",
+        description = RingespesifikkRolle.ringerForMedlemmerGodkjennerAdmin
+    )
     @Retry
     fun hentAlle(@Context ctx: SecurityContext) = frivilligService.hentAlle(ctx.userId(), jwt.groups)
 
-    @RolesAllowed(RingespesifikkRolle.ringerMedlemmer, RingespesifikkRolle.godkjenner, GenerellRolle.admin)
+    @jakarta.annotation.security.RolesAllowed(
+        RingespesifikkRolle.ringerMedlemmer,
+        RingespesifikkRolle.godkjenner,
+        GenerellRolle.admin
+    )
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/aktivitet")
@@ -86,12 +97,19 @@ class FrivilligController(
             throw e
         }
 
-    @RolesAllowed(RingespesifikkRolle.ringerMedlemmer, RingespesifikkRolle.godkjenner, GenerellRolle.admin)
+    @jakarta.annotation.security.RolesAllowed(
+        RingespesifikkRolle.ringerMedlemmer,
+        RingespesifikkRolle.godkjenner,
+        GenerellRolle.admin
+    )
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/registrerKontakt")
-    @Operation(summary = "Registrer kontakt med frivillig", description = RingespesifikkRolle.ringerForMedlemmerGodkjennerAdmin)
+    @Operation(
+        summary = "Registrer kontakt med frivillig",
+        description = RingespesifikkRolle.ringerForMedlemmerGodkjennerAdmin
+    )
     @Retry
     @Transactional
     fun registrerKontakt(@Context ctx: SecurityContext, registrerKontaktRequest: RegistrerKontaktRequest) =
@@ -99,7 +117,7 @@ class FrivilligController(
             AutentisertRegistrerKontaktRequest(userId = ctx.userId(), request = registrerKontaktRequest)
         )
 
-    @RolesAllowed(GenerellRolle.systembrukerFrontend)
+    @jakarta.annotation.security.RolesAllowed(GenerellRolle.systembrukerFrontend)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

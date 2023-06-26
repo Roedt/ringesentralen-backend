@@ -1,5 +1,6 @@
 package no.roedt.frivilligsystem
 
+import jakarta.enterprise.context.ApplicationScoped
 import no.roedt.DatabaseUpdater
 import no.roedt.Emojifjerner
 import no.roedt.Kilde
@@ -26,7 +27,6 @@ import no.roedt.person.UserId
 import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import java.time.Instant
-import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class FrivilligService(
@@ -73,6 +73,7 @@ class FrivilligService(
                 .map { it as Int }
                 .map { frivilligRepository.findById(it) }
         }
+
         else -> databaseUpdater.getResultList("select f.id from frivillig f inner join person p on p.id = f.personId and p.lokallag=${ringer.lokallag} ORDER BY p.etternavn ASC")
             .map { it as Int }
             .map { frivilligRepository.findById(it) }
@@ -157,7 +158,8 @@ class FrivilligService(
             Kontakt(
                 frivillig_id = request.request.frivillig_id,
                 tilbakemelding = request.request.tilbakemelding,
-                registrert_av = personRepository.find("hypersysID", request.userId.userId).firstResult<Person>().id.toInt(),
+                registrert_av = personRepository.find("hypersysID", request.userId.userId)
+                    .firstResult<Person>().id.toInt(),
                 datetime = Instant.now()
             )
         )

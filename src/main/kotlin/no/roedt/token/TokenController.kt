@@ -1,16 +1,16 @@
 package no.roedt.token
 
+import jakarta.annotation.security.PermitAll
+import jakarta.transaction.Transactional
+import jakarta.ws.rs.POST
+import jakarta.ws.rs.Path
+import jakarta.ws.rs.Produces
+import jakarta.ws.rs.core.MediaType
 import no.roedt.brukere.mfa.MFARequest
 import no.roedt.hypersys.login.LoginRequest
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
-import javax.annotation.security.PermitAll
-import javax.transaction.Transactional
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
 
 @Path("/token")
 @Tag(name = "Token")

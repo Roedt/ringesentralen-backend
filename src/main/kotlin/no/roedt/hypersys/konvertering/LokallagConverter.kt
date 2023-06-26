@@ -1,8 +1,8 @@
 package no.roedt.hypersys.konvertering
 
+import jakarta.enterprise.context.Dependent
 import no.roedt.hypersys.externalModel.Membership
 import no.roedt.lokallag.LokallagRepository
-import javax.enterprise.context.Dependent
 
 @Dependent
 class LokallagConverter(val lokallagRepository: LokallagRepository) {

@@ -1,5 +1,6 @@
 package no.roedt.hypersys.konvertering
 
+import jakarta.enterprise.context.Dependent
 import no.roedt.Kilde
 import no.roedt.brukere.FylkeRepository
 import no.roedt.hypersys.externalModel.User
@@ -13,7 +14,6 @@ import no.roedt.person.Postnummer
 import no.roedt.person.PostnummerRepository
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import java.time.Instant
-import javax.enterprise.context.Dependent
 
 interface ModelConverter {
     fun convert(user: User, groupID: Int): Person

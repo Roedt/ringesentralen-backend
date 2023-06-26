@@ -1,7 +1,7 @@
 package no.roedt.person
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
-import javax.enterprise.context.ApplicationScoped
+import jakarta.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class PersonRepository : PanacheRepositoryBase<Person, Int> {

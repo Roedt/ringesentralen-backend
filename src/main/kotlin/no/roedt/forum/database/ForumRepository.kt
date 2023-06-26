@@ -1,15 +1,16 @@
 package no.roedt.forum.database
 
+import jakarta.enterprise.context.ApplicationScoped
 import no.roedt.forum.underforum.Traad
 import no.roedt.forum.underforum.TraadMedInnhold
 import no.roedt.forum.underforum.TraadRequest
 import no.roedt.forum.underforum.Underforum
-import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class ForumRepository(val firestoreCollections: FirestoreCollections) {
 
-    fun hentAlleUnderforum(): List<Underforum> = firestoreCollections.collections?.map { it.tilUnderforum() } ?: listOf()
+    fun hentAlleUnderforum(): List<Underforum> =
+        firestoreCollections.collections?.map { it.tilUnderforum() } ?: listOf()
 
     fun hentTraader(underforum: String): List<Traad> =
         finnUnderforum(underforum)?.listDocuments()?.map { it.tilTraad() } ?: listOf()
@@ -31,5 +32,6 @@ fun FirestoreDocument.tilTraad() = Traad(
     tittel = this.tittel,
     underforum = this.underforum
 )
+
 private fun FirestoreDocument.tilTraadMedInnhold(): TraadMedInnhold =
     TraadMedInnhold(traad = this.tilTraad(), innhold = this.innhold)

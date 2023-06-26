@@ -1,7 +1,7 @@
 package no.roedt.person
 
+import jakarta.ws.rs.BadRequestException
 import java.util.regex.Pattern
-import javax.ws.rs.BadRequestException
 
 class EpostValidator {
 

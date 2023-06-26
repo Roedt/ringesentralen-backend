@@ -1,5 +1,12 @@
 package no.roedt.innloggaBruker
 
+import jakarta.annotation.security.RolesAllowed
+import jakarta.ws.rs.GET
+import jakarta.ws.rs.Path
+import jakarta.ws.rs.Produces
+import jakarta.ws.rs.core.Context
+import jakarta.ws.rs.core.MediaType
+import jakarta.ws.rs.core.SecurityContext
 import no.roedt.brukere.GenerellRolle
 import no.roedt.hypersys.HypersysIdProvider
 import org.eclipse.microprofile.faulttolerance.Bulkhead
@@ -8,13 +15,6 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
-import javax.annotation.security.RolesAllowed
-import javax.ws.rs.GET
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.core.Context
-import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.SecurityContext
 
 @Path("/profil")
 @Tag(name = "Profil")
@@ -22,7 +22,7 @@ import javax.ws.rs.core.SecurityContext
 class InnloggaBrukerController(val innloggaBrukerService: InnloggaBrukerService, val jwt: JsonWebToken) :
     HypersysIdProvider {
 
-    @RolesAllowed(GenerellRolle.bruker, GenerellRolle.venterPaaGodkjenning)
+    @jakarta.annotation.security.RolesAllowed(GenerellRolle.bruker, GenerellRolle.venterPaaGodkjenning)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/")
@@ -31,7 +31,7 @@ class InnloggaBrukerController(val innloggaBrukerService: InnloggaBrukerService,
     @Retry
     fun getProfil(@Context ctx: SecurityContext) = innloggaBrukerService.getProfil(ctx.userId())
 
-    @RolesAllowed(GenerellRolle.bruker)
+    @jakarta.annotation.security.RolesAllowed(GenerellRolle.bruker)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/lokallag")
@@ -40,7 +40,7 @@ class InnloggaBrukerController(val innloggaBrukerService: InnloggaBrukerService,
     @Retry
     fun getLokallag(@Context ctx: SecurityContext) = innloggaBrukerService.getLokallag(ctx.userId(), jwt.groups)
 
-    @RolesAllowed(GenerellRolle.venterPaaGodkjenning, GenerellRolle.bruker)
+    @jakarta.annotation.security.RolesAllowed(GenerellRolle.venterPaaGodkjenning, GenerellRolle.bruker)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/roller")

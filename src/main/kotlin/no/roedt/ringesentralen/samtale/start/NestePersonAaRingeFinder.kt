@@ -1,5 +1,8 @@
 package no.roedt.ringesentralen.samtale.start
 
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.ws.rs.ForbiddenException
+import jakarta.ws.rs.NotAuthorizedException
 import no.roedt.DatabaseUpdater
 import no.roedt.brukere.GroupID
 import no.roedt.lokallag.LokallagRepository
@@ -13,9 +16,6 @@ import no.roedt.ringesentralen.samtale.OppfoelgingValg21Repository
 import no.roedt.ringesentralen.samtale.Samtale
 import no.roedt.skrivUt
 import java.sql.Timestamp
-import javax.enterprise.context.ApplicationScoped
-import javax.ws.rs.ForbiddenException
-import javax.ws.rs.NotAuthorizedException
 
 @ApplicationScoped
 class NestePersonAaRingeFinder(
@@ -48,7 +48,10 @@ class NestePersonAaRingeFinder(
         if (!request.roller.contains(RingespesifikkRolle.ringerMedlemmer)) {
             throw ForbiddenException("Kun dei godkjente for det kan ringe medlemmar")
         }
-        return nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(personRepository.getPerson(request.userId), request.lokallag)
+        return nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(
+            personRepository.getPerson(request.userId),
+            request.lokallag
+        )
     }
 
     private fun hentNesteVelgerAaRinge(request: AutentisertNestePersonAaRingeRequest): Int? {
@@ -96,7 +99,8 @@ class NestePersonAaRingeFinder(
                     kommentar = (it[3] ?: "") as String,
                     ringtNummer = oppringtNummer,
                     ringtNavn = it[4] as String,
-                    oppfoelging = it[5]?.toString()?.let { i -> if (i != "null") oppfoelgingValg21Repository.findById(i.toInt()) else null }
+                    oppfoelging = it[5]?.toString()
+                        ?.let { i -> if (i != "null") oppfoelgingValg21Repository.findById(i.toInt()) else null }
                 )
             }
             .toList()
