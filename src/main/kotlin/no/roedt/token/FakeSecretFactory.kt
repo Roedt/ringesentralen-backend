@@ -3,7 +3,7 @@ package no.roedt.token
 class FakeSecretFactory : SecretFactory {
     override fun getPrivateKey() = "A"
 
-    override fun getFrontendTokenKey() = "B"
+    override fun getFrontendTokenKey() = "AOC2024"
 
     override fun getHypersysBrukerId() = "C"
 
@@ -17,5 +17,5 @@ class FakeSecretFactory : SecretFactory {
 
     override fun getFrontendSystembrukerPassord() = "H"
 
-    override fun getEncryptionKey() = "Hi6ly3ozN8GeOgQzBXGPOQ==:rZChW/juIwZkwo7BitDKTQ=="
+    override fun getEncryptionKey() = "FfZdV0Cu13lscPPVjYjJGRZmp0afpY3h"
 }
