@@ -48,7 +48,7 @@ class DashboardService(
     private fun getMineLokallag(ringer: Person): List<Lokallag> = when {
         RingesentralenGroupID.Admin.references(ringer.groupID()) -> lokallagRepository.findAll(Sort.ascending("navn")).list()
         RingesentralenGroupID.LokalGodkjenner.references(ringer.groupID()) -> lokallagRepository.fromFylke(ringer.fylke)
-        else -> lokallagRepository.list("id", ringer.lokallag.toLong())
+        else -> lokallagRepository.list("id", ringer.lokallag)
     }
 
     private fun hypersysIdTilPerson(hypersysId: UserId) = personRepository.find("hypersysID", hypersysId.userId).firstResult<Person>()
