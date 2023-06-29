@@ -91,7 +91,7 @@ class TilgangsendringServiceBean(
                 "fornavn = ?1, etternavn = ?2, postnummer = ?3 where hypersysID = ?4",
                 it.first_name,
                 it.last_name,
-                nyttPostnr.Postnummer,
+                nyttPostnr,
                 hypersysID
             )
         }
