@@ -16,11 +16,13 @@ class SMSSender(
     @PostConstruct
     fun setUp() = Twilio.init(secretFactory.getTwilioAccountSid(), secretFactory.getTwilioAuthToken())
 
-    internal fun sendSMS(sendSMSRequest: AutentisertSendSMSRequest): Message = Message
-        .creator(
-            PhoneNumber(sendSMSRequest.request.til),
-            PhoneNumber(sendSMSRequest.request.fra),
-            sendSMSRequest.request.melding
-        ).create()
-        .also { println("Sendte sms") }
+    internal fun sendSMS(sendSMSRequest: AutentisertSendSMSRequest) {
+        Message
+            .creator(
+                PhoneNumber(sendSMSRequest.request.til),
+                PhoneNumber(sendSMSRequest.request.fra),
+                sendSMSRequest.request.melding
+            ).create()
+            .also { println("Sendte sms") }
+    }
 }
