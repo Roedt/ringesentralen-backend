@@ -9,6 +9,6 @@ data class LoginRequest(
     @JsonProperty("brukarnamn") val brukarnamn: String,
     @JsonProperty("passord") val passord: String,
     @JsonProperty("systembruker") val systembruker: Boolean,
-    @JsonProperty("enhetsid") val enhetsid: String,
+    @JsonProperty("enhetsid") val enhetsid: String? = null,
     @JsonProperty("engangskode") val engangskode: String? = null
 )

@@ -13,6 +13,7 @@ import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.SecurityContext
 import no.roedt.brukere.GenerellRolle
 import no.roedt.hypersys.HypersysIdProvider
+import no.roedt.ringesentralen.twilio.SMSSender
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
@@ -23,7 +24,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @Tag(name = "SMS")
 @SecurityRequirement(name = "jwt")
 @ApplicationScoped
-class SMSController(val smsService: SMSService, val jwt: JsonWebToken) : HypersysIdProvider {
+class SMSController(val smsService: SMSService, val jwt: JsonWebToken, val smsSender: SMSSender) : HypersysIdProvider {
 
     @RolesAllowed(GenerellRolle.admin)
     @POST
@@ -46,4 +47,17 @@ class SMSController(val smsService: SMSService, val jwt: JsonWebToken) : Hypersy
     @Transactional
     fun oppdaterUtsendingsstatus(@Context ctx: SecurityContext, request: OppdaterSMSRequest) =
         smsService.oppdaterUtsendingsstatus(AutentisertOppdaterSMSRequest(userId = ctx.userId(), request = request))
+
+
+    @RolesAllowed(GenerellRolle.admin)
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/lagre")
+    @Operation(summary = "Registrer ny SMS som skal sendast ut", description = GenerellRolle.admin)
+    @Retry
+    @Transactional
+    fun sendSMS(@Context ctx: SecurityContext, request: SendSMSRequest) =
+        smsSender.sendSMS(AutentisertSendSMSRequest(userId = ctx.userId(), request = request))
+
 }

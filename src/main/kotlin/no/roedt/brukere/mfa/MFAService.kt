@@ -25,7 +25,7 @@ class MFAService(
     )
 
     private fun dekrypter(loginRequest: LoginRequest): SettVerifisertRequest = SettVerifisertRequest(
-        enhetsid = aesUtil.decrypt(loginRequest.enhetsid),
+        enhetsid = if (loginRequest.systembruker) "" else aesUtil.decrypt(loginRequest.enhetsid!!),
         brukarnamn = aesUtil.decrypt(loginRequest.brukarnamn),
         engangskode = aesUtil.decrypt(loginRequest.engangskode!!)
     )
@@ -55,12 +55,12 @@ class MFAService(
         )
 
     fun verifiserEngangskode(loginRequest: LoginRequest) {
-        if (mockMFA) {
+        if (mockMFA || loginRequest.systembruker) {
             return
         }
         val trengerMFA = trengerMFA(
             MFARequest(
-                enhetsid = loginRequest.enhetsid,
+                enhetsid = loginRequest.enhetsid!!,
                 brukernavn = loginRequest.brukarnamn
             )
         )
