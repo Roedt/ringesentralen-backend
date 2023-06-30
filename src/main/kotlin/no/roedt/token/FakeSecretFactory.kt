@@ -18,4 +18,7 @@ class FakeSecretFactory : SecretFactory {
     override fun getFrontendSystembrukerPassord() = "H"
 
     override fun getEncryptionKey() = "FfZdV0Cu13lscPPVjYjJGRZmp0afpY3h"
+    override fun getTwilioAccountSid() = "I"
+
+    override fun getTwilioAuthToken() = "J"
 }

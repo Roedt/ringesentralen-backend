@@ -10,4 +10,6 @@ interface SecretFactory {
     fun getFrontendSystembruker(): String
     fun getFrontendSystembrukerPassord(): String
     fun getEncryptionKey(): String
+    fun getTwilioAccountSid(): String
+    fun getTwilioAuthToken(): String
 }

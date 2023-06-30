@@ -6,19 +6,15 @@ import com.twilio.type.PhoneNumber
 import jakarta.annotation.PostConstruct
 import jakarta.enterprise.context.ApplicationScoped
 import no.roedt.ringesentralen.sms.AutentisertSendSMSRequest
-import org.eclipse.microprofile.config.inject.ConfigProperty
+import no.roedt.token.SecretFactory
 
 @ApplicationScoped
 class SMSSender(
-    @ConfigProperty(name = "TWILIO_ACCOUNT_SID", defaultValue = "sid1")
-    private val twilioAccountSid: String,
-
-    @ConfigProperty(name = "TWILIO_AUTH_TOKEN", defaultValue = "token1")
-    private val twilioAuthToken: String
+    private val secretFactory: SecretFactory
 ) {
 
     @PostConstruct
-    fun setUp() = Twilio.init(twilioAccountSid, twilioAuthToken)
+    fun setUp() = Twilio.init(secretFactory.getTwilioAccountSid(), secretFactory.getTwilioAuthToken())
 
     fun sendSMS(sendSMSRequest: AutentisertSendSMSRequest): Message = Message
         .creator(

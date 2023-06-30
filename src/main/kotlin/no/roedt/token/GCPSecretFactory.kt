@@ -2,7 +2,6 @@ package no.roedt.token
 
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient
 import com.google.cloud.secretmanager.v1.SecretVersionName
-import jakarta.annotation.PostConstruct
 import jakarta.annotation.PreDestroy
 import org.eclipse.microprofile.config.inject.ConfigProperty
 
@@ -15,7 +14,9 @@ private enum class GCPSecretManagerKey {
     hypersysClientSecret,
     frontendSystembruker,
     frontendSystembrukerPassord,
-    encryptionKey
+    encryptionKey,
+    TWILIO_ACCOUNT_SID,
+    TWILIO_AUTH_TOKEN
 }
 
 class GCPSecretFactory(
@@ -52,6 +53,10 @@ class GCPSecretFactory(
         getSecretFromSecretManager(GCPSecretManagerKey.frontendSystembrukerPassord)
 
     override fun getEncryptionKey() = getSecretFromSecretManager(GCPSecretManagerKey.encryptionKey)
+
+    override fun getTwilioAccountSid() = getSecretFromSecretManager(GCPSecretManagerKey.TWILIO_ACCOUNT_SID)
+
+    override fun getTwilioAuthToken() = getSecretFromSecretManager(GCPSecretManagerKey.TWILIO_AUTH_TOKEN)
 
     private fun getSecretFromSecretManager(secretName: GCPSecretManagerKey): String {
         val secretVersionName = SecretVersionName.of(secretManagerProjectId, secretName.name, "latest")
