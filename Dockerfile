@@ -16,7 +16,7 @@ FROM quay.io/quarkus/ubi-quarkus-mandrel-builder-image:22.3-java17 AS native-bui
 COPY --chown=quarkus:quarkus --from=maven /home/app/target/native-sources /build
 USER quarkus
 WORKDIR /build
-RUN native-image $(cat native-image.args) -J-Xmx20g
+RUN native-image $(cat native-image.args) -J-Xmx20g --initialize-at-run-time=org.apache.http.impl.auth.NTLMEngineImpl --initialize-at-run-time=com.google.protobuf.UnsafeUtil
 COPY --chown=quarkus:quarkus --from=maven /home/app/src/main/resources/META-INF/resources/publickey.pem /build/publickey.pem
 
 # Stage 3: Create the docker final image
