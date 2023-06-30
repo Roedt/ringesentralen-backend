@@ -52,8 +52,8 @@ class SMSController(val smsService: SMSService, val jwt: JsonWebToken, val smsSe
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/lagre")
-    @Operation(summary = "Registrer ny SMS som skal sendast ut", description = GenerellRolle.admin)
+    @Path("/send")
+    @Operation(summary = "Send ut SMS", description = GenerellRolle.admin)
     @Retry
     @Transactional
     fun sendSMS(@Context ctx: SecurityContext, request: SendSMSRequest) =
