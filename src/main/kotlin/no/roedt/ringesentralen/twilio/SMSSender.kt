@@ -16,7 +16,7 @@ class SMSSender(
     @PostConstruct
     fun setUp() = Twilio.init(secretFactory.getTwilioAccountSid(), secretFactory.getTwilioAuthToken())
 
-    fun sendSMS(sendSMSRequest: AutentisertSendSMSRequest): Message = Message
+    internal fun sendSMS(sendSMSRequest: AutentisertSendSMSRequest): Message = Message
         .creator(
             PhoneNumber(sendSMSRequest.request.til),
             PhoneNumber(sendSMSRequest.request.fra),
