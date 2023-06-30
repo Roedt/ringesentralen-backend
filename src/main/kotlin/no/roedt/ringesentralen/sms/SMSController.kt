@@ -48,7 +48,6 @@ class SMSController(val smsService: SMSService, val jwt: JsonWebToken, val smsSe
     fun oppdaterUtsendingsstatus(@Context ctx: SecurityContext, request: OppdaterSMSRequest) =
         smsService.oppdaterUtsendingsstatus(AutentisertOppdaterSMSRequest(userId = ctx.userId(), request = request))
 
-
     @RolesAllowed(GenerellRolle.admin)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -59,5 +58,4 @@ class SMSController(val smsService: SMSService, val jwt: JsonWebToken, val smsSe
     @Transactional
     fun sendSMS(@Context ctx: SecurityContext, request: SendSMSRequest) =
         smsSender.sendSMS(AutentisertSendSMSRequest(userId = ctx.userId(), request = request))
-
 }

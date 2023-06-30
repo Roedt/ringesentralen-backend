@@ -29,4 +29,4 @@ data class Ringer(
 }
 
 @ApplicationScoped
-class   RingerRepository : PanacheRepositoryBase<Ringer, Int>
+class RingerRepository : PanacheRepositoryBase<Ringer, Int>
