@@ -22,4 +22,5 @@ class SMSSender(
             PhoneNumber(sendSMSRequest.request.fra),
             sendSMSRequest.request.melding
         ).create()
+        .also { println("Sendte sms") }
 }
