@@ -29,7 +29,7 @@ class SMSController(val smsService: SMSService, val jwt: JsonWebToken) : Hypersy
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/lagre")
+    @Path("/lagreSMS")
     @Operation(summary = "Registrer ny SMS som skal sendast ut", description = GenerellRolle.admin)
     @Retry
     @Transactional
