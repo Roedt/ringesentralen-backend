@@ -386,6 +386,7 @@
       </build>
       <properties>
         <quarkus.native.native-image-xmx>16g</quarkus.native.native-image-xmx>
+        <quarkus.native.additional-build-args>--initialize-at-run-time=org.apache.http.impl.auth.NTLMEngineImpl</quarkus.native.additional-build-args>
         <quarkus.package.type>native</quarkus.package.type>
       </properties>
     </profile>
