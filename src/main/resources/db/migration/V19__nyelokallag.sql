@@ -1,7 +1,5 @@
-INSERT INTO `lokallag`(`id`, `navn`, `hypersysID`, `fylke`)
-VALUES
-    (53954,'Lier',100754,6),
-    (53955,'Raudt Suldal',100742,11),
-    (53956,'Rødt Bø i Vesterålen',100753,18),
-    (53957,'Rødt Sauda',100752,11),
-    (53958,'Rødt Sokndal',100755,11);
+UPDATE lokallag SET fylke = 11 where navn = 'Raudt Suldal';
+UPDATE lokallag SET fylke = 18 where navn = 'Rødt Bø i Vesterålen';
+UPDATE lokallag SET fylke = 11 where navn = 'Rødt Sauda';
+UPDATE lokallag SET fylke = 11 where navn = 'Rødt Sokndal';
+UPDATE lokallag SET fylke = 6 where navn = 'Lier';
