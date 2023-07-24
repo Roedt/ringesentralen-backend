@@ -1,7 +1,7 @@
 package no.roedt.forum.database
 
 import com.google.auth.oauth2.GoogleCredentials
-import io.quarkus.arc.Priority
+import jakarta.annotation.Priority
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.enterprise.inject.Alternative
 import jakarta.enterprise.inject.Produces
