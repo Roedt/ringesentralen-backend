@@ -1,0 +1,1 @@
+UPDATE lokallag SET navn = 'Rødt Løten - gammel' where navn = 'Rødt Løten' and hypersysID = '100640';
