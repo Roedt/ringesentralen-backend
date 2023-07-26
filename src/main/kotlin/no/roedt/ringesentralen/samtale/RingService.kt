@@ -3,7 +3,7 @@ package no.roedt.ringesentralen.samtale
 import jakarta.enterprise.context.ApplicationScoped
 import no.roedt.DatabaseUpdater
 import no.roedt.brukere.GroupID
-import no.roedt.lokallag.LokallagRepository
+import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonDTO
 import no.roedt.person.PersonRepository
@@ -37,7 +37,7 @@ class RingServiceBean(
     val databaseUpdater: DatabaseUpdater,
     val samtaleRepository: PersistentSamtaleRepository,
     val oppfoelgingValg21Repository: OppfoelgingValg21Repository,
-    val lokallagRepository: LokallagRepository,
+    val lokallagService: LokallagService,
     val ringerRepository: RingerRepository,
     val nestePersonAaRingeFinder: NestePersonAaRingeFinder
 ) : RingService {
@@ -122,7 +122,7 @@ class RingServiceBean(
     private fun toResponse(it: Person) =
         NestePersonAaRingeResponse(
             person = PersonDTO.fra(it),
-            lokallagNavn = lokallagRepository.findById(it.lokallag).navn,
+            lokallagNavn = lokallagService.findById(it.lokallag).navn,
             tidlegareSamtalar = nestePersonAaRingeFinder.getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1")
         )
 

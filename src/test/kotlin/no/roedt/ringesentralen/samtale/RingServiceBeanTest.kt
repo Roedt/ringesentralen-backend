@@ -9,7 +9,7 @@ import io.quarkus.hibernate.orm.panache.PanacheQuery
 import no.roedt.DatabaseUpdater
 import no.roedt.Kilde
 import no.roedt.Kommune
-import no.roedt.lokallag.LokallagRepository
+import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.Postnummer
@@ -32,7 +32,7 @@ internal class RingServiceBeanTest {
     private val databaseUpdater: DatabaseUpdater = mock()
     private val persistentSamtaleRepository: PersistentSamtaleRepository = mock()
     private val oppfoelgingValg21Repository: OppfoelgingValg21Repository = mock()
-    private val lokallagRepository: LokallagRepository = mock()
+    private val lokallagService: LokallagService = mock()
     private val ringerRepository: RingerRepository = mock()
     private val nestePersonAaRingeFinder: NestePersonAaRingeFinder = mock()
 
@@ -41,7 +41,7 @@ internal class RingServiceBeanTest {
         databaseUpdater = databaseUpdater,
         samtaleRepository = persistentSamtaleRepository,
         oppfoelgingValg21Repository = oppfoelgingValg21Repository,
-        lokallagRepository = lokallagRepository,
+        lokallagService = lokallagService,
         ringerRepository = ringerRepository,
         nestePersonAaRingeFinder = nestePersonAaRingeFinder
     )
@@ -107,11 +107,25 @@ internal class RingServiceBeanTest {
         }
     }
 
-    private fun createRingbarPerson(fornavn: String, etternavn: String, telefonnummer: String, id: Int, hypersysID: Int) {
+    private fun createRingbarPerson(
+        fornavn: String,
+        etternavn: String,
+        telefonnummer: String,
+        id: Int,
+        hypersysID: Int
+    ) {
         val person = Person(
-            hypersysID = hypersysID, fornavn = fornavn, etternavn = etternavn,
-            telefonnummer = telefonnummer, email = "",
-            postnummer = Postnummer("1234", "Lillevik", Kommune("", "", 0, 0)), fylke = 0, lokallag = 0, groupID = 0, kilde = Kilde.Hypersys, sistOppdatert = null
+            hypersysID = hypersysID,
+            fornavn = fornavn,
+            etternavn = etternavn,
+            telefonnummer = telefonnummer,
+            email = "",
+            postnummer = Postnummer("1234", "Lillevik", Kommune("", "", 0, 0)),
+            fylke = 0,
+            lokallag = 0,
+            groupID = 0,
+            kilde = Kilde.Hypersys,
+            sistOppdatert = null
         )
         doReturn(person).whenever(personRepository).findById(id)
         val query: PanacheQuery<Person> = mock()

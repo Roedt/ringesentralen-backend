@@ -4,7 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped
 import no.roedt.brukere.FylkeRepository
 import no.roedt.brukere.GenerellRolle
 import no.roedt.lokallag.Lokallag
-import no.roedt.lokallag.LokallagRepository
+import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.UserId
@@ -17,7 +17,7 @@ import java.util.Optional
 class InnloggaBrukerService(
     private val personRepository: PersonRepository,
     private val fylkeRepository: FylkeRepository,
-    private val lokallagRepository: LokallagRepository,
+    private val lokallagService: LokallagService,
     private val tokenService: TokenService
 ) {
     fun getProfil(userId: UserId): Profil? = getPerson(userId).map { it.toProfil() }.orElse(null)
@@ -36,19 +36,19 @@ class InnloggaBrukerService(
         lokallag = lokallag,
         rolle = RingesentralenGroupID.from(groupID()).roller,
         fylkeNavn = fylkeRepository.findById(fylke).navn,
-        lokallagNavn = lokallagRepository.findById(lokallag).navn
+        lokallagNavn = lokallagService.findById(lokallag).navn
     )
 
     fun getLokallag(userId: UserId, groups: Set<String>): List<Lokallag> = when {
-        groups.contains(GenerellRolle.admin) -> lokallagRepository.findAll().list()
-        groups.contains(RingespesifikkRolle.godkjenner) -> lokallagRepository.fromFylke(
+        groups.contains(GenerellRolle.admin) -> lokallagService.findAll()
+        groups.contains(RingespesifikkRolle.godkjenner) -> lokallagService.fromFylke(
             fylkeRepository.getFylkeIdFraLokallag(
                 getPerson(userId).get().lokallag
             )
         )
 
         getProfil(userId) == null -> listOf()
-        else -> listOf(lokallagRepository.findById(getPerson(userId).get().lokallag))
+        else -> listOf(lokallagService.findById(getPerson(userId).get().lokallag))
     }
 
     fun getRoller(userId: UserId): Set<String> = tokenService.hentRoller(userId)

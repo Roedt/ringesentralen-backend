@@ -9,7 +9,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import no.roedt.DatabaseUpdater
-import no.roedt.lokallag.LokallagRepository
+import no.roedt.lokallag.LokallagService
 import no.roedt.person.Postnummer
 import org.hibernate.Hibernate
 
@@ -37,13 +37,13 @@ data class Fylke(
 @ApplicationScoped
 class FylkeRepository(
     private val databaseUpdater: DatabaseUpdater,
-    private val lokallagRepository: LokallagRepository
+    private val lokallagService: LokallagService
 ) : PanacheRepositoryBase<Fylke, Int> {
 
     fun getFylke(lokallag: Int, postnummer: Postnummer): Int =
         if (!postnummer.erUkjent() && lokallag != -1) getFylkeIdFraLokallag(lokallag) else toFylke(postnummer)
 
-    fun getFylkeIdFraLokallag(lokallag: Int): Int = lokallagRepository.findById(lokallag).fylke
+    fun getFylkeIdFraLokallag(lokallag: Int): Int = lokallagService.findById(lokallag).fylke
 
     fun toFylke(postnummer: Postnummer): Int =
         databaseUpdater.getResultList(

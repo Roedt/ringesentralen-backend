@@ -4,7 +4,7 @@ import jakarta.enterprise.context.Dependent
 import no.roedt.DatabaseUpdater
 import no.roedt.KommuneRepository
 import no.roedt.brukere.MedlemslisteOppdaterer
-import no.roedt.lokallag.LokallagRepository
+import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 
@@ -13,7 +13,7 @@ open class NesteMedlemAaRingeFinder(
     val personRepository: PersonRepository,
     val databaseUpdater: DatabaseUpdater,
     private val kommuneRepository: KommuneRepository,
-    private val lokallagRepository: LokallagRepository,
+    private val lokallagService: LokallagService,
     private val medlemslisteOppdaterer: MedlemslisteOppdaterer
 ) {
 
@@ -29,7 +29,7 @@ open class NesteMedlemAaRingeFinder(
         val nestePersonFraDatabasen = hentNestePerson(ringer, lokallag)
         if (nestePersonFraDatabasen != null) return nestePersonFraDatabasen
 
-        oppdaterteLokallag.forEach { lokallagRepository.persist(it) }
+        oppdaterteLokallag.forEach { lokallagService.persist(it) }
 
         return hentNestePerson(ringer, lokallag)
     }

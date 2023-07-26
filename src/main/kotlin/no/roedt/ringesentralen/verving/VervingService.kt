@@ -3,7 +3,7 @@ package no.roedt.ringesentralen.verving
 import jakarta.enterprise.context.Dependent
 import no.roedt.Kilde
 import no.roedt.brukere.FylkeRepository
-import no.roedt.lokallag.LokallagRepository
+import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.PostnummerRepository
@@ -13,7 +13,7 @@ import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 class VervingService(
     private val personRepository: PersonRepository,
     private val vervingRepository: VervingRepository,
-    private val lokallagRepository: LokallagRepository,
+    private val lokallagService: LokallagService,
     private val fylkeRepository: FylkeRepository,
     private val postnummerRepository: PostnummerRepository
 ) {
@@ -42,7 +42,7 @@ class VervingService(
             email = null,
             postnummer = postnummer,
             fylke = fylkeRepository.toFylke(postnummer),
-            lokallag = lokallagRepository.fromPostnummer(postnummer),
+            lokallag = lokallagService.fromPostnummer(postnummer),
             groupID = RingesentralenGroupID.ManglerSamtykke.nr,
             kilde = Kilde.Verva,
             sistOppdatert = null

@@ -6,7 +6,7 @@ import no.roedt.brukere.AutentisertGetBrukereRequest
 import no.roedt.brukere.Brukerinformasjon
 import no.roedt.brukere.FylkeRepository
 import no.roedt.brukere.GenerellRolle
-import no.roedt.lokallag.LokallagRepository
+import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.ringesentralen.ringer.Ringer
@@ -22,7 +22,7 @@ class BrukereServiceBean(
     val personRepository: PersonRepository,
     val databaseUpdater: DatabaseUpdater,
     val fylkeRepository: FylkeRepository,
-    val lokallagRepository: LokallagRepository,
+    val lokallagService: LokallagService,
     val ringerRepository: RingerRepository
 ) : BrukereService {
 
@@ -51,7 +51,7 @@ class BrukereServiceBean(
         fylke = fylkeRepository.findById(r.fylke),
         epost = r.email ?: "",
         hypersysID = r.hypersysID ?: -1,
-        lokallag = lokallagRepository.findById(r.lokallag),
+        lokallag = lokallagService.findById(r.lokallag),
         rolle = RingesentralenGroupID.from(r.groupID()).roller,
         registreringstidspunkt = ringerRepository.find("personId", r.id.toInt())
             .firstResult<Ringer>().oppretta.tilNorskTid()

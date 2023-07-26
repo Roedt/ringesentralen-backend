@@ -8,13 +8,13 @@ import org.eclipse.microprofile.faulttolerance.Fallback
 import org.eclipse.microprofile.faulttolerance.Timeout
 
 @ApplicationScoped
-class Lokallagsynkroniserer(val hypersysService: HypersysService, val lokallagRepository: LokallagRepository) {
+class Lokallagsynkroniserer(val hypersysService: HypersysService, val lokallagService: LokallagService) {
 
     @Timeout(value = 10000L)
     @Fallback(fallbackMethod = "hoppOverSynkronisering")
     fun onStart(@Observes event: StartupEvent) {
         val alleLokallagFraHypersys = hypersysService.getAlleLokallag()
-        val alleLokallagISystemet = lokallagRepository.listAll()
+        val alleLokallagISystemet = lokallagService.listAll()
         val iHypersysMenIkkeIDatabasen =
             alleLokallagFraHypersys.filterNot { alleLokallagISystemet.map { i -> i.navn }.contains(it.name) }
         if (iHypersysMenIkkeIDatabasen.isNotEmpty()) {

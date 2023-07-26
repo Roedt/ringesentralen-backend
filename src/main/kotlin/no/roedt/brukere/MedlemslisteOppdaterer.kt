@@ -5,7 +5,7 @@ import no.roedt.Kilde
 import no.roedt.hypersys.HypersysService
 import no.roedt.hypersys.externalModel.membership.Membership
 import no.roedt.lokallag.Lokallag
-import no.roedt.lokallag.LokallagRepository
+import no.roedt.lokallag.LokallagService
 import no.roedt.person.Oppdateringskilde
 import no.roedt.person.PersonRepository
 import no.roedt.tidssone
@@ -15,7 +15,7 @@ import java.time.ZonedDateTime
 
 @Dependent
 class MedlemslisteOppdaterer(
-    private val lokallagRepository: LokallagRepository,
+    private val lokallagService: LokallagService,
     private val hypersysService: HypersysService,
     private val personRepository: PersonRepository,
     private val tidligereMedlemSletter: TidligereMedlemSletter,
@@ -26,11 +26,11 @@ class MedlemslisteOppdaterer(
 ) {
 
     fun oppdaterMedlemsliste(lokallagID: Int): Set<Lokallag> {
-        val lokallag = lokallagRepository.findById(lokallagID)
+        val lokallag = lokallagService.findById(lokallagID)
         val sistOppdatert = lokallag.sistOppdatert?.atZone(tidssone())
         val sistOppdatertTilsierOppdatere =
             overstyrVenting || sistOppdatert.erSistOppdatertFørDenSisteUka() || sistOppdatert == null
-        if (lokallag != null && sistOppdatertTilsierOppdatere) {
+        if (sistOppdatertTilsierOppdatere) {
             try {
                 hypersysService.oppdaterLokallag()
             } catch (e: Exception) {

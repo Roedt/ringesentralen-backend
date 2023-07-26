@@ -7,7 +7,7 @@ import no.roedt.hypersys.externalModel.membership.ListMembershipTypeReference
 import no.roedt.hypersys.externalModel.membership.Membership
 import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.lokallag.Lokallag
-import no.roedt.lokallag.LokallagRepository
+import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.UserId
@@ -20,7 +20,7 @@ class HypersysService(
     val hypersysSystemTokenVerifier: HypersysSystemTokenVerifier,
     val personRepository: PersonRepository,
     val modelConverter: ModelConverter,
-    val lokallagRepository: LokallagRepository
+    val lokallagService: LokallagService
 ) {
 
     private fun getMedlemmer(hypersysLokallagId: Int?): List<Membership> = if (hypersysLokallagId == null) {
@@ -35,7 +35,7 @@ class HypersysService(
 
     private fun convertToHypersysLokallagId(lokallag: Int): Int? {
         if (lokallag == -1) return null
-        val hypersysId = lokallagRepository.findById(lokallag)
+        val hypersysId = lokallagService.findById(lokallag)
             ?.let { mittLag ->
                 if (mittLag.hypersysID != null) {
                     mittLag.hypersysID!!
@@ -54,16 +54,16 @@ class HypersysService(
 
     private fun getLokallagIdFromHypersys(mittLag: Lokallag) =
         getAlleLokallag().first { mittLag.navn == it.name }
-            .also { lokallagRepository.update("hypersysID=?1, navn=?2 where id=?3", it.id, it.name, mittLag.id) }
+            .also { lokallagService.oppdater(it.id, it.name, mittLag.id) }
             .id
 
     fun oppdaterLokallag() {
         var lokallagAaLeggeTil: Set<Lokallag> = setOf()
         getAlleLokallag().forEach { lag ->
-            if (lokallagRepository.find("hypersysID", lag.id).count() > 0) {
-                lokallagRepository.update("navn=?1 where hypersysID=?2", lag.name, lag.id)
-            } else if (lokallagRepository.find("navn", lag.name).count() > 0) {
-                lokallagRepository.update("hypersysID=?1 where navn=?2", lag.id, lag.name)
+            if (lokallagService.exists("hypersysID", lag.id)) {
+                lokallagService.oppdaterNavn(lag.id, lag.name)
+            } else if (lokallagService.exists("navn", lag.name)) {
+                lokallagService.oppdaterHypersysID(lag.id, lag.name)
             } else {
                 lokallagAaLeggeTil = lokallagAaLeggeTil.plus(
                     Lokallag(
@@ -75,7 +75,7 @@ class HypersysService(
                 )
             }
         }
-        lokallagAaLeggeTil.forEach { lokallagRepository.persist(it) }
+        lokallagAaLeggeTil.forEach { lokallagService.persist(it) }
     }
 
     fun getAlleLokallag(): List<Organisasjonsledd> =

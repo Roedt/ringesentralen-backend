@@ -5,7 +5,7 @@ import jakarta.enterprise.context.ApplicationScoped
 import no.roedt.DatabaseUpdater
 import no.roedt.brukere.FylkeRepository
 import no.roedt.lokallag.Lokallag
-import no.roedt.lokallag.LokallagRepository
+import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.UserId
@@ -14,7 +14,7 @@ import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 
 @ApplicationScoped
 class DashboardService(
-    val lokallagRepository: LokallagRepository,
+    val lokallagService: LokallagService,
     val databaseUpdater: DatabaseUpdater,
     val personRepository: PersonRepository,
     val fylkeRepository: FylkeRepository
@@ -67,11 +67,10 @@ class DashboardService(
     }
 
     private fun getMineLokallag(ringer: Person): List<Lokallag> = when {
-        RingesentralenGroupID.Admin.references(ringer.groupID()) -> lokallagRepository.findAll(Sort.ascending("navn"))
-            .list()
+        RingesentralenGroupID.Admin.references(ringer.groupID()) -> lokallagService.findAll(Sort.ascending("navn"))
 
-        RingesentralenGroupID.LokalGodkjenner.references(ringer.groupID()) -> lokallagRepository.fromFylke(ringer.fylke)
-        else -> lokallagRepository.list("id", ringer.lokallag)
+        RingesentralenGroupID.LokalGodkjenner.references(ringer.groupID()) -> lokallagService.fromFylke(ringer.fylke)
+        else -> lokallagService.list(ringer.lokallag)
     }
 
     private fun hypersysIdTilPerson(hypersysId: UserId) =

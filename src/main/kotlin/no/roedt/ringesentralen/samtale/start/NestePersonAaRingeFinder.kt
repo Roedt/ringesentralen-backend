@@ -5,7 +5,7 @@ import jakarta.ws.rs.ForbiddenException
 import jakarta.ws.rs.NotAuthorizedException
 import no.roedt.DatabaseUpdater
 import no.roedt.brukere.GroupID
-import no.roedt.lokallag.LokallagRepository
+import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonDTO
 import no.roedt.person.PersonRepository
@@ -24,7 +24,7 @@ class NestePersonAaRingeFinder(
     val oppslagRepository: OppslagRepository,
     val oppfoelgingValg21Repository: OppfoelgingValg21Repository,
     val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder,
-    val lokallagRepository: LokallagRepository,
+    val lokallagService: LokallagService,
     val nyligeOppslagCache: NyligeOppslagCache
 ) {
 
@@ -84,7 +84,7 @@ class NestePersonAaRingeFinder(
     private fun toResponse(it: Person) =
         NestePersonAaRingeResponse(
             person = PersonDTO.fra(it),
-            lokallagNavn = lokallagRepository.findById(it.lokallag).navn,
+            lokallagNavn = lokallagService.findById(it.lokallag).navn,
             tidlegareSamtalar = getTidlegareSamtalarMedDennePersonen(it.telefonnummer ?: "-1")
         )
 

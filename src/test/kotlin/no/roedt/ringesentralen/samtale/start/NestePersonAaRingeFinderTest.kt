@@ -9,7 +9,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import no.roedt.DatabaseUpdater
 import no.roedt.Kilde
 import no.roedt.Kommune
-import no.roedt.lokallag.LokallagRepository
+import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonRepository
 import no.roedt.person.Postnummer
@@ -24,7 +24,7 @@ internal class NestePersonAaRingeFinderTest {
     private val personRepository: PersonRepository = mock()
     private val databaseUpdater: DatabaseUpdater = mock()
     private val oppfoelgingValg21Repository: OppfoelgingValg21Repository = mock()
-    private val lokallagRepository: LokallagRepository = mock()
+    private val lokallagService: LokallagService = mock()
     private val oppslagRepository: OppslagRepository = mock()
     private val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder = mock()
 
@@ -34,7 +34,7 @@ internal class NestePersonAaRingeFinderTest {
         oppslagRepository = oppslagRepository,
         oppfoelgingValg21Repository = oppfoelgingValg21Repository,
         nesteMedlemAaRingeFinder = nesteMedlemAaRingeFinder,
-        lokallagRepository = lokallagRepository,
+        lokallagService = lokallagService,
         nyligeOppslagCache = NyligeOppslagCache()
     )
 

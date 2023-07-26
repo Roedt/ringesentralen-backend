@@ -17,7 +17,7 @@ import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.AutentisertSoMeFrivilligRequest
 import no.roedt.frivilligsystem.registrer.ErMedlemStatus
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
-import no.roedt.lokallag.LokallagRepository
+import no.roedt.lokallag.LokallagService
 import no.roedt.person.Oppdateringskilde
 import no.roedt.person.Person
 import no.roedt.person.PersonDTO
@@ -34,7 +34,7 @@ class FrivilligService(
     val personRepository: PersonRepository,
     val kontaktRepository: KontaktRepository,
     val databaseUpdater: DatabaseUpdater,
-    val lokallagRepository: LokallagRepository,
+    val lokallagService: LokallagService,
     val fylkeRepository: FylkeRepository,
     val aktivitetForFrivilligRepository: AktivitetForFrivilligRepository,
     val frivilligOpptattAvRepository: FrivilligOpptattAvRepository,
@@ -50,7 +50,7 @@ class FrivilligService(
                     person = PersonDTO.fra(it.second),
                     aktiviteter = aktivitetForFrivilligRepository.list("frivillig_id", it.first.id),
                     fylke = fylkeRepository.findById(it.second.fylke),
-                    lokallag = lokallagRepository.findById(it.second.lokallag),
+                    lokallag = lokallagService.findById(it.second.lokallag),
                     kontakt = kontaktRepository.list("frivillig_id", it.first.id.toInt()).map { i ->
                         KontaktResponse(
                             frivillig_id = i.frivillig_id,
@@ -132,7 +132,7 @@ class FrivilligService(
 
     private fun RegistrerNyFrivilligRequest.toPerson(): Person {
         val postnr = postnummerRepository.findById(postnummer)
-        val lokallag = lokallagRepository.fromPostnummer(postnr)
+        val lokallag = lokallagService.fromPostnummer(postnr)
         val person = Person(
             hypersysID = null,
             fornavn = fornavn,

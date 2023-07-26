@@ -1,14 +1,14 @@
 package no.roedt.hypersys.konvertering
 
 import com.nhaarman.mockitokotlin2.mock
-import no.roedt.lokallag.LokallagRepository
+import no.roedt.lokallag.LokallagService
 import org.junit.jupiter.api.Test
 
 internal class LokallagConverterTest {
 
-    private val lokallagRepository: LokallagRepository = mock()
+    private val lokallagService: LokallagService = mock()
 
-    private val lokallagConverter = LokallagConverter(lokallagRepository)
+    private val lokallagConverter = LokallagConverter(lokallagService)
 
     @Test
     fun `taklar manglande lokallag`() {
