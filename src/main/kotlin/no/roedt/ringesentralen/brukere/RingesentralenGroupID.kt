@@ -6,7 +6,6 @@ import no.roedt.brukere.GroupID.Companion.referencesOneOf
 import no.roedt.forum.ForumRolle
 import no.roedt.ringesentralen.RingespesifikkRolle
 
-@Suppress("ktlint:no-semi") // Remove when fixed in ktlint 0.48.1
 enum class RingesentralenGroupID(override val nr: Int, override val skildring: String, override val roller: Set<String>) :
     GroupID {
     ManglerSamtykke(0, "mangler info/samtykke før ringing", setOf()),
@@ -24,7 +23,7 @@ enum class RingesentralenGroupID(override val nr: Int, override val skildring: S
     Frivillig(12, "har meldt seg som valgkampfrivillig", setOf());
 
     companion object {
-        fun from(value: Int): GroupID = values().first { it.nr == value }
+        fun from(value: Int): GroupID = entries.first { it.nr == value }
         fun erUgyldigRolleForAaBrukeSystemet(groupID: GroupID) = setOf(ManglerSamtykke, KlarTilAaRinges, Ferdigringt, Slett).contains(groupID)
         fun isBrukerEllerVenter(groupID: Int) = referencesOneOf(groupID, UgodkjentRinger, GodkjentRinger, GodkjentRingerMedlemmer, LokalGodkjenner, Admin)
         fun isIkkeRegistrertRinger(groupID: Int) = referencesOneOf(groupID, ManglerSamtykke, KlarTilAaRinges, Ferdigringt, Slett, PrioritertAaRinge, Frivillig)
