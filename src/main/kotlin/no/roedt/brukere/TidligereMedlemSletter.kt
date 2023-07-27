@@ -2,8 +2,8 @@ package no.roedt.brukere
 
 import jakarta.enterprise.context.Dependent
 import no.roedt.brukere.mfa.MFAService
-import no.roedt.frivilligsystem.FrivilligKoronaRepository
-import no.roedt.frivilligsystem.FrivilligOpptattAvRepository
+import no.roedt.frivilligsystem.FrivilligKoronaService
+import no.roedt.frivilligsystem.FrivilligOpptattAvService
 import no.roedt.frivilligsystem.FrivilligService
 import no.roedt.frivilligsystem.kontakt.KontaktService
 import no.roedt.frivilligsystem.registrer.AktivitetForFrivilligService
@@ -20,8 +20,8 @@ import no.roedt.ringesentralen.sms.SMSTilMottakerService
 class TidligereMedlemSletter(
     private val personService: PersonService,
     private val ringerService: RingerService,
-    private val frivilligOpptattAvRepository: FrivilligOpptattAvRepository,
-    private val frivilligKoronaRepository: FrivilligKoronaRepository,
+    private val frivilligOpptattAvService: FrivilligOpptattAvService,
+    private val frivilligKoronaService: FrivilligKoronaService,
     private val aktivitetForFrivilligService: AktivitetForFrivilligService,
     private val kontaktService: KontaktService,
     private val frivilligService: FrivilligService,
@@ -87,8 +87,8 @@ class TidligereMedlemSletter(
     ) {
         frivilligService.finnFraPersonId(personId).ifPresent {
             aktivitetForFrivilligService.slett(it.id)
-            frivilligKoronaRepository.delete("frivillig_id=?1", it.id)
-            frivilligOpptattAvRepository.delete("frivillig_id=?1", it.id)
+            frivilligKoronaService.slett(it.id)
+            frivilligOpptattAvService.slett(it.id)
             kontaktService.slett(it.id)
             smsTilMottakerService.slett(it.id)
             frivilligService.slett(it.id)

@@ -35,8 +35,8 @@ class FrivilligService(
     val lokallagService: LokallagService,
     val fylkeService: FylkeService,
     val aktivitetForFrivilligService: AktivitetForFrivilligService,
-    val frivilligOpptattAvRepository: FrivilligOpptattAvRepository,
-    val frivilligKoronaRepository: FrivilligKoronaRepository,
+    val frivilligOpptattAvService: FrivilligOpptattAvService,
+    val frivilligKoronaService: FrivilligKoronaService,
     val postnummerService: PostnummerService
 ) {
     fun hentAlle(userId: UserId, roller: Set<String>) =
@@ -50,10 +50,8 @@ class FrivilligService(
                     fylke = fylkeService.findById(it.second.fylke),
                     lokallag = lokallagService.findById(it.second.lokallag),
                     kontakt = kontaktService.hentKontakt(it.first.id),
-                    opptattAv = frivilligOpptattAvRepository.list("frivillig_id", it.first.id).map { i -> i.opptattAv }
-                        .map { i -> i.displaytext },
-                    frivilligKorona = frivilligKoronaRepository.find("frivillig_id", it.first.id)
-                        .firstResultOptional<FrivilligKorona>().orElse(null)
+                    opptattAv = frivilligOpptattAvService.hent(it.first.id),
+                    frivilligKorona = frivilligKoronaService.hent(it.first.id)
                 )
             }
 
@@ -94,7 +92,7 @@ class FrivilligService(
             .forEach { aktivitetForFrivilligService.persist(it) }
         lagreOpptattAv(request, frivillig)
 
-        frivilligKoronaRepository.persist(
+        frivilligKoronaService.persist(
             FrivilligKorona(
                 frivillig_id = frivillig.id,
                 haandtering = Emojifjerner.fjernEmojis(request.haandtering) ?: "",
@@ -115,7 +113,7 @@ class FrivilligService(
             request.opptattAv
                 .map { OpptattAv.valueOf(it) }
                 .map { FrivilligOpptattAv(frivillig_id = frivillig.id, opptattAv = it) }
-                .forEach { frivilligOpptattAvRepository.persist(it) }
+                .forEach { frivilligOpptattAvService.persist(it) }
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
