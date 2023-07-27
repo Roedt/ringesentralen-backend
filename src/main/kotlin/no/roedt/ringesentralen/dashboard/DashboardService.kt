@@ -3,7 +3,8 @@ package no.roedt.ringesentralen.dashboard
 import io.quarkus.panache.common.Sort
 import jakarta.enterprise.context.ApplicationScoped
 import no.roedt.DatabaseUpdater
-import no.roedt.brukere.FylkeRepository
+import no.roedt.fylke.FylkeService
+
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
@@ -17,7 +18,7 @@ class DashboardService(
     val lokallagService: LokallagService,
     val databaseUpdater: DatabaseUpdater,
     val personService: PersonService,
-    val fylkeRepository: FylkeRepository
+    val fylkeService: FylkeService
 ) {
 
     fun getDashboard(ringerID: UserId, modus: Modus): DashboardResponse {
@@ -58,7 +59,7 @@ class DashboardService(
                             listOf()
                         ) as List<*>
                         ).size,
-                    fylke = fylkeRepository.findById(lokallag.fylke)
+                    fylke = fylkeService.findById(lokallag.fylke)
                 )
             }
             .sortedBy { it.lokallag.navn }

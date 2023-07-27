@@ -1,7 +1,7 @@
 package no.roedt.hypersys.konvertering
 
 import com.nhaarman.mockitokotlin2.mock
-import no.roedt.brukere.FylkeRepository
+import no.roedt.fylke.FylkeService
 import no.roedt.person.PersonService
 import no.roedt.person.PostnummerRepository
 import org.junit.jupiter.api.Test
@@ -12,13 +12,13 @@ internal class ModelConverterTest {
 
     private val lokallagConverter: LokallagConverter = LokallagConverter(mock())
     private val personService: PersonService = mock()
-    private val fylkeRepository: FylkeRepository = mock()
+    private val fylkeService: FylkeService = mock()
     private val postnummerRepository: PostnummerRepository = mock()
 
     private val modelConverter: ModelConverterBean = ModelConverterBean(
         lokallagConverter = lokallagConverter,
         personService = personService,
-        fylkeRepository = fylkeRepository,
+        fylkeService = fylkeService,
         postnummerRepository = postnummerRepository
     )
 

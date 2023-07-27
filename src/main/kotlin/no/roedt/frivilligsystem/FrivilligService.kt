@@ -4,7 +4,6 @@ import jakarta.enterprise.context.ApplicationScoped
 import no.roedt.DatabaseUpdater
 import no.roedt.Emojifjerner
 import no.roedt.Kilde
-import no.roedt.brukere.FylkeRepository
 import no.roedt.brukere.GenerellRolle
 import no.roedt.frivilligsystem.kontakt.AutentisertRegistrerKontaktRequest
 import no.roedt.frivilligsystem.kontakt.Kontakt
@@ -17,6 +16,7 @@ import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.AutentisertSoMeFrivilligRequest
 import no.roedt.frivilligsystem.registrer.ErMedlemStatus
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
+import no.roedt.fylke.FylkeService
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Oppdateringskilde
 import no.roedt.person.Person
@@ -35,7 +35,7 @@ class FrivilligService(
     val kontaktRepository: KontaktRepository,
     val databaseUpdater: DatabaseUpdater,
     val lokallagService: LokallagService,
-    val fylkeRepository: FylkeRepository,
+    val fylkeService: FylkeService,
     val aktivitetForFrivilligRepository: AktivitetForFrivilligRepository,
     val frivilligOpptattAvRepository: FrivilligOpptattAvRepository,
     val frivilligKoronaRepository: FrivilligKoronaRepository,
@@ -49,7 +49,7 @@ class FrivilligService(
                     frivillig = it.first,
                     person = PersonDTO.fra(it.second),
                     aktiviteter = aktivitetForFrivilligRepository.list("frivillig_id", it.first.id),
-                    fylke = fylkeRepository.findById(it.second.fylke),
+                    fylke = fylkeService.findById(it.second.fylke),
                     lokallag = lokallagService.findById(it.second.lokallag),
                     kontakt = kontaktRepository.list("frivillig_id", it.first.id.toInt()).map { i ->
                         KontaktResponse(
@@ -140,7 +140,7 @@ class FrivilligService(
             telefonnummer = telefonnummer,
             email = epost,
             postnummer = postnr,
-            fylke = fylkeRepository.getFylke(lokallag, postnr),
+            fylke = fylkeService.getFylke(lokallag, postnr),
             lokallag = lokallag,
             groupID = RingesentralenGroupID.Frivillig.nr,
             kilde = Kilde.Frivillig,

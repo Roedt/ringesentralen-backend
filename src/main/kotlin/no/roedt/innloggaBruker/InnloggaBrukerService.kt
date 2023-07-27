@@ -1,8 +1,8 @@
 package no.roedt.innloggaBruker
 
 import jakarta.enterprise.context.ApplicationScoped
-import no.roedt.brukere.FylkeRepository
 import no.roedt.brukere.GenerellRolle
+import no.roedt.fylke.FylkeService
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
@@ -16,7 +16,7 @@ import java.util.Optional
 @ApplicationScoped
 class InnloggaBrukerService(
     private val personService: PersonService,
-    private val fylkeRepository: FylkeRepository,
+    private val fylkeService: FylkeService,
     private val lokallagService: LokallagService,
     private val tokenService: TokenService
 ) {
@@ -35,16 +35,14 @@ class InnloggaBrukerService(
         fylke = fylke,
         lokallag = lokallag,
         rolle = RingesentralenGroupID.from(groupID()).roller,
-        fylkeNavn = fylkeRepository.findById(fylke).navn,
+        fylkeNavn = fylkeService.findById(fylke).navn,
         lokallagNavn = lokallagService.findById(lokallag).navn
     )
 
     fun getLokallag(userId: UserId, groups: Set<String>): List<Lokallag> = when {
         groups.contains(GenerellRolle.admin) -> lokallagService.findAll()
         groups.contains(RingespesifikkRolle.godkjenner) -> lokallagService.fromFylke(
-            fylkeRepository.getFylkeIdFraLokallag(
-                getPerson(userId).get().lokallag
-            )
+            fylkeService.getFylkeIdFraLokallag(getPerson(userId).get().lokallag)
         )
 
         getProfil(userId) == null -> listOf()

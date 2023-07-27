@@ -1,7 +1,7 @@
 package no.roedt.ringesentralen.dashboard
 
 import io.quarkus.runtime.annotations.RegisterForReflection
-import no.roedt.brukere.Fylke
+import no.roedt.fylke.Fylke
 import no.roedt.lokallag.Lokallag
 
 @RegisterForReflection

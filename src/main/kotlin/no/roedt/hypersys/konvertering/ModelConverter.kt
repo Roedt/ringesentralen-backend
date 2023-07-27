@@ -2,7 +2,7 @@ package no.roedt.hypersys.konvertering
 
 import jakarta.enterprise.context.Dependent
 import no.roedt.Kilde
-import no.roedt.brukere.FylkeRepository
+import no.roedt.fylke.FylkeService
 import no.roedt.hypersys.externalModel.User
 import no.roedt.hypersys.externalModel.membership.Membership
 import no.roedt.lokallag.Lokallag
@@ -26,7 +26,7 @@ interface ModelConverter {
 class ModelConverterBean(
     private val lokallagConverter: LokallagConverter,
     private val personService: PersonService,
-    private val fylkeRepository: FylkeRepository,
+    private val fylkeService: FylkeService,
     private val postnummerRepository: PostnummerRepository
 ) : ModelConverter {
 
@@ -36,7 +36,7 @@ class ModelConverterBean(
         val etternavn = user.name.substring(sisteMellomrom + 1)
         val postnummer = toPostnummer(user)
         val lokallag = lokallagConverter.tilLokallag(user.memberships)
-        val fylke = fylkeRepository.getFylke(lokallag, postnummer)
+        val fylke = fylkeService.getFylke(lokallag, postnummer)
         return Person(
             hypersysID = user.id,
             fornavn = fornavn,
@@ -68,7 +68,7 @@ class ModelConverterBean(
             telefonnummer = telefonnummer?.vask(),
             email = itOrNull(medlemskap.email)?.vask(),
             postnummer = postnummer,
-            fylke = fylkeRepository.toFylke(postnummer),
+            fylke = fylkeService.toFylke(postnummer),
             groupID = groupID,
             lokallag = lokallagConverter.tilLokallag(medlemskap.organisation),
             kilde = Kilde.Hypersys,
@@ -89,7 +89,7 @@ class ModelConverterBean(
             telefonnummer = itOrNull(medlemskap.mobile)?.let { toTelefonnummer(it) }?.vask(),
             email = itOrNull(medlemskap.email?.vask()),
             postnummer = postnummer,
-            fylke = fylkeRepository.toFylke(postnummer),
+            fylke = fylkeService.toFylke(postnummer),
             lokallag = lokallag.id,
             sistOppdatert = Instant.now(),
             groupID = person.groupID(),
