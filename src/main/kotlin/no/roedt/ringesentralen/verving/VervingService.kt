@@ -6,7 +6,7 @@ import no.roedt.fylke.FylkeService
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonService
-import no.roedt.person.PostnummerRepository
+import no.roedt.postnummer.PostnummerService
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 
 @Dependent
@@ -15,11 +15,11 @@ class VervingService(
     private val vervingRepository: VervingRepository,
     private val lokallagService: LokallagService,
     private val fylkeService: FylkeService,
-    private val postnummerRepository: PostnummerRepository
+    private val postnummerService: PostnummerService
 ) {
 
     fun postPersonSomSkalRinges(request: AutentisertVervingRequest): Pair<Boolean, Person> {
-        val postnummer = postnummerRepository.findById(request.request.postnummer)
+        val postnummer = postnummerService.findById(request.request.postnummer)
         vervingRepository.persist(
             Verving(
                 telefonnummer = request.request.telefonnummer,

@@ -2,6 +2,7 @@ package no.roedt.fylke
 
 import jakarta.enterprise.context.Dependent
 import no.roedt.person.Postnummer
+import no.roedt.postnummer.Postnummer
 
 @Dependent
 class FylkeService(private val repository: FylkeRepository) {

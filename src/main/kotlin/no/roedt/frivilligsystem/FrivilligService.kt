@@ -19,8 +19,8 @@ import no.roedt.person.Oppdateringskilde
 import no.roedt.person.Person
 import no.roedt.person.PersonDTO
 import no.roedt.person.PersonService
-import no.roedt.person.PostnummerRepository
 import no.roedt.person.UserId
+import no.roedt.postnummer.PostnummerService
 import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import java.time.Instant
@@ -37,7 +37,7 @@ class FrivilligService(
     val aktivitetForFrivilligService: AktivitetForFrivilligService,
     val frivilligOpptattAvRepository: FrivilligOpptattAvRepository,
     val frivilligKoronaRepository: FrivilligKoronaRepository,
-    val postnummerRepository: PostnummerRepository
+    val postnummerService: PostnummerService
 ) {
     fun hentAlle(userId: UserId, roller: Set<String>) =
         hentFrivilligeUtFraMinRolle(roller, personService.getPerson(userId))
@@ -122,7 +122,7 @@ class FrivilligService(
     }
 
     private fun RegistrerNyFrivilligRequest.toPerson(): Person {
-        val postnr = postnummerRepository.findById(postnummer)
+        val postnr = postnummerService.findById(postnummer)
         val lokallag = lokallagService.fromPostnummer(postnr)
         val person = Person(
             hypersysID = null,

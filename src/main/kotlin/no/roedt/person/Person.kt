@@ -13,6 +13,7 @@ import jakarta.persistence.Table
 import no.roedt.Kilde
 import no.roedt.RoedtPanacheEntity
 import no.roedt.brukere.GroupID
+import no.roedt.postnummer.Postnummer
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import org.hibernate.Hibernate
 import java.time.Instant

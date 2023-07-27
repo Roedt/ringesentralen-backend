@@ -1,4 +1,4 @@
-package no.roedt.person
+package no.roedt.postnummer
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
@@ -40,6 +40,4 @@ data class Postnummer(
 }
 
 @ApplicationScoped
-class PostnummerRepository : PanacheRepositoryBase<Postnummer, String> {
-    fun ukjent(): Postnummer = findById("-1")
-}
+class PostnummerRepository : PanacheRepositoryBase<Postnummer, String>
