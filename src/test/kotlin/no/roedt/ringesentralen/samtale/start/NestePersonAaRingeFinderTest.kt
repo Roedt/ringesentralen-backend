@@ -12,10 +12,10 @@ import no.roedt.kommune.Kommune
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonService
-import no.roedt.person.Postnummer
 import no.roedt.person.UserId
+import no.roedt.postnummer.Postnummer
 import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.samtale.OppfoelgingValg21Repository
+import no.roedt.ringesentralen.samtale.OppfoelgingValg21Service
 import no.roedt.ringesentralen.samtale.oppslag.OppslagService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -24,7 +24,7 @@ internal class NestePersonAaRingeFinderTest {
 
     private val personService: PersonService = mock()
     private val databaseUpdater: DatabaseUpdater = mock()
-    private val oppfoelgingValg21Repository: OppfoelgingValg21Repository = mock()
+    private val oppfoelgingValg21Service: OppfoelgingValg21Service = mock()
     private val lokallagService: LokallagService = mock()
     private val oppslagService: OppslagService = mock()
     private val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder = mock()
@@ -33,7 +33,7 @@ internal class NestePersonAaRingeFinderTest {
         personService = personService,
         databaseUpdater = databaseUpdater,
         oppslagService = oppslagService,
-        oppfoelgingValg21Repository = oppfoelgingValg21Repository,
+        oppfoelgingValg21Service = oppfoelgingValg21Service,
         nesteMedlemAaRingeFinder = nesteMedlemAaRingeFinder,
         lokallagService = lokallagService,
         nyligeOppslagCache = NyligeOppslagCache()

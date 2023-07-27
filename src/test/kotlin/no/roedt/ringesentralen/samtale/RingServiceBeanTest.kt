@@ -12,8 +12,8 @@ import no.roedt.kommune.Kommune
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonService
-import no.roedt.person.Postnummer
 import no.roedt.person.UserId
+import no.roedt.postnummer.Postnummer
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.ringer.RingerService
 import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
@@ -31,7 +31,7 @@ internal class RingServiceBeanTest {
     private val personService: PersonService = mock()
     private val databaseUpdater: DatabaseUpdater = mock()
     private val samtaleService: SamtaleService = mock()
-    private val oppfoelgingValg21Repository: OppfoelgingValg21Repository = mock()
+    private val oppfoelgingValg21Service: OppfoelgingValg21Service = mock()
     private val lokallagService: LokallagService = mock()
     private val ringerService: RingerService = mock()
     private val nestePersonAaRingeFinder: NestePersonAaRingeFinder = mock()
@@ -40,7 +40,7 @@ internal class RingServiceBeanTest {
         personService = personService,
         databaseUpdater = databaseUpdater,
         samtaleService = samtaleService,
-        oppfoelgingValg21Repository = oppfoelgingValg21Repository,
+        oppfoelgingValg21Service = oppfoelgingValg21Service,
         lokallagService = lokallagService,
         ringerService = ringerService,
         nestePersonAaRingeFinder = nestePersonAaRingeFinder

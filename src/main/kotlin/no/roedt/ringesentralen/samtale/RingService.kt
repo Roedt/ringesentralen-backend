@@ -36,7 +36,7 @@ class RingServiceBean(
     val personService: PersonService,
     val databaseUpdater: DatabaseUpdater,
     val samtaleService: SamtaleService,
-    val oppfoelgingValg21Repository: OppfoelgingValg21Repository,
+    val oppfoelgingValg21Service: OppfoelgingValg21Service,
     val lokallagService: LokallagService,
     val ringerService: RingerService,
     val nestePersonAaRingeFinder: NestePersonAaRingeFinder
@@ -135,7 +135,7 @@ class RingServiceBean(
 
     private fun registrerValg21SpesifikkeResultat(samtaleId: Long, request: ResultatFraSamtaleRequest) {
         val resultat = request.modusspesifikkeResultat as Valg21SpesifikkeResultat
-        oppfoelgingValg21Repository.persist(
+        oppfoelgingValg21Service.persist(
             OppfoelgingValg21(
                 samtaleId = samtaleId.toInt(),
                 vilBliMerAktiv = resultat.vilBliMerAktiv,

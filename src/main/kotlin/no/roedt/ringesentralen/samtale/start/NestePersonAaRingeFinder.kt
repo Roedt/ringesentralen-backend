@@ -12,7 +12,7 @@ import no.roedt.person.PersonService
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
-import no.roedt.ringesentralen.samtale.OppfoelgingValg21Repository
+import no.roedt.ringesentralen.samtale.OppfoelgingValg21Service
 import no.roedt.ringesentralen.samtale.Samtale
 import no.roedt.ringesentralen.samtale.oppslag.Oppslag
 import no.roedt.ringesentralen.samtale.oppslag.OppslagService
@@ -24,7 +24,7 @@ class NestePersonAaRingeFinder(
     val personService: PersonService,
     val databaseUpdater: DatabaseUpdater,
     val oppslagService: OppslagService,
-    val oppfoelgingValg21Repository: OppfoelgingValg21Repository,
+    val oppfoelgingValg21Service: OppfoelgingValg21Service,
     val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder,
     val lokallagService: LokallagService,
     val nyligeOppslagCache: NyligeOppslagCache
@@ -102,7 +102,7 @@ class NestePersonAaRingeFinder(
                     ringtNummer = oppringtNummer,
                     ringtNavn = it[4] as String,
                     oppfoelging = it[5]?.toString()
-                        ?.let { i -> if (i != "null") oppfoelgingValg21Repository.findById(i.toInt()) else null }
+                        ?.let { i -> if (i != "null") oppfoelgingValg21Service.findById(i.toInt()) else null }
                 )
             }
             .toList()

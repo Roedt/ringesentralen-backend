@@ -4,7 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped
 import no.roedt.DatabaseUpdater
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.samtale.OppfoelgingValg21Repository
+import no.roedt.ringesentralen.samtale.OppfoelgingValg21Service
 import no.roedt.ringesentralen.samtale.Samtale
 import no.roedt.skrivUt
 import java.math.BigInteger
@@ -13,7 +13,7 @@ import java.sql.Timestamp
 @ApplicationScoped
 class HistorikkService(
     private val databaseUpdater: DatabaseUpdater,
-    private val oppfoelgingValg21Repository: OppfoelgingValg21Repository
+    private val oppfoelgingValg21Service: OppfoelgingValg21Service
 ) {
 
     fun getMineSamtaler(userId: UserId, modus: Modus): List<Samtale> =
@@ -37,7 +37,7 @@ class HistorikkService(
                     ringtNummer = (it[4] ?: "Ukjent") as String,
                     ringtNavn = it[5] as String,
                     oppfoelging = it[6]?.toString()
-                        ?.let { i -> if (i != "null") oppfoelgingValg21Repository.findById(i.toInt()) else null }
+                        ?.let { i -> if (i != "null") oppfoelgingValg21Service.findById(i.toInt()) else null }
                 )
             }
     }
