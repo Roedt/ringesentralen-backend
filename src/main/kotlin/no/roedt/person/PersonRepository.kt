@@ -69,5 +69,5 @@ class PersonRepository : PanacheRepositoryBase<Person, Int> {
 
     fun hypersysIDTilRingerId(userId: UserId) = entityManager.list(
         "select ringer.id from ringer inner join person on person.id = ringer.personId and person.hypersysID = ${userId.userId} "
-    ).first()
+    ).first() as Int
 }

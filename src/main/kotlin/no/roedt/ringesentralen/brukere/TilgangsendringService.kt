@@ -58,7 +58,7 @@ class TilgangsendringServiceBean(
         val ringerId = personService.hypersysIDTilRingerId(request.userId)
         godkjenningService.persist(
             Godkjenning(
-                godkjenner = ringerId.toString().toInt(),
+                godkjenner = ringerId,
                 godkjentPerson = personMedEndraTilgang,
                 nyGroupId = nyTilgang.nr
             )

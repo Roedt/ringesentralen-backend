@@ -93,7 +93,6 @@ class StatistikkRepository(internal val entityManager: EntityManager) {
             """
         ).size
 
-
     fun lodd(fra: Instant, til: Instant): List<LoddStatistikk> =
         entityManager.list(
             """
