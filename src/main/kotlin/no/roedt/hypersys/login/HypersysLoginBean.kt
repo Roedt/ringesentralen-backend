@@ -17,7 +17,7 @@ abstract class HypersysLoginBean(
     private val hypersysProxy: HypersysProxy,
     private val modelConverter: ModelConverter,
     private val secretFactory: SecretFactory,
-    private val loginAttemptRepository: LoginAttemptRepository,
+    private val loginService: LoginService,
     private val personService: PersonService,
     private val aesUtil: AESUtil
 ) {
@@ -46,7 +46,7 @@ abstract class HypersysLoginBean(
         val profile: Profile = hypersysProxy.get("actor/api/profile/", token, Profile::class.java)
         val convertedPerson = modelConverter.convert(profile.user, getRolle(profile))
         return Pair(lagrePerson(convertedPerson), convertedPerson)
-            .also { loginAttemptRepository.persist(LoginAttempt(hypersysID = profile.user.id)) }
+            .also { loginService.persist(LoginAttempt(hypersysID = profile.user.id)) }
     }
 
     protected open fun getRolle(profile: Profile): Int {

@@ -9,8 +9,8 @@ import no.roedt.hypersys.externalModel.Profile
 import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.hypersys.login.AESUtil
 import no.roedt.hypersys.login.HypersysLoginBean
-import no.roedt.hypersys.login.LoginAttemptRepository
 import no.roedt.hypersys.login.LoginRequest
+import no.roedt.hypersys.login.LoginService
 import no.roedt.person.Person
 import no.roedt.person.PersonService
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
@@ -24,7 +24,7 @@ class RingesentralenLoginBean(
     hypersysProxy: HypersysProxy,
     modelConverter: ModelConverter,
     secretFactory: SecretFactory,
-    loginAttemptRepository: LoginAttemptRepository,
+    loginService: LoginService,
     personService: PersonService,
     private val ringerService: RingerService,
     aesUtil: AESUtil
@@ -32,7 +32,7 @@ class RingesentralenLoginBean(
     hypersysProxy,
     modelConverter,
     secretFactory,
-    loginAttemptRepository,
+    loginService,
     personService,
     aesUtil
 ) {

@@ -8,7 +8,7 @@ import no.roedt.frivilligsystem.FrivilligOpptattAvRepository
 import no.roedt.frivilligsystem.FrivilligRepository
 import no.roedt.frivilligsystem.kontakt.KontaktRepository
 import no.roedt.frivilligsystem.registrer.AktivitetForFrivilligRepository
-import no.roedt.hypersys.login.LoginAttemptRepository
+import no.roedt.hypersys.login.LoginService
 import no.roedt.person.Person
 import no.roedt.person.PersonService
 import no.roedt.ringesentralen.ringer.Ringer
@@ -27,7 +27,7 @@ class TidligereMedlemSletter(
     private val kontaktRepository: KontaktRepository,
     private val frivilligRepository: FrivilligRepository,
     private val godkjenningRepository: GodkjenningRepository,
-    private val loginAttemptRepository: LoginAttemptRepository,
+    private val loginService: LoginService,
     private val mfaService: MFAService,
     private val samtaleService: SamtaleService,
     private val oppslagService: OppslagService,
@@ -89,7 +89,7 @@ class TidligereMedlemSletter(
             smsTilMottakerRepository.delete("mottaker_id=?1", it.id)
             frivilligRepository.deleteById(it.id)
         }
-        loginAttemptRepository.delete("hypersysID=?1", ikkeMedlemLenger.hypersysID)
+        loginService.slett(ikkeMedlemLenger.hypersysID)
         mfaService.slett(ikkeMedlemLenger.email)
         ringerService.slett(personId)
         personService.deleteById(personId)
