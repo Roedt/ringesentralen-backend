@@ -2,7 +2,7 @@ package no.roedt.lokallag
 
 import io.quarkus.panache.common.Sort
 import jakarta.enterprise.context.ApplicationScoped
-import no.roedt.person.Postnummer
+import no.roedt.postnummer.Postnummer
 
 @ApplicationScoped
 class LokallagService(val repository: LokallagRepository) {

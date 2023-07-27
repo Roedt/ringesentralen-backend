@@ -8,7 +8,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Table
 import no.roedt.DatabaseUpdater
 import no.roedt.RoedtPanacheEntity
-import no.roedt.person.Postnummer
+import no.roedt.postnummer.Postnummer
 import org.hibernate.Hibernate
 import java.time.Instant
 

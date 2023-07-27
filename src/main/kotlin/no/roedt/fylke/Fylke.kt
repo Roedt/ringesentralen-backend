@@ -10,7 +10,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 import no.roedt.DatabaseUpdater
 import no.roedt.lokallag.LokallagService
-import no.roedt.person.Postnummer
+import no.roedt.postnummer.Postnummer
 import org.hibernate.Hibernate
 
 @Entity

@@ -2,6 +2,7 @@ package no.roedt.person
 
 import io.quarkus.runtime.annotations.RegisterForReflection
 import no.roedt.Kilde
+import no.roedt.postnummer.Postnummer
 import java.time.Instant
 
 @RegisterForReflection

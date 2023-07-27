@@ -17,8 +17,8 @@ import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.kommune.Kommune
 import no.roedt.person.Person
 import no.roedt.person.PersonService
-import no.roedt.person.Postnummer
 import no.roedt.person.UserId
+import no.roedt.postnummer.Postnummer
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.doReturn

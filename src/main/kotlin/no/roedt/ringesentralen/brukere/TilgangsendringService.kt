@@ -12,8 +12,8 @@ import no.roedt.hypersys.HypersysService
 import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.person.Person
 import no.roedt.person.PersonService
-import no.roedt.person.Postnummer
 import no.roedt.person.UserId
+import no.roedt.postnummer.Postnummer
 
 interface TilgangsendringService {
     fun aktiverRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring
