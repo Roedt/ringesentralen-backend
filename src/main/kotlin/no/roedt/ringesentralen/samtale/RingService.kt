@@ -1,7 +1,6 @@
 package no.roedt.ringesentralen.samtale
 
 import jakarta.enterprise.context.ApplicationScoped
-import no.roedt.DatabaseUpdater
 import no.roedt.brukere.GroupID
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
@@ -34,7 +33,6 @@ interface RingService {
 @ApplicationScoped
 class RingServiceBean(
     val personService: PersonService,
-    val databaseUpdater: DatabaseUpdater,
     val samtaleService: SamtaleService,
     val oppfoelgingValg21Service: OppfoelgingValg21Service,
     val lokallagService: LokallagService,
@@ -148,8 +146,5 @@ class RingServiceBean(
         )
     }
 
-    fun hypersysIDTilRingerId(userId: UserId) =
-        databaseUpdater.getResultList(
-            "select ringer.id from ringer inner join person on person.id = ringer.personId and person.hypersysID = ${userId.userId} "
-        ).first()
+    fun hypersysIDTilRingerId(userId: UserId) = personService.hypersysIDTilRingerId(userId)
 }

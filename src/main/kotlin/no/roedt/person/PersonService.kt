@@ -55,5 +55,5 @@ class PersonService(internal val repository: PersonRepository) {
     fun oppdaterRolleFraTelefonnummer(nyRolle: Int, telefonnummer: String) =
         repository.update("groupID=?1 where telefonnummer=?2", nyRolle, telefonnummer)
 
-    fun hypersysIDTilRingerId(userId: UserId): Any = repository.hypersysIDTilRingerId(userId)
+    fun hypersysIDTilRingerId(userId: UserId) = repository.hypersysIDTilRingerId(userId)
 }

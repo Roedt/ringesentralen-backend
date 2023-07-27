@@ -38,7 +38,6 @@ internal class RingServiceBeanTest {
 
     private var ringService = RingServiceBean(
         personService = personService,
-        databaseUpdater = databaseUpdater,
         samtaleService = samtaleService,
         oppfoelgingValg21Service = oppfoelgingValg21Service,
         lokallagService = lokallagService,

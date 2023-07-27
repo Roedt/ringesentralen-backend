@@ -2,7 +2,6 @@ package no.roedt.ringesentralen.dashboard
 
 import io.quarkus.panache.common.Sort
 import jakarta.enterprise.context.ApplicationScoped
-import no.roedt.DatabaseUpdater
 import no.roedt.fylke.FylkeService
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagService
@@ -15,26 +14,18 @@ import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 @ApplicationScoped
 class DashboardService(
     val lokallagService: LokallagService,
-    val databaseUpdater: DatabaseUpdater,
     val personService: PersonService,
-    val fylkeService: FylkeService
+    val fylkeService: FylkeService,
+    val repository: DashboardRepository
 ) {
 
     fun getDashboard(ringerID: UserId, modus: Modus): DashboardResponse {
         val mineLokallag = getMineLokallag(hypersysIdTilPerson(ringerID))
         val lokallagIDar = mineLokallag.map { it.id.toInt() }
 
-        val hypersysID = if (modus == Modus.medlemmer) " is not null" else " is null"
-
-        val igjenAaRingePerLokallag =
-            databaseUpdater.getResultList("SELECT lokallag from person where groupID=${RingesentralenGroupID.KlarTilAaRinges.nr} and hypersysID $hypersysID")
-                .filter { lokallagIDar.contains(it) }.groupBy { it }
-        val personerSomKanRingesPerLokallag =
-            databaseUpdater.getResultList("SELECT lokallag FROM v_personerSomKanRinges where hypersysID $hypersysID")
-                .filter { lokallagIDar.contains(it) }.groupBy { it }
-        val totaltInklRingtePerLokallag =
-            databaseUpdater.getResultList("SELECT lokallag from person where groupID iN (${RingesentralenGroupID.Ferdigringt.nr}, ${RingesentralenGroupID.Slett.nr}) and hypersysID $hypersysID")
-                .filter { lokallagIDar.contains(it) }.groupBy { it }
+        val igjenAaRingePerLokallag = repository.hentIgjenAaRingePerLokallag(lokallagIDar, modus)
+        val personerSomKanRingesPerLokallag = repository.hentPersonerSomKanRingesPerLokallag(lokallagIDar, modus)
+        val totaltInklRingtePerLokallag = repository.hentTotaltInklRingtePerLokallag(lokallagIDar, modus)
 
         val statusliste: List<Lokallagsstatus> = mineLokallag
             .map { lokallag ->
