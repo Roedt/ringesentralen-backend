@@ -11,7 +11,7 @@ import no.roedt.brukere.GroupID
 import no.roedt.hypersys.HypersysService
 import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.person.Person
-import no.roedt.person.PersonRepository
+import no.roedt.person.PersonService
 import no.roedt.person.Postnummer
 import no.roedt.person.UserId
 
@@ -26,7 +26,7 @@ interface TilgangsendringService {
 
 @ApplicationScoped
 class TilgangsendringServiceBean(
-    val personRepository: PersonRepository,
+    val personService: PersonService,
     val databaseUpdater: DatabaseUpdater,
     val epostSender: RingesentralenEpostformulerer,
     val hypersysService: HypersysService,
@@ -65,10 +65,10 @@ class TilgangsendringServiceBean(
                 nyGroupId = nyTilgang.nr
             )
         )
-        personRepository.update("groupID=?1 where id=?2", nyTilgang.nr, personMedEndraTilgang)
+        personService.oppdaterRolle(nyTilgang.nr, personMedEndraTilgang)
         val brukerendring = Brukerendring(personID = personMedEndraTilgang, nyGroupId = nyTilgang, epostSendt = false)
 
-        val person = personRepository.findById(personMedEndraTilgang)
+        val person = personService.findById(personMedEndraTilgang)
         oppdaterNavnFraHypersys(person.postnummer, person.hypersysID)
 
         sendEpost(person, nyTilgang, brukerendring)
@@ -87,8 +87,7 @@ class TilgangsendringServiceBean(
     private fun oppdaterNavnFraHypersys(naavaerendePostnummer: Postnummer, hypersysID: Int?) =
         hypersysService.hentFraMedlemslista(hypersysID)?.let {
             val nyttPostnr = modelConverter.finnPostnummer(it).takeIf { i -> !i.erUkjent() } ?: naavaerendePostnummer
-            personRepository.update(
-                "fornavn = ?1, etternavn = ?2, postnummer = ?3 where hypersysID = ?4",
+            personService.oppdaterNavnFraHypersys(
                 it.first_name,
                 it.last_name,
                 nyttPostnr,
@@ -98,7 +97,7 @@ class TilgangsendringServiceBean(
 
     private fun assertAutorisert(request: AutentisertTilgangsendringRequest) {
         val ringersBrukertype = hypersysIdTilPerson(request.userId).groupID()
-        val personMedEndraTilgang = personRepository.findById(request.personMedEndraTilgang())
+        val personMedEndraTilgang = personService.findById(request.personMedEndraTilgang())
         val groupID = personMedEndraTilgang.groupID()
 
         if (personMedEndraTilgang.isSystembruker()) throw ForbiddenException("Kan ikkje endre systembruker")
@@ -114,7 +113,7 @@ class TilgangsendringServiceBean(
     }
 
     private fun hypersysIdTilPerson(hypersysId: UserId) =
-        personRepository.find("hypersysID", hypersysId.userId).firstResult<Person>()
+        personService.finnFraHypersysId(hypersysId.userId).firstResult<Person>()
 
     private fun hypersysIDTilRingerId(userId: UserId) = databaseUpdater.getResultList(
         "select ringer.id from ringer inner join person on person.id = ringer.personId and person.hypersysID = ${userId.userId} "

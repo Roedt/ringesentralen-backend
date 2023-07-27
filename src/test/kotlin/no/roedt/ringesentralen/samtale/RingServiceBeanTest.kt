@@ -11,7 +11,7 @@ import no.roedt.Kilde
 import no.roedt.Kommune
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
-import no.roedt.person.PersonRepository
+import no.roedt.person.PersonService
 import no.roedt.person.Postnummer
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.Modus
@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test
 
 internal class RingServiceBeanTest {
 
-    private val personRepository: PersonRepository = mock()
+    private val personService: PersonService = mock()
     private val databaseUpdater: DatabaseUpdater = mock()
     private val persistentSamtaleRepository: PersistentSamtaleRepository = mock()
     private val oppfoelgingValg21Repository: OppfoelgingValg21Repository = mock()
@@ -37,7 +37,7 @@ internal class RingServiceBeanTest {
     private val nestePersonAaRingeFinder: NestePersonAaRingeFinder = mock()
 
     private var ringService = RingServiceBean(
-        personRepository = personRepository,
+        personService = personService,
         databaseUpdater = databaseUpdater,
         samtaleRepository = persistentSamtaleRepository,
         oppfoelgingValg21Repository = oppfoelgingValg21Repository,
@@ -127,9 +127,9 @@ internal class RingServiceBeanTest {
             kilde = Kilde.Hypersys,
             sistOppdatert = null
         )
-        doReturn(person).whenever(personRepository).findById(id)
+        doReturn(person).whenever(personService).findById(id)
         val query: PanacheQuery<Person> = mock()
         doReturn(person).whenever(query).firstResult<Person>()
-        doReturn(query).whenever(personRepository).find("hypersysID", hypersysID)
+        doReturn(query).whenever(personService).finnFraHypersysId(hypersysID)
     }
 }

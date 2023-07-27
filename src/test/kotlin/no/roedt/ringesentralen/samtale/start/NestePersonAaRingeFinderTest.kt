@@ -11,7 +11,7 @@ import no.roedt.Kilde
 import no.roedt.Kommune
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
-import no.roedt.person.PersonRepository
+import no.roedt.person.PersonService
 import no.roedt.person.Postnummer
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.Modus
@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test
 
 internal class NestePersonAaRingeFinderTest {
 
-    private val personRepository: PersonRepository = mock()
+    private val personService: PersonService = mock()
     private val databaseUpdater: DatabaseUpdater = mock()
     private val oppfoelgingValg21Repository: OppfoelgingValg21Repository = mock()
     private val lokallagService: LokallagService = mock()
@@ -29,7 +29,7 @@ internal class NestePersonAaRingeFinderTest {
     private val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder = mock()
 
     private val nestePersonAaRingeFinder = NestePersonAaRingeFinder(
-        personRepository = personRepository,
+        personService = personService,
         databaseUpdater = databaseUpdater,
         oppslagRepository = oppslagRepository,
         oppfoelgingValg21Repository = oppfoelgingValg21Repository,
@@ -40,7 +40,7 @@ internal class NestePersonAaRingeFinderTest {
 
     @BeforeEach
     fun setup() {
-        doReturn(lagPerson("Peder", "Ås", "123")).whenever(personRepository).getPerson(any())
+        doReturn(lagPerson("Peder", "Ås", "123")).whenever(personService).getPerson(any())
     }
 
     @Test
@@ -57,14 +57,14 @@ internal class NestePersonAaRingeFinderTest {
         )
 
         verify(databaseUpdater).getResultList(any())
-        verify(personRepository).findById(1234)
+        verify(personService).findById(1234)
     }
 
     @Test
     fun `returnerer utan svar viss ingen fleire aa ringe no`() {
         val emptyList: List<Long> = listOf()
         doReturn(emptyList).whenever(databaseUpdater).getResultList(any())
-        verifyNoMoreInteractions(personRepository)
+        verifyNoMoreInteractions(personService)
 
         nestePersonAaRingeFinder.hentNestePersonAaRinge(
             AutentisertNestePersonAaRingeRequest(

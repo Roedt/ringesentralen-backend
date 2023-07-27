@@ -7,7 +7,7 @@ import no.roedt.brukere.FylkeRepository
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
-import no.roedt.person.PersonRepository
+import no.roedt.person.PersonService
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
@@ -16,7 +16,7 @@ import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 class DashboardService(
     val lokallagService: LokallagService,
     val databaseUpdater: DatabaseUpdater,
-    val personRepository: PersonRepository,
+    val personService: PersonService,
     val fylkeRepository: FylkeRepository
 ) {
 
@@ -74,5 +74,5 @@ class DashboardService(
     }
 
     private fun hypersysIdTilPerson(hypersysId: UserId) =
-        personRepository.find("hypersysID", hypersysId.userId).firstResult<Person>()
+        personService.finnFraHypersysId(hypersysId.userId).firstResult<Person>()
 }

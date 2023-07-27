@@ -5,13 +5,13 @@ import no.roedt.Kilde
 import no.roedt.brukere.FylkeRepository
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
-import no.roedt.person.PersonRepository
+import no.roedt.person.PersonService
 import no.roedt.person.PostnummerRepository
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 
 @Dependent
 class VervingService(
-    private val personRepository: PersonRepository,
+    private val personService: PersonService,
     private val vervingRepository: VervingRepository,
     private val lokallagService: LokallagService,
     private val fylkeRepository: FylkeRepository,
@@ -30,8 +30,7 @@ class VervingService(
             )
         )
 
-        val vervaFraFoer =
-            personRepository.find("telefonnummer=?1", request.request.telefonnummer).singleResultOptional<Person>()
+        val vervaFraFoer = personService.finnFraTelefonnummer(request.request.telefonnummer)
         if (vervaFraFoer.isPresent) return Pair(false, vervaFraFoer.get())
 
         val person = Person(
@@ -47,20 +46,19 @@ class VervingService(
             kilde = Kilde.Verva,
             sistOppdatert = null
         )
-        personRepository.persist(person)
+        personService.persist(person)
         return Pair(true, person)
     }
 
     fun mottaSvar(request: AutentisertMottaSvarRequest) {
-        val erBruker = personRepository
-            .find("telefonnummer", request.request.telefonnummer)
-            .firstResultOptional<Person>()
+        val erBruker = personService
+            .finnFraTelefonnummer(request.request.telefonnummer)
             .map { it.groupID() }
             .filter { RingesentralenGroupID.isBrukerEllerVenter(it) }
         if (erBruker.isPresent) return
 
         val nextValue =
             if (request.request.svar) RingesentralenGroupID.PrioritertAaRinge else RingesentralenGroupID.Slett
-        personRepository.update("groupID=?1 where telefonnummer=?2", nextValue.nr, request.request.telefonnummer)
+        personService.oppdaterRolleFraTelefonnummer(nextValue.nr, request.request.telefonnummer)
     }
 }

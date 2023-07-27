@@ -16,7 +16,7 @@ import no.roedt.brukere.TilgangsendringsRequest
 import no.roedt.hypersys.HypersysService
 import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.person.Person
-import no.roedt.person.PersonRepository
+import no.roedt.person.PersonService
 import no.roedt.person.Postnummer
 import no.roedt.person.UserId
 import org.junit.jupiter.api.Test
@@ -27,7 +27,7 @@ import kotlin.test.assertTrue
 
 internal class TilgangsendringServiceBeanTest {
 
-    private val personRepository: PersonRepository = mock()
+    private val personService: PersonService = mock()
     private val databaseUpdater: DatabaseUpdater = mock()
     private val epostSender: RingesentralenEpostformulerer = mock()
     private val hypersysService: HypersysService = mock()
@@ -35,7 +35,7 @@ internal class TilgangsendringServiceBeanTest {
     private val modelConverter: ModelConverter = mock()
 
     private val tilgangsendringService = TilgangsendringServiceBean(
-        personRepository = personRepository,
+        personService = personService,
         databaseUpdater = databaseUpdater,
         epostSender = epostSender,
         hypersysService = hypersysService,
@@ -49,7 +49,7 @@ internal class TilgangsendringServiceBeanTest {
 
         val ringt = lagPerson("Lars", "Holm", "+4792345678")
         ringt.hypersysID = 3
-        doReturn(ringt).whenever(personRepository).findById(2)
+        doReturn(ringt).whenever(personService).findById(2)
 
         doReturn(listOf(1L)).whenever(databaseUpdater).getResultList(any())
 
@@ -63,7 +63,7 @@ internal class TilgangsendringServiceBeanTest {
         assertEquals(2, brukerendring.personID)
         assertEquals(RingesentralenGroupID.GodkjentRinger, brukerendring.nyGroupId)
         assertTrue { brukerendring.epostSendt }
-        verify(personRepository).update(any(), eq(RingesentralenGroupID.GodkjentRinger.nr), eq(2))
+        verify(personService).oppdaterRolle(eq(RingesentralenGroupID.GodkjentRinger.nr), eq(2))
         verify(hypersysService).hentFraMedlemslista(3)
         verify(epostSender).sendEpostOmEndraStatus(
             person = eq(ringt),
@@ -78,7 +78,7 @@ internal class TilgangsendringServiceBeanTest {
         val ringt = lagPerson("Lars", "Holm", "+4792345678")
         ringt.hypersysID = 3
         ringt.setGroupID(RingesentralenGroupID.Admin)
-        doReturn(ringt).whenever(personRepository).findById(2)
+        doReturn(ringt).whenever(personService).findById(2)
 
         doReturn(listOf(1L)).whenever(databaseUpdater).getResultList(any())
 
@@ -99,7 +99,7 @@ internal class TilgangsendringServiceBeanTest {
         val userId = UserId(userId = 1)
         val panacheQuery: PanacheQuery<Person> = mock()
         doReturn(ringerPerson).whenever(panacheQuery).firstResult<Person>()
-        doReturn(panacheQuery).whenever(personRepository).find("hypersysID", 1)
+        doReturn(panacheQuery).whenever(personService).finnFraHypersysId(1)
         return userId
     }
 

@@ -6,7 +6,7 @@ import no.roedt.brukere.GroupID
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonDTO
-import no.roedt.person.PersonRepository
+import no.roedt.person.PersonService
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.RingespesifikkRolle
@@ -33,7 +33,7 @@ interface RingService {
 
 @ApplicationScoped
 class RingServiceBean(
-    val personRepository: PersonRepository,
+    val personService: PersonService,
     val databaseUpdater: DatabaseUpdater,
     val samtaleRepository: PersistentSamtaleRepository,
     val oppfoelgingValg21Repository: OppfoelgingValg21Repository,
@@ -84,14 +84,14 @@ class RingServiceBean(
             registrerValg21SpesifikkeResultat(samtaleId, request)
         }
         if (isBrukerEllerVenterPaaGodkjenning(request.ringtID.toInt())) return
-        nesteGroupID?.nr?.let { personRepository.update("groupID=?1 where id=?2", it, request.ringtID.toInt()) }
+        nesteGroupID?.nr?.let { personService.oppdaterRolle(it, request.ringtID.toInt()) }
     }
 
     fun isBrukerEllerVenterPaaGodkjenning(ringer: Int) =
         RingesentralenGroupID.isBrukerEllerVenter(
             ringerRepository.find("personId=?1", ringer).singleResultOptional<Ringer>()
                 .map { it.personId }
-                .map { personRepository.findById(it) }
+                .map { personService.findById(it) }
                 .map { it.groupID() }
                 .orElse(-1)
         )
@@ -100,11 +100,11 @@ class RingServiceBean(
         request.validate()
         val oppringtNummer = request.ringtNummer()
         var personSomRingerTilbake =
-            personRepository.find("telefonnummer", oppringtNummer).firstResultOptional<Person>()
-                .orElseGet { personRepository.find("telefonnummer", "-1").firstResult() }
+            personService.finnFraTelefonnummer(oppringtNummer)
+                .orElseGet { personService.finnFraTelefonnummer("-1").get() }
         val modus = if (personSomRingerTilbake.hypersysID != null) Modus.medlemmer else Modus.velgere
         if (modus == Modus.medlemmer && !request.groups.contains(RingespesifikkRolle.ringerMedlemmer)) {
-            personSomRingerTilbake = personRepository.find("telefonnummer", "-1").firstResult()
+            personSomRingerTilbake = personService.finnFraTelefonnummer("-1").get()
         }
 
         startSamtale(

@@ -8,7 +8,7 @@ import no.roedt.brukere.GroupID
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonDTO
-import no.roedt.person.PersonRepository
+import no.roedt.person.PersonService
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
@@ -19,7 +19,7 @@ import java.sql.Timestamp
 
 @ApplicationScoped
 class NestePersonAaRingeFinder(
-    val personRepository: PersonRepository,
+    val personService: PersonService,
     val databaseUpdater: DatabaseUpdater,
     val oppslagRepository: OppslagRepository,
     val oppfoelgingValg21Repository: OppfoelgingValg21Repository,
@@ -31,7 +31,7 @@ class NestePersonAaRingeFinder(
     fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? {
         nyligeOppslagCache.assertAtIngenAndreSoekerIDetteLagetAkkuratNo(request.lokallag)
         return hentNestePersonAaRingeIDenneModusen(request)
-            ?.let { personRepository.findById(it) }
+            ?.let { personService.findById(it) }
             ?.let { toResponse(it) }
             ?.also { oppslagRepository.persist(Oppslag(ringt = it.person.id, ringerHypersysId = request.userId())) }
             ?.also { nyligeOppslagCache.remove(request.lokallag) }
@@ -49,13 +49,13 @@ class NestePersonAaRingeFinder(
             throw ForbiddenException("Kun dei godkjente for det kan ringe medlemmar")
         }
         return nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(
-            personRepository.getPerson(request.userId),
+            personService.getPerson(request.userId),
             request.lokallag
         )
     }
 
     private fun hentNesteVelgerAaRinge(request: AutentisertNestePersonAaRingeRequest): Int? {
-        val ringer = personRepository.getPerson(request.userId)
+        val ringer = personService.getPerson(request.userId)
         if (ringer.lokallag != request.lokallag && !GroupID.referencesOneOf(
                 ringer.groupID(),
                 RingesentralenGroupID.LokalGodkjenner,

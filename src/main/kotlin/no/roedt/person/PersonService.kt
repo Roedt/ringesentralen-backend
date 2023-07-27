@@ -20,7 +20,7 @@ class PersonService(private val repository: PersonRepository) {
     fun getPerson(userId: UserId): Person = repository.getPerson(userId)
     fun finnPerson(person: Person): Person? = repository.finnPerson(person)
     fun finnFraTelefonnummer(telefonnummer: String?): Optional<Person> =
-        repository.find("telefonnummer", telefonnummer).singleResultOptional()
+        repository.find("telefonnummer", telefonnummer).firstResultOptional()
 
     fun finnFraEpost(email: String?): PanacheQuery<Person> = repository.find("email", email)
     fun listBrukere(filtrer: Boolean, brukerId: UserId): List<Person> {
@@ -38,4 +38,19 @@ class PersonService(private val repository: PersonRepository) {
             )
             .filter { !it.isSystembruker() }
     }
+
+    fun oppdaterRolle(nyRolle: Int, person: Int) = repository.update("groupID=?1 where id=?2", nyRolle, person)
+    fun systembruker(): Person = repository.find("fornavn='Systembruker' and etternavn='Frontend'").firstResult()
+    fun oppdaterNavnFraHypersys(firstName: String, lastName: String, nyttPostnr: Postnummer, hypersysID: Int?) =
+        repository.update(
+            "fornavn = ?1, etternavn = ?2, postnummer = ?3 where hypersysID = ?4",
+            firstName,
+            lastName,
+            nyttPostnr,
+            hypersysID
+        )
+
+    fun persist(person: Person) = repository.persist(person)
+    fun oppdaterRolleFraTelefonnummer(nyRolle: Int, telefonnummer: String) =
+        repository.update("groupID=?1 where telefonnummer=?2", nyRolle, telefonnummer)
 }

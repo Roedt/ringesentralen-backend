@@ -15,14 +15,14 @@ import no.roedt.hypersys.login.AESUtil
 import no.roedt.hypersys.login.HypersysLoginBean
 import no.roedt.hypersys.login.LoginRequest
 import no.roedt.person.Person
-import no.roedt.person.PersonRepository
+import no.roedt.person.PersonService
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import java.time.Duration
 import java.util.function.Supplier
 
 class RealTokenService(
-    private val personRepository: PersonRepository,
+    private val personService: PersonService,
     private val privateKeyFactory: PrivateKeyFactory,
     private val secretFactory: SecretFactory,
     private val hypersysLoginBean: HypersysLoginBean,
@@ -57,8 +57,7 @@ class RealTokenService(
             .groups(GenerellRolle.systembrukerFrontend)
             .claim(
                 "hypersys.user_id",
-                personRepository.find("fornavn='Systembruker' and etternavn='Frontend'")
-                    .firstResult<Person>().hypersysID
+                personService.systembruker().hypersysID
             )
             .sign(privateKeyFactory.readPrivateKey())
     }
@@ -112,7 +111,7 @@ class RealTokenService(
     }
 
     private fun getPersonFromHypersysID(userId: String) =
-        personRepository.find("hypersysID", userId.toInt()).firstResult<Person>()
+        personService.finnFraHypersysId(userId.toInt()).firstResult<Person>()
 
     override fun trengerMFA(mfaRequest: MFARequest) = mfaService.trengerMFA(mfaRequest)
     override fun sendMFA(mfaRequest: MFARequest) {
