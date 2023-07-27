@@ -35,7 +35,7 @@ interface RingService {
 class RingServiceBean(
     val personService: PersonService,
     val databaseUpdater: DatabaseUpdater,
-    val samtaleRepository: PersistentSamtaleRepository,
+    val samtaleService: SamtaleService,
     val oppfoelgingValg21Repository: OppfoelgingValg21Repository,
     val lokallagService: LokallagService,
     val ringerService: RingerService,
@@ -45,7 +45,7 @@ class RingServiceBean(
     override fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest) =
         nestePersonAaRingeFinder.hentNestePersonAaRinge(request)
 
-    override fun startSamtale(request: AutentisertStartSamtaleRequest) = samtaleRepository.persist(
+    override fun startSamtale(request: AutentisertStartSamtaleRequest) = samtaleService.persist(
         PersistentSamtale(
             ringt = request.skalRingesID().toInt(),
             ringer = hypersysIDTilRingerId(request.userId).toString().toInt(),
@@ -68,7 +68,7 @@ class RingServiceBean(
             kommentar = request.kommentar,
             modus = autentisertRequest.modus
         )
-        samtaleRepository.persist(persistentSamtale)
+        samtaleService.persist(persistentSamtale)
         lagreResultat(persistentSamtale.id.toLong(), getNesteGroupID(request), request)
     }
 
@@ -127,9 +127,7 @@ class RingServiceBean(
         )
 
     private fun erFleireEnnToIkkeSvar(request: ResultatFraSamtaleRequest): Boolean {
-        val resultat: List<Int> =
-            samtaleRepository.list("ringt=?1 and resultat=${Resultat.Ikke_svar.nr}", request.ringtID.toInt())
-                .map { it.resultat }.map { it }
+        val resultat: List<Int> = samtaleService.samtalerUtenSvar(request.ringtID)
         val fleireEnnToIkkeSvar: Boolean = resultat.count { it == 0 } > 2
         val ingenSvar: Boolean = resultat.none { it != Resultat.Ikke_svar.nr && it != Resultat.Samtale_startet.nr }
         return ingenSvar && fleireEnnToIkkeSvar && request.resultat == Resultat.Ikke_svar

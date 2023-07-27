@@ -7,13 +7,13 @@ import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.ringesentralen.ringer.Ringer
 import no.roedt.ringesentralen.ringer.RingerService
 import no.roedt.ringesentralen.samtale.PersistentSamtale
-import no.roedt.ringesentralen.samtale.PersistentSamtaleRepository
 import no.roedt.ringesentralen.samtale.Ringesesjon
+import no.roedt.ringesentralen.samtale.SamtaleService
 
 @Dependent
 class TelefonsvarerService(
     private val personService: PersonService,
-    private val samtaleRepository: PersistentSamtaleRepository,
+    private val samtaleService: SamtaleService,
     private val ringerService: RingerService
 ) {
     fun postSvarFraTelefonsvarer(request: AutentisertTelefonsvarerRequest) {
@@ -26,7 +26,7 @@ class TelefonsvarerService(
 
         val systembruker = personService.systembruker()
 
-        samtaleRepository.persist(
+        samtaleService.persist(
             PersistentSamtale(
                 ringt = person.id.toInt(),
                 ringer = ringerService.finnFraPerson(systembruker.id.toInt()).firstResult<Ringer>().id.toInt(),

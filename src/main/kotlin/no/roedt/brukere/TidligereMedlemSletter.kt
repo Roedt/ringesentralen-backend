@@ -13,7 +13,7 @@ import no.roedt.person.Person
 import no.roedt.person.PersonService
 import no.roedt.ringesentralen.ringer.Ringer
 import no.roedt.ringesentralen.ringer.RingerService
-import no.roedt.ringesentralen.samtale.PersistentSamtaleRepository
+import no.roedt.ringesentralen.samtale.SamtaleService
 import no.roedt.ringesentralen.samtale.start.OppslagRepository
 import no.roedt.ringesentralen.sms.SMSTilMottakerRepository
 
@@ -29,7 +29,7 @@ class TidligereMedlemSletter(
     private val godkjenningRepository: GodkjenningRepository,
     private val loginAttemptRepository: LoginAttemptRepository,
     private val mfaService: MFAService,
-    private val samtaleRepository: PersistentSamtaleRepository,
+    private val samtaleService: SamtaleService,
     private val oppslagRepository: OppslagRepository,
     private val smsTilMottakerRepository: SMSTilMottakerRepository
 ) {
@@ -62,12 +62,12 @@ class TidligereMedlemSletter(
 
         godkjenningRepository.update("godkjentPerson=?1 where godkjentPerson=?2", tidligereMedlemPerson.id, personId)
 
-        samtaleRepository.update("ringt=?1 where ringt=?2", tidligereMedlemPerson.id, personId)
+        samtaleService.flyttSamtalerMedDenneSomRingt(tidligereMedlemPerson.id, personId)
 
         val ikkeMedlemLengerRinger = ringerService.finnFraPerson(personId).firstResultOptional<Ringer>()
         ikkeMedlemLengerRinger.ifPresent {
             godkjenningRepository.update("godkjenner=?1 where godkjenner=?2", tidligereMedlemRinger.id, it.id)
-            samtaleRepository.update("ringer=?1 where ringer=?2", tidligereMedlemRinger.id, it.id)
+            samtaleService.flyttSamtalerMedDenneSomRinger(tidligereMedlemRinger.id, it.id)
         }
 
         oppslagRepository.update("ringt=?1 where ringt=?2", tidligereMedlemPerson.id, personId)

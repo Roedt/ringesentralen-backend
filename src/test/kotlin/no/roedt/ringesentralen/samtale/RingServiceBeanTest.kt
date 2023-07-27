@@ -30,7 +30,7 @@ internal class RingServiceBeanTest {
 
     private val personService: PersonService = mock()
     private val databaseUpdater: DatabaseUpdater = mock()
-    private val persistentSamtaleRepository: PersistentSamtaleRepository = mock()
+    private val samtaleService: SamtaleService = mock()
     private val oppfoelgingValg21Repository: OppfoelgingValg21Repository = mock()
     private val lokallagService: LokallagService = mock()
     private val ringerService: RingerService = mock()
@@ -39,7 +39,7 @@ internal class RingServiceBeanTest {
     private var ringService = RingServiceBean(
         personService = personService,
         databaseUpdater = databaseUpdater,
-        samtaleRepository = persistentSamtaleRepository,
+        samtaleService = samtaleService,
         oppfoelgingValg21Repository = oppfoelgingValg21Repository,
         lokallagService = lokallagService,
         ringerService = ringerService,
