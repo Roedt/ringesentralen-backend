@@ -5,7 +5,7 @@ import no.roedt.brukere.mfa.MFAService
 import no.roedt.frivilligsystem.FrivilligKoronaRepository
 import no.roedt.frivilligsystem.FrivilligOpptattAvRepository
 import no.roedt.frivilligsystem.FrivilligService
-import no.roedt.frivilligsystem.kontakt.KontaktRepository
+import no.roedt.frivilligsystem.kontakt.KontaktService
 import no.roedt.frivilligsystem.registrer.AktivitetForFrivilligRepository
 import no.roedt.hypersys.login.LoginService
 import no.roedt.person.Person
@@ -23,7 +23,7 @@ class TidligereMedlemSletter(
     private val frivilligOpptattAvRepository: FrivilligOpptattAvRepository,
     private val frivilligKoronaRepository: FrivilligKoronaRepository,
     private val aktivitetForFrivilligRepository: AktivitetForFrivilligRepository,
-    private val kontaktRepository: KontaktRepository,
+    private val kontaktService: KontaktService,
     private val frivilligService: FrivilligService,
     private val godkjenningService: GodkjenningService,
     private val loginService: LoginService,
@@ -57,7 +57,7 @@ class TidligereMedlemSletter(
         tidligereMedlemRinger: Ringer,
         ikkeMedlemLenger: Person
     ) {
-        kontaktRepository.update("registrert_av=?1 where registrert_av=?2", tidligereMedlemPerson.id, personId)
+        kontaktService.flyttKontaktTilGeneriskTidligereMedlem(tidligereMedlemPerson.id, personId)
 
         samtaleService.flyttSamtalerMedDenneSomRingt(tidligereMedlemPerson.id, personId)
 
@@ -89,7 +89,7 @@ class TidligereMedlemSletter(
             aktivitetForFrivilligRepository.delete("frivillig_id=?1", it.id)
             frivilligKoronaRepository.delete("frivillig_id=?1", it.id)
             frivilligOpptattAvRepository.delete("frivillig_id=?1", it.id)
-            kontaktRepository.delete("frivillig_id=?1", it.id)
+            kontaktService.slett(it.id)
             smsTilMottakerService.slett(it.id)
             frivilligService.slett(it.id)
         }

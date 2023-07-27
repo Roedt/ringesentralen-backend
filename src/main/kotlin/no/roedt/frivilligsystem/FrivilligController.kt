@@ -13,6 +13,7 @@ import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.core.SecurityContext
 import no.roedt.brukere.GenerellRolle
 import no.roedt.frivilligsystem.kontakt.AutentisertRegistrerKontaktRequest
+import no.roedt.frivilligsystem.kontakt.KontaktService
 import no.roedt.frivilligsystem.kontakt.RegistrerKontaktRequest
 import no.roedt.frivilligsystem.registrer.Aktivitet
 import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
@@ -35,6 +36,7 @@ import java.net.URI
 @SecurityRequirement(name = "jwt")
 class FrivilligController(
     val frivilligService: FrivilligService,
+    val kontaktService: KontaktService,
     val epostSender: RingesentralenEpostformulerer,
     val personService: PersonService,
     val jwt: JsonWebToken
@@ -113,7 +115,7 @@ class FrivilligController(
     @Retry
     @Transactional
     fun registrerKontakt(@Context ctx: SecurityContext, registrerKontaktRequest: RegistrerKontaktRequest) =
-        frivilligService.registrerKontakt(
+        kontaktService.registrerKontakt(
             AutentisertRegistrerKontaktRequest(userId = ctx.userId(), request = registrerKontaktRequest)
         )
 
