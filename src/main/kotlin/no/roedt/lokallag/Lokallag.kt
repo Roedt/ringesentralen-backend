@@ -6,8 +6,8 @@ import jakarta.enterprise.context.ApplicationScoped
 import jakarta.persistence.Cacheable
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
-import no.roedt.DatabaseUpdater
 import no.roedt.RoedtPanacheEntity
+import no.roedt.list
 import no.roedt.postnummer.Postnummer
 import org.hibernate.Hibernate
 import java.time.Instant
@@ -36,16 +36,14 @@ data class Lokallag(
 }
 
 @ApplicationScoped
-class LokallagRepository(
-    private val databaseUpdater: DatabaseUpdater
-) : PanacheRepositoryBase<Lokallag, Int> {
+class LokallagRepository : PanacheRepositoryBase<Lokallag, Int> {
 
     fun fromPostnummer(postnummer: Postnummer): Int =
         toLokallagId("select lokallag from postnummerIKommunerMedFleireLag where postnummerFra <= ${postnummer.Postnummer.toInt()} and postnummerTil >= ${postnummer.Postnummer.toInt()}")
             ?: toLokallagId("select l.id from lokallag l inner join kommune k on k.lokallag_id = l.id inner join postnummer  p on p.kommunekode = k.nummer where p.postnummer = $postnummer")
             ?: -1
 
-    private fun toLokallagId(query: String) = databaseUpdater.getResultList(query).map { it as Int }.firstOrNull()
+    private fun toLokallagId(query: String) = entityManager.list(query).map { it as Int }.firstOrNull()
 
     fun fromOrganisationName(organisationName: String): Int {
         val finnLokallag = finnLokallag(organisationName)

@@ -9,7 +9,7 @@ import java.sql.Timestamp
 import java.time.Instant
 
 @ApplicationScoped
-class StatistikkService(val databaseUpdater: DatabaseUpdater) {
+class StatistikkService(val databaseUpdater: DatabaseUpdater, val repository: StatistikkRepository) {
 
     fun getStatistikk(groups: Set<String>): StatistikkResponse {
         return if (groups.contains(GenerellRolle.admin)) {
@@ -27,23 +27,7 @@ class StatistikkService(val databaseUpdater: DatabaseUpdater) {
         }
     }
 
-    private fun getSamtalerStatistikkResponse(): SamtalerStatistikkResponse {
-        val list = get("SELECT id, displaytext FROM `resultat` ")
-            .map { it as Array<*> }
-            .map { Resultattype(id = it[0] as Int, displaytext = it[1].toString()) }
-            .map {
-                SamtaleResultat(
-                    displaytext = it.displaytext,
-                    antal = get("SELECT ringer FROM `samtale` WHERE resultat = ${it.id}").size
-                )
-            }
-            .filter { it.antal > 0 }
-
-        return SamtalerStatistikkResponse(
-            resultat = list,
-            samtalerMedResultatSaaLangt = get("SELECT ringer FROM `samtale` WHERE resultat!=${Resultat.Samtale_startet.nr}").size
-        )
-    }
+    private fun getSamtalerStatistikkResponse() = repository.getSamtalerStatistikkResponse()
 
     private fun getRingereStatistikkResponse(): RingereStatistikkResponse =
         RingereStatistikkResponse(

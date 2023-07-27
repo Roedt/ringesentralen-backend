@@ -8,7 +8,7 @@ import jakarta.persistence.Cacheable
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import no.roedt.DatabaseUpdater
+import no.roedt.list
 import no.roedt.lokallag.LokallagService
 import no.roedt.postnummer.Postnummer
 import org.hibernate.Hibernate
@@ -36,7 +36,6 @@ data class Fylke(
 
 @ApplicationScoped
 class FylkeRepository(
-    private val databaseUpdater: DatabaseUpdater,
     private val lokallagService: LokallagService
 ) : PanacheRepositoryBase<Fylke, Int> {
 
@@ -46,7 +45,7 @@ class FylkeRepository(
     fun getFylkeIdFraLokallag(lokallag: Int): Int = lokallagService.findById(lokallag).fylke
 
     fun toFylke(postnummer: Postnummer): Int =
-        databaseUpdater.getResultList(
+        entityManager.list(
             "select fylke.id from `postnummer` p " +
                 "inner join kommune kommune on p.KommuneKode = kommune.nummer " +
                 "inner join `fylker` fylke on fylke.id=kommune.fylke_id where postnummer = ${postnummer.Postnummer}"
