@@ -2,23 +2,22 @@ package no.roedt.ringesentralen.samtale.start
 
 import jakarta.enterprise.context.Dependent
 import no.roedt.DatabaseUpdater
-import no.roedt.KommuneRepository
 import no.roedt.brukere.MedlemslisteOppdaterer
+import no.roedt.kommune.KommuneService
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 
 @Dependent
 open class NesteMedlemAaRingeFinder(
     val databaseUpdater: DatabaseUpdater,
-    private val kommuneRepository: KommuneRepository,
+    private val kommuneService: KommuneService,
     private val lokallagService: LokallagService,
     private val medlemslisteOppdaterer: MedlemslisteOppdaterer
 ) {
 
     fun hentIDForNesteMedlemAaRinge(ringer: Person, lokallag: Int): Int? =
-        hentNestePersonAaRingeIDetteLokallaget(ringer, lokallag) ?: kommuneRepository
-            .list("fylke_id=?1", ringer.fylke)
-            .mapNotNull { it.lokallag_id }
+        hentNestePersonAaRingeIDetteLokallaget(ringer, lokallag) ?: kommuneService
+            .hent(ringer.fylke)
             .firstOrNull { hentNestePersonAaRingeIDetteLokallaget(ringer, it) != null }
 
     private fun hentNestePersonAaRingeIDetteLokallaget(ringer: Person, lokallag: Int): Int? {

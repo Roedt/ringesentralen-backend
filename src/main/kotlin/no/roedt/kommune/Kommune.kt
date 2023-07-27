@@ -1,4 +1,4 @@
-package no.roedt
+package no.roedt.kommune
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase

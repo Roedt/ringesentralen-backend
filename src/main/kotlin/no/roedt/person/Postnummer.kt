@@ -11,7 +11,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
-import no.roedt.Kommune
+import no.roedt.kommune.Kommune
 import org.hibernate.Hibernate
 
 @Entity
