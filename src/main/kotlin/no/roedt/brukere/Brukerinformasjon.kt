@@ -1,6 +1,7 @@
 package no.roedt.brukere
 
 import io.quarkus.runtime.annotations.RegisterForReflection
+import no.roedt.fylke.Fylke
 import no.roedt.lokallag.Lokallag
 import java.time.Instant
 

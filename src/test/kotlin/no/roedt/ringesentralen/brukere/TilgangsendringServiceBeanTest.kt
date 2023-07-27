@@ -9,12 +9,12 @@ import io.quarkus.hibernate.orm.panache.PanacheQuery
 import jakarta.ws.rs.ForbiddenException
 import no.roedt.DatabaseUpdater
 import no.roedt.Kilde
-import no.roedt.Kommune
 import no.roedt.brukere.AutentisertTilgangsendringRequest
 import no.roedt.brukere.GodkjenningRepository
 import no.roedt.brukere.TilgangsendringsRequest
 import no.roedt.hypersys.HypersysService
 import no.roedt.hypersys.konvertering.ModelConverter
+import no.roedt.kommune.Kommune
 import no.roedt.person.Person
 import no.roedt.person.PersonService
 import no.roedt.person.Postnummer

@@ -8,7 +8,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import no.roedt.DatabaseUpdater
 import no.roedt.Kilde
-import no.roedt.Kommune
+import no.roedt.kommune.Kommune
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonService

@@ -4,7 +4,6 @@ import io.quarkus.panache.common.Sort
 import jakarta.enterprise.context.ApplicationScoped
 import no.roedt.DatabaseUpdater
 import no.roedt.fylke.FylkeService
-
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
