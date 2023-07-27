@@ -8,7 +8,7 @@ import no.roedt.brukere.FylkeRepository
 import no.roedt.brukere.GenerellRolle
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
-import no.roedt.person.PersonRepository
+import no.roedt.person.PersonService
 import no.roedt.ringesentralen.ringer.Ringer
 import no.roedt.ringesentralen.ringer.RingerRepository
 import no.roedt.tilNorskTid
@@ -19,28 +19,16 @@ interface BrukereService {
 
 @ApplicationScoped
 class BrukereServiceBean(
-    val personRepository: PersonRepository,
+    val personService: PersonService,
     val databaseUpdater: DatabaseUpdater,
     val fylkeRepository: FylkeRepository,
     val lokallagService: LokallagService,
     val ringerRepository: RingerRepository
 ) : BrukereService {
 
-    override fun getBrukere(request: AutentisertGetBrukereRequest): List<Brukerinformasjon> {
-        val brukersFylke = personRepository.find("hypersysID", request.userId.userId).firstResult<Person>().fylke
-        val filtrerPaaFylke = if (request.groups.contains(GenerellRolle.admin)) "" else "and fylke=$brukersFylke"
-        return personRepository.list(
-            "(groupID=?1 or groupID=?2 or groupID=?3 or groupID=?4 or groupID=?5 or groupID=?6) $filtrerPaaFylke",
-            RingesentralenGroupID.UgodkjentRinger.nr,
-            RingesentralenGroupID.AvslaattRinger.nr,
-            RingesentralenGroupID.GodkjentRinger.nr,
-            RingesentralenGroupID.GodkjentRingerMedlemmer.nr,
-            RingesentralenGroupID.LokalGodkjenner.nr,
-            RingesentralenGroupID.Admin.nr
-        )
-            .filter { !it.isSystembruker() }
+    override fun getBrukere(request: AutentisertGetBrukereRequest): List<Brukerinformasjon> =
+        personService.listBrukere(request.groups.contains(GenerellRolle.admin), request.userId)
             .map(this::toBrukerinformasjon)
-    }
 
     private fun toBrukerinformasjon(r: Person) = Brukerinformasjon(
         id = r.id.toLong(),

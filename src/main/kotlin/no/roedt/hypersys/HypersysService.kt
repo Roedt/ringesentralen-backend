@@ -9,7 +9,7 @@ import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
-import no.roedt.person.PersonRepository
+import no.roedt.person.PersonService
 import no.roedt.person.UserId
 import java.time.Instant
 import java.time.LocalDate
@@ -18,7 +18,7 @@ import java.time.LocalDate
 class HypersysService(
     val hypersysProxy: HypersysProxy,
     val hypersysSystemTokenVerifier: HypersysSystemTokenVerifier,
-    val personRepository: PersonRepository,
+    val personService: PersonService,
     val modelConverter: ModelConverter,
     val lokallagService: LokallagService
 ) {
@@ -50,7 +50,7 @@ class HypersysService(
     }
 
     private fun getLokallag(userId: UserId) =
-        personRepository.find("hypersysID", userId.userId).firstResult<Person>().lokallag
+        personService.finnFraHypersysId(userId.userId).firstResult<Person>().lokallag
 
     private fun getLokallagIdFromHypersys(mittLag: Lokallag) =
         getAlleLokallag().first { mittLag.navn == it.name }

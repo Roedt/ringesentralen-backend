@@ -20,7 +20,7 @@ import no.roedt.frivilligsystem.registrer.AutentisertSoMeFrivilligRequest
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.SoMeFrivilligRequest
 import no.roedt.hypersys.HypersysIdProvider
-import no.roedt.person.PersonRepository
+import no.roedt.person.PersonService
 import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenEpostformulerer
 import org.eclipse.microprofile.faulttolerance.Retry
@@ -36,7 +36,7 @@ import java.net.URI
 class FrivilligController(
     val frivilligService: FrivilligService,
     val epostSender: RingesentralenEpostformulerer,
-    val personRepository: PersonRepository,
+    val personService: PersonService,
     val jwt: JsonWebToken
 ) :
     HypersysIdProvider {
@@ -140,7 +140,7 @@ class FrivilligController(
                 Response.noContent().build()
             } else {
                 try {
-                    epostSender.sendEpostOmRegistrertSoMeFrivillig(personRepository.findById(frivillig.second.personId))
+                    epostSender.sendEpostOmRegistrertSoMeFrivillig(personService.findById(frivillig.second.personId))
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

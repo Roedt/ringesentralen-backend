@@ -10,7 +10,7 @@ import no.roedt.frivilligsystem.kontakt.KontaktRepository
 import no.roedt.frivilligsystem.registrer.AktivitetForFrivilligRepository
 import no.roedt.hypersys.login.LoginAttemptRepository
 import no.roedt.person.Person
-import no.roedt.person.PersonRepository
+import no.roedt.person.PersonService
 import no.roedt.ringesentralen.ringer.Ringer
 import no.roedt.ringesentralen.ringer.RingerRepository
 import no.roedt.ringesentralen.samtale.PersistentSamtaleRepository
@@ -19,7 +19,7 @@ import no.roedt.ringesentralen.sms.SMSTilMottakerRepository
 
 @Dependent
 class TidligereMedlemSletter(
-    private val personRepository: PersonRepository,
+    private val personService: PersonService,
     private val ringerRepository: RingerRepository,
     private val frivilligOpptattAvRepository: FrivilligOpptattAvRepository,
     private val frivilligKoronaRepository: FrivilligKoronaRepository,
@@ -39,8 +39,7 @@ class TidligereMedlemSletter(
         }
         val personId = ikkeMedlemLenger.id
 
-        val tidligereMedlemPerson =
-            personRepository.find("fornavn=?1 and etternavn=?2", "Tidligere", "Medlem").firstResult<Person>()
+        val tidligereMedlemPerson = personService.finnFraNavn("Tidligere", "Medlem")
         val tidligereMedlemRinger =
             ringerRepository.find("personId", tidligereMedlemPerson.id).firstResult<Ringer>()
 
@@ -95,6 +94,6 @@ class TidligereMedlemSletter(
         loginAttemptRepository.delete("hypersysID=?1", ikkeMedlemLenger.hypersysID)
         mfaRepository.delete("epost=?1", ikkeMedlemLenger.email)
         ringerRepository.delete("personId=?1", personId)
-        personRepository.deleteById(personId)
+        personService.deleteById(personId)
     }
 }

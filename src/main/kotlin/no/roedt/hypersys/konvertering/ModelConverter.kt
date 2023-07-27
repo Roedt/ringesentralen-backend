@@ -9,7 +9,7 @@ import no.roedt.lokallag.Lokallag
 import no.roedt.person.Oppdateringskilde
 import no.roedt.person.Person
 import no.roedt.person.PersonOppdatering
-import no.roedt.person.PersonRepository
+import no.roedt.person.PersonService
 import no.roedt.person.Postnummer
 import no.roedt.person.PostnummerRepository
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
@@ -25,7 +25,7 @@ interface ModelConverter {
 @Dependent
 class ModelConverterBean(
     private val lokallagConverter: LokallagConverter,
-    private val personRepository: PersonRepository,
+    private val personService: PersonService,
     private val fylkeRepository: FylkeRepository,
     private val postnummerRepository: PostnummerRepository
 ) : ModelConverter {
@@ -56,8 +56,7 @@ class ModelConverterBean(
         val postnummer = finnPostnummer(medlemskap)
 
         val telefonnummer = itOrNull(medlemskap.mobile)?.let { toTelefonnummer(it) }
-        val groupID = personRepository.find("telefonnummer", telefonnummer)
-            .singleResultOptional<Person>()
+        val groupID = personService.finnFraTelefonnummer(telefonnummer)
             .map { it.groupID() }
             .orElse(RingesentralenGroupID.KlarTilAaRinges.nr)
         // TODO: Finn på noko lurt her

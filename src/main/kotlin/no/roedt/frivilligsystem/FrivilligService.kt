@@ -21,7 +21,7 @@ import no.roedt.lokallag.LokallagService
 import no.roedt.person.Oppdateringskilde
 import no.roedt.person.Person
 import no.roedt.person.PersonDTO
-import no.roedt.person.PersonRepository
+import no.roedt.person.PersonService
 import no.roedt.person.PostnummerRepository
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.RingespesifikkRolle
@@ -31,7 +31,7 @@ import java.time.Instant
 @ApplicationScoped
 class FrivilligService(
     val frivilligRepository: FrivilligRepository,
-    val personRepository: PersonRepository,
+    val personService: PersonService,
     val kontaktRepository: KontaktRepository,
     val databaseUpdater: DatabaseUpdater,
     val lokallagService: LokallagService,
@@ -42,8 +42,8 @@ class FrivilligService(
     val postnummerRepository: PostnummerRepository
 ) {
     fun hentAlle(userId: UserId, roller: Set<String>) =
-        hentFrivilligeUtFraMinRolle(roller, personRepository.getPerson(userId))
-            .map { Pair(it, personRepository.findById(it.personId)) }
+        hentFrivilligeUtFraMinRolle(roller, personService.getPerson(userId))
+            .map { Pair(it, personService.findById(it.personId)) }
             .map {
                 FrivilligResponse(
                     frivillig = it.first,
@@ -55,7 +55,7 @@ class FrivilligService(
                         KontaktResponse(
                             frivillig_id = i.frivillig_id,
                             tilbakemelding = i.tilbakemelding,
-                            registrert_av = personRepository.findById(i.registrert_av),
+                            registrert_av = personService.findById(i.registrert_av),
                             datetime = i.datetime
                         )
                     },
@@ -82,7 +82,7 @@ class FrivilligService(
     fun registrerNyFrivillig(autentisertRequest: AutentisertRegistrerNyFrivilligRequest): Pair<Boolean, Frivillig> {
         val request = autentisertRequest.request
         val person = request.toPerson()
-        val id = personRepository.save(person, Oppdateringskilde.RegistrertFrivillig)
+        val id = personService.save(person, Oppdateringskilde.RegistrertFrivillig)
         val personId = person.id?.toInt() ?: id.toInt()
         if (frivilligRepository.count("personId", personId) > 0L) {
             return Pair(false, frivilligRepository.find("personId", personId).firstResult())
@@ -146,7 +146,7 @@ class FrivilligService(
             kilde = Kilde.Frivillig,
             sistOppdatert = null
         )
-        val eksisterendePerson = personRepository.finnPerson(person = person)
+        val eksisterendePerson = personService.finnPerson(person = person)
         if (!RingesentralenGroupID.isBrukerEllerVenter(eksisterendePerson?.groupID() ?: -1)) {
             eksisterendePerson?.setGroupID(RingesentralenGroupID.Frivillig)
         }
@@ -158,7 +158,7 @@ class FrivilligService(
             Kontakt(
                 frivillig_id = request.request.frivillig_id,
                 tilbakemelding = request.request.tilbakemelding,
-                registrert_av = personRepository.find("hypersysID", request.userId.userId)
+                registrert_av = personService.finnFraHypersysId(request.userId.userId)
                     .firstResult<Person>().id.toInt(),
                 datetime = Instant.now()
             )

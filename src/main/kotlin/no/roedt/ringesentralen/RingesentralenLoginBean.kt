@@ -12,7 +12,7 @@ import no.roedt.hypersys.login.HypersysLoginBean
 import no.roedt.hypersys.login.LoginAttemptRepository
 import no.roedt.hypersys.login.LoginRequest
 import no.roedt.person.Person
-import no.roedt.person.PersonRepository
+import no.roedt.person.PersonService
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.ringesentralen.ringer.Ringer
 import no.roedt.ringesentralen.ringer.RingerRepository
@@ -25,7 +25,7 @@ class RingesentralenLoginBean(
     modelConverter: ModelConverter,
     secretFactory: SecretFactory,
     loginAttemptRepository: LoginAttemptRepository,
-    personRepository: PersonRepository,
+    personService: PersonService,
     private val ringerRepository: RingerRepository,
     aesUtil: AESUtil
 ) : HypersysLoginBean(
@@ -33,7 +33,7 @@ class RingesentralenLoginBean(
     modelConverter,
     secretFactory,
     loginAttemptRepository,
-    personRepository,
+    personService,
     aesUtil
 ) {
     override fun login(loginRequest: LoginRequest): Pair<Token, Person?> {

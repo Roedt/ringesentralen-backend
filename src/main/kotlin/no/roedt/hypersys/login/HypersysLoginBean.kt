@@ -9,7 +9,7 @@ import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.person.EpostValidator
 import no.roedt.person.Oppdateringskilde
 import no.roedt.person.Person
-import no.roedt.person.PersonRepository
+import no.roedt.person.PersonService
 import no.roedt.token.SecretFactory
 import java.net.http.HttpResponse
 
@@ -18,7 +18,7 @@ abstract class HypersysLoginBean(
     private val modelConverter: ModelConverter,
     private val secretFactory: SecretFactory,
     private val loginAttemptRepository: LoginAttemptRepository,
-    private val personRepository: PersonRepository,
+    private val personService: PersonService,
     private val aesUtil: AESUtil
 ) {
     abstract fun login(loginRequest: LoginRequest): Pair<Token, Person?>
@@ -50,16 +50,16 @@ abstract class HypersysLoginBean(
     }
 
     protected open fun getRolle(profile: Profile): Int {
-        return personRepository.find("hypersysID=?1", profile.user.id)
+        return personService.finnFraHypersysId(profile.user.id)
             .singleResultOptional<Person>()
             .map { it.groupID() }
             .orElse(-1)
     }
 
     private fun lagrePerson(convertedPerson: Person): Long {
-        personRepository.save(convertedPerson, Oppdateringskilde.Hypersys)
+        personService.save(convertedPerson, Oppdateringskilde.Hypersys)
         var id = convertedPerson.id
-        if (id == null) personRepository.find("email", convertedPerson.email).firstResult<Person>().id.also { id = it }
+        if (id == null) personService.finnFraEpost(convertedPerson.email).firstResult<Person>().id.also { id = it }
         return id.toLong()
     }
 }
