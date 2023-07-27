@@ -12,7 +12,7 @@ import no.roedt.hypersys.login.LoginAttemptRepository
 import no.roedt.person.Person
 import no.roedt.person.PersonService
 import no.roedt.ringesentralen.ringer.Ringer
-import no.roedt.ringesentralen.ringer.RingerRepository
+import no.roedt.ringesentralen.ringer.RingerService
 import no.roedt.ringesentralen.samtale.PersistentSamtaleRepository
 import no.roedt.ringesentralen.samtale.start.OppslagRepository
 import no.roedt.ringesentralen.sms.SMSTilMottakerRepository
@@ -20,7 +20,7 @@ import no.roedt.ringesentralen.sms.SMSTilMottakerRepository
 @Dependent
 class TidligereMedlemSletter(
     private val personService: PersonService,
-    private val ringerRepository: RingerRepository,
+    private val ringerService: RingerService,
     private val frivilligOpptattAvRepository: FrivilligOpptattAvRepository,
     private val frivilligKoronaRepository: FrivilligKoronaRepository,
     private val aktivitetForFrivilligRepository: AktivitetForFrivilligRepository,
@@ -41,7 +41,7 @@ class TidligereMedlemSletter(
 
         val tidligereMedlemPerson = personService.finnFraNavn("Tidligere", "Medlem")
         val tidligereMedlemRinger =
-            ringerRepository.find("personId", tidligereMedlemPerson.id).firstResult<Ringer>()
+            ringerService.finnFraPerson(tidligereMedlemPerson.id).firstResult<Ringer>()
 
         flyttSamtalerOgKontaktTilGeneriskTidligereMedlem(
             tidligereMedlemPerson,
@@ -64,8 +64,7 @@ class TidligereMedlemSletter(
 
         samtaleRepository.update("ringt=?1 where ringt=?2", tidligereMedlemPerson.id, personId)
 
-        val ikkeMedlemLengerRinger =
-            ringerRepository.find("personId", personId).firstResultOptional<Ringer>()
+        val ikkeMedlemLengerRinger = ringerService.finnFraPerson(personId).firstResultOptional<Ringer>()
         ikkeMedlemLengerRinger.ifPresent {
             godkjenningRepository.update("godkjenner=?1 where godkjenner=?2", tidligereMedlemRinger.id, it.id)
             samtaleRepository.update("ringer=?1 where ringer=?2", tidligereMedlemRinger.id, it.id)
@@ -93,7 +92,7 @@ class TidligereMedlemSletter(
         }
         loginAttemptRepository.delete("hypersysID=?1", ikkeMedlemLenger.hypersysID)
         mfaService.slett(ikkeMedlemLenger.email)
-        ringerRepository.delete("personId=?1", personId)
+        ringerService.slett(personId)
         personService.deleteById(personId)
     }
 }

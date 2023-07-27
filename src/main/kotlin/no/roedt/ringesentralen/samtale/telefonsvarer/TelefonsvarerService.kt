@@ -5,7 +5,7 @@ import no.roedt.person.PersonService
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.ringesentralen.ringer.Ringer
-import no.roedt.ringesentralen.ringer.RingerRepository
+import no.roedt.ringesentralen.ringer.RingerService
 import no.roedt.ringesentralen.samtale.PersistentSamtale
 import no.roedt.ringesentralen.samtale.PersistentSamtaleRepository
 import no.roedt.ringesentralen.samtale.Ringesesjon
@@ -14,7 +14,7 @@ import no.roedt.ringesentralen.samtale.Ringesesjon
 class TelefonsvarerService(
     private val personService: PersonService,
     private val samtaleRepository: PersistentSamtaleRepository,
-    private val ringerRepository: RingerRepository
+    private val ringerService: RingerService
 ) {
     fun postSvarFraTelefonsvarer(request: AutentisertTelefonsvarerRequest) {
         val optionalPerson = personService.finnFraTelefonnummer(request.request.telefonnummer)
@@ -29,7 +29,7 @@ class TelefonsvarerService(
         samtaleRepository.persist(
             PersistentSamtale(
                 ringt = person.id.toInt(),
-                ringer = ringerRepository.find("personId", systembruker.id.toInt()).firstResult<Ringer>().id.toInt(),
+                ringer = ringerService.finnFraPerson(systembruker.id.toInt()).firstResult<Ringer>().id.toInt(),
                 kommentar = "Resultat frå telefonsvar",
                 ringesesjon = Ringesesjon.Valkamp2023.id,
                 resultat = request.resultat().nr,

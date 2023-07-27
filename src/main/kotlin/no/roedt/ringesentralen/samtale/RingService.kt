@@ -12,7 +12,7 @@ import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.ringesentralen.ringer.Ringer
-import no.roedt.ringesentralen.ringer.RingerRepository
+import no.roedt.ringesentralen.ringer.RingerService
 import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
@@ -38,7 +38,7 @@ class RingServiceBean(
     val samtaleRepository: PersistentSamtaleRepository,
     val oppfoelgingValg21Repository: OppfoelgingValg21Repository,
     val lokallagService: LokallagService,
-    val ringerRepository: RingerRepository,
+    val ringerService: RingerService,
     val nestePersonAaRingeFinder: NestePersonAaRingeFinder
 ) : RingService {
 
@@ -89,7 +89,7 @@ class RingServiceBean(
 
     fun isBrukerEllerVenterPaaGodkjenning(ringer: Int) =
         RingesentralenGroupID.isBrukerEllerVenter(
-            ringerRepository.find("personId=?1", ringer).singleResultOptional<Ringer>()
+            ringerService.finnFraPerson(ringer).singleResultOptional<Ringer>()
                 .map { it.personId }
                 .map { personService.findById(it) }
                 .map { it.groupID() }

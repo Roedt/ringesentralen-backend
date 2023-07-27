@@ -8,14 +8,14 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.quarkus.hibernate.orm.panache.PanacheQuery
 import no.roedt.DatabaseUpdater
 import no.roedt.Kilde
-import no.roedt.Kommune
+import no.roedt.kommune.Kommune
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonService
 import no.roedt.person.Postnummer
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.Modus
-import no.roedt.ringesentralen.ringer.RingerRepository
+import no.roedt.ringesentralen.ringer.RingerService
 import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import no.roedt.ringesentralen.samtale.resultat.ResultatFraSamtaleRequest
@@ -33,7 +33,7 @@ internal class RingServiceBeanTest {
     private val persistentSamtaleRepository: PersistentSamtaleRepository = mock()
     private val oppfoelgingValg21Repository: OppfoelgingValg21Repository = mock()
     private val lokallagService: LokallagService = mock()
-    private val ringerRepository: RingerRepository = mock()
+    private val ringerService: RingerService = mock()
     private val nestePersonAaRingeFinder: NestePersonAaRingeFinder = mock()
 
     private var ringService = RingServiceBean(
@@ -42,7 +42,7 @@ internal class RingServiceBeanTest {
         samtaleRepository = persistentSamtaleRepository,
         oppfoelgingValg21Repository = oppfoelgingValg21Repository,
         lokallagService = lokallagService,
-        ringerRepository = ringerRepository,
+        ringerService = ringerService,
         nestePersonAaRingeFinder = nestePersonAaRingeFinder
     )
 

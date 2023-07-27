@@ -15,7 +15,7 @@ import no.roedt.person.Person
 import no.roedt.person.PersonService
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.ringesentralen.ringer.Ringer
-import no.roedt.ringesentralen.ringer.RingerRepository
+import no.roedt.ringesentralen.ringer.RingerService
 import no.roedt.token.SecretFactory
 import java.time.Instant
 
@@ -26,7 +26,7 @@ class RingesentralenLoginBean(
     secretFactory: SecretFactory,
     loginAttemptRepository: LoginAttemptRepository,
     personService: PersonService,
-    private val ringerRepository: RingerRepository,
+    private val ringerService: RingerService,
     aesUtil: AESUtil
 ) : HypersysLoginBean(
     hypersysProxy,
@@ -46,8 +46,8 @@ class RingesentralenLoginBean(
     }
 
     private fun lagreSomRinger(id: Long) {
-        if (ringerRepository.find("personId", id.toInt()).count() == 0L) {
-            ringerRepository.persist(Ringer(oppretta = Instant.now(), personId = id.toInt()))
+        if (ringerService.finnFraPerson(id.toInt()).count() == 0L) {
+            ringerService.persist(Ringer(oppretta = Instant.now(), personId = id.toInt()))
         }
     }
 

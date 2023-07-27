@@ -10,7 +10,7 @@ import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonService
 import no.roedt.ringesentralen.ringer.Ringer
-import no.roedt.ringesentralen.ringer.RingerRepository
+import no.roedt.ringesentralen.ringer.RingerService
 import no.roedt.tilNorskTid
 
 interface BrukereService {
@@ -23,7 +23,7 @@ class BrukereServiceBean(
     val databaseUpdater: DatabaseUpdater,
     val fylkeService: FylkeService,
     val lokallagService: LokallagService,
-    val ringerRepository: RingerRepository
+    val ringerService: RingerService
 ) : BrukereService {
 
     override fun getBrukere(request: AutentisertGetBrukereRequest): List<Brukerinformasjon> =
@@ -41,7 +41,6 @@ class BrukereServiceBean(
         hypersysID = r.hypersysID ?: -1,
         lokallag = lokallagService.findById(r.lokallag),
         rolle = RingesentralenGroupID.from(r.groupID()).roller,
-        registreringstidspunkt = ringerRepository.find("personId", r.id.toInt())
-            .firstResult<Ringer>().oppretta.tilNorskTid()
+        registreringstidspunkt = ringerService.finnFraPerson(r.id.toInt()).firstResult<Ringer>().oppretta.tilNorskTid()
     )
 }
