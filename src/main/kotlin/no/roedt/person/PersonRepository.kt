@@ -2,6 +2,7 @@ package no.roedt.person
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import jakarta.enterprise.context.ApplicationScoped
+import no.roedt.list
 
 @ApplicationScoped
 class PersonRepository : PanacheRepositoryBase<Person, Int> {
@@ -65,4 +66,8 @@ class PersonRepository : PanacheRepositoryBase<Person, Int> {
     fun oppdater(oppdatering: PersonOppdatering) {
         oppdaterEksisterendePerson(oppdatering, find("hypersysID=?1", oppdatering.hypersysID).firstResult<Person>().id)
     }
+
+    fun hypersysIDTilRingerId(userId: UserId) = entityManager.list(
+        "select ringer.id from ringer inner join person on person.id = ringer.personId and person.hypersysID = ${userId.userId} "
+    ).first()
 }
