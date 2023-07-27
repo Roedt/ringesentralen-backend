@@ -2,7 +2,6 @@ package no.roedt.ringesentralen.brukere
 
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.ws.rs.ForbiddenException
-import no.roedt.DatabaseUpdater
 import no.roedt.brukere.AutentisertTilgangsendringRequest
 import no.roedt.brukere.Brukerendring
 import no.roedt.brukere.Godkjenning
@@ -27,7 +26,6 @@ interface TilgangsendringService {
 @ApplicationScoped
 class TilgangsendringServiceBean(
     val personService: PersonService,
-    val databaseUpdater: DatabaseUpdater,
     val epostSender: RingesentralenEpostformulerer,
     val hypersysService: HypersysService,
     val godkjenningService: GodkjenningService,
@@ -57,7 +55,7 @@ class TilgangsendringServiceBean(
 
         val personMedEndraTilgang = request.personMedEndraTilgang()
 
-        val ringerId = hypersysIDTilRingerId(request.userId)
+        val ringerId = personService.hypersysIDTilRingerId(request.userId)
         godkjenningService.persist(
             Godkjenning(
                 godkjenner = ringerId.toString().toInt(),
@@ -114,8 +112,4 @@ class TilgangsendringServiceBean(
 
     private fun hypersysIdTilPerson(hypersysId: UserId) =
         personService.finnFraHypersysId(hypersysId.userId).firstResult<Person>()
-
-    private fun hypersysIDTilRingerId(userId: UserId) = databaseUpdater.getResultList(
-        "select ringer.id from ringer inner join person on person.id = ringer.personId and person.hypersysID = ${userId.userId} "
-    ).first()
 }

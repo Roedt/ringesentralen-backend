@@ -54,4 +54,8 @@ class PersonService(internal val repository: PersonRepository) {
     fun persist(person: Person) = repository.persist(person)
     fun oppdaterRolleFraTelefonnummer(nyRolle: Int, telefonnummer: String) =
         repository.update("groupID=?1 where telefonnummer=?2", nyRolle, telefonnummer)
+
+    fun hypersysIDTilRingerId(userId: UserId): Any = repository.list(
+        "select ringer.id from ringer inner join person on person.id = ringer.personId and person.hypersysID = ${userId.userId} "
+    ).first()
 }

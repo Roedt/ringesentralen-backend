@@ -36,7 +36,6 @@ internal class TilgangsendringServiceBeanTest {
 
     private val tilgangsendringService = TilgangsendringServiceBean(
         personService = personService,
-        databaseUpdater = databaseUpdater,
         epostSender = epostSender,
         hypersysService = hypersysService,
         godkjenningService = godkjenningService,
