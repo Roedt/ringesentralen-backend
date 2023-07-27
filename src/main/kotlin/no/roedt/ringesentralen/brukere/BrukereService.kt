@@ -4,8 +4,8 @@ import jakarta.enterprise.context.ApplicationScoped
 import no.roedt.DatabaseUpdater
 import no.roedt.brukere.AutentisertGetBrukereRequest
 import no.roedt.brukere.Brukerinformasjon
-import no.roedt.brukere.FylkeRepository
 import no.roedt.brukere.GenerellRolle
+import no.roedt.fylke.FylkeService
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonService
@@ -21,7 +21,7 @@ interface BrukereService {
 class BrukereServiceBean(
     val personService: PersonService,
     val databaseUpdater: DatabaseUpdater,
-    val fylkeRepository: FylkeRepository,
+    val fylkeService: FylkeService,
     val lokallagService: LokallagService,
     val ringerRepository: RingerRepository
 ) : BrukereService {
@@ -36,7 +36,7 @@ class BrukereServiceBean(
         etternavn = r.etternavn,
         telefonnummer = r.telefonnummer,
         postnummer = r.postnummer.Postnummer,
-        fylke = fylkeRepository.findById(r.fylke),
+        fylke = fylkeService.findById(r.fylke),
         epost = r.email ?: "",
         hypersysID = r.hypersysID ?: -1,
         lokallag = lokallagService.findById(r.lokallag),

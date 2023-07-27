@@ -1,4 +1,4 @@
-package no.roedt.brukere
+package no.roedt.fylke
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
