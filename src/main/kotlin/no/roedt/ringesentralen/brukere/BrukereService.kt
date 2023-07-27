@@ -1,7 +1,6 @@
 package no.roedt.ringesentralen.brukere
 
 import jakarta.enterprise.context.ApplicationScoped
-import no.roedt.DatabaseUpdater
 import no.roedt.brukere.AutentisertGetBrukereRequest
 import no.roedt.brukere.Brukerinformasjon
 import no.roedt.brukere.GenerellRolle
@@ -20,7 +19,6 @@ interface BrukereService {
 @ApplicationScoped
 class BrukereServiceBean(
     val personService: PersonService,
-    val databaseUpdater: DatabaseUpdater,
     val fylkeService: FylkeService,
     val lokallagService: LokallagService,
     val ringerService: RingerService
