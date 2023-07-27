@@ -15,7 +15,7 @@ import no.roedt.ringesentralen.ringer.Ringer
 import no.roedt.ringesentralen.ringer.RingerService
 import no.roedt.ringesentralen.samtale.SamtaleService
 import no.roedt.ringesentralen.samtale.oppslag.OppslagService
-import no.roedt.ringesentralen.sms.SMSTilMottakerRepository
+import no.roedt.ringesentralen.sms.SMSTilMottakerService
 
 @Dependent
 class TidligereMedlemSletter(
@@ -31,7 +31,7 @@ class TidligereMedlemSletter(
     private val mfaService: MFAService,
     private val samtaleService: SamtaleService,
     private val oppslagService: OppslagService,
-    private val smsTilMottakerRepository: SMSTilMottakerRepository
+    private val smsTilMottakerService: SMSTilMottakerService
 ) {
     fun slett(ikkeMedlemLenger: Person?) {
         if (ikkeMedlemLenger == null) {
@@ -86,7 +86,7 @@ class TidligereMedlemSletter(
             frivilligKoronaRepository.delete("frivillig_id=?1", it.id)
             frivilligOpptattAvRepository.delete("frivillig_id=?1", it.id)
             kontaktRepository.delete("frivillig_id=?1", it.id)
-            smsTilMottakerRepository.delete("mottaker_id=?1", it.id)
+            smsTilMottakerService.slett(it.id)
             frivilligRepository.deleteById(it.id)
         }
         loginService.slett(ikkeMedlemLenger.hypersysID)
