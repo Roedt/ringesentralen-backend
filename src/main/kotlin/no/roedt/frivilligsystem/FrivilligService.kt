@@ -8,7 +8,7 @@ import no.roedt.brukere.GenerellRolle
 import no.roedt.frivilligsystem.kontakt.KontaktService
 import no.roedt.frivilligsystem.registrer.Aktivitet
 import no.roedt.frivilligsystem.registrer.AktivitetForFrivillig
-import no.roedt.frivilligsystem.registrer.AktivitetForFrivilligRepository
+import no.roedt.frivilligsystem.registrer.AktivitetForFrivilligService
 import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.AutentisertSoMeFrivilligRequest
 import no.roedt.frivilligsystem.registrer.ErMedlemStatus
@@ -34,7 +34,7 @@ class FrivilligService(
     val databaseUpdater: DatabaseUpdater,
     val lokallagService: LokallagService,
     val fylkeService: FylkeService,
-    val aktivitetForFrivilligRepository: AktivitetForFrivilligRepository,
+    val aktivitetForFrivilligService: AktivitetForFrivilligService,
     val frivilligOpptattAvRepository: FrivilligOpptattAvRepository,
     val frivilligKoronaRepository: FrivilligKoronaRepository,
     val postnummerRepository: PostnummerRepository
@@ -46,7 +46,7 @@ class FrivilligService(
                 FrivilligResponse(
                     frivillig = it.first,
                     person = PersonDTO.fra(it.second),
-                    aktiviteter = aktivitetForFrivilligRepository.list("frivillig_id", it.first.id),
+                    aktiviteter = aktivitetForFrivilligService.hent(it.first.id),
                     fylke = fylkeService.findById(it.second.fylke),
                     lokallag = lokallagService.findById(it.second.lokallag),
                     kontakt = kontaktService.hentKontakt(it.first.id),
@@ -91,7 +91,7 @@ class FrivilligService(
         frivilligRepository.persist(frivillig)
         request.kanTenkeSegAaBidraMedAktiviteter
             .map { AktivitetForFrivillig(frivillig_id = frivillig.id.toInt(), aktivitet = it) }
-            .forEach { aktivitetForFrivilligRepository.persist(it) }
+            .forEach { aktivitetForFrivilligService.persist(it) }
         lagreOpptattAv(request, frivillig)
 
         frivilligKoronaRepository.persist(
