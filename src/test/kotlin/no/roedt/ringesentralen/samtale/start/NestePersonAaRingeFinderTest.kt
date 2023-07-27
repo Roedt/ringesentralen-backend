@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import no.roedt.DatabaseUpdater
 import no.roedt.Kilde
 import no.roedt.kommune.Kommune
 import no.roedt.lokallag.LokallagService
@@ -23,7 +22,7 @@ import org.junit.jupiter.api.Test
 internal class NestePersonAaRingeFinderTest {
 
     private val personService: PersonService = mock()
-    private val databaseUpdater: DatabaseUpdater = mock()
+    private val nesteAaRingeRepository: NesteAaRingeRepository = mock()
     private val oppfoelgingValg21Service: OppfoelgingValg21Service = mock()
     private val lokallagService: LokallagService = mock()
     private val oppslagService: OppslagService = mock()
@@ -31,7 +30,7 @@ internal class NestePersonAaRingeFinderTest {
 
     private val nestePersonAaRingeFinder = NestePersonAaRingeFinder(
         personService = personService,
-        databaseUpdater = databaseUpdater,
+        nesteAaRingeRepository = nesteAaRingeRepository,
         oppslagService = oppslagService,
         oppfoelgingValg21Service = oppfoelgingValg21Service,
         nesteMedlemAaRingeFinder = nesteMedlemAaRingeFinder,
@@ -46,7 +45,7 @@ internal class NestePersonAaRingeFinderTest {
 
     @Test
     fun `hentar neste person aa ringe`() {
-        doReturn(listOf(1234)).whenever(databaseUpdater).getResultList(any())
+        doReturn(listOf(1234)).whenever(nesteAaRingeRepository).hentNesteIkkemedlem(any(), any())
 
         nestePersonAaRingeFinder.hentNestePersonAaRinge(
             AutentisertNestePersonAaRingeRequest(
@@ -57,14 +56,14 @@ internal class NestePersonAaRingeFinderTest {
             )
         )
 
-        verify(databaseUpdater).getResultList(any())
+        verify(nesteAaRingeRepository).hentNesteIkkemedlem(any(), any())
         verify(personService).findById(1234)
     }
 
     @Test
     fun `returnerer utan svar viss ingen fleire aa ringe no`() {
         val emptyList: List<Long> = listOf()
-        doReturn(emptyList).whenever(databaseUpdater).getResultList(any())
+        doReturn(emptyList).whenever(nesteAaRingeRepository).hentNesteIkkemedlem(any(), any())
         verifyNoMoreInteractions(personService)
 
         nestePersonAaRingeFinder.hentNestePersonAaRinge(
@@ -75,7 +74,7 @@ internal class NestePersonAaRingeFinderTest {
                 roller = setOf()
             )
         )
-        verify(databaseUpdater).getResultList(any())
+        verify(nesteAaRingeRepository).hentNesteIkkemedlem(any(), any())
     }
 
     private fun lagPerson(fornavn: String, etternavn: String, telefonnummer: String) = Person(

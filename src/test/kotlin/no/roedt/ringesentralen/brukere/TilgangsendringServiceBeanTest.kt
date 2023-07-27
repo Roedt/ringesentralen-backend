@@ -1,13 +1,11 @@
 package no.roedt.ringesentralen.brukere
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.quarkus.hibernate.orm.panache.PanacheQuery
 import jakarta.ws.rs.ForbiddenException
-import no.roedt.DatabaseUpdater
 import no.roedt.Kilde
 import no.roedt.brukere.AutentisertTilgangsendringRequest
 import no.roedt.brukere.GodkjenningService
@@ -28,7 +26,6 @@ import kotlin.test.assertTrue
 internal class TilgangsendringServiceBeanTest {
 
     private val personService: PersonService = mock()
-    private val databaseUpdater: DatabaseUpdater = mock()
     private val epostSender: RingesentralenEpostformulerer = mock()
     private val hypersysService: HypersysService = mock()
     private val godkjenningService: GodkjenningService = mock()
@@ -49,8 +46,6 @@ internal class TilgangsendringServiceBeanTest {
         val ringt = lagPerson("Lars", "Holm", "+4792345678")
         ringt.hypersysID = 3
         doReturn(ringt).whenever(personService).findById(2)
-
-        doReturn(listOf(1L)).whenever(databaseUpdater).getResultList(any())
 
         val brukerendring = tilgangsendringService.aktiverRinger(
             AutentisertTilgangsendringRequest(
@@ -78,8 +73,6 @@ internal class TilgangsendringServiceBeanTest {
         ringt.hypersysID = 3
         ringt.setGroupID(RingesentralenGroupID.Admin)
         doReturn(ringt).whenever(personService).findById(2)
-
-        doReturn(listOf(1L)).whenever(databaseUpdater).getResultList(any())
 
         assertThrows<ForbiddenException> {
             tilgangsendringService.aktiverRinger(

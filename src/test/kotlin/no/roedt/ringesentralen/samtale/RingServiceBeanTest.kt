@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.spy
 import com.nhaarman.mockitokotlin2.whenever
 import io.quarkus.hibernate.orm.panache.PanacheQuery
-import no.roedt.DatabaseUpdater
 import no.roedt.Kilde
 import no.roedt.kommune.Kommune
 import no.roedt.lokallag.LokallagService
@@ -29,7 +28,6 @@ import org.junit.jupiter.api.Test
 internal class RingServiceBeanTest {
 
     private val personService: PersonService = mock()
-    private val databaseUpdater: DatabaseUpdater = mock()
     private val samtaleService: SamtaleService = mock()
     private val oppfoelgingValg21Service: OppfoelgingValg21Service = mock()
     private val lokallagService: LokallagService = mock()
