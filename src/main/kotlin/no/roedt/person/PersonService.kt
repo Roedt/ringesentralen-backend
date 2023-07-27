@@ -2,11 +2,12 @@ package no.roedt.person
 
 import io.quarkus.hibernate.orm.panache.PanacheQuery
 import jakarta.enterprise.context.ApplicationScoped
+import no.roedt.postnummer.Postnummer
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import java.util.Optional
 
 @ApplicationScoped
-class PersonService(private val repository: PersonRepository) {
+class PersonService(internal val repository: PersonRepository) {
     fun harMedlemMedHypersysID(hypersysID: Int): Boolean = repository.find("hypersysID", hypersysID).count() > 0
     fun save(oppdatertPerson: Person, kilde: Oppdateringskilde) = repository.save(oppdatertPerson, kilde)
     fun finnFraHypersysId(memberId: Int): PanacheQuery<Person> = repository.find("hypersysID", memberId)

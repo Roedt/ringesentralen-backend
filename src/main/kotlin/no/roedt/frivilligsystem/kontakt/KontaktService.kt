@@ -6,7 +6,7 @@ import no.roedt.person.PersonService
 import java.time.Instant
 
 @Dependent
-class KontaktService(private val repository: KontaktRepository, private val personService: PersonService) {
+class KontaktService(internal val repository: KontaktRepository, internal val personService: PersonService) {
     fun flyttKontaktTilGeneriskTidligereMedlem(tidligereMedlem: Int?, personId: Int) =
         repository.update("registrert_av=?1 where registrert_av=?2", tidligereMedlem, personId)
 

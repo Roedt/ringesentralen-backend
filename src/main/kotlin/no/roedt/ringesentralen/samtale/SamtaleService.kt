@@ -4,7 +4,7 @@ import jakarta.enterprise.context.Dependent
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 
 @Dependent
-class SamtaleService(private val repository: PersistentSamtaleRepository) {
+class SamtaleService(internal val repository: PersistentSamtaleRepository) {
     fun flyttSamtalerMedDenneSomRingt(id: Int?, personId: Int) =
         repository.update("ringt=?1 where ringt=?2", id, personId)
 

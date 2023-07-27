@@ -5,7 +5,7 @@ import no.roedt.ringesentralen.ringer.Ringer
 import java.util.Optional
 
 @Dependent
-class GodkjenningService(private val repository: GodkjenningRepository) {
+class GodkjenningService(internal val repository: GodkjenningRepository) {
     fun persist(godkjenning: Godkjenning) = repository.persist(godkjenning)
     fun flyttGodkjenningerTilGeneriskTidligereMedlem(
         tidligereMedlemPerson: Int,

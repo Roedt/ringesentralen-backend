@@ -3,7 +3,7 @@ package no.roedt.ringesentralen.sms
 import jakarta.enterprise.context.Dependent
 
 @Dependent
-class SMSTilMottakerService(private val repository: SMSTilMottakerRepository) {
+class SMSTilMottakerService(internal val repository: SMSTilMottakerRepository) {
     fun slett(id: Int?) = repository.delete("mottaker_id=?1", id)
     fun persist(smsTilMottaker: SMSTilMottaker) = repository.persist(smsTilMottaker)
     fun oppdaterUtsendingsstatus(innerRequest: OppdaterSMSRequest, mottaker: Long) =

@@ -5,7 +5,7 @@ import no.roedt.person.Postnummer
 import no.roedt.postnummer.Postnummer
 
 @Dependent
-class FylkeService(private val repository: FylkeRepository) {
+class FylkeService(internal val repository: FylkeRepository) {
     fun findById(fylke: Int): Fylke = repository.findById(fylke)
     fun toFylke(postnummer: Postnummer): Int = repository.toFylke(postnummer)
     fun getFylkeIdFraLokallag(lokallag: Int): Int = repository.getFylkeIdFraLokallag(lokallag)
