@@ -1,7 +1,7 @@
 package no.roedt.brukere
 
 import jakarta.enterprise.context.Dependent
-import no.roedt.brukere.mfa.MFARepository
+import no.roedt.brukere.mfa.MFAService
 import no.roedt.frivilligsystem.Frivillig
 import no.roedt.frivilligsystem.FrivilligKoronaRepository
 import no.roedt.frivilligsystem.FrivilligOpptattAvRepository
@@ -28,7 +28,7 @@ class TidligereMedlemSletter(
     private val frivilligRepository: FrivilligRepository,
     private val godkjenningRepository: GodkjenningRepository,
     private val loginAttemptRepository: LoginAttemptRepository,
-    private val mfaRepository: MFARepository,
+    private val mfaService: MFAService,
     private val samtaleRepository: PersistentSamtaleRepository,
     private val oppslagRepository: OppslagRepository,
     private val smsTilMottakerRepository: SMSTilMottakerRepository
@@ -92,7 +92,7 @@ class TidligereMedlemSletter(
             frivilligRepository.deleteById(it.id)
         }
         loginAttemptRepository.delete("hypersysID=?1", ikkeMedlemLenger.hypersysID)
-        mfaRepository.delete("epost=?1", ikkeMedlemLenger.email)
+        mfaService.slett(ikkeMedlemLenger.email)
         ringerRepository.delete("personId=?1", personId)
         personService.deleteById(personId)
     }
