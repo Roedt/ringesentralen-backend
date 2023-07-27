@@ -6,7 +6,7 @@ import no.roedt.DatabaseUpdater
 import no.roedt.brukere.AutentisertTilgangsendringRequest
 import no.roedt.brukere.Brukerendring
 import no.roedt.brukere.Godkjenning
-import no.roedt.brukere.GodkjenningRepository
+import no.roedt.brukere.GodkjenningService
 import no.roedt.brukere.GroupID
 import no.roedt.hypersys.HypersysService
 import no.roedt.hypersys.konvertering.ModelConverter
@@ -30,7 +30,7 @@ class TilgangsendringServiceBean(
     val databaseUpdater: DatabaseUpdater,
     val epostSender: RingesentralenEpostformulerer,
     val hypersysService: HypersysService,
-    val godkjenningRepository: GodkjenningRepository,
+    val godkjenningService: GodkjenningService,
     val modelConverter: ModelConverter
 ) : TilgangsendringService {
 
@@ -58,7 +58,7 @@ class TilgangsendringServiceBean(
         val personMedEndraTilgang = request.personMedEndraTilgang()
 
         val ringerId = hypersysIDTilRingerId(request.userId)
-        godkjenningRepository.persist(
+        godkjenningService.persist(
             Godkjenning(
                 godkjenner = ringerId.toString().toInt(),
                 godkjentPerson = personMedEndraTilgang,

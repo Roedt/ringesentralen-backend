@@ -10,7 +10,7 @@ import jakarta.ws.rs.ForbiddenException
 import no.roedt.DatabaseUpdater
 import no.roedt.Kilde
 import no.roedt.brukere.AutentisertTilgangsendringRequest
-import no.roedt.brukere.GodkjenningRepository
+import no.roedt.brukere.GodkjenningService
 import no.roedt.brukere.TilgangsendringsRequest
 import no.roedt.hypersys.HypersysService
 import no.roedt.hypersys.konvertering.ModelConverter
@@ -31,7 +31,7 @@ internal class TilgangsendringServiceBeanTest {
     private val databaseUpdater: DatabaseUpdater = mock()
     private val epostSender: RingesentralenEpostformulerer = mock()
     private val hypersysService: HypersysService = mock()
-    private val godkjenningRepository: GodkjenningRepository = mock()
+    private val godkjenningService: GodkjenningService = mock()
     private val modelConverter: ModelConverter = mock()
 
     private val tilgangsendringService = TilgangsendringServiceBean(
@@ -39,7 +39,7 @@ internal class TilgangsendringServiceBeanTest {
         databaseUpdater = databaseUpdater,
         epostSender = epostSender,
         hypersysService = hypersysService,
-        godkjenningRepository = godkjenningRepository,
+        godkjenningService = godkjenningService,
         modelConverter = modelConverter
     )
 

@@ -26,7 +26,7 @@ class TidligereMedlemSletter(
     private val aktivitetForFrivilligRepository: AktivitetForFrivilligRepository,
     private val kontaktRepository: KontaktRepository,
     private val frivilligRepository: FrivilligRepository,
-    private val godkjenningRepository: GodkjenningRepository,
+    private val godkjenningService: GodkjenningService,
     private val loginService: LoginService,
     private val mfaService: MFAService,
     private val samtaleService: SamtaleService,
@@ -60,13 +60,18 @@ class TidligereMedlemSletter(
     ) {
         kontaktRepository.update("registrert_av=?1 where registrert_av=?2", tidligereMedlemPerson.id, personId)
 
-        godkjenningRepository.update("godkjentPerson=?1 where godkjentPerson=?2", tidligereMedlemPerson.id, personId)
-
         samtaleService.flyttSamtalerMedDenneSomRingt(tidligereMedlemPerson.id, personId)
 
         val ikkeMedlemLengerRinger = ringerService.finnFraPerson(personId).firstResultOptional<Ringer>()
+
+        godkjenningService.flyttGodkjenningerTilGeneriskTidligereMedlem(
+            tidligereMedlemPerson.id,
+            tidligereMedlemRinger,
+            personId,
+            ikkeMedlemLengerRinger
+        )
+
         ikkeMedlemLengerRinger.ifPresent {
-            godkjenningRepository.update("godkjenner=?1 where godkjenner=?2", tidligereMedlemRinger.id, it.id)
             samtaleService.flyttSamtalerMedDenneSomRinger(tidligereMedlemRinger.id, it.id)
         }
 
