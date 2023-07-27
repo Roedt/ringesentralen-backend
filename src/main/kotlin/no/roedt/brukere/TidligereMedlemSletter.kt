@@ -14,7 +14,7 @@ import no.roedt.person.PersonService
 import no.roedt.ringesentralen.ringer.Ringer
 import no.roedt.ringesentralen.ringer.RingerService
 import no.roedt.ringesentralen.samtale.SamtaleService
-import no.roedt.ringesentralen.samtale.start.OppslagRepository
+import no.roedt.ringesentralen.samtale.oppslag.OppslagService
 import no.roedt.ringesentralen.sms.SMSTilMottakerRepository
 
 @Dependent
@@ -30,7 +30,7 @@ class TidligereMedlemSletter(
     private val loginAttemptRepository: LoginAttemptRepository,
     private val mfaService: MFAService,
     private val samtaleService: SamtaleService,
-    private val oppslagRepository: OppslagRepository,
+    private val oppslagService: OppslagService,
     private val smsTilMottakerRepository: SMSTilMottakerRepository
 ) {
     fun slett(ikkeMedlemLenger: Person?) {
@@ -70,11 +70,10 @@ class TidligereMedlemSletter(
             samtaleService.flyttSamtalerMedDenneSomRinger(tidligereMedlemRinger.id, it.id)
         }
 
-        oppslagRepository.update("ringt=?1 where ringt=?2", tidligereMedlemPerson.id, personId)
-        oppslagRepository.update(
-            "ringerHypersysId=?1 where ringerHypersysId=?2",
-            tidligereMedlemPerson.hypersysID,
-            ikkeMedlemLenger.hypersysID
+        oppslagService.flyttTilGeneriskTidligereMedlem(
+            tidligereMedlemPerson,
+            personId,
+            ikkeMedlemLenger
         )
     }
 

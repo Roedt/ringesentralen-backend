@@ -1,4 +1,4 @@
-package no.roedt.ringesentralen.samtale.start
+package no.roedt.ringesentralen.samtale.oppslag
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase
 import io.quarkus.runtime.annotations.RegisterForReflection

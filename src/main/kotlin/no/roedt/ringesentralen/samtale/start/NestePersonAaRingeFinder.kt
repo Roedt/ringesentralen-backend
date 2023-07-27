@@ -14,6 +14,8 @@ import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.ringesentralen.samtale.OppfoelgingValg21Repository
 import no.roedt.ringesentralen.samtale.Samtale
+import no.roedt.ringesentralen.samtale.oppslag.Oppslag
+import no.roedt.ringesentralen.samtale.oppslag.OppslagService
 import no.roedt.skrivUt
 import java.sql.Timestamp
 
@@ -21,7 +23,7 @@ import java.sql.Timestamp
 class NestePersonAaRingeFinder(
     val personService: PersonService,
     val databaseUpdater: DatabaseUpdater,
-    val oppslagRepository: OppslagRepository,
+    val oppslagService: OppslagService,
     val oppfoelgingValg21Repository: OppfoelgingValg21Repository,
     val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder,
     val lokallagService: LokallagService,
@@ -33,7 +35,7 @@ class NestePersonAaRingeFinder(
         return hentNestePersonAaRingeIDenneModusen(request)
             ?.let { personService.findById(it) }
             ?.let { toResponse(it) }
-            ?.also { oppslagRepository.persist(Oppslag(ringt = it.person.id, ringerHypersysId = request.userId())) }
+            ?.also { oppslagService.persist(Oppslag(ringt = it.person.id, ringerHypersysId = request.userId())) }
             ?.also { nyligeOppslagCache.remove(request.lokallag) }
     }
 

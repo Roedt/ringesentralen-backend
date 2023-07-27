@@ -16,6 +16,7 @@ import no.roedt.person.Postnummer
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.samtale.OppfoelgingValg21Repository
+import no.roedt.ringesentralen.samtale.oppslag.OppslagService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -25,13 +26,13 @@ internal class NestePersonAaRingeFinderTest {
     private val databaseUpdater: DatabaseUpdater = mock()
     private val oppfoelgingValg21Repository: OppfoelgingValg21Repository = mock()
     private val lokallagService: LokallagService = mock()
-    private val oppslagRepository: OppslagRepository = mock()
+    private val oppslagService: OppslagService = mock()
     private val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder = mock()
 
     private val nestePersonAaRingeFinder = NestePersonAaRingeFinder(
         personService = personService,
         databaseUpdater = databaseUpdater,
-        oppslagRepository = oppslagRepository,
+        oppslagService = oppslagService,
         oppfoelgingValg21Repository = oppfoelgingValg21Repository,
         nesteMedlemAaRingeFinder = nesteMedlemAaRingeFinder,
         lokallagService = lokallagService,
