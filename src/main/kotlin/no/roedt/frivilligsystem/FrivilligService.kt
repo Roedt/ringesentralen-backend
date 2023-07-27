@@ -27,6 +27,7 @@ import no.roedt.person.UserId
 import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import java.time.Instant
+import java.util.Optional
 
 @ApplicationScoped
 class FrivilligService(
@@ -193,4 +194,9 @@ class FrivilligService(
                 )
             )
         )
+
+    fun finnFraPersonId(personId: Int): Optional<Frivillig> =
+        frivilligRepository.find("personId", personId).firstResultOptional()
+
+    fun slett(id: Int) = frivilligRepository.deleteById(id)
 }
