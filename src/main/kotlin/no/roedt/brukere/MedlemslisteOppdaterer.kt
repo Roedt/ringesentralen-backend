@@ -7,7 +7,7 @@ import no.roedt.hypersys.externalModel.membership.Membership
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Oppdateringskilde
-import no.roedt.person.PersonRepository
+import no.roedt.person.PersonService
 import no.roedt.tidssone
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Instant
@@ -17,7 +17,7 @@ import java.time.ZonedDateTime
 class MedlemslisteOppdaterer(
     private val lokallagService: LokallagService,
     private val hypersysService: HypersysService,
-    private val personRepository: PersonRepository,
+    private val personService: PersonService,
     private val tidligereMedlemSletter: TidligereMedlemSletter,
     @ConfigProperty(
         name = "overstyrVentingFoerOppdateringMotHypersys",
@@ -46,7 +46,7 @@ class MedlemslisteOppdaterer(
     private fun oppdaterMedlemmer(lokallag: Lokallag) {
         val oppdatertMedlemsliste = hypersysService.hentOppdatertMedlemslisteForLokallag(lokallag)
         val partitionNyEksisterende = oppdatertMedlemsliste
-            .partition { medlem -> personRepository.find("hypersysID", medlem.member_id).count() == 0L }
+            .partition { medlem -> !personService.harMedlemMedHypersysID(medlem.member_id) }
         leggTilNyMedlemFraHypersys(partitionNyEksisterende)
         oppdaterEksisterendeMedlemmer(partitionNyEksisterende, lokallag)
         oppdaterMedlemmerSomIkkeErILagetIHypersysLenger(partitionNyEksisterende, lokallag)
@@ -57,7 +57,7 @@ class MedlemslisteOppdaterer(
             .first
             .map { hypersysService.convertMembershipToPerson(it) }
             .filter { it.telefonnummer != null }
-            .forEach { personRepository.save(it, Oppdateringskilde.Hypersys) }
+            .forEach { personService.save(it, Oppdateringskilde.Hypersys) }
     }
 
     private fun oppdaterEksisterendeMedlemmer(
@@ -66,7 +66,7 @@ class MedlemslisteOppdaterer(
     ) {
         partitionNyEksisterende
             .second
-            .map { Pair(it, personRepository.find("hypersysID", it.member_id)) }
+            .map { Pair(it, personService.finnFraHypersysId(it.member_id)) }
             .filter { it.second.count() > 0 }
             .map {
                 hypersysService.konverterTilOppdatering(
@@ -75,14 +75,14 @@ class MedlemslisteOppdaterer(
                     it.second.firstResult()
                 )
             }
-            .forEach { personRepository.oppdater(it) }
+            .forEach { personService.oppdater(it) }
     }
 
     private fun oppdaterMedlemmerSomIkkeErILagetIHypersysLenger(
         partitionNyEksisterende: Pair<List<Membership>, List<Membership>>,
         lokallag: Lokallag
     ) {
-        val ikkeIDetteLagetIHypersys = personRepository.list("lokallag", lokallag.id)
+        val ikkeIDetteLagetIHypersys = personService.hentMedlemmerILokallag(lokallag.id)
             .filterNot { it.hypersysID == null }
             .filterNot { it.kilde == Kilde.Systembruker }
             .filter {

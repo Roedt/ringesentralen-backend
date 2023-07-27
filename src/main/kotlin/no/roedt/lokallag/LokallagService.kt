@@ -25,5 +25,5 @@ class LokallagService(val repository: LokallagRepository) {
     fun exists(field: String, value: Any) = repository.find(field, value).count() > 0
     fun persist(it: Lokallag) = repository.persist(it)
     fun fromOrganisationName(it: String) = repository.fromOrganisationName(it)
-    fun listAll() = repository.listAll()
+    fun listAll(): List<Lokallag> = repository.listAll()
 }

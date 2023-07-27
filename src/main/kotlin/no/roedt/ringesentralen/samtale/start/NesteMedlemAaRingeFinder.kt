@@ -6,11 +6,9 @@ import no.roedt.KommuneRepository
 import no.roedt.brukere.MedlemslisteOppdaterer
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
-import no.roedt.person.PersonRepository
 
 @Dependent
 open class NesteMedlemAaRingeFinder(
-    val personRepository: PersonRepository,
     val databaseUpdater: DatabaseUpdater,
     private val kommuneRepository: KommuneRepository,
     private val lokallagService: LokallagService,
