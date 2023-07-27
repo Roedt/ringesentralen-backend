@@ -8,7 +8,7 @@ import no.roedt.person.Person
 
 @Dependent
 open class NesteMedlemAaRingeFinder(
-    val repository: NesteMedlemAaRingeRepository,
+    val repository: NesteAaRingeRepository,
     private val kommuneService: KommuneService,
     private val lokallagService: LokallagService,
     private val medlemslisteOppdaterer: MedlemslisteOppdaterer
@@ -30,5 +30,5 @@ open class NesteMedlemAaRingeFinder(
         return hentNestePerson(ringer, lokallag)
     }
 
-    private fun hentNestePerson(ringer: Person, lokallag: Int) = repository.hentNestePerson(ringer.fylke, lokallag, ringer.lokallag)
+    private fun hentNestePerson(ringer: Person, lokallag: Int) = repository.hentNesteMedlem(ringer.fylke, lokallag, ringer.lokallag)
 }

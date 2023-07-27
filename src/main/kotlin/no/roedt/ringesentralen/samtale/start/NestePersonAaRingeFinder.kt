@@ -3,7 +3,6 @@ package no.roedt.ringesentralen.samtale.start
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.ws.rs.ForbiddenException
 import jakarta.ws.rs.NotAuthorizedException
-import no.roedt.DatabaseUpdater
 import no.roedt.brukere.GroupID
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
@@ -22,12 +21,12 @@ import java.sql.Timestamp
 @ApplicationScoped
 class NestePersonAaRingeFinder(
     val personService: PersonService,
-    val databaseUpdater: DatabaseUpdater,
     val oppslagService: OppslagService,
     val oppfoelgingValg21Service: OppfoelgingValg21Service,
     val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder,
     val lokallagService: LokallagService,
-    val nyligeOppslagCache: NyligeOppslagCache
+    val nyligeOppslagCache: NyligeOppslagCache,
+    val nesteAaRingeRepository: NesteAaRingeRepository
 ) {
 
     fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? {
@@ -69,19 +68,10 @@ class NestePersonAaRingeFinder(
         return hentNestePerson(ringer, request.lokallag)
     }
 
-    private fun hentNestePerson(ringer: Person, lokallag: Int) = databaseUpdater.getResultList(
-        """SELECT v.id FROM v_personerSomKanRinges v 
-                WHERE fylke = ${ringer.fylke} 
-                AND hypersysID is null 
-                ORDER BY ABS(lokallag-'$lokallag') ASC, 
-                hypersysID DESC,
-                brukergruppe = ${RingesentralenGroupID.PrioritertAaRinge.nr} DESC,
-                sisteSamtale ASC,
-                v.hypersysID DESC
-        """
-    )
-        .map { it as Int }
-        .firstOrNull()
+    private fun hentNestePerson(ringer: Person, lokallag: Int) =
+        nesteAaRingeRepository.hentNesteIkkemedlem(ringer.fylke, lokallag)
+            .map { it as Int }
+            .firstOrNull()
 
     private fun toResponse(it: Person) =
         NestePersonAaRingeResponse(
@@ -91,7 +81,7 @@ class NestePersonAaRingeFinder(
         )
 
     fun getTidlegareSamtalarMedDennePersonen(oppringtNummer: String): List<Samtale> =
-        databaseUpdater.getResultList("SELECT resultat, ringerNavn, datetime, kommentar, ringtNavn, oppfoelgingId FROM `v_samtalerResultat` WHERE oppringtNummer = '$oppringtNummer'")
+        nesteAaRingeRepository.getTidlegareSamtalarMedDennePersonen(oppringtNummer)
             .map { it as Array<*> }
             .map {
                 Samtale(
