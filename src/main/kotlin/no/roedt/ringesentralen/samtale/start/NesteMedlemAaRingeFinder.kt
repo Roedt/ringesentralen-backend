@@ -1,7 +1,6 @@
 package no.roedt.ringesentralen.samtale.start
 
 import jakarta.enterprise.context.Dependent
-import no.roedt.DatabaseUpdater
 import no.roedt.brukere.MedlemslisteOppdaterer
 import no.roedt.kommune.KommuneService
 import no.roedt.lokallag.LokallagService
@@ -9,7 +8,7 @@ import no.roedt.person.Person
 
 @Dependent
 open class NesteMedlemAaRingeFinder(
-    val databaseUpdater: DatabaseUpdater,
+    val repository: NesteMedlemAaRingeRepository,
     private val kommuneService: KommuneService,
     private val lokallagService: LokallagService,
     private val medlemslisteOppdaterer: MedlemslisteOppdaterer
@@ -31,16 +30,5 @@ open class NesteMedlemAaRingeFinder(
         return hentNestePerson(ringer, lokallag)
     }
 
-    private fun hentNestePerson(ringer: Person, lokallag: Int) = databaseUpdater.getResultList(
-        """SELECT v.id FROM v_personerSomKanRinges v
-                WHERE fylke = ${ringer.fylke} 
-                AND lokallag=$lokallag AND hypersysID is not null 
-                ORDER BY ABS(lokallag-'${ringer.lokallag}') ASC,
-                hypersysID DESC,
-                sisteSamtale ASC,
-                v.hypersysID DESC
-        """
-    )
-        .map { it as Int }
-        .firstOrNull()
+    private fun hentNestePerson(ringer: Person, lokallag: Int) = repository.hentNestePerson(ringer.fylke, lokallag, ringer.lokallag)
 }

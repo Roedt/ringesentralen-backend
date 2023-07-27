@@ -1,7 +1,6 @@
 package no.roedt.frivilligsystem
 
 import jakarta.enterprise.context.ApplicationScoped
-import no.roedt.DatabaseUpdater
 import no.roedt.Emojifjerner
 import no.roedt.Kilde
 import no.roedt.brukere.GenerellRolle
@@ -31,7 +30,6 @@ class FrivilligService(
     val frivilligRepository: FrivilligRepository,
     val personService: PersonService,
     val kontaktService: KontaktService,
-    val databaseUpdater: DatabaseUpdater,
     val lokallagService: LokallagService,
     val fylkeService: FylkeService,
     val aktivitetForFrivilligService: AktivitetForFrivilligService,
@@ -57,15 +55,8 @@ class FrivilligService(
 
     private fun hentFrivilligeUtFraMinRolle(roller: Set<String>, ringer: Person): List<Frivillig> = when {
         roller.contains(GenerellRolle.admin) -> frivilligRepository.listAll()
-        roller.contains(RingespesifikkRolle.godkjenner) -> {
-            databaseUpdater.getResultList("select f.id from frivillig f inner join person p on p.id = f.personId and p.fylke=${ringer.fylke} ORDER BY p.etternavn ASC")
-                .map { it as Int }
-                .map { frivilligRepository.findById(it) }
-        }
-
-        else -> databaseUpdater.getResultList("select f.id from frivillig f inner join person p on p.id = f.personId and p.lokallag=${ringer.lokallag} ORDER BY p.etternavn ASC")
-            .map { it as Int }
-            .map { frivilligRepository.findById(it) }
+        roller.contains(RingespesifikkRolle.godkjenner) -> frivilligRepository.hentFrivilligeIFylket(ringer.fylke)
+        else -> frivilligRepository.hentFrivilligeILokallaget(ringer.lokallag)
     }
 
     fun registrerNyFrivillig(autentisertRequest: AutentisertRegistrerNyFrivilligRequest): Pair<Boolean, Frivillig> {

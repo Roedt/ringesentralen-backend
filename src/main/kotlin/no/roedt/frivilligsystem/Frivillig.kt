@@ -10,6 +10,7 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.Table
 import no.roedt.RoedtPanacheEntity
 import no.roedt.frivilligsystem.registrer.ErMedlemStatus
+import no.roedt.list
 import org.hibernate.Hibernate
 import java.time.Instant
 
@@ -42,4 +43,14 @@ data class Frivillig(
 }
 
 @ApplicationScoped
-class FrivilligRepository : PanacheRepositoryBase<Frivillig, Int>
+class FrivilligRepository : PanacheRepositoryBase<Frivillig, Int> {
+    fun hentFrivilligeIFylket(fylke: Int) =
+        entityManager.list("select f.id from frivillig f inner join person p on p.id = f.personId and p.fylke=$fylke ORDER BY p.etternavn ASC")
+            .map { it as Int }
+            .map { findById(it) }
+
+    fun hentFrivilligeILokallaget(lokallag: Int): List<Frivillig> =
+        entityManager.list("select f.id from frivillig f inner join person p on p.id = f.personId and p.lokallag=$lokallag ORDER BY p.etternavn ASC")
+            .map { it as Int }
+            .map { findById(it) }
+}
