@@ -1,12 +1,12 @@
 package no.roedt.brukere
 
 import jakarta.enterprise.context.Dependent
-import no.roedt.Kilde
 import no.roedt.hypersys.HypersysService
 import no.roedt.hypersys.externalModel.membership.Membership
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Oppdateringskilde
+import no.roedt.person.Person
 import no.roedt.person.PersonService
 import no.roedt.tidssone
 import org.eclipse.microprofile.config.inject.ConfigProperty
@@ -83,16 +83,8 @@ class MedlemslisteOppdaterer(
         lokallag: Lokallag
     ) {
         val ikkeIDetteLagetIHypersys = personService.hentMedlemmerILokallag(lokallag.id)
-            .filterNot { it.hypersysID == null }
-            .filterNot { it.kilde == Kilde.Systembruker }
-            .filter {
-                !partitionNyEksisterende.first.filter { i -> i.organisation == lokallag.navn }.map { i -> i.member_id }
-                    .contains(it.hypersysID)
-            }
-            .filter {
-                !partitionNyEksisterende.second.filter { i -> i.organisation == lokallag.navn }.map { i -> i.member_id }
-                    .contains(it.hypersysID)
-            }
+            .filter { erIkkeILaget(lokallag, it, partitionNyEksisterende.first) }
+            .filter { erIkkeILaget(lokallag, it, partitionNyEksisterende.second) }
         val deltIMedlemIkkeMedlem = ikkeIDetteLagetIHypersys
             .map { Pair(it, hypersysService.hentPerson(it)) }
             .partition { it.second.is_member }
@@ -103,6 +95,12 @@ class MedlemslisteOppdaterer(
         println("Fant ${deltIMedlemIkkeMedlem.second.size} tidligere medlemmer i ${lokallag.id} som ikke lenger er medlem")
         deltIMedlemIkkeMedlem.second.map { it.first }.forEach { tidligereMedlemSletter.slett(it) }
     }
+
+    private fun erIkkeILaget(lokallag: Lokallag, person: Person, memberships: List<Membership>) =
+        !memberships
+            .filter { it.organisation == lokallag.navn }
+            .map { it.member_id }
+            .contains(person.hypersysID)
 }
 
 private fun ZonedDateTime?.erSistOppdatertFørDenSisteUka(): Boolean = this?.isBefore(

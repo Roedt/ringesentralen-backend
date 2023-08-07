@@ -2,6 +2,7 @@ package no.roedt.person
 
 import io.quarkus.hibernate.orm.panache.PanacheQuery
 import jakarta.enterprise.context.ApplicationScoped
+import no.roedt.Kilde
 import no.roedt.postnummer.Postnummer
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import java.util.Optional
@@ -13,6 +14,8 @@ class PersonService(internal val repository: PersonRepository) {
     fun finnFraHypersysId(memberId: Int): PanacheQuery<Person> = repository.find("hypersysID", memberId)
     fun oppdater(oppdatering: PersonOppdatering) = repository.oppdater(oppdatering)
     fun hentMedlemmerILokallag(lokallag: Int): List<Person> = repository.list("lokallag", lokallag)
+        .filterNot { it.hypersysID == null }
+        .filterNot { it.kilde == Kilde.Systembruker }
     fun finnFraNavn(fornavn: String, etternavn: String): Person =
         repository.find("fornavn=?1 and etternavn=?2", fornavn, etternavn).firstResult()
 
