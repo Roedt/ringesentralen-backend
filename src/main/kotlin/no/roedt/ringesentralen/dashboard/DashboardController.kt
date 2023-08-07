@@ -12,7 +12,7 @@ import jakarta.ws.rs.core.Context
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.SecurityContext
 import no.roedt.brukere.GenerellRolle
-import no.roedt.hypersys.HypersysIdProvider
+import no.roedt.hypersys.userId
 import no.roedt.ringesentralen.Modus
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
@@ -25,7 +25,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @Tag(name = "Dashboard")
 @RequestScoped
 @SecurityRequirement(name = "jwt")
-class DashboardController(val dashboardService: DashboardService, val jwt: JsonWebToken) : HypersysIdProvider {
+class DashboardController(val dashboardService: DashboardService, val jwt: JsonWebToken) {
 
     @RolesAllowed(GenerellRolle.bruker)
     @GET

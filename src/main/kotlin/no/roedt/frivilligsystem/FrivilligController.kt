@@ -20,7 +20,7 @@ import no.roedt.frivilligsystem.registrer.AutentisertRegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.AutentisertSoMeFrivilligRequest
 import no.roedt.frivilligsystem.registrer.RegistrerNyFrivilligRequest
 import no.roedt.frivilligsystem.registrer.SoMeFrivilligRequest
-import no.roedt.hypersys.HypersysIdProvider
+import no.roedt.hypersys.userId
 import no.roedt.person.PersonService
 import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.brukere.RingesentralenEpostformulerer
@@ -40,8 +40,7 @@ class FrivilligController(
     val epostSender: RingesentralenEpostformulerer,
     val personService: PersonService,
     val jwt: JsonWebToken
-) :
-    HypersysIdProvider {
+) {
 
     @jakarta.annotation.security.RolesAllowed(
         RingespesifikkRolle.ringerMedlemmer,

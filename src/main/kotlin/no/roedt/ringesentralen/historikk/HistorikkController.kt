@@ -1,6 +1,5 @@
 package no.roedt.ringesentralen.historikk
 
-import jakarta.annotation.security.RolesAllowed
 import jakarta.ws.rs.DefaultValue
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.Path
@@ -10,7 +9,7 @@ import jakarta.ws.rs.core.Context
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.SecurityContext
 import no.roedt.brukere.GenerellRolle
-import no.roedt.hypersys.HypersysIdProvider
+import no.roedt.hypersys.userId
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.RingespesifikkRolle
 import org.eclipse.microprofile.faulttolerance.Bulkhead
@@ -23,7 +22,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @Path("/historikk")
 @Tag(name = "Historikk")
 @SecurityRequirement(name = "jwt")
-class HistorikkController(private val historikkService: HistorikkService, val jwt: JsonWebToken) : HypersysIdProvider {
+class HistorikkController(private val historikkService: HistorikkService, val jwt: JsonWebToken) {
 
     @jakarta.annotation.security.RolesAllowed(GenerellRolle.bruker)
     @GET

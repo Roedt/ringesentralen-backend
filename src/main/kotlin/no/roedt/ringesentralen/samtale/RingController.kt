@@ -12,7 +12,7 @@ import jakarta.ws.rs.QueryParam
 import jakarta.ws.rs.core.Context
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.SecurityContext
-import no.roedt.hypersys.HypersysIdProvider
+import no.roedt.hypersys.userId
 import no.roedt.ringesentralen.Modus
 import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.ringesentralen.samtale.resultat.AutentisertResultatFraSamtaleRequest
@@ -32,7 +32,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @Path("/samtale")
 @Tag(name = "Ring")
 @SecurityRequirement(name = "jwt")
-class RingController(val ringService: RingService, val jwt: JsonWebToken) : HypersysIdProvider {
+class RingController(val ringService: RingService, val jwt: JsonWebToken) {
 
     @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.ringer)
     @GET

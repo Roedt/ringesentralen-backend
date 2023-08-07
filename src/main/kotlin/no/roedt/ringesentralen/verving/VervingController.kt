@@ -10,7 +10,7 @@ import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.core.SecurityContext
 import no.roedt.brukere.GenerellRolle
-import no.roedt.hypersys.HypersysIdProvider
+import no.roedt.hypersys.userId
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
@@ -22,7 +22,7 @@ import java.net.URI
 @Path("/verving")
 @Tag(name = "Verving")
 @SecurityRequirement(name = "jwt")
-class VervingController(val service: VervingService, val jwt: JsonWebToken) : HypersysIdProvider {
+class VervingController(val service: VervingService, val jwt: JsonWebToken) {
 
     @jakarta.annotation.security.RolesAllowed(GenerellRolle.systembrukerFrontend)
     @POST

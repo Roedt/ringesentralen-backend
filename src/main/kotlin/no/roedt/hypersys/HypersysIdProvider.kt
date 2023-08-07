@@ -4,7 +4,5 @@ import jakarta.ws.rs.core.SecurityContext
 import no.roedt.person.UserId
 import org.eclipse.microprofile.jwt.JsonWebToken
 
-interface HypersysIdProvider {
-    fun SecurityContext.userId(): UserId =
-        UserId((userPrincipal as JsonWebToken).claim<Any>("hypersys.user_id").get().toString().toInt())
-}
+fun SecurityContext.userId(): UserId =
+    UserId((userPrincipal as JsonWebToken).claim<Any>("hypersys.user_id").get().toString().toInt())

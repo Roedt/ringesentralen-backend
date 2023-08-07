@@ -12,7 +12,6 @@ import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.SecurityContext
 import no.roedt.forum.underforum.Traad
 import no.roedt.forum.underforum.TraadRequest
-import no.roedt.hypersys.HypersysIdProvider
 import org.eclipse.microprofile.faulttolerance.Retry
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.Operation
@@ -25,7 +24,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 class ForumController(
     val forumService: ForumService,
     val jwt: JsonWebToken
-) : HypersysIdProvider {
+) {
 
     @RolesAllowed(ForumRolle.debattant)
     @GET

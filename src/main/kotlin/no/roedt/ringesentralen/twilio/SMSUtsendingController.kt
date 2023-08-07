@@ -11,7 +11,7 @@ import jakarta.ws.rs.core.Context
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.SecurityContext
 import no.roedt.brukere.GenerellRolle
-import no.roedt.hypersys.HypersysIdProvider
+import no.roedt.hypersys.userId
 import no.roedt.ringesentralen.sms.AutentisertSendSMSRequest
 import no.roedt.ringesentralen.sms.SendSMSRequest
 import org.eclipse.microprofile.openapi.annotations.Operation
@@ -22,7 +22,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @Tag(name = "SMSUtsending")
 @SecurityRequirement(name = "jwt")
 @ApplicationScoped
-class SMSUtsendingController(val smsSender: SMSSender) : HypersysIdProvider {
+class SMSUtsendingController(val smsSender: SMSSender) {
 
     @RolesAllowed(GenerellRolle.admin)
     @POST

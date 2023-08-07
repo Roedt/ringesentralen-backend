@@ -16,7 +16,7 @@ import no.roedt.brukere.Brukerendring
 import no.roedt.brukere.Brukerinformasjon
 import no.roedt.brukere.GenerellRolle
 import no.roedt.brukere.TilgangsendringsRequest
-import no.roedt.hypersys.HypersysIdProvider
+import no.roedt.hypersys.userId
 import no.roedt.ringesentralen.RingespesifikkRolle
 import org.eclipse.microprofile.faulttolerance.Bulkhead
 import org.eclipse.microprofile.faulttolerance.Retry
@@ -32,7 +32,7 @@ class BrukereController(
     val brukereService: BrukereService,
     val tilgangsendringService: TilgangsendringService,
     val jwt: JsonWebToken
-) : HypersysIdProvider {
+) {
 
     @RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
     @GET

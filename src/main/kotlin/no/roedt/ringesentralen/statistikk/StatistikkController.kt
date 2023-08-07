@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.Context
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.SecurityContext
 import no.roedt.brukere.GenerellRolle
-import no.roedt.hypersys.HypersysIdProvider
+import no.roedt.hypersys.userId
 import no.roedt.ringesentralen.RingespesifikkRolle
 import no.roedt.tidssone
 import org.eclipse.microprofile.jwt.JsonWebToken
@@ -24,7 +24,7 @@ import java.time.ZonedDateTime
 @Path("/statistikk")
 @Tag(name = "Statistikk")
 @SecurityRequirement(name = "jwt")
-class StatistikkController(val service: StatistikkService, val jwt: JsonWebToken) : HypersysIdProvider {
+class StatistikkController(val service: StatistikkService, val jwt: JsonWebToken) {
 
     @jakarta.annotation.security.RolesAllowed(
         RingespesifikkRolle.ringer,
