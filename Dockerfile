@@ -13,10 +13,10 @@ RUN mvn package -Dquarkus.package.type=native-sources -B -e -Dquarkus.datasource
 
 # Stage 2: Build the native image
 FROM quay.io/quarkus/ubi-quarkus-mandrel-builder-image:22.3-java17 AS native-build
-COPY --chown=quarkus:quarkus --from=maven /home/app/target/native-sources /build
+COPY --chown=quarkus:quarkus --from=maven /home/app/target/native-sources/ /build/
 USER quarkus
 WORKDIR /build
-RUN native-image $(cat native-image.args) -J-Xmx20g --initialize-at-run-time=org.apache.http.impl.auth.NTLMEngineImpl
+RUN native-image $(cat native-image.args) -J-Xmx15g --initialize-at-run-time=org.apache.http.impl.auth.NTLMEngineImpl
 COPY --chown=quarkus:quarkus --from=maven /home/app/src/main/resources/META-INF/resources/publickey.pem /build/publickey.pem
 
 # Stage 3: Create the docker final image
