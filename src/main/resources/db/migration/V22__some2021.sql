@@ -1,0 +1,1 @@
+INSERT INTO `aktivitet` VALUES ('VarSome2021');
