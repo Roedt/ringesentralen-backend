@@ -24,9 +24,11 @@ class TokenController(private val tokenService: TokenService, val jwt: JsonWebTo
     @Produces(MediaType.TEXT_PLAIN)
     @Transactional
     fun login(loginRequest: LoginRequest) = try {
+        println("Starter innlogging for ${loginRequest.brukarnamn}")
         tokenService.login(loginRequest)
+        println("Bruker ${loginRequest.brukarnamn} logga inn")
     } catch (e: UgyldigEngangskodeException) {
-        println("Ugyldig engangskode")
+        println("Ugyldig engangskode for ${loginRequest.brukarnamn}")
     }
 
     @PermitAll
