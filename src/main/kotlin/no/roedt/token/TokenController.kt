@@ -29,6 +29,9 @@ class TokenController(private val tokenService: TokenService, val jwt: JsonWebTo
         println("Bruker ${loginRequest.brukarnamn} logga inn")
     } catch (e: UgyldigEngangskodeException) {
         println("Ugyldig engangskode for ${loginRequest.brukarnamn}")
+    } catch (e: Exception) {
+        println("Innlogging feila for ${loginRequest.brukarnamn}")
+        throw e
     }
 
     @PermitAll
