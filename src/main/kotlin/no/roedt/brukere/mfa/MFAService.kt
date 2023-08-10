@@ -71,7 +71,7 @@ class MFAService(
             mfaRepository.settVerifisert(dekrypter(loginRequest))
             return
         }
-        throw RuntimeException("Ugyldig engangskode")
+        throw UgyldigEngangskodeException()
     }
 
     fun slett(email: String?) = mfaRepository.delete("epost=?1", email)

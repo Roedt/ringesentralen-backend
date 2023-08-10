@@ -7,6 +7,7 @@ import jakarta.ws.rs.Path
 import jakarta.ws.rs.Produces
 import jakarta.ws.rs.core.MediaType
 import no.roedt.brukere.mfa.MFARequest
+import no.roedt.brukere.mfa.UgyldigEngangskodeException
 import no.roedt.hypersys.login.LoginRequest
 import org.eclipse.microprofile.jwt.JsonWebToken
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
@@ -22,7 +23,11 @@ class TokenController(private val tokenService: TokenService, val jwt: JsonWebTo
     @Path("/login")
     @Produces(MediaType.TEXT_PLAIN)
     @Transactional
-    fun login(loginRequest: LoginRequest) = tokenService.login(loginRequest)
+    fun login(loginRequest: LoginRequest) = try {
+        tokenService.login(loginRequest)
+    } catch (e: UgyldigEngangskodeException) {
+        println("Ugyldig engangskode")
+    }
 
     @PermitAll
     @POST
