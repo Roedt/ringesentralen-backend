@@ -116,4 +116,23 @@ class StatistikkRepository(internal val entityManager: EntityManager) {
                     antallSamtaler = it[3].toString().toInt()
                 )
             }
+
+    fun ringteIValkampen2023(): Map<String, Int> =
+        entityManager.list(
+            """
+                SELECT lokallag.navn, count(1) FROM samtale samtale 
+                INNER JOIN ringer ringer on samtale.ringer=ringer.id 
+                INNER JOIN person ringerPerson on ringerPerson.id=ringer.personId
+                INNER JOIN lokallag lokallag on lokallag.id = ringerPerson.lokallag
+                INNER JOIN ringesesjon sesjon on sesjon.id = samtale.ringesesjon
+                WHERE samtale.resultat = ${Resultat.Samtale_startet.nr}
+                and samtale.ringt != ringerPerson.id
+                and sesjon.tekst = 'Valkamp 2023'
+                group by ringerPerson.lokallag
+                order by count(1) desc
+            """.trimIndent()
+        )
+            .map { it as Array<*> }
+            .sortedBy { it[1].toString().toInt() }
+            .associate { it[0].toString() to it[1].toString().toInt() }
 }

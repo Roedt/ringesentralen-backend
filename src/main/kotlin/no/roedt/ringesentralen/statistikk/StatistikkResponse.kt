@@ -6,5 +6,6 @@ import io.quarkus.runtime.annotations.RegisterForReflection
 data class StatistikkResponse(
     val samtalerStatistikkResponse: SamtalerStatistikkResponse,
     val ringereStatistikkResponse: RingereStatistikkResponse?,
-    val personerStatistikkResponse: PersonerStatistikkResponse?
+    val personerStatistikkResponse: PersonerStatistikkResponse?,
+    val ringteIValkampen2023: Map<String, Int> = mapOf()
 )

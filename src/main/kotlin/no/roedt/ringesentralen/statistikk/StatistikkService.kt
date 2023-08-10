@@ -12,7 +12,8 @@ class StatistikkService(val repository: StatistikkRepository) {
             StatistikkResponse(
                 samtalerStatistikkResponse = repository.getSamtalerStatistikkResponse(),
                 ringereStatistikkResponse = repository.getRingereStatistikkResponse(),
-                personerStatistikkResponse = repository.getPersonerStatistikkResponse()
+                personerStatistikkResponse = repository.getPersonerStatistikkResponse(),
+                ringteIValkampen2023 = repository.ringteIValkampen2023()
             )
         } else {
             StatistikkResponse(
