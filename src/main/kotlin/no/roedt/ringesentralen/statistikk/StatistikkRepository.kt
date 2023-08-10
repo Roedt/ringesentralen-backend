@@ -135,4 +135,3 @@ class StatistikkRepository(internal val entityManager: EntityManager) {
             .sortedBy { it[1].toString().toInt() }
             .map { it[0].toString() to it[1].toString().toInt() }
 }
-
