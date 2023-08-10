@@ -7,7 +7,6 @@ import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.ringesentralen.samtale.resultat.Resultat
 import java.sql.Timestamp
 import java.time.Instant
-
 @Dependent
 class StatistikkRepository(internal val entityManager: EntityManager) {
     fun getSamtalerStatistikkResponse(): SamtalerStatistikkResponse {
@@ -117,7 +116,7 @@ class StatistikkRepository(internal val entityManager: EntityManager) {
                 )
             }
 
-    fun ringteIValkampen2023(): Map<String, Int> =
+    fun ringteIValkampen2023(): List<Pair<String, Int>> =
         entityManager.list(
             """
                 SELECT lokallag.navn, count(1) FROM samtale samtale 
@@ -134,5 +133,6 @@ class StatistikkRepository(internal val entityManager: EntityManager) {
         )
             .map { it as Array<*> }
             .sortedBy { it[1].toString().toInt() }
-            .associate { it[0].toString() to it[1].toString().toInt() }
+            .map { it[0].toString() to it[1].toString().toInt() }
 }
+

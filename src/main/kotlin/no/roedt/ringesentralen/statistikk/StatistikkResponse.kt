@@ -7,5 +7,5 @@ data class StatistikkResponse(
     val samtalerStatistikkResponse: SamtalerStatistikkResponse,
     val ringereStatistikkResponse: RingereStatistikkResponse?,
     val personerStatistikkResponse: PersonerStatistikkResponse?,
-    val ringteIValkampen2023: Map<String, Int> = mapOf()
+    val ringteIValkampen2023: List<Pair<String, Int>> = listOf()
 )
