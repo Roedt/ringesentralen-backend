@@ -1,25 +1,20 @@
-# Step 1: Build the code using regular maven
-FROM maven:3.9.3-eclipse-temurin-17 as maven
+FROM quay.io/quarkus/ubi-quarkus-mandrel-builder-image:jdk-17 AS native-build
 ARG DBUSER
 ARG DBPASSWORD
 ARG QuarkusMailerUsername
 ARG QuarkusMailerPassword
-COPY pom.xml /home/app/
-WORKDIR /home/app
-RUN mvn verify -B --fail-never
-COPY src /home/app/src
-COPY .editorconfig .editorconfig
-RUN mvn package -Dquarkus.package.type=native-sources -B -e -Dquarkus.datasource.username=${DBUSER} -Dquarkus.datasource.password=${DBPASSWORD} -Dquarkus.mailer.username=${QuarkusMailerUsername} -Dquarkus.mailer.password=${QuarkusMailerPassword}
-
-# Stage 2: Build the native image
-FROM quay.io/quarkus/ubi-quarkus-mandrel-builder-image:22.3-java17 AS native-build
-COPY --chown=quarkus:quarkus --from=maven /home/app/target/native-sources/ /build/
+COPY --chown=quarkus:quarkus mvnw /code/mvnw
+COPY --chown=quarkus:quarkus .mvn /code/.mvn
+COPY --chown=quarkus:quarkus pom.xml /code/
+COPY --chown=quarkus:quarkus .editorconfig /code/.editorconfig
 USER quarkus
-WORKDIR /build
-RUN native-image $(cat native-image.args) -J-Xmx15g --initialize-at-run-time=org.apache.http.impl.auth.NTLMEngineImpl
-COPY --chown=quarkus:quarkus --from=maven /home/app/src/main/resources/META-INF/resources/publickey.pem /build/publickey.pem
+WORKDIR /code
+RUN ./mvnw -B org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline
+COPY src /code/src
+RUN ./mvnw package -Dnative -Dquarkus.datasource.username=${DBUSER} -Dquarkus.datasource.password=${DBPASSWORD} -Dquarkus.mailer.username=${QuarkusMailerUsername} -Dquarkus.mailer.password=${QuarkusMailerPassword}
+COPY --chown=quarkus:quarkus src/main/resources/META-INF/resources/publickey.pem /build/publickey.pem
 
-# Stage 3: Create the docker final image
+# Create the docker final image
 FROM quay.io/quarkus/quarkus-micro-image:2.0
 WORKDIR /work/
 COPY --from=native-build /build/*-runner /work/application
