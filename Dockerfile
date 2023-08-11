@@ -19,8 +19,8 @@ COPY --chown=quarkus:quarkus src/main/resources/META-INF/resources/publickey.pem
 # Create the docker final image
 FROM quay.io/quarkus/quarkus-micro-image:2.0
 WORKDIR /work/
-COPY --from=native-build /build/*-runner /work/application
-COPY --from=native-build /build/publickey.pem /work/publickey.pem
+COPY --from=native-build /code/target/*-runner /work/application
+COPY --from=native-build /code/publickey.pem /work/publickey.pem
 RUN chmod 775 /work
 EXPOSE 8080
 ENTRYPOINT [ "/work/application" ]
