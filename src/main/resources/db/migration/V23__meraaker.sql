@@ -1,0 +1,1 @@
+UPDATE lokallag SET fylke = 50 where navn = 'Meråker'
