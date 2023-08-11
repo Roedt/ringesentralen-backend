@@ -1,4 +1,4 @@
-FROM quay.io/quarkus/ubi-quarkus-mandrel-builder-image:jdk-17 AS native-build
+FROM quay.io/quarkus/ubi-quarkus-mandrel-builder-image:22.3-java17 AS native-build
 ARG DBUSER
 ARG DBPASSWORD
 ARG QuarkusMailerUsername
@@ -8,6 +8,8 @@ COPY --chown=quarkus:quarkus .mvn /code/.mvn
 COPY --chown=quarkus:quarkus pom.xml /code/
 COPY --chown=quarkus:quarkus .editorconfig /code/.editorconfig
 USER root
+RUN chown -R quarkus:quarkus /code
+USER quarkus
 WORKDIR /code
 RUN ./mvnw -B org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline
 COPY src /code/src
