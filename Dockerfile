@@ -14,7 +14,7 @@ WORKDIR /code
 RUN ./mvnw -B org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline
 COPY src /code/src
 RUN ./mvnw package -B -e -Dnative -Dquarkus.datasource.username=${DBUSER} -Dquarkus.datasource.password=${DBPASSWORD} -Dquarkus.mailer.username=${QuarkusMailerUsername} -Dquarkus.mailer.password=${QuarkusMailerPassword}
-COPY --chown=quarkus:quarkus src/main/resources/META-INF/resources/publickey.pem /build/publickey.pem
+COPY --chown=quarkus:quarkus src/main/resources/META-INF/resources/publickey.pem /code/publickey.pem
 
 # Create the docker final image
 FROM quay.io/quarkus/quarkus-micro-image:2.0
