@@ -32,5 +32,6 @@ class EpostSender(
                 epost.tekst
             )
         )
+        println("Sendte epost med tittel ${epost.tittel}")
     }
 }
