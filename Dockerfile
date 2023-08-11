@@ -13,7 +13,6 @@ USER quarkus
 WORKDIR /code
 RUN ./mvnw -B org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline
 COPY src /code/src
-RUN mkdir -p /code/target/classes
 RUN ./mvnw package -B -e -Dnative -Dquarkus.datasource.username=${DBUSER} -Dquarkus.datasource.password=${DBPASSWORD} -Dquarkus.mailer.username=${QuarkusMailerUsername} -Dquarkus.mailer.password=${QuarkusMailerPassword}
 COPY --chown=quarkus:quarkus src/main/resources/META-INF/resources/publickey.pem /build/publickey.pem
 
