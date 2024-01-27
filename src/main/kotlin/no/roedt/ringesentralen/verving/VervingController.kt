@@ -23,16 +23,18 @@ import java.net.URI
 @Tag(name = "Verving")
 @SecurityRequirement(name = "jwt")
 class VervingController(val service: VervingService, val jwt: JsonWebToken) {
-
-    @jakarta.annotation.security.RolesAllowed(GenerellRolle.systembrukerFrontend)
+    @jakarta.annotation.security.RolesAllowed(GenerellRolle.SYSTEMBRUKER_FRONTEND)
     @POST
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/verv")
-    @Operation(summary = "Legg til person som skal ringes", description = GenerellRolle.systembrukerFrontend)
+    @Operation(summary = "Legg til person som skal ringes", description = GenerellRolle.SYSTEMBRUKER_FRONTEND)
     @Bulkhead(3)
     @Retry
-    fun postPersonSomSkalRinges(@Context ctx: SecurityContext, request: VervingRequest): Response {
+    fun postPersonSomSkalRinges(
+        @Context ctx: SecurityContext,
+        request: VervingRequest
+    ): Response {
         val person = service.postPersonSomSkalRinges(AutentisertVervingRequest(request = request))
         return if (!person.first) {
             Response.noContent().build()
@@ -41,18 +43,21 @@ class VervingController(val service: VervingService, val jwt: JsonWebToken) {
         }
     }
 
-    @RolesAllowed(GenerellRolle.systembrukerFrontend)
+    @RolesAllowed(GenerellRolle.SYSTEMBRUKER_FRONTEND)
     @POST
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/svar")
     @Operation(
         summary = "Registrer svar fra personen på om hen vil ringes",
-        description = GenerellRolle.systembrukerFrontend
+        description = GenerellRolle.SYSTEMBRUKER_FRONTEND
     )
     @Bulkhead(3)
     @Retry
-    fun mottaSvar(@Context ctx: SecurityContext, request: MottaSvarRequest) = service.mottaSvar(
+    fun mottaSvar(
+        @Context ctx: SecurityContext,
+        request: MottaSvarRequest
+    ) = service.mottaSvar(
         AutentisertMottaSvarRequest(request = request, userId = ctx.userId())
     )
 }

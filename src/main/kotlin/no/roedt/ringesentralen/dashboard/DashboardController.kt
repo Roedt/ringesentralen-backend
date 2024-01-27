@@ -26,13 +26,12 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @RequestScoped
 @SecurityRequirement(name = "jwt")
 class DashboardController(val dashboardService: DashboardService, val jwt: JsonWebToken) {
-
-    @RolesAllowed(GenerellRolle.bruker)
+    @RolesAllowed(GenerellRolle.BRUKER)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.TEXT_PLAIN)
     @Path("/")
-    @Operation(summary = "Dashboard", description = GenerellRolle.bruker)
+    @Operation(summary = "Dashboard", description = GenerellRolle.BRUKER)
     @Bulkhead(5)
     @Retry
     fun getDashboard(

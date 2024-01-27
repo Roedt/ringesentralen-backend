@@ -14,7 +14,6 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 internal class AESUtilsTest {
-
     private val secretFactory: SecretFactory = mock()
 
     @Test
@@ -26,13 +25,18 @@ internal class AESUtilsTest {
 
         val aesUtil = AESUtil(secretFactory).also { it.setKey() }
 
-        val cipherText = encrypt(input = input, algorithm = aesUtil.algorithm, key = SecretKeySpec(encryptionKey.encodeToByteArray(), "AES"))
+        val cipherText =
+            encrypt(input = input, algorithm = aesUtil.algorithm, key = SecretKeySpec(encryptionKey.encodeToByteArray(), "AES"))
         val plainText = aesUtil.decrypt(cipherText)
 
         Assertions.assertEquals(input, plainText)
     }
 
-    private fun encrypt(input: String, algorithm: String, key: SecretKey): String {
+    private fun encrypt(
+        input: String,
+        algorithm: String,
+        key: SecretKey
+    ): String {
         val iv = IvParameterSpec(ByteArray(16).also { SecureRandom().nextBytes(it) })
         val encoder = Base64.getEncoder()
 

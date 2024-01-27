@@ -28,7 +28,6 @@ class NestePersonAaRingeFinder(
     val nyligeOppslagCache: NyligeOppslagCache,
     val nesteAaRingeRepository: NesteAaRingeRepository
 ) {
-
     fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse? {
         nyligeOppslagCache.assertAtIngenAndreSoekerIDetteLagetAkkuratNo(request.lokallag)
         return hentNestePersonAaRingeIDenneModusen(request)
@@ -46,7 +45,7 @@ class NestePersonAaRingeFinder(
         }
 
     private fun hentNesteMedlemAaRinge(request: AutentisertNestePersonAaRingeRequest): Int? {
-        if (!request.roller.contains(RingespesifikkRolle.ringerMedlemmer)) {
+        if (!request.roller.contains(RingespesifikkRolle.RINGER_MEDLEMMER)) {
             throw ForbiddenException("Kun dei godkjente for det kan ringe medlemmar")
         }
         return nesteMedlemAaRingeFinder.hentIDForNesteMedlemAaRinge(
@@ -57,7 +56,8 @@ class NestePersonAaRingeFinder(
 
     private fun hentNesteVelgerAaRinge(request: AutentisertNestePersonAaRingeRequest): Int? {
         val ringer = personService.getPerson(request.userId)
-        if (ringer.lokallag != request.lokallag && !GroupID.referencesOneOf(
+        if (ringer.lokallag != request.lokallag &&
+            !GroupID.referencesOneOf(
                 ringer.groupID(),
                 RingesentralenGroupID.LokalGodkjenner,
                 RingesentralenGroupID.Admin
@@ -68,10 +68,12 @@ class NestePersonAaRingeFinder(
         return hentNestePerson(ringer, request.lokallag)
     }
 
-    private fun hentNestePerson(ringer: Person, lokallag: Int) =
-        nesteAaRingeRepository.hentNesteIkkemedlem(ringer.fylke, lokallag)
-            .map { it as Int }
-            .firstOrNull()
+    private fun hentNestePerson(
+        ringer: Person,
+        lokallag: Int
+    ) = nesteAaRingeRepository.hentNesteIkkemedlem(ringer.fylke, lokallag)
+        .map { it as Int }
+        .firstOrNull()
 
     private fun toResponse(it: Person) =
         NestePersonAaRingeResponse(
@@ -91,8 +93,9 @@ class NestePersonAaRingeFinder(
                     kommentar = (it[3] ?: "") as String,
                     ringtNummer = oppringtNummer,
                     ringtNavn = it[4] as String,
-                    oppfoelging = it[5]?.toString()
-                        ?.let { i -> if (i != "null") oppfoelgingValg21Service.findById(i.toInt()) else null }
+                    oppfoelging =
+                        it[5]?.toString()
+                            ?.let { i -> if (i != "null") oppfoelgingValg21Service.findById(i.toInt()) else null }
                 )
             }
             .toList()

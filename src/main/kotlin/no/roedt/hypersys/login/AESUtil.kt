@@ -11,7 +11,6 @@ import javax.crypto.spec.SecretKeySpec
 
 @Dependent
 class AESUtil(val secretFactory: SecretFactory) {
-
     val algorithm: String = "AES/CBC/PKCS5Padding"
     private lateinit var key: SecretKey
 
@@ -20,10 +19,11 @@ class AESUtil(val secretFactory: SecretFactory) {
         key = SecretKeySpec(secretFactory.getEncryptionKey().encodeToByteArray(), "AES")
     }
 
-    fun decrypt(cipherText: String): String = Cipher.getInstance(algorithm)
-        .also { it.init(Cipher.DECRYPT_MODE, key, getIV(cipherText)) }
-        .doFinal(decode(cipherText))
-        .let { String(it) }
+    fun decrypt(cipherText: String): String =
+        Cipher.getInstance(algorithm)
+            .also { it.init(Cipher.DECRYPT_MODE, key, getIV(cipherText)) }
+            .doFinal(decode(cipherText))
+            .let { String(it) }
 
     private fun getIV(cipherText: String) = IvParameterSpec(Base64.getDecoder().decode(cipherText.split(":")[0]))
 

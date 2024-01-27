@@ -15,7 +15,6 @@ class PrivateKeyFactory(
     @ConfigProperty(name = "usePrivateKeyFromSecretManager")
     private val usePrivateKeyFromSecretManager: Boolean
 ) {
-
     fun readPrivateKey(): RSAPrivateKey = readPrivateKey(getPrivateKey())
 
     private fun getPrivateKey(): String =
@@ -26,11 +25,12 @@ class PrivateKeyFactory(
         }
 
     private fun readPrivateKey(key: String): RSAPrivateKey {
-        val privateKeyPEM = key
-            .replace("-----BEGIN PRIVATE KEY-----", "")
-            .replace(System.lineSeparator().toRegex(), "")
-            .replace("\n", "")
-            .replace("-----END PRIVATE KEY-----", "")
+        val privateKeyPEM =
+            key
+                .replace("-----BEGIN PRIVATE KEY-----", "")
+                .replace(System.lineSeparator().toRegex(), "")
+                .replace("\n", "")
+                .replace("-----END PRIVATE KEY-----", "")
         val encoded: ByteArray = Base64.getDecoder().decode(privateKeyPEM)
         val keyFactory = KeyFactory.getInstance("RSA")
         val keySpec = PKCS8EncodedKeySpec(encoded)

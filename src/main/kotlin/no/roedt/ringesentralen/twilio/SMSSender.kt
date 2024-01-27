@@ -12,7 +12,6 @@ import no.roedt.token.SecretFactory
 class SMSSender(
     private val secretFactory: SecretFactory
 ) {
-
     @PostConstruct
     fun setUp() = Twilio.init(secretFactory.getTwilioAccountSid(), secretFactory.getTwilioAuthToken())
 

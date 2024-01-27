@@ -11,18 +11,21 @@ import org.eclipse.microprofile.openapi.annotations.info.License
 import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme
 
 @OpenAPIDefinition(
-    info = Info(
-        title = "Ringesentral-API",
-        version = "1.0.0",
-        contact = Contact(
-            name = "Mads Opheim",
-            url = "https://github.com/roedt/ringesentralen-backend"
-        ),
-        license = License(
-            name = "MIT License",
-            url = "https://github.com/Roedt/ringesentralen-backend/blob/main/LICENSE"
+    info =
+        Info(
+            title = "Ringesentral-API",
+            version = "1.0.0",
+            contact =
+                Contact(
+                    name = "Mads Opheim",
+                    url = "https://github.com/roedt/ringesentralen-backend"
+                ),
+            license =
+                License(
+                    name = "MIT License",
+                    url = "https://github.com/Roedt/ringesentralen-backend/blob/main/LICENSE"
+                )
         )
-    )
 )
 @SecurityScheme(
     securitySchemeName = "jwt",

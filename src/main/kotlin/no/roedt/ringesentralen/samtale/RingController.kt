@@ -33,13 +33,12 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @Tag(name = "Ring")
 @SecurityRequirement(name = "jwt")
 class RingController(val ringService: RingService, val jwt: JsonWebToken) {
-
-    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.ringer)
+    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.RINGER)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/neste")
-    @Operation(summary = "Finn neste person å ringe", description = RingespesifikkRolle.ringer)
+    @Operation(summary = "Finn neste person å ringe", description = RingespesifikkRolle.RINGER)
     @Retry
     @Transactional
     fun hentNestePersonAaRinge(
@@ -60,50 +59,47 @@ class RingController(val ringService: RingService, val jwt: JsonWebToken) {
             )
         )
 
-    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.ringer)
+    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.RINGER)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/startSamtale")
-    @Operation(summary = "Start samtale", description = RingespesifikkRolle.ringer)
+    @Operation(summary = "Start samtale", description = RingespesifikkRolle.RINGER)
     @Retry
     @Transactional
     fun startSamtale(
         @Context ctx: SecurityContext,
         startSamtaleRequest: StartSamtaleRequest,
         @QueryParam("modus") modus: Modus
-    ) =
-        ringService.startSamtale(AutentisertStartSamtaleRequest(ctx.userId(), startSamtaleRequest, modus))
+    ) = ringService.startSamtale(AutentisertStartSamtaleRequest(ctx.userId(), startSamtaleRequest, modus))
 
-    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.ringer)
+    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.RINGER)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/registrerResultatFraSamtale")
-    @Operation(summary = "Registrer resultat fra samtale", description = RingespesifikkRolle.ringer)
+    @Operation(summary = "Registrer resultat fra samtale", description = RingespesifikkRolle.RINGER)
     @Retry
     @Transactional
     fun registrerResultatFraSamtale(
         @Context ctx: SecurityContext,
         resultatFraSamtaleRequest: ResultatFraSamtaleRequest,
         @QueryParam("modus") modus: Modus
-    ) =
-        ringService.registrerResultatFraSamtale(
-            AutentisertResultatFraSamtaleRequest(ctx.userId(), resultatFraSamtaleRequest, modus)
-        )
+    ) = ringService.registrerResultatFraSamtale(
+        AutentisertResultatFraSamtaleRequest(ctx.userId(), resultatFraSamtaleRequest, modus)
+    )
 
-    @RolesAllowed(RingespesifikkRolle.ringer)
+    @RolesAllowed(RingespesifikkRolle.RINGER)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/noenRingerTilbake")
-    @Operation(summary = "Noen ringer tilbake", description = RingespesifikkRolle.ringer)
+    @Operation(summary = "Noen ringer tilbake", description = RingespesifikkRolle.RINGER)
     @Retry
     @Transactional
     fun noenRingerTilbake(
         @Context ctx: SecurityContext,
         request: RingerTilbakeRequest,
         @QueryParam("modus") modus: Modus
-    ): NestePersonAaRingeResponse =
-        ringService.noenRingerTilbake(AutentisertRingerTilbakeRequest(ctx.userId(), request, modus, jwt.groups))
+    ): NestePersonAaRingeResponse = ringService.noenRingerTilbake(AutentisertRingerTilbakeRequest(ctx.userId(), request, modus, jwt.groups))
 }

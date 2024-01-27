@@ -5,7 +5,6 @@ import jakarta.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class Emojifjerner {
-
     companion object Fjerner {
         fun fjernEmojis(input: String?): String? =
             if (input == null) {

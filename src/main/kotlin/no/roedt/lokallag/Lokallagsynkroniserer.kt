@@ -9,10 +9,11 @@ import org.eclipse.microprofile.faulttolerance.Timeout
 
 @ApplicationScoped
 class Lokallagsynkroniserer(val hypersysService: HypersysService, val lokallagService: LokallagService) {
-
     @Timeout(value = 10000L)
     @Fallback(fallbackMethod = "hoppOverSynkronisering")
-    fun onStart(@Observes event: StartupEvent) {
+    fun onStart(
+        @Observes event: StartupEvent
+    ) {
         val alleLokallagFraHypersys = hypersysService.getAlleLokallag()
         val alleLokallagISystemet = lokallagService.listAll()
         val iHypersysMenIkkeIDatabasen =
@@ -34,10 +35,11 @@ class Lokallagsynkroniserer(val hypersysService: HypersysService, val lokallagSe
                 "Utland",
                 "testlaget"
             )
-        val iDatabasenUtanFylke = alleLokallagISystemet
-            .filter { it.fylke == -1 }
-            .map { it.navn }
-            .filterNot { forventaUtanFylke.contains(it) }
+        val iDatabasenUtanFylke =
+            alleLokallagISystemet
+                .filter { it.fylke == -1 }
+                .map { it.navn }
+                .filterNot { forventaUtanFylke.contains(it) }
         if (iDatabasenUtanFylke.isNotEmpty()) {
             println("Lokallag som er i databasen utan fylke:")
             println(iDatabasenUtanFylke)

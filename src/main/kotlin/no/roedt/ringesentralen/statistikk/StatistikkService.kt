@@ -6,9 +6,8 @@ import java.time.Instant
 
 @ApplicationScoped
 class StatistikkService(val repository: StatistikkRepository) {
-
     fun getStatistikk(groups: Set<String>): StatistikkResponse {
-        return if (groups.contains(GenerellRolle.admin)) {
+        return if (groups.contains(GenerellRolle.ADMIN)) {
             StatistikkResponse(
                 samtalerStatistikkResponse = repository.getSamtalerStatistikkResponse(),
                 ringereStatistikkResponse = repository.getRingereStatistikkResponse(),
@@ -24,12 +23,16 @@ class StatistikkService(val repository: StatistikkRepository) {
         }
     }
 
-    fun getRingtMest(hypersysId: Int): RingtFlestStatistikk = RingtFlestStatistikk(
-        jegHarRingt = repository.mineRingte(hypersysId),
-        maksRingt = repository.personSomHarRingtFlest(),
-        samtalerGjennomfoertILaget = repository.samtalerGjennomfoertILaget(hypersysId),
-        antallRingereILaget = repository.antallRingereILaget(hypersysId)
-    )
+    fun getRingtMest(hypersysId: Int): RingtFlestStatistikk =
+        RingtFlestStatistikk(
+            jegHarRingt = repository.mineRingte(hypersysId),
+            maksRingt = repository.personSomHarRingtFlest(),
+            samtalerGjennomfoertILaget = repository.samtalerGjennomfoertILaget(hypersysId),
+            antallRingereILaget = repository.antallRingereILaget(hypersysId)
+        )
 
-    fun lodd(fra: Instant, til: Instant): List<LoddStatistikk> = repository.lodd(fra, til)
+    fun lodd(
+        fra: Instant,
+        til: Instant
+    ): List<LoddStatistikk> = repository.lodd(fra, til)
 }

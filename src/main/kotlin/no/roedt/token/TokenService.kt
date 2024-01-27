@@ -5,7 +5,6 @@ import no.roedt.hypersys.login.LoginRequest
 import no.roedt.person.UserId
 
 interface TokenService {
-
     fun login(loginRequest: LoginRequest): String
 
     fun trengerMFA(mfaRequest: MFARequest): Boolean

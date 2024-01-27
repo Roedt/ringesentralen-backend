@@ -16,10 +16,20 @@ import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import java.time.Instant
 
 interface ModelConverter {
-    fun convert(user: User, groupID: Int): Person
+    fun convert(
+        user: User,
+        groupID: Int
+    ): Person
+
     fun convertMembershipToPerson(medlemskap: Membership): Person
+
     fun finnPostnummer(medlemskap: Membership): Postnummer
-    fun konverterTilOppdatering(medlemskap: Membership, lokallag: Lokallag, person: Person): PersonOppdatering
+
+    fun konverterTilOppdatering(
+        medlemskap: Membership,
+        lokallag: Lokallag,
+        person: Person
+    ): PersonOppdatering
 }
 
 @Dependent
@@ -29,8 +39,10 @@ class ModelConverterBean(
     private val fylkeService: FylkeService,
     private val postnummerService: PostnummerService
 ) : ModelConverter {
-
-    override fun convert(user: User, groupID: Int): Person {
+    override fun convert(
+        user: User,
+        groupID: Int
+    ): Person {
         val sisteMellomrom = user.name.lastIndexOf(" ")
         val fornavn = user.name.substring(0, sisteMellomrom)
         val etternavn = user.name.substring(sisteMellomrom + 1)
@@ -56,9 +68,10 @@ class ModelConverterBean(
         val postnummer = finnPostnummer(medlemskap)
 
         val telefonnummer = itOrNull(medlemskap.mobile)?.let { toTelefonnummer(it) }
-        val groupID = personService.finnFraTelefonnummer(telefonnummer)
-            .map { it.groupID() }
-            .orElse(RingesentralenGroupID.KlarTilAaRinges.nr)
+        val groupID =
+            personService.finnFraTelefonnummer(telefonnummer)
+                .map { it.groupID() }
+                .orElse(RingesentralenGroupID.KlarTilAaRinges.nr)
         // TODO: Finn på noko lurt her
 
         return Person(
@@ -106,8 +119,7 @@ class ModelConverterBean(
             ?.let { postnummerService.findById(it) }
             ?: postnummerService.ukjent()
 
-    fun toTelefonnummer(telefonnummer: String): String? =
-        telefonnummer.replace(" ", "").takeIf { it != "" }
+    fun toTelefonnummer(telefonnummer: String): String? = telefonnummer.replace(" ", "").takeIf { it != "" }
 
     private fun toPostnummer(user: User): Postnummer =
         user.addresses

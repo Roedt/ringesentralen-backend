@@ -22,25 +22,25 @@ class TokenServiceProducer(
     @ConfigProperty(name = "token.expiryPeriod")
     private val tokenExpiryPeriod: Duration
 ) {
-
     @Produces
     @ApplicationScoped
-    fun tokenService(): TokenService = if (brukHypersys) {
-        RealTokenService(
-            personService = personService,
-            privateKeyFactory = privateKeyFactory,
-            secretFactory = secretFactory,
-            hypersysLoginBean = hypersysLoginBean,
-            aesUtil = aesUtil,
-            mfaService = mfaService,
-            tokenExpiryPeriod = tokenExpiryPeriod
-        )
-    } else {
-        FakeTokenService(
-            secretFactory = secretFactory,
-            privateKeyFactory = privateKeyFactory,
-            aesUtil = aesUtil,
-            tokenExpiryPeriod = tokenExpiryPeriod
-        )
-    }
+    fun tokenService(): TokenService =
+        if (brukHypersys) {
+            RealTokenService(
+                personService = personService,
+                privateKeyFactory = privateKeyFactory,
+                secretFactory = secretFactory,
+                hypersysLoginBean = hypersysLoginBean,
+                aesUtil = aesUtil,
+                mfaService = mfaService,
+                tokenExpiryPeriod = tokenExpiryPeriod
+            )
+        } else {
+            FakeTokenService(
+                secretFactory = secretFactory,
+                privateKeyFactory = privateKeyFactory,
+                aesUtil = aesUtil,
+                tokenExpiryPeriod = tokenExpiryPeriod
+            )
+        }
 }

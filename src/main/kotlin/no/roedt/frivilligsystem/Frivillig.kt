@@ -38,19 +38,32 @@ data class Frivillig(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
+
     override fun toString(): String =
-        "Frivillig(id=$id, personId=$personId, alleredeAktivILokallag=$alleredeAktivILokallag, medlemIRoedt=$medlemIRoedt, spesiellKompetanse=$spesiellKompetanse, andreTingDuVilBidraMed=$andreTingDuVilBidraMed, spraak=$spraak, fortellLittOmDegSelv=$fortellLittOmDegSelv, registrertTidspunkt=$registrertTidspunkt)"
+        "Frivillig(id=$id, personId=$personId, " +
+            "alleredeAktivILokallag=$alleredeAktivILokallag, " +
+            "medlemIRoedt=$medlemIRoedt, " +
+            "spesiellKompetanse=$spesiellKompetanse, " +
+            "andreTingDuVilBidraMed=$andreTingDuVilBidraMed, " +
+            "spraak=$spraak, " +
+            "fortellLittOmDegSelv=$fortellLittOmDegSelv, " +
+            "registrertTidspunkt=$registrertTidspunkt" +
+            ")"
 }
 
 @ApplicationScoped
 class FrivilligRepository : PanacheRepositoryBase<Frivillig, Int> {
     fun hentFrivilligeIFylket(fylke: Int) =
-        entityManager.list("select f.id from frivillig f inner join person p on p.id = f.personId and p.fylke=$fylke ORDER BY p.etternavn ASC")
+        entityManager.list(
+            "select f.id from frivillig f inner join person p on p.id = f.personId and p.fylke=$fylke ORDER BY p.etternavn ASC"
+        )
             .map { it as Int }
             .map { findById(it) }
 
     fun hentFrivilligeILokallaget(lokallag: Int): List<Frivillig> =
-        entityManager.list("select f.id from frivillig f inner join person p on p.id = f.personId and p.lokallag=$lokallag ORDER BY p.etternavn ASC")
+        entityManager.list(
+            "select f.id from frivillig f inner join person p on p.id = f.personId and p.lokallag=$lokallag ORDER BY p.etternavn ASC"
+        )
             .map { it as Int }
             .map { findById(it) }
 }

@@ -30,7 +30,6 @@ class RealTokenService(
     private val mfaService: MFAService,
     private val tokenExpiryPeriod: Duration
 ) : TokenService {
-
     override fun login(loginRequest: LoginRequest): String {
         if (loginRequest.key != secretFactory.getFrontendTokenKey()) {
             throw IllegalArgumentException("Illegal key")
@@ -54,7 +53,7 @@ class RealTokenService(
             throw IllegalArgumentException("Ugyldig brukernavn eller passord")
         }
         return generateBaseToken()
-            .groups(GenerellRolle.systembrukerFrontend)
+            .groups(GenerellRolle.SYSTEMBRUKER_FRONTEND)
             .claim(
                 "hypersys.user_id",
                 personService.systembruker().hypersysID
@@ -63,43 +62,54 @@ class RealTokenService(
     }
 
     private fun loginMotHypersys(loginRequest: LoginRequest): Pair<Token, Person?> {
-        val hypersysToken: Pair<Token, Person?> = try {
-            hypersysLoginBean.login(loginRequest)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw ServiceUnavailableException("Kunne ikke kontakte Hypersys")
-        }
+        val hypersysToken: Pair<Token, Person?> =
+            try {
+                hypersysLoginBean.login(loginRequest)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                throw ServiceUnavailableException("Kunne ikke kontakte Hypersys")
+            }
         if (hypersysToken.first is UgyldigToken) throw ForbiddenException((hypersysToken.first as UgyldigToken).error)
         return hypersysToken
     }
 
-    private fun generateToken(hypersysToken: GyldigPersonToken, person: Person): String = generateBaseToken()
-        .groups(getGroups(person::groupID, hypersysToken.user_id))
-        .claim("hypersys.token_type", hypersysToken.token_type)
-        .claim("hypersys.scope", hypersysToken.scope)
-        .claim("hypersys.access_token", hypersysToken.access_token)
-        .claim("hypersys.expires_in", hypersysToken.expires_in)
-        .claim("hypersys.refresh_token", hypersysToken.refresh_token)
-        .claim("hypersys.user_id", hypersysToken.user_id)
-        .sign(privateKeyFactory.readPrivateKey())
+    private fun generateToken(
+        hypersysToken: GyldigPersonToken,
+        person: Person
+    ): String =
+        generateBaseToken()
+            .groups(getGroups(person::groupID, hypersysToken.user_id))
+            .claim("hypersys.token_type", hypersysToken.token_type)
+            .claim("hypersys.scope", hypersysToken.scope)
+            .claim("hypersys.access_token", hypersysToken.access_token)
+            .claim("hypersys.expires_in", hypersysToken.expires_in)
+            .claim("hypersys.refresh_token", hypersysToken.refresh_token)
+            .claim("hypersys.user_id", hypersysToken.user_id)
+            .sign(privateKeyFactory.readPrivateKey())
 
-    private fun generateBaseToken() = Jwt
-        .audience("ringer")
-        .issuer("https://ringesentralen.no")
-        .subject("Ringesentralen")
-        .upn("Ringesentralen")
-        .issuedAt(System.currentTimeMillis())
-        .expiresAt(System.currentTimeMillis() + tokenExpiryPeriod.toSeconds())
+    private fun generateBaseToken() =
+        Jwt
+            .audience("ringer")
+            .issuer("https://ringesentralen.no")
+            .subject("Ringesentralen")
+            .upn("Ringesentralen")
+            .issuedAt(System.currentTimeMillis())
+            .expiresAt(System.currentTimeMillis() + tokenExpiryPeriod.toSeconds())
 
-    override fun hentRoller(userId: UserId): Set<String> =
-        getGroups({ RingesentralenGroupID.UgodkjentRinger.nr }, userId.userId.toString())
+    override fun hentRoller(userId: UserId): Set<String> = getGroups({ RingesentralenGroupID.UgodkjentRinger.nr }, userId.userId.toString())
 
-    private fun getGroups(fallbackSupplier: Supplier<Int>, userId: String): Set<String> =
+    private fun getGroups(
+        fallbackSupplier: Supplier<Int>,
+        userId: String
+    ): Set<String> =
         getRolle(fallbackSupplier, userId)
             .roller
             .also { i -> if (i.isEmpty()) println("Fann ingen roller for $userId") }
 
-    private fun getRolle(fallbackSupplier: Supplier<Int>, userId: String): GroupID {
+    private fun getRolle(
+        fallbackSupplier: Supplier<Int>,
+        userId: String
+    ): GroupID {
         var groupID = RingesentralenGroupID.from(getPersonFromHypersysID(userId).groupID())
         if (RingesentralenGroupID.isIkkeRegistrertRinger(groupID.nr)) {
             groupID = RingesentralenGroupID.from(fallbackSupplier.get())
@@ -110,10 +120,10 @@ class RealTokenService(
         return groupID
     }
 
-    private fun getPersonFromHypersysID(userId: String) =
-        personService.finnFraHypersysId(userId.toInt()).firstResult<Person>()
+    private fun getPersonFromHypersysID(userId: String) = personService.finnFraHypersysId(userId.toInt()).firstResult<Person>()
 
     override fun trengerMFA(mfaRequest: MFARequest) = mfaService.trengerMFA(mfaRequest)
+
     override fun sendMFA(mfaRequest: MFARequest) {
         mfaService.sendMFA(mfaRequest)
     }

@@ -24,20 +24,20 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 internal class TilgangsendringServiceBeanTest {
-
     private val personService: PersonService = mock()
     private val epostSender: RingesentralenEpostformulerer = mock()
     private val hypersysService: HypersysService = mock()
     private val godkjenningService: GodkjenningService = mock()
     private val modelConverter: ModelConverter = mock()
 
-    private val tilgangsendringService = TilgangsendringServiceBean(
-        personService = personService,
-        epostSender = epostSender,
-        hypersysService = hypersysService,
-        godkjenningService = godkjenningService,
-        modelConverter = modelConverter
-    )
+    private val tilgangsendringService =
+        TilgangsendringServiceBean(
+            personService = personService,
+            epostSender = epostSender,
+            hypersysService = hypersysService,
+            godkjenningService = godkjenningService,
+            modelConverter = modelConverter
+        )
 
     @Test
     fun `godkjenner kan godkjenne brukar`() {
@@ -47,13 +47,14 @@ internal class TilgangsendringServiceBeanTest {
         ringt.hypersysID = 3
         doReturn(ringt).whenever(personService).findById(2)
 
-        val brukerendring = tilgangsendringService.aktiverRinger(
-            AutentisertTilgangsendringRequest(
-                userId = userId,
-                tilgangsendringRequest = TilgangsendringsRequest(personMedEndraTilgang = 2),
-                jwt = mock()
+        val brukerendring =
+            tilgangsendringService.aktiverRinger(
+                AutentisertTilgangsendringRequest(
+                    userId = userId,
+                    tilgangsendringRequest = TilgangsendringsRequest(personMedEndraTilgang = 2),
+                    jwt = mock()
+                )
             )
-        )
         assertEquals(2, brukerendring.personID)
         assertEquals(RingesentralenGroupID.GodkjentRinger, brukerendring.nyGroupId)
         assertTrue { brukerendring.epostSendt }
@@ -95,7 +96,11 @@ internal class TilgangsendringServiceBeanTest {
         return userId
     }
 
-    private fun lagPerson(fornavn: String, etternavn: String, telefonnummer: String) = Person(
+    private fun lagPerson(
+        fornavn: String,
+        etternavn: String,
+        telefonnummer: String
+    ) = Person(
         hypersysID = 123,
         fornavn = fornavn,
         etternavn = etternavn,

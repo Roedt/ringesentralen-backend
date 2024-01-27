@@ -23,22 +23,23 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @Tag(name = "Historikk")
 @SecurityRequirement(name = "jwt")
 class HistorikkController(private val historikkService: HistorikkService, val jwt: JsonWebToken) {
-
-    @jakarta.annotation.security.RolesAllowed(GenerellRolle.bruker)
+    @jakarta.annotation.security.RolesAllowed(GenerellRolle.BRUKER)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/meg")
-    @Operation(summary = "Historikk over mine samtaler", description = GenerellRolle.bruker)
+    @Operation(summary = "Historikk over mine samtaler", description = GenerellRolle.BRUKER)
     @Bulkhead(5)
     @Retry
-    fun getMineSamtaler(@Context ctx: SecurityContext, @QueryParam("modus") modus: Modus) =
-        historikkService.getMineSamtaler(ctx.userId(), modus)
+    fun getMineSamtaler(
+        @Context ctx: SecurityContext,
+        @QueryParam("modus") modus: Modus
+    ) = historikkService.getMineSamtaler(ctx.userId(), modus)
 
-    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
+    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.GODKJENNER, GenerellRolle.ADMIN)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/laget")
-    @Operation(summary = "Historikk over lagets samtaler", description = RingespesifikkRolle.godkjennerAdmin)
+    @Operation(summary = "Historikk over lagets samtaler", description = RingespesifikkRolle.GODKJENNER_ADMIN)
     @Bulkhead(5)
     @Retry
     fun getLagetsSamtaler(
@@ -49,12 +50,14 @@ class HistorikkController(private val historikkService: HistorikkService, val jw
         lokallag: Int
     ) = historikkService.getLagetsSamtaler(ctx.userId(), modus, lokallag)
 
-    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.ringer)
+    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.RINGER)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/meg/antall")
-    @Operation(summary = "Antall samtaler jeg har tatt", description = RingespesifikkRolle.ringer)
+    @Operation(summary = "Antall samtaler jeg har tatt", description = RingespesifikkRolle.RINGER)
     @Bulkhead(5)
     @Retry
-    fun tellMineSamtaler(@Context ctx: SecurityContext) = historikkService.tellMineSamtaler(ctx.userId())
+    fun tellMineSamtaler(
+        @Context ctx: SecurityContext
+    ) = historikkService.tellMineSamtaler(ctx.userId())
 }

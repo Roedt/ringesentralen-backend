@@ -20,19 +20,20 @@ data class PersonDTO(
     val sistOppdatert: Instant?
 ) {
     companion object {
-        fun fra(person: Person): PersonDTO = PersonDTO(
-            id = person.id,
-            hypersysID = person.hypersysID,
-            fornavn = person.fornavn,
-            etternavn = person.etternavn,
-            telefonnummer = person.telefonnummer,
-            email = person.email,
-            postnummer = person.postnummer.Postnummer,
-            fylke = person.fylke,
-            lokallag = person.lokallag,
-            groupID = person.groupID(),
-            kilde = person.kilde,
-            sistOppdatert = person.sistOppdatert
-        )
+        fun fra(person: Person): PersonDTO =
+            PersonDTO(
+                id = person.id,
+                hypersysID = person.hypersysID,
+                fornavn = person.fornavn,
+                etternavn = person.etternavn,
+                telefonnummer = person.telefonnummer,
+                email = person.email,
+                postnummer = person.postnummer.Postnummer,
+                fylke = person.fylke,
+                lokallag = person.lokallag,
+                groupID = person.groupID(),
+                kilde = person.kilde,
+                sistOppdatert = person.sistOppdatert
+            )
     }
 }

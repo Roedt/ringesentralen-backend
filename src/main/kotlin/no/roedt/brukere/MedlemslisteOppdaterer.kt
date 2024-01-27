@@ -24,7 +24,6 @@ class MedlemslisteOppdaterer(
         defaultValue = "false"
     ) val overstyrVenting: Boolean
 ) {
-
     fun oppdaterMedlemsliste(lokallagID: Int): Set<Lokallag> {
         val lokallag = lokallagService.findById(lokallagID)
         val sistOppdatert = lokallag.sistOppdatert?.atZone(tidssone())
@@ -45,8 +44,9 @@ class MedlemslisteOppdaterer(
 
     private fun oppdaterMedlemmer(lokallag: Lokallag) {
         val oppdatertMedlemsliste = hypersysService.hentOppdatertMedlemslisteForLokallag(lokallag)
-        val partitionNyEksisterende = oppdatertMedlemsliste
-            .partition { medlem -> !personService.harMedlemMedHypersysID(medlem.member_id) }
+        val partitionNyEksisterende =
+            oppdatertMedlemsliste
+                .partition { medlem -> !personService.harMedlemMedHypersysID(medlem.member_id) }
         leggTilNyMedlemFraHypersys(partitionNyEksisterende)
         oppdaterEksisterendeMedlemmer(partitionNyEksisterende, lokallag)
         oppdaterMedlemmerSomIkkeErILagetIHypersysLenger(partitionNyEksisterende, lokallag)
@@ -82,12 +82,14 @@ class MedlemslisteOppdaterer(
         partitionNyEksisterende: Pair<List<Membership>, List<Membership>>,
         lokallag: Lokallag
     ) {
-        val ikkeIDetteLagetIHypersys = personService.hentMedlemmerILokallag(lokallag.id)
-            .filter { erIkkeILaget(lokallag, it, partitionNyEksisterende.first) }
-            .filter { erIkkeILaget(lokallag, it, partitionNyEksisterende.second) }
-        val deltIMedlemIkkeMedlem = ikkeIDetteLagetIHypersys
-            .map { Pair(it, hypersysService.hentPerson(it)) }
-            .partition { it.second.is_member }
+        val ikkeIDetteLagetIHypersys =
+            personService.hentMedlemmerILokallag(lokallag.id)
+                .filter { erIkkeILaget(lokallag, it, partitionNyEksisterende.first) }
+                .filter { erIkkeILaget(lokallag, it, partitionNyEksisterende.second) }
+        val deltIMedlemIkkeMedlem =
+            ikkeIDetteLagetIHypersys
+                .map { Pair(it, hypersysService.hentPerson(it)) }
+                .partition { it.second.is_member }
         // Medlemmer i andre lag blir automatisk flytta over når vi hentar inn medlemslista for det nye laget deira.
         // Før den tid er det ikkje heilt godt å seie kva vi bør gjera, for HS har tilsynelatande ikkje noko endepunkt som gir lag gitt brukarid, og å iterere gjennom alt blir for tullete
         // Kanskje vi kan lage eit "jukse-lokallag" som heiter noko a la "Har bytta lokallag i Hypersys, men ikkje oppdatert her enno"
@@ -96,13 +98,17 @@ class MedlemslisteOppdaterer(
         deltIMedlemIkkeMedlem.second.map { it.first }.forEach { tidligereMedlemSletter.slett(it) }
     }
 
-    private fun erIkkeILaget(lokallag: Lokallag, person: Person, memberships: List<Membership>) =
-        !memberships
-            .filter { it.organisation == lokallag.navn }
-            .map { it.member_id }
-            .contains(person.hypersysID)
+    private fun erIkkeILaget(
+        lokallag: Lokallag,
+        person: Person,
+        memberships: List<Membership>
+    ) = !memberships
+        .filter { it.organisation == lokallag.navn }
+        .map { it.member_id }
+        .contains(person.hypersysID)
 }
 
-private fun ZonedDateTime?.erSistOppdatertFørDenSisteUka(): Boolean = this?.isBefore(
-    ZonedDateTime.now().minusWeeks(1)
-) == true
+private fun ZonedDateTime?.erSistOppdatertFørDenSisteUka(): Boolean =
+    this?.isBefore(
+        ZonedDateTime.now().minusWeeks(1)
+    ) == true

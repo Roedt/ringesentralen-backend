@@ -7,7 +7,6 @@ class SMSService(
     private val smsRepository: SMSRepository,
     private val smsTilMottakerService: SMSTilMottakerService
 ) {
-
     fun registrerSMSForUtsending(request: AutentisertLagreSMSRequest): LagreSMSResponse {
         val innerRequest = request.request
         val sms = SMS(innerRequest.tekst)

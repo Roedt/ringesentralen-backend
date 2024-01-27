@@ -8,15 +8,21 @@ enum class OpptattAv(val displaytext: String) {
     Etmerrettferdigpensjonssystem("Et mer rettferdig pensjonssystem"),
     Erstatthelseforetakenemedenaapenogdemokratiskstyringsmodell("Erstatt helseforetakene med en åpen og  demokratisk styringsmodell"),
     Gratisbarnehage("Gratis barnehage"),
-    Opprettelseavenlikeloennspottforaautjevneloennsforskjellerbasertpaakjoenn("Opprettelse av en likelønnspott for å utjevne  lønnsforskjeller basert på kjønn"),
+    Opprettelseavenlikeloennspottforaautjevneloennsforskjellerbasertpaakjoenn(
+        "Opprettelse av en likelønnspott for å utjevne  lønnsforskjeller basert på kjønn"
+    ),
     Oekebarnetrygdenogholdedenutenforberegningenavsosialhjelp("Øke barnetrygden og holde den utenfor  beregningen av sosialhjelp"),
     Oekningiskattenefordesuperrike("Økning i skattene for de superrike"),
     Forbyprivatebemanningsselskaper("Forby private bemanningsselskaper"),
     Sikreatingenmisterarbeidsavklaringspengerfoerdeeravklart("Sikre at ingen mister arbeidsavklaringspenger  før de er avklart"),
     Gratistannhelse("Gratis tannhelse"),
-    Kutteiflateavgiftersomikketarhensyntilhvormyeduhar_hvorduborellerhvormyeduforbruker("Kutte i flate avgifter som ikke tar hensyn til  hvor mye du har, hvor du bor eller hvor mye du forbruker"),
+    Kutteiflateavgiftersomikketarhensyntilhvormyeduhar_hvorduborellerhvormyeduforbruker(
+        "Kutte i flate avgifter som ikke tar hensyn til  hvor mye du har, hvor du bor eller hvor mye du forbruker"
+    ),
     MeldeNorgeutavNATOogjobbeforennordiskforsvarsallianse("Melde Norge ut av NATO og jobbe for en nordisk  forsvarsallianse"),
-    Innfoeringavdynastiskatt_enrettferdigogprogressivskattpaaluksusarv("Innføring av dynastiskatt, en rettferdig og  progressiv skatt på luksusarv"),
+    Innfoeringavdynastiskatt_enrettferdigogprogressivskattpaaluksusarv(
+        "Innføring av dynastiskatt, en rettferdig og  progressiv skatt på luksusarv"
+    ),
     Sekstimersnormalarbeidsdag_30timersarbeidsuke("Sekstimers normal-arbeidsdag (30 timers  arbeidsuke)"),
     Sikreuroertnatur("Sikre urørt natur"),
     Styrkekommuneoekonomien("Styrke kommuneøkonomien"),
@@ -39,8 +45,12 @@ enum class OpptattAv(val displaytext: String) {
     Tatilbakejernbanenioffentligregi("Ta tilbake jernbanen i offentlig regi"),
     Innfoeringavleksefriskole("Innføring av leksefri skole"),
     Profittfrivelferd("Profittfri velferd"),
-    SineitilEUdirektivsomsvekkerfagbevegelsenogrettigheteriarbeidslivet("Si nei til EU-direktiv som svekker fagbevegelsen  og rettigheter i arbeidslivet"),
-    Brukedeleravoljefondetpaaaagjoerenoedvendigeinvesteringeriutbyggingavklimavennliginfrastruktur("Bruke deler av oljefondet på å gjøre  nødvendige investeringer i utbygging av klimavennlig infrastruktur"),
+    SineitilEUdirektivsomsvekkerfagbevegelsenogrettigheteriarbeidslivet(
+        "Si nei til EU-direktiv som svekker fagbevegelsen  og rettigheter i arbeidslivet"
+    ),
+    Brukedeleravoljefondetpaaaagjoerenoedvendigeinvesteringeriutbyggingavklimavennliginfrastruktur(
+        "Bruke deler av oljefondet på å gjøre  nødvendige investeringer i utbygging av klimavennlig infrastruktur"
+    ),
     Reverseringavtvangssammenslaattefylkerogkommuner("Reversering av tvangssammenslåtte fylker og  kommuner"),
     Oekesosialstoenaden("Øke sosialstønaden"),
     Oektnorskselvforsyningavmat_medisinerogannet("Økt norsk selvforsyning av mat, medisiner og  annet")

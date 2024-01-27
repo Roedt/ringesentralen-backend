@@ -29,8 +29,16 @@ data class OppfoelgingValg21(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
+
     override fun toString(): String =
-        "OppfoelgingValg21(id=$id, samtaleId=$samtaleId, vilBliMerAktiv=$vilBliMerAktiv, vilPolitikkLink=$vilPolitikkLink, vilIkkeBliRingt=$vilIkkeBliRingt, vilHaMedlemsLink=$vilHaMedlemsLink, vilHaFellesskapLink=$vilHaFellesskapLink, vilBliRingtAugust=$vilBliRingtAugust)"
+        "OppfoelgingValg21(id=$id, " +
+            "samtaleId=$samtaleId, " +
+            "vilBliMerAktiv=$vilBliMerAktiv, " +
+            "vilPolitikkLink=$vilPolitikkLink, " +
+            "vilIkkeBliRingt=$vilIkkeBliRingt, " +
+            "vilHaMedlemsLink=$vilHaMedlemsLink, " +
+            "vilHaFellesskapLink=$vilHaFellesskapLink, " +
+            "vilBliRingtAugust=$vilBliRingtAugust)"
 }
 
 @ApplicationScoped

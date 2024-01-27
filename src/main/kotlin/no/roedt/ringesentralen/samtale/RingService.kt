@@ -25,8 +25,11 @@ import no.roedt.ringesentralen.samtale.start.StartSamtaleRequest
 
 interface RingService {
     fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest): NestePersonAaRingeResponse?
+
     fun startSamtale(request: AutentisertStartSamtaleRequest)
+
     fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest)
+
     fun noenRingerTilbake(request: AutentisertRingerTilbakeRequest): NestePersonAaRingeResponse
 }
 
@@ -39,45 +42,51 @@ class RingServiceBean(
     val ringerService: RingerService,
     val nestePersonAaRingeFinder: NestePersonAaRingeFinder
 ) : RingService {
-
     override fun hentNestePersonAaRinge(request: AutentisertNestePersonAaRingeRequest) =
         nestePersonAaRingeFinder.hentNestePersonAaRinge(request)
 
-    override fun startSamtale(request: AutentisertStartSamtaleRequest) = samtaleService.persist(
-        PersistentSamtale(
-            ringt = request.skalRingesID().toInt(),
-            ringer = hypersysIDTilRingerId(request.userId).toString().toInt(),
-            resultat = Resultat.Samtale_startet.nr,
-            ringesesjon = Ringesesjon.Valkamp2023.id,
-            kommentar = "Starter samtale",
-            modus = request.modus
+    override fun startSamtale(request: AutentisertStartSamtaleRequest) =
+        samtaleService.persist(
+            PersistentSamtale(
+                ringt = request.skalRingesID().toInt(),
+                ringer = hypersysIDTilRingerId(request.userId).toString().toInt(),
+                resultat = Resultat.Samtale_startet.nr,
+                ringesesjon = Ringesesjon.Valkamp2023.id,
+                kommentar = "Starter samtale",
+                modus = request.modus
+            )
         )
-    )
 
     override fun registrerResultatFraSamtale(autentisertRequest: AutentisertResultatFraSamtaleRequest) {
         val request = autentisertRequest.request
         assert(request.isGyldigResultat())
         val ringer = hypersysIDTilRingerId(autentisertRequest.userId).toString().toInt()
-        val persistentSamtale = PersistentSamtale(
-            ringt = request.ringtID.toInt(),
-            ringer = ringer,
-            resultat = request.resultat.nr,
-            ringesesjon = Ringesesjon.Valkamp2023.id,
-            kommentar = request.kommentar,
-            modus = autentisertRequest.modus
-        )
+        val persistentSamtale =
+            PersistentSamtale(
+                ringt = request.ringtID.toInt(),
+                ringer = ringer,
+                resultat = request.resultat.nr,
+                ringesesjon = Ringesesjon.Valkamp2023.id,
+                kommentar = request.kommentar,
+                modus = autentisertRequest.modus
+            )
         samtaleService.persist(persistentSamtale)
         lagreResultat(persistentSamtale.id.toLong(), getNesteGroupID(request), request)
     }
 
-    private fun getNesteGroupID(request: ResultatFraSamtaleRequest): GroupID? = when {
-        request.vilIkkeBliRingt -> RingesentralenGroupID.Ferdigringt
-        request.resultat.nesteGroupID != null -> request.resultat.nesteGroupID
-        erFleireEnnToIkkeSvar(request) -> RingesentralenGroupID.Ferdigringt
-        else -> null
-    }
+    private fun getNesteGroupID(request: ResultatFraSamtaleRequest): GroupID? =
+        when {
+            request.vilIkkeBliRingt -> RingesentralenGroupID.Ferdigringt
+            request.resultat.nesteGroupID != null -> request.resultat.nesteGroupID
+            erFleireEnnToIkkeSvar(request) -> RingesentralenGroupID.Ferdigringt
+            else -> null
+        }
 
-    private fun lagreResultat(samtaleId: Long, nesteGroupID: GroupID?, request: ResultatFraSamtaleRequest) {
+    private fun lagreResultat(
+        samtaleId: Long,
+        nesteGroupID: GroupID?,
+        request: ResultatFraSamtaleRequest
+    ) {
         if (request.skalRegistrere()) {
             registrerValg21SpesifikkeResultat(samtaleId, request)
         }
@@ -101,16 +110,17 @@ class RingServiceBean(
             personService.finnFraTelefonnummer(oppringtNummer)
                 .orElseGet { personService.finnFraTelefonnummer("-1").get() }
         val modus = if (personSomRingerTilbake.hypersysID != null) Modus.medlemmer else Modus.velgere
-        if (modus == Modus.medlemmer && !request.groups.contains(RingespesifikkRolle.ringerMedlemmer)) {
+        if (modus == Modus.medlemmer && !request.groups.contains(RingespesifikkRolle.RINGER_MEDLEMMER)) {
             personSomRingerTilbake = personService.finnFraTelefonnummer("-1").get()
         }
 
         startSamtale(
             AutentisertStartSamtaleRequest(
                 userId = request.userId,
-                startSamtaleRequest = StartSamtaleRequest(
-                    skalRingesID = personSomRingerTilbake.id.toLong()
-                ),
+                startSamtaleRequest =
+                    StartSamtaleRequest(
+                        skalRingesID = personSomRingerTilbake.id.toLong()
+                    ),
                 modus = modus
             )
         )
@@ -131,7 +141,10 @@ class RingServiceBean(
         return ingenSvar && fleireEnnToIkkeSvar && request.resultat == Resultat.Ikke_svar
     }
 
-    private fun registrerValg21SpesifikkeResultat(samtaleId: Long, request: ResultatFraSamtaleRequest) {
+    private fun registrerValg21SpesifikkeResultat(
+        samtaleId: Long,
+        request: ResultatFraSamtaleRequest
+    ) {
         val resultat = request.modusspesifikkeResultat as Valg21SpesifikkeResultat
         oppfoelgingValg21Service.persist(
             OppfoelgingValg21(

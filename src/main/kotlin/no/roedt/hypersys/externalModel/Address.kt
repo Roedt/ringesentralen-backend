@@ -9,6 +9,7 @@ data class Address(
     @JsonProperty("name") val name: String,
     @JsonProperty("address1") val address1: String,
     @JsonProperty("address2") val address2: String,
-    @JsonProperty("subject") val subject: String, // Kanskje eigentleg ein enum?
+    @JsonProperty("subject") val subject: String,
+    // Subject her er kanskje eigentleg ein enum?
     @JsonProperty("postal_code") val postalCode: List<String>
 )

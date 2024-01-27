@@ -5,9 +5,13 @@ interface GroupID {
     val name: String
     val skildring: String
     val roller: Set<String>
+
     fun references(value: Int): Boolean = nr == value
 
     companion object {
-        fun referencesOneOf(groupID: Int, vararg groupIDs: GroupID) = groupIDs.map { it.nr }.any { it == groupID }
+        fun referencesOneOf(
+            groupID: Int,
+            vararg groupIDs: GroupID
+        ) = groupIDs.map { it.nr }.any { it == groupID }
     }
 }

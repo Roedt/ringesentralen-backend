@@ -6,7 +6,6 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
 internal class TelefonnummerValidatorTest {
-
     @Test
     fun `norske mobilnummer paa 9 er gyldige`() {
         assertDoesNotThrow { TelefonnummerValidator.validate("+4799999999") }

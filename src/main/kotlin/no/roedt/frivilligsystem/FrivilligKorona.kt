@@ -29,8 +29,15 @@ data class FrivilligKorona(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
+
     override fun toString(): String =
-        "FrivilligKorona(id=$id, frivillig_id=$frivillig_id, haandtering='$haandtering', personlig=$personlig, tydelig='$tydelig', forslag='$forslag')"
+        "FrivilligKorona(id=$id, " +
+            "frivillig_id=$frivillig_id, " +
+            "haandtering='$haandtering', " +
+            "personlig=$personlig, " +
+            "tydelig='$tydelig', " +
+            "forslag='$forslag'" +
+            ")"
 }
 
 @ApplicationScoped

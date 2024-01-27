@@ -41,44 +41,47 @@ class FrivilligController(
     val personService: PersonService,
     val jwt: JsonWebToken
 ) {
-
     @jakarta.annotation.security.RolesAllowed(
-        RingespesifikkRolle.ringerMedlemmer,
-        RingespesifikkRolle.godkjenner,
-        GenerellRolle.admin
+        RingespesifikkRolle.RINGER_MEDLEMMER,
+        RingespesifikkRolle.GODKJENNER,
+        GenerellRolle.ADMIN
     )
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/alle")
     @Operation(
         summary = "Finn alle frivillige i laget",
-        description = RingespesifikkRolle.ringerForMedlemmerGodkjennerAdmin
+        description = RingespesifikkRolle.RINGER_FOR_MEDLEMMER_GODKJENNER_ADMIN
     )
     @Retry
-    fun hentAlle(@Context ctx: SecurityContext) = frivilligService.hentAlle(ctx.userId(), jwt.groups)
+    fun hentAlle(
+        @Context ctx: SecurityContext
+    ) = frivilligService.hentAlle(ctx.userId(), jwt.groups)
 
     @jakarta.annotation.security.RolesAllowed(
-        RingespesifikkRolle.ringerMedlemmer,
-        RingespesifikkRolle.godkjenner,
-        GenerellRolle.admin
+        RingespesifikkRolle.RINGER_MEDLEMMER,
+        RingespesifikkRolle.GODKJENNER,
+        GenerellRolle.ADMIN
     )
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/aktivitet")
     @Operation(
         summary = "Finn alle frivillige som kan bidra med en gitt aktivitet",
-        description = RingespesifikkRolle.ringerForMedlemmerGodkjennerAdmin
+        description = RingespesifikkRolle.RINGER_FOR_MEDLEMMER_GODKJENNER_ADMIN
     )
     @Retry
-    fun hentAlleForAktivitet(@Context ctx: SecurityContext, aktivitet: Aktivitet) =
-        frivilligService.hentAlleForAktivitet(ctx.userId(), jwt.groups, aktivitet)
+    fun hentAlleForAktivitet(
+        @Context ctx: SecurityContext,
+        aktivitet: Aktivitet
+    ) = frivilligService.hentAlleForAktivitet(ctx.userId(), jwt.groups, aktivitet)
 
-    @RolesAllowed(GenerellRolle.systembrukerFrontend)
+    @RolesAllowed(GenerellRolle.SYSTEMBRUKER_FRONTEND)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/registrer")
-    @Operation(summary = "Registrer ny frivillig", description = GenerellRolle.systembrukerFrontend)
+    @Operation(summary = "Registrer ny frivillig", description = GenerellRolle.SYSTEMBRUKER_FRONTEND)
     @Retry
     @Transactional
     fun registrerNyFrivillig(
@@ -99,9 +102,9 @@ class FrivilligController(
         }
 
     @jakarta.annotation.security.RolesAllowed(
-        RingespesifikkRolle.ringerMedlemmer,
-        RingespesifikkRolle.godkjenner,
-        GenerellRolle.admin
+        RingespesifikkRolle.RINGER_MEDLEMMER,
+        RingespesifikkRolle.GODKJENNER,
+        GenerellRolle.ADMIN
     )
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -109,21 +112,23 @@ class FrivilligController(
     @Path("/registrerKontakt")
     @Operation(
         summary = "Registrer kontakt med frivillig",
-        description = RingespesifikkRolle.ringerForMedlemmerGodkjennerAdmin
+        description = RingespesifikkRolle.RINGER_FOR_MEDLEMMER_GODKJENNER_ADMIN
     )
     @Retry
     @Transactional
-    fun registrerKontakt(@Context ctx: SecurityContext, registrerKontaktRequest: RegistrerKontaktRequest) =
-        kontaktService.registrerKontakt(
-            AutentisertRegistrerKontaktRequest(userId = ctx.userId(), request = registrerKontaktRequest)
-        )
+    fun registrerKontakt(
+        @Context ctx: SecurityContext,
+        registrerKontaktRequest: RegistrerKontaktRequest
+    ) = kontaktService.registrerKontakt(
+        AutentisertRegistrerKontaktRequest(userId = ctx.userId(), request = registrerKontaktRequest)
+    )
 
-    @jakarta.annotation.security.RolesAllowed(GenerellRolle.systembrukerFrontend)
+    @jakarta.annotation.security.RolesAllowed(GenerellRolle.SYSTEMBRUKER_FRONTEND)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/registrerSoMeFrivillig")
-    @Operation(summary = "Registrer ny SoMe-frivillig", description = GenerellRolle.systembrukerFrontend)
+    @Operation(summary = "Registrer ny SoMe-frivillig", description = GenerellRolle.SYSTEMBRUKER_FRONTEND)
     @Retry
     @Transactional
     fun soMeFrivilligregistrering(
@@ -131,12 +136,13 @@ class FrivilligController(
         request: SoMeFrivilligRequest
     ): Response {
         try {
-            val frivillig = frivilligService.registrerNySoMeFrivillig(
-                AutentisertSoMeFrivilligRequest(
-                    userId = ctx.userId(),
-                    request = request
+            val frivillig =
+                frivilligService.registrerNySoMeFrivillig(
+                    AutentisertSoMeFrivilligRequest(
+                        userId = ctx.userId(),
+                        request = request
+                    )
                 )
-            )
             return if (!frivillig.first) {
                 Response.noContent().build()
             } else {

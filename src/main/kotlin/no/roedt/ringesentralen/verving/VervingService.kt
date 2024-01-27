@@ -17,7 +17,6 @@ class VervingService(
     private val fylkeService: FylkeService,
     private val postnummerService: PostnummerService
 ) {
-
     fun postPersonSomSkalRinges(request: AutentisertVervingRequest): Pair<Boolean, Person> {
         val postnummer = postnummerService.findById(request.request.postnummer)
         vervingRepository.persist(
@@ -33,28 +32,30 @@ class VervingService(
         val vervaFraFoer = personService.finnFraTelefonnummer(request.request.telefonnummer)
         if (vervaFraFoer.isPresent) return Pair(false, vervaFraFoer.get())
 
-        val person = Person(
-            hypersysID = null,
-            fornavn = request.request.fornavn,
-            etternavn = request.request.etternavn,
-            telefonnummer = request.request.telefonnummer,
-            email = null,
-            postnummer = postnummer,
-            fylke = fylkeService.toFylke(postnummer),
-            lokallag = lokallagService.fromPostnummer(postnummer),
-            groupID = RingesentralenGroupID.ManglerSamtykke.nr,
-            kilde = Kilde.Verva,
-            sistOppdatert = null
-        )
+        val person =
+            Person(
+                hypersysID = null,
+                fornavn = request.request.fornavn,
+                etternavn = request.request.etternavn,
+                telefonnummer = request.request.telefonnummer,
+                email = null,
+                postnummer = postnummer,
+                fylke = fylkeService.toFylke(postnummer),
+                lokallag = lokallagService.fromPostnummer(postnummer),
+                groupID = RingesentralenGroupID.ManglerSamtykke.nr,
+                kilde = Kilde.Verva,
+                sistOppdatert = null
+            )
         personService.persist(person)
         return Pair(true, person)
     }
 
     fun mottaSvar(request: AutentisertMottaSvarRequest) {
-        val erBruker = personService
-            .finnFraTelefonnummer(request.request.telefonnummer)
-            .map { it.groupID() }
-            .filter { RingesentralenGroupID.isBrukerEllerVenter(it) }
+        val erBruker =
+            personService
+                .finnFraTelefonnummer(request.request.telefonnummer)
+                .map { it.groupID() }
+                .filter { RingesentralenGroupID.isBrukerEllerVenter(it) }
         if (erBruker.isPresent) return
 
         val nextValue =

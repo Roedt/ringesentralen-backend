@@ -29,13 +29,13 @@ class RingesentralenLoginBean(
     private val ringerService: RingerService,
     aesUtil: AESUtil
 ) : HypersysLoginBean(
-    hypersysProxy,
-    modelConverter,
-    secretFactory,
-    loginService,
-    personService,
-    aesUtil
-) {
+        hypersysProxy,
+        modelConverter,
+        secretFactory,
+        loginService,
+        personService,
+        aesUtil
+    ) {
     override fun login(loginRequest: LoginRequest): Pair<Token, Person?> {
         val token = loginInternal(loginRequest)
         if (token is UgyldigToken) return Pair(token, null)

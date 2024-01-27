@@ -16,10 +16,15 @@ import no.roedt.postnummer.Postnummer
 
 interface TilgangsendringService {
     fun aktiverRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring
+
     fun giTilgangTilAaRingeMedlemmer(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring
+
     fun deaktiverRinger(deaktiverRequest: AutentisertTilgangsendringRequest): Brukerendring
+
     fun gjoerRingerTilLokalGodkjenner(tilLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring
+
     fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring
+
     fun fjernTilgangTilAaRingeMedlemmer(request: AutentisertTilgangsendringRequest): Brukerendring
 }
 
@@ -31,7 +36,6 @@ class TilgangsendringServiceBean(
     val godkjenningService: GodkjenningService,
     val modelConverter: ModelConverter
 ) : TilgangsendringService {
-
     override fun aktiverRinger(godkjennRequest: AutentisertTilgangsendringRequest): Brukerendring =
         endreTilgang(godkjennRequest, RingesentralenGroupID.GodkjentRinger)
 
@@ -50,7 +54,10 @@ class TilgangsendringServiceBean(
     override fun fjernRingerSomLokalGodkjenner(fjernSomLokalGodkjennerRequest: AutentisertTilgangsendringRequest): Brukerendring =
         endreTilgang(fjernSomLokalGodkjennerRequest, RingesentralenGroupID.GodkjentRingerMedlemmer)
 
-    private fun endreTilgang(request: AutentisertTilgangsendringRequest, nyTilgang: GroupID): Brukerendring {
+    private fun endreTilgang(
+        request: AutentisertTilgangsendringRequest,
+        nyTilgang: GroupID
+    ): Brukerendring {
         assertAutorisert(request)
 
         val personMedEndraTilgang = request.personMedEndraTilgang()
@@ -73,7 +80,11 @@ class TilgangsendringServiceBean(
         return brukerendring
     }
 
-    private fun sendEpost(person: Person, nyTilgang: GroupID, brukerendring: Brukerendring) {
+    private fun sendEpost(
+        person: Person,
+        nyTilgang: GroupID,
+        brukerendring: Brukerendring
+    ) {
         try {
             epostSender.sendEpostOmEndraStatus(person, nyTilgang)
             brukerendring.epostSendt = true
@@ -82,16 +93,18 @@ class TilgangsendringServiceBean(
         }
     }
 
-    private fun oppdaterNavnFraHypersys(naavaerendePostnummer: Postnummer, hypersysID: Int?) =
-        hypersysService.hentFraMedlemslista(hypersysID)?.let {
-            val nyttPostnr = modelConverter.finnPostnummer(it).takeIf { i -> !i.erUkjent() } ?: naavaerendePostnummer
-            personService.oppdaterNavnFraHypersys(
-                it.first_name,
-                it.last_name,
-                nyttPostnr,
-                hypersysID
-            )
-        }
+    private fun oppdaterNavnFraHypersys(
+        naavaerendePostnummer: Postnummer,
+        hypersysID: Int?
+    ) = hypersysService.hentFraMedlemslista(hypersysID)?.let {
+        val nyttPostnr = modelConverter.finnPostnummer(it).takeIf { i -> !i.erUkjent() } ?: naavaerendePostnummer
+        personService.oppdaterNavnFraHypersys(
+            it.first_name,
+            it.last_name,
+            nyttPostnr,
+            hypersysID
+        )
+    }
 
     private fun assertAutorisert(request: AutentisertTilgangsendringRequest) {
         val ringersBrukertype = hypersysIdTilPerson(request.userId).groupID()
@@ -100,7 +113,8 @@ class TilgangsendringServiceBean(
 
         if (personMedEndraTilgang.isSystembruker()) throw ForbiddenException("Kan ikkje endre systembruker")
         if (RingesentralenGroupID.Admin.references(groupID)) throw ForbiddenException("Kan ikkje endre admins")
-        if (RingesentralenGroupID.LokalGodkjenner.references(ringersBrukertype) && RingesentralenGroupID.LokalGodkjenner.references(
+        if (RingesentralenGroupID.LokalGodkjenner.references(ringersBrukertype) &&
+            RingesentralenGroupID.LokalGodkjenner.references(
                 groupID
             )
         ) {
@@ -110,6 +124,5 @@ class TilgangsendringServiceBean(
         }
     }
 
-    private fun hypersysIdTilPerson(hypersysId: UserId) =
-        personService.finnFraHypersysId(hypersysId.userId).firstResult<Person>()
+    private fun hypersysIdTilPerson(hypersysId: UserId) = personService.finnFraHypersysId(hypersysId.userId).firstResult<Person>()
 }

@@ -19,7 +19,6 @@ data class MFA(
     var epost: String,
     var enhetsid: String
 ) : RoedtPanacheEntity() {
-
     companion object {
         fun generer(): String {
             val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
@@ -38,6 +37,7 @@ data class MFA(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
+
     override fun toString(): String =
         "MFA(id=$id, engangskode='$engangskode', verifisert=$verifisert, epost='$epost', enhetsid='$enhetsid')"
 }

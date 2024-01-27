@@ -26,7 +26,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class RingServiceBeanTest {
-
     private val personService: PersonService = mock()
     private val samtaleService: SamtaleService = mock()
     private val oppfoelgingValg21Service: OppfoelgingValg21Service = mock()
@@ -34,14 +33,15 @@ internal class RingServiceBeanTest {
     private val ringerService: RingerService = mock()
     private val nestePersonAaRingeFinder: NestePersonAaRingeFinder = mock()
 
-    private var ringService = RingServiceBean(
-        personService = personService,
-        samtaleService = samtaleService,
-        oppfoelgingValg21Service = oppfoelgingValg21Service,
-        lokallagService = lokallagService,
-        ringerService = ringerService,
-        nestePersonAaRingeFinder = nestePersonAaRingeFinder
-    )
+    private var ringService =
+        RingServiceBean(
+            personService = personService,
+            samtaleService = samtaleService,
+            oppfoelgingValg21Service = oppfoelgingValg21Service,
+            lokallagService = lokallagService,
+            ringerService = ringerService,
+            nestePersonAaRingeFinder = nestePersonAaRingeFinder
+        )
 
     @BeforeEach
     fun setup() {
@@ -55,24 +55,26 @@ internal class RingServiceBeanTest {
         doReturn(1).whenever(ringService).hypersysIDTilRingerId(any())
         doReturn(false).whenever(ringService).isBrukerEllerVenterPaaGodkjenning(any())
 
-        val request = AutentisertResultatFraSamtaleRequest(
-            UserId(1),
-            ResultatFraSamtaleRequest(
-                modus = Modus.medlemmer,
-                ringtID = 2,
-                resultat = Resultat.Svarte,
-                kommentar = "Hei",
-                modusspesifikkeResultat = Valg21SpesifikkeResultat(
-                    vilPolitikkLink = false,
-                    vilBliMerAktiv = false,
-                    vilBliRingtAugust = false,
-                    vilHaMedlemsLink = false,
-                    vilHaFellesskapLink = true
+        val request =
+            AutentisertResultatFraSamtaleRequest(
+                UserId(1),
+                ResultatFraSamtaleRequest(
+                    modus = Modus.medlemmer,
+                    ringtID = 2,
+                    resultat = Resultat.Svarte,
+                    kommentar = "Hei",
+                    modusspesifikkeResultat =
+                        Valg21SpesifikkeResultat(
+                            vilPolitikkLink = false,
+                            vilBliMerAktiv = false,
+                            vilBliRingtAugust = false,
+                            vilHaMedlemsLink = false,
+                            vilHaFellesskapLink = true
+                        ),
+                    vilIkkeBliRingt = false
                 ),
-                vilIkkeBliRingt = false
-            ),
-            modus = Modus.velgere
-        )
+                modus = Modus.velgere
+            )
 
         val response = ringService.registrerResultatFraSamtale(request)
         assertNotNull(response)
@@ -80,24 +82,27 @@ internal class RingServiceBeanTest {
 
     @Test
     fun `resultattype som ikkje passar med modusen kastar feilmelding`() {
-        val request = AutentisertResultatFraSamtaleRequest(
-            userId = UserId(1),
-            request = ResultatFraSamtaleRequest(
-                modus = Modus.medlemmer,
-                ringtID = 2,
-                resultat = Resultat.Ringes_etter_valget,
-                kommentar = "Hei",
-                modusspesifikkeResultat = Valg21SpesifikkeResultat(
-                    vilPolitikkLink = false,
-                    vilBliMerAktiv = false,
-                    vilBliRingtAugust = false,
-                    vilHaMedlemsLink = false,
-                    vilHaFellesskapLink = true
-                ),
-                vilIkkeBliRingt = false
-            ),
-            modus = Modus.medlemmer
-        )
+        val request =
+            AutentisertResultatFraSamtaleRequest(
+                userId = UserId(1),
+                request =
+                    ResultatFraSamtaleRequest(
+                        modus = Modus.medlemmer,
+                        ringtID = 2,
+                        resultat = Resultat.Ringes_etter_valget,
+                        kommentar = "Hei",
+                        modusspesifikkeResultat =
+                            Valg21SpesifikkeResultat(
+                                vilPolitikkLink = false,
+                                vilBliMerAktiv = false,
+                                vilBliRingtAugust = false,
+                                vilHaMedlemsLink = false,
+                                vilHaFellesskapLink = true
+                            ),
+                        vilIkkeBliRingt = false
+                    ),
+                modus = Modus.medlemmer
+            )
 
         assertThrows(AssertionError::class.java) {
             ringService.registrerResultatFraSamtale(request)
@@ -111,19 +116,20 @@ internal class RingServiceBeanTest {
         id: Int,
         hypersysID: Int
     ) {
-        val person = Person(
-            hypersysID = hypersysID,
-            fornavn = fornavn,
-            etternavn = etternavn,
-            telefonnummer = telefonnummer,
-            email = "",
-            postnummer = Postnummer("1234", "Lillevik", Kommune("", "", 0, 0)),
-            fylke = 0,
-            lokallag = 0,
-            groupID = 0,
-            kilde = Kilde.Hypersys,
-            sistOppdatert = null
-        )
+        val person =
+            Person(
+                hypersysID = hypersysID,
+                fornavn = fornavn,
+                etternavn = etternavn,
+                telefonnummer = telefonnummer,
+                email = "",
+                postnummer = Postnummer("1234", "Lillevik", Kommune("", "", 0, 0)),
+                fylke = 0,
+                lokallag = 0,
+                groupID = 0,
+                kilde = Kilde.Hypersys,
+                sistOppdatert = null
+            )
         doReturn(person).whenever(personService).findById(id)
         val query: PanacheQuery<Person> = mock()
         doReturn(person).whenever(query).firstResult<Person>()

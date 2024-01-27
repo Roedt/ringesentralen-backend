@@ -20,5 +20,6 @@ data class AutentisertRingerTilbakeRequest(
     val groups: Set<String>
 ) {
     fun ringtNummer() = ringerTilbakeRequest.ringtNummer
+
     fun validate() = ringerTilbakeRequest.validate()
 }

@@ -23,14 +23,15 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @SecurityRequirement(name = "jwt")
 @ApplicationScoped
 class SMSUtsendingController(val smsSender: SMSSender) {
-
-    @RolesAllowed(GenerellRolle.admin)
+    @RolesAllowed(GenerellRolle.ADMIN)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/send")
-    @Operation(summary = "Send ut SMS", description = GenerellRolle.admin)
+    @Operation(summary = "Send ut SMS", description = GenerellRolle.ADMIN)
     @Transactional
-    fun sendSMS(@Context ctx: SecurityContext, request: SendSMSRequest) =
-        smsSender.sendSMS(AutentisertSendSMSRequest(userId = ctx.userId(), request = request))
+    fun sendSMS(
+        @Context ctx: SecurityContext,
+        request: SendSMSRequest
+    ) = smsSender.sendSMS(AutentisertSendSMSRequest(userId = ctx.userId(), request = request))
 }

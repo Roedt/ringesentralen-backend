@@ -31,6 +31,7 @@ data class Fylke(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
+
     override fun toString(): String = "Fylke(id=$id, navn='$navn')"
 }
 
@@ -38,9 +39,10 @@ data class Fylke(
 class FylkeRepository(
     private val lokallagService: LokallagService
 ) : PanacheRepositoryBase<Fylke, Int> {
-
-    fun getFylke(lokallag: Int, postnummer: Postnummer): Int =
-        if (!postnummer.erUkjent() && lokallag != -1) getFylkeIdFraLokallag(lokallag) else toFylke(postnummer)
+    fun getFylke(
+        lokallag: Int,
+        postnummer: Postnummer
+    ): Int = if (!postnummer.erUkjent() && lokallag != -1) getFylkeIdFraLokallag(lokallag) else toFylke(postnummer)
 
     fun getFylkeIdFraLokallag(lokallag: Int): Int = lokallagService.findById(lokallag).fylke
 

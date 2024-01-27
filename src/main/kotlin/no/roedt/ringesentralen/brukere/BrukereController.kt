@@ -33,113 +33,125 @@ class BrukereController(
     val tilgangsendringService: TilgangsendringService,
     val jwt: JsonWebToken
 ) {
-
-    @RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
+    @RolesAllowed(RingespesifikkRolle.GODKJENNER, GenerellRolle.ADMIN)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/brukere")
-    @Operation(summary = "List ut brukere", description = RingespesifikkRolle.godkjennerAdmin)
-    fun getBrukere(@Context ctx: SecurityContext): List<Brukerinformasjon> = brukereService.getBrukere(
-        AutentisertGetBrukereRequest(ctx.userId(), jwt.groups)
-    )
+    @Operation(summary = "List ut brukere", description = RingespesifikkRolle.GODKJENNER_ADMIN)
+    fun getBrukere(
+        @Context ctx: SecurityContext
+    ): List<Brukerinformasjon> =
+        brukereService.getBrukere(
+            AutentisertGetBrukereRequest(ctx.userId(), jwt.groups)
+        )
 
-    @RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
+    @RolesAllowed(RingespesifikkRolle.GODKJENNER, GenerellRolle.ADMIN)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/aktiver")
-    @Operation(summary = "Aktiver ringer", description = RingespesifikkRolle.godkjennerAdmin)
+    @Operation(summary = "Aktiver ringer", description = RingespesifikkRolle.GODKJENNER_ADMIN)
     @Bulkhead(3)
     @Retry
     @Transactional
-    fun aktiverRinger(@Context ctx: SecurityContext, godkjennRequest: TilgangsendringsRequest): Brukerendring =
+    fun aktiverRinger(
+        @Context ctx: SecurityContext,
+        godkjennRequest: TilgangsendringsRequest
+    ): Brukerendring =
         tilgangsendringService.aktiverRinger(
             AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
         )
 
-    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
+    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.GODKJENNER, GenerellRolle.ADMIN)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/giTilgangTilAaRingeMedlemmer")
-    @Operation(summary = "Gi tilgang til å ringe medlemmer", description = RingespesifikkRolle.godkjennerAdmin)
+    @Operation(summary = "Gi tilgang til å ringe medlemmer", description = RingespesifikkRolle.GODKJENNER_ADMIN)
     @Bulkhead(3)
     @Retry
     @Transactional
     fun giTilgangTilAaRingeMedlemmer(
         @Context ctx: SecurityContext,
         godkjennRequest: TilgangsendringsRequest
-    ): Brukerendring = tilgangsendringService.giTilgangTilAaRingeMedlemmer(
-        AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
-    )
+    ): Brukerendring =
+        tilgangsendringService.giTilgangTilAaRingeMedlemmer(
+            AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
+        )
 
-    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
+    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.GODKJENNER, GenerellRolle.ADMIN)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/fjernTilgangTilAaRingeMedlemmer")
-    @Operation(summary = "Fjern tilgang til å ringe medlemmer", description = RingespesifikkRolle.godkjennerAdmin)
+    @Operation(summary = "Fjern tilgang til å ringe medlemmer", description = RingespesifikkRolle.GODKJENNER_ADMIN)
     @Bulkhead(3)
     @Retry
     @Transactional
     fun fjernTilgangTilAaRingeMedlemmer(
         @Context ctx: SecurityContext,
         godkjennRequest: TilgangsendringsRequest
-    ): Brukerendring = tilgangsendringService.fjernTilgangTilAaRingeMedlemmer(
-        AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
-    )
+    ): Brukerendring =
+        tilgangsendringService.fjernTilgangTilAaRingeMedlemmer(
+            AutentisertTilgangsendringRequest(ctx.userId(), godkjennRequest, jwt)
+        )
 
-    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.godkjenner, GenerellRolle.admin)
+    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.GODKJENNER, GenerellRolle.ADMIN)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/deaktiver")
-    @Operation(summary = "Deaktiver ringer", description = RingespesifikkRolle.godkjennerAdmin)
+    @Operation(summary = "Deaktiver ringer", description = RingespesifikkRolle.GODKJENNER_ADMIN)
     @Bulkhead(5)
     @Retry
     @Transactional
-    fun deaktiverRinger(@Context ctx: SecurityContext, deaktiverRequest: TilgangsendringsRequest): Brukerendring =
+    fun deaktiverRinger(
+        @Context ctx: SecurityContext,
+        deaktiverRequest: TilgangsendringsRequest
+    ): Brukerendring =
         tilgangsendringService.deaktiverRinger(
             AutentisertTilgangsendringRequest(ctx.userId(), deaktiverRequest, jwt)
         )
 
-    @RolesAllowed(GenerellRolle.admin)
+    @RolesAllowed(GenerellRolle.ADMIN)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/gjoerTilLokalGodkjenner")
-    @Operation(summary = "Gjør til lokal godkjenner", description = GenerellRolle.admin)
+    @Operation(summary = "Gjør til lokal godkjenner", description = GenerellRolle.ADMIN)
     @Bulkhead(5)
     @Retry
     @Transactional
     fun gjoerRingerTilLokalGodkjenner(
         @Context ctx: SecurityContext,
         tilLokalGodkjennerRequest: TilgangsendringsRequest
-    ): Brukerendring = tilgangsendringService.gjoerRingerTilLokalGodkjenner(
-        AutentisertTilgangsendringRequest(
-            ctx.userId(),
-            tilLokalGodkjennerRequest,
-            jwt
+    ): Brukerendring =
+        tilgangsendringService.gjoerRingerTilLokalGodkjenner(
+            AutentisertTilgangsendringRequest(
+                ctx.userId(),
+                tilLokalGodkjennerRequest,
+                jwt
+            )
         )
-    )
 
-    @jakarta.annotation.security.RolesAllowed(GenerellRolle.admin)
+    @jakarta.annotation.security.RolesAllowed(GenerellRolle.ADMIN)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/fjernSomLokalGodkjenner")
-    @Operation(summary = "Fjern som lokal godkjenner", description = GenerellRolle.admin)
+    @Operation(summary = "Fjern som lokal godkjenner", description = GenerellRolle.ADMIN)
     @Bulkhead(5)
     @Retry
     @Transactional
     fun fjernRingerSomLokalGodkjenner(
         @Context ctx: SecurityContext,
         fjernSomLokalGodkjennerRequest: TilgangsendringsRequest
-    ): Brukerendring = tilgangsendringService.fjernRingerSomLokalGodkjenner(
-        AutentisertTilgangsendringRequest(
-            ctx.userId(),
-            fjernSomLokalGodkjennerRequest,
-            jwt
+    ): Brukerendring =
+        tilgangsendringService.fjernRingerSomLokalGodkjenner(
+            AutentisertTilgangsendringRequest(
+                ctx.userId(),
+                fjernSomLokalGodkjennerRequest,
+                jwt
+            )
         )
-    )
 }

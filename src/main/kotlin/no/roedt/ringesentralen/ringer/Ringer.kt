@@ -25,6 +25,7 @@ data class Ringer(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
+
     override fun toString(): String = "Ringer(id=$id, oppretta=$oppretta, personId=$personId)"
 }
 

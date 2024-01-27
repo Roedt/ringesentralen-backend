@@ -29,6 +29,7 @@ data class Kontakt(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
+
     override fun toString(): String =
         "Kontakt(id=$id, frivillig_id=$frivillig_id, tilbakemelding='$tilbakemelding', registrert_av=$registrert_av, datetime=$datetime)"
 }

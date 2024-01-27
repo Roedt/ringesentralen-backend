@@ -25,6 +25,7 @@ data class SMS(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
+
     override fun toString(): String = "SMS(id=$id, tekst='$tekst')"
 }
 

@@ -3,7 +3,7 @@ package no.roedt.ringesentralen.samtale.start
 import jakarta.enterprise.context.ApplicationScoped
 import java.util.concurrent.ConcurrentHashMap
 
-const val cacheTimeValidityInMillis: Long = 5000
+const val CACHE_TIME_VALIDITY_IN_MS: Long = 5000
 
 @ApplicationScoped
 class NyligeOppslagCache {
@@ -19,6 +19,6 @@ class NyligeOppslagCache {
     fun remove(lokallag: Int) = hashMap.remove(lokallag)
 
     data class TimedEntry(val creationTime: Long = System.currentTimeMillis()) {
-        fun isGyldig() = (System.currentTimeMillis() - creationTime) <= cacheTimeValidityInMillis
+        fun isGyldig() = (System.currentTimeMillis() - creationTime) <= CACHE_TIME_VALIDITY_IN_MS
     }
 }

@@ -21,12 +21,13 @@ class HypersysSystemTokenVerifier(
     @Timeout(value = 10000L)
     @Fallback(fallbackMethod = "settTokenUgyldig")
     fun getTokenFromHypersys(): Token {
-        val response = hypersysProxy.post(
-            secretFactory.getHypersysClientId(),
-            secretFactory.getHypersysClientSecret(),
-            "grant_type=client_credentials",
-            loggingtekst = "systeminnlogging"
-        )
+        val response =
+            hypersysProxy.post(
+                secretFactory.getHypersysClientId(),
+                secretFactory.getHypersysClientSecret(),
+                "grant_type=client_credentials",
+                loggingtekst = "systeminnlogging"
+            )
         return if (response.statusCode() != 200) {
             hypersysProxy.readResponse(response, UgyldigToken::class.java)
         } else {

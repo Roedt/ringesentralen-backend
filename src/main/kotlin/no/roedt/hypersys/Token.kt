@@ -7,7 +7,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken
 interface Token
 
 interface GyldigToken : Token {
-    fun access_token(): String
+    fun accessToken(): String
 }
 
 @RegisterForReflection
@@ -17,7 +17,7 @@ data class GyldigSystemToken(
     @JsonProperty("token_type") val token_type: String,
     @JsonProperty("scope") val scope: String
 ) : GyldigToken {
-    override fun access_token() = access_token
+    override fun accessToken() = access_token
 }
 
 @RegisterForReflection
@@ -29,7 +29,7 @@ data class GyldigPersonToken(
     @JsonProperty("refresh_token") val refresh_token: String,
     @JsonProperty("user_id") val user_id: String
 ) : GyldigToken {
-    override fun access_token() = access_token
+    override fun accessToken() = access_token
 
     companion object {
         fun from(token: JsonWebToken) =

@@ -5,7 +5,6 @@ import no.roedt.lokallag.LokallagService
 import org.junit.jupiter.api.Test
 
 internal class LokallagConverterTest {
-
     private val lokallagService: LokallagService = mock()
 
     private val lokallagConverter = LokallagConverter(lokallagService)
