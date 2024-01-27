@@ -11,12 +11,12 @@ class SecretFactoryProducer(
     @ConfigProperty(name = "secretManagerProjectId", defaultValue = "")
     val secretManagerProjectId: String
 ) {
-
     @Produces
     @ApplicationScoped
-    fun secretFactory(): SecretFactory = if (brukHypersys) {
-        GCPSecretFactory(secretManagerProjectId = secretManagerProjectId).also { it.setup() }
-    } else {
-        FakeSecretFactory()
-    }
+    fun secretFactory(): SecretFactory =
+        if (brukHypersys) {
+            GCPSecretFactory(secretManagerProjectId = secretManagerProjectId).also { it.setup() }
+        } else {
+            FakeSecretFactory()
+        }
 }

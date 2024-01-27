@@ -21,20 +21,21 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @Tag(name = "Telefonsvar")
 @SecurityRequirement(name = "jwt")
 class TelefonsvarerController(val telefonsvarerService: TelefonsvarerService, val jwt: JsonWebToken) {
-
-    @RolesAllowed(GenerellRolle.systembrukerFrontend)
+    @RolesAllowed(GenerellRolle.SYSTEMBRUKER_FRONTEND)
     @POST
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/")
-    @Operation(summary = "Registrere resultat frå telefonsvar", description = GenerellRolle.systembrukerFrontend)
+    @Operation(summary = "Registrere resultat frå telefonsvar", description = GenerellRolle.SYSTEMBRUKER_FRONTEND)
     @Bulkhead(5)
     @Retry
-    fun postSvarFraTelefonsvarer(@Context ctx: SecurityContext, request: TelefonsvarerRequest) =
-        telefonsvarerService.postSvarFraTelefonsvarer(
-            AutentisertTelefonsvarerRequest(
-                userId = ctx.userId(),
-                request = request
-            )
+    fun postSvarFraTelefonsvarer(
+        @Context ctx: SecurityContext,
+        request: TelefonsvarerRequest
+    ) = telefonsvarerService.postSvarFraTelefonsvarer(
+        AutentisertTelefonsvarerRequest(
+            userId = ctx.userId(),
+            request = request
         )
+    )
 }

@@ -25,30 +25,33 @@ class ForumController(
     val forumService: ForumService,
     val jwt: JsonWebToken
 ) {
-
-    @RolesAllowed(ForumRolle.debattant)
+    @RolesAllowed(ForumRolle.DEBATTANT)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/")
-    @Operation(summary = "Finn alle underforum i forumet", description = ForumRolle.debattant)
+    @Operation(summary = "Finn alle underforum i forumet", description = ForumRolle.DEBATTANT)
     @Retry
-    fun hentAlleUnderforum(@Context ctx: SecurityContext) = forumService.hentAlleUnderforum()
+    fun hentAlleUnderforum(
+        @Context ctx: SecurityContext
+    ) = forumService.hentAlleUnderforum()
 
-    @RolesAllowed(ForumRolle.debattant)
+    @RolesAllowed(ForumRolle.DEBATTANT)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/traader/{underforum}")
-    @Operation(summary = "Finn alle tråder i et underforum", description = ForumRolle.debattant)
+    @Operation(summary = "Finn alle tråder i et underforum", description = ForumRolle.DEBATTANT)
     @Retry
-    fun hentTraaderForUnderforum(@Context ctx: SecurityContext, @PathParam("underforum") underforum: String) =
-        forumService.hentTraader(underforum)
+    fun hentTraaderForUnderforum(
+        @Context ctx: SecurityContext,
+        @PathParam("underforum") underforum: String
+    ) = forumService.hentTraader(underforum)
 
-    @RolesAllowed(ForumRolle.debattant)
+    @RolesAllowed(ForumRolle.DEBATTANT)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/traader/traad/{underforum}/{tittel}")
-    @Operation(summary = "Finn en gitt tråd", description = ForumRolle.debattant)
+    @Operation(summary = "Finn en gitt tråd", description = ForumRolle.DEBATTANT)
     @Retry
     fun hentTraad(
         @Context ctx: SecurityContext,
@@ -56,12 +59,12 @@ class ForumController(
         @PathParam("tittel") tittel: String
     ) = forumService.hentTraad(Traad(tittel = tittel, underforum = underforum))
 
-    @jakarta.annotation.security.RolesAllowed(ForumRolle.debattant)
+    @jakarta.annotation.security.RolesAllowed(ForumRolle.DEBATTANT)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/traader/traad/{underforum}/{traad}")
-    @Operation(summary = "Opprett en tråd", description = ForumRolle.debattant)
+    @Operation(summary = "Opprett en tråd", description = ForumRolle.DEBATTANT)
     @Retry
     fun opprettTraad(
         @Context ctx: SecurityContext,

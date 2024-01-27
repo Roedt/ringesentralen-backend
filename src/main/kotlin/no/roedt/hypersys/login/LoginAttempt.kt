@@ -23,6 +23,7 @@ data class LoginAttempt(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
+
     override fun toString(): String = "LoginAttempt(id=$id, hypersysID=$hypersysID)"
 }
 

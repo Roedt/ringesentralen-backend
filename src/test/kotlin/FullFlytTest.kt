@@ -12,8 +12,7 @@ import no.roedt.ringesentralen.samtale.start.StartSamtaleRequest
 import org.hamcrest.CoreMatchers.equalTo
 
 class FullFlytTest {
-
-//    @Test
+    //    @Test
     fun test() {
         val token = login()
 
@@ -32,13 +31,14 @@ class FullFlytTest {
                     ringtID = ringtId,
                     resultat = Resultat.Passet_ikke,
                     kommentar = "Frå automatisk test",
-                    modusspesifikkeResultat = Valg21SpesifikkeResultat(
-                        vilBliMerAktiv = true,
-                        vilPolitikkLink = true,
-                        vilBliRingtAugust = false,
-                        vilHaMedlemsLink = true,
-                        vilHaFellesskapLink = true
-                    ),
+                    modusspesifikkeResultat =
+                        Valg21SpesifikkeResultat(
+                            vilBliMerAktiv = true,
+                            vilPolitikkLink = true,
+                            vilBliRingtAugust = false,
+                            vilHaMedlemsLink = true,
+                            vilHaFellesskapLink = true
+                        ),
                     vilIkkeBliRingt = false
                 )
             )
@@ -57,14 +57,16 @@ class FullFlytTest {
     }
 
     private fun login(): String {
-        val loginRequest = LoginRequest(brukarnamn = "dittBrukarnamn", key = "dinKey", passord = "dittPassord", systembruker = false, enhetsid = "1234")
-        val response = given()
-            .body(loginRequest)
-            .contentType(ContentType.JSON)
-            .`when`()
-            .post("/token/login")
-            .then()
-            .statusCode(200)
+        val loginRequest =
+            LoginRequest(brukarnamn = "dittBrukarnamn", key = "dinKey", passord = "dittPassord", systembruker = false, enhetsid = "1234")
+        val response =
+            given()
+                .body(loginRequest)
+                .contentType(ContentType.JSON)
+                .`when`()
+                .post("/token/login")
+                .then()
+                .statusCode(200)
         return response.responseAsString()
     }
 

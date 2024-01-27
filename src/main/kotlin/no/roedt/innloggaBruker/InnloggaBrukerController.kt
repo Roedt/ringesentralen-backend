@@ -19,31 +19,36 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @Tag(name = "Profil")
 @SecurityRequirement(name = "jwt")
 class InnloggaBrukerController(val innloggaBrukerService: InnloggaBrukerService, val jwt: JsonWebToken) {
-
-    @jakarta.annotation.security.RolesAllowed(GenerellRolle.bruker, GenerellRolle.venterPaaGodkjenning)
+    @jakarta.annotation.security.RolesAllowed(GenerellRolle.BRUKER, GenerellRolle.VENTER_PAA_GODKJENNING)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/")
-    @Operation(summary = "Hent informasjon om innlogga bruker", description = GenerellRolle.brukerVenterPaaGodkjenning)
+    @Operation(summary = "Hent informasjon om innlogga bruker", description = GenerellRolle.BRUKER_VENTER_PAA_GODKJENNING)
     @Bulkhead(5)
     @Retry
-    fun getProfil(@Context ctx: SecurityContext) = innloggaBrukerService.getProfil(ctx.userId())
+    fun getProfil(
+        @Context ctx: SecurityContext
+    ) = innloggaBrukerService.getProfil(ctx.userId())
 
-    @jakarta.annotation.security.RolesAllowed(GenerellRolle.bruker)
+    @jakarta.annotation.security.RolesAllowed(GenerellRolle.BRUKER)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/lokallag")
-    @Operation(summary = "Hent mine tilgjengelege lokallag", description = GenerellRolle.bruker)
+    @Operation(summary = "Hent mine tilgjengelege lokallag", description = GenerellRolle.BRUKER)
     @Bulkhead(3)
     @Retry
-    fun getLokallag(@Context ctx: SecurityContext) = innloggaBrukerService.getLokallag(ctx.userId(), jwt.groups)
+    fun getLokallag(
+        @Context ctx: SecurityContext
+    ) = innloggaBrukerService.getLokallag(ctx.userId(), jwt.groups)
 
-    @jakarta.annotation.security.RolesAllowed(GenerellRolle.venterPaaGodkjenning, GenerellRolle.bruker)
+    @jakarta.annotation.security.RolesAllowed(GenerellRolle.VENTER_PAA_GODKJENNING, GenerellRolle.BRUKER)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/roller")
-    @Operation(summary = "Hent mine oppdaterte roller", description = GenerellRolle.brukerVenterPaaGodkjenning)
+    @Operation(summary = "Hent mine oppdaterte roller", description = GenerellRolle.BRUKER_VENTER_PAA_GODKJENNING)
     @Bulkhead(3)
     @Retry
-    fun hentOppdaterteRoller(@Context ctx: SecurityContext) = innloggaBrukerService.getRoller(ctx.userId())
+    fun hentOppdaterteRoller(
+        @Context ctx: SecurityContext
+    ) = innloggaBrukerService.getRoller(ctx.userId())
 }

@@ -23,22 +23,22 @@ class BrukereServiceBean(
     val lokallagService: LokallagService,
     val ringerService: RingerService
 ) : BrukereService {
-
     override fun getBrukere(request: AutentisertGetBrukereRequest): List<Brukerinformasjon> =
-        personService.listBrukere(request.groups.contains(GenerellRolle.admin), request.userId)
+        personService.listBrukere(request.groups.contains(GenerellRolle.ADMIN), request.userId)
             .map(this::toBrukerinformasjon)
 
-    private fun toBrukerinformasjon(r: Person) = Brukerinformasjon(
-        id = r.id.toLong(),
-        fornavn = r.fornavn,
-        etternavn = r.etternavn,
-        telefonnummer = r.telefonnummer,
-        postnummer = r.postnummer.Postnummer,
-        fylke = fylkeService.findById(r.fylke),
-        epost = r.email ?: "",
-        hypersysID = r.hypersysID ?: -1,
-        lokallag = lokallagService.findById(r.lokallag),
-        rolle = RingesentralenGroupID.from(r.groupID()).roller,
-        registreringstidspunkt = ringerService.finnFraPerson(r.id.toInt()).firstResult<Ringer>().oppretta.tilNorskTid()
-    )
+    private fun toBrukerinformasjon(r: Person) =
+        Brukerinformasjon(
+            id = r.id.toLong(),
+            fornavn = r.fornavn,
+            etternavn = r.etternavn,
+            telefonnummer = r.telefonnummer,
+            postnummer = r.postnummer.Postnummer,
+            fylke = fylkeService.findById(r.fylke),
+            epost = r.email ?: "",
+            hypersysID = r.hypersysID ?: -1,
+            lokallag = lokallagService.findById(r.lokallag),
+            rolle = RingesentralenGroupID.from(r.groupID()).roller,
+            registreringstidspunkt = ringerService.finnFraPerson(r.id.toInt()).firstResult<Ringer>().oppretta.tilNorskTid()
+        )
 }

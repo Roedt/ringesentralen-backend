@@ -22,32 +22,37 @@ class InnloggaBrukerService(
 ) {
     fun getProfil(userId: UserId): Profil? = getPerson(userId).map { it.toProfil() }.orElse(null)
 
-    private fun getPerson(userId: UserId): Optional<Person> =
-        personService.finnFraHypersysId(userId.userId).firstResultOptional()
+    private fun getPerson(userId: UserId): Optional<Person> = personService.finnFraHypersysId(userId.userId).firstResultOptional()
 
-    private fun Person.toProfil(): Profil = Profil(
-        hypersysID = hypersysID,
-        fornavn = fornavn,
-        etternavn = etternavn,
-        telefonnummer = telefonnummer,
-        email = email,
-        postnummer = postnummer.Postnummer,
-        fylke = fylke,
-        lokallag = lokallag,
-        rolle = RingesentralenGroupID.from(groupID()).roller,
-        fylkeNavn = fylkeService.findById(fylke).navn,
-        lokallagNavn = lokallagService.findById(lokallag).navn
-    )
-
-    fun getLokallag(userId: UserId, groups: Set<String>): List<Lokallag> = when {
-        groups.contains(GenerellRolle.admin) -> lokallagService.findAll()
-        groups.contains(RingespesifikkRolle.godkjenner) -> lokallagService.fromFylke(
-            fylkeService.getFylkeIdFraLokallag(getPerson(userId).get().lokallag)
+    private fun Person.toProfil(): Profil =
+        Profil(
+            hypersysID = hypersysID,
+            fornavn = fornavn,
+            etternavn = etternavn,
+            telefonnummer = telefonnummer,
+            email = email,
+            postnummer = postnummer.Postnummer,
+            fylke = fylke,
+            lokallag = lokallag,
+            rolle = RingesentralenGroupID.from(groupID()).roller,
+            fylkeNavn = fylkeService.findById(fylke).navn,
+            lokallagNavn = lokallagService.findById(lokallag).navn
         )
 
-        getProfil(userId) == null -> listOf()
-        else -> listOf(lokallagService.findById(getPerson(userId).get().lokallag))
-    }
+    fun getLokallag(
+        userId: UserId,
+        groups: Set<String>
+    ): List<Lokallag> =
+        when {
+            groups.contains(GenerellRolle.ADMIN) -> lokallagService.findAll()
+            groups.contains(RingespesifikkRolle.GODKJENNER) ->
+                lokallagService.fromFylke(
+                    fylkeService.getFylkeIdFraLokallag(getPerson(userId).get().lokallag)
+                )
+
+            getProfil(userId) == null -> listOf()
+            else -> listOf(lokallagService.findById(getPerson(userId).get().lokallag))
+        }
 
     fun getRoller(userId: UserId): Set<String> = tokenService.hentRoller(userId)
 }

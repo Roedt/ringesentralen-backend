@@ -29,8 +29,15 @@ data class Verving(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
+
     override fun toString(): String =
-        "Verving(id=$id, telefonnummer='$telefonnummer', fornavn='$fornavn', etternavn='$etternavn', postnummer='$postnummer', verversNavn=$verversNavn)"
+        "Verving(" +
+            "id=$id, " +
+            "telefonnummer='$telefonnummer', " +
+            "fornavn='$fornavn', " +
+            "etternavn='$etternavn', " +
+            "postnummer='$postnummer', " +
+            "verversNavn=$verversNavn)"
 }
 
 @Dependent

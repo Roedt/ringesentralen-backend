@@ -31,8 +31,7 @@ data class Kommune(
 
     override fun hashCode(): Int = javaClass.hashCode()
 
-    override fun toString(): String =
-        "Kommune(navn='$navn', nummer='$nummer', lokallag_id=$lokallag_id, fylke_id=$fylke_id)"
+    override fun toString(): String = "Kommune(navn='$navn', nummer='$nummer', lokallag_id=$lokallag_id, fylke_id=$fylke_id)"
 }
 
 @ApplicationScoped

@@ -13,13 +13,18 @@ open class NesteMedlemAaRingeFinder(
     private val lokallagService: LokallagService,
     private val medlemslisteOppdaterer: MedlemslisteOppdaterer
 ) {
-
-    fun hentIDForNesteMedlemAaRinge(ringer: Person, lokallag: Int): Int? =
+    fun hentIDForNesteMedlemAaRinge(
+        ringer: Person,
+        lokallag: Int
+    ): Int? =
         hentNestePersonAaRingeIDetteLokallaget(ringer, lokallag) ?: kommuneService
             .hent(ringer.fylke)
             .firstOrNull { hentNestePersonAaRingeIDetteLokallaget(ringer, it) != null }
 
-    private fun hentNestePersonAaRingeIDetteLokallaget(ringer: Person, lokallag: Int): Int? {
+    private fun hentNestePersonAaRingeIDetteLokallaget(
+        ringer: Person,
+        lokallag: Int
+    ): Int? {
         val oppdaterteLokallag = medlemslisteOppdaterer.oppdaterMedlemsliste(lokallag)
 
         val nestePersonFraDatabasen = hentNestePerson(ringer, lokallag)
@@ -30,5 +35,8 @@ open class NesteMedlemAaRingeFinder(
         return hentNestePerson(ringer, lokallag)
     }
 
-    private fun hentNestePerson(ringer: Person, lokallag: Int) = repository.hentNesteMedlem(ringer.fylke, lokallag, ringer.lokallag)
+    private fun hentNestePerson(
+        ringer: Person,
+        lokallag: Int
+    ) = repository.hentNesteMedlem(ringer.fylke, lokallag, ringer.lokallag)
 }

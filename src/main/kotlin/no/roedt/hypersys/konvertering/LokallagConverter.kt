@@ -6,7 +6,6 @@ import no.roedt.lokallag.LokallagService
 
 @Dependent
 class LokallagConverter(private val lokallagService: LokallagService) {
-
     fun tilLokallag(memberships: List<Membership>): Int =
         getOrganisationName(memberships)?.let { lokallagService.fromOrganisationName(it) } ?: -1
 

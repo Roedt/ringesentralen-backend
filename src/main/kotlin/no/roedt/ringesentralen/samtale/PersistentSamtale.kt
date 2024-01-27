@@ -33,8 +33,15 @@ data class PersistentSamtale(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
+
     override fun toString(): String =
-        "PersistentSamtale(id=$id, ringt=$ringt, ringer=$ringer, resultat=$resultat, ringesesjon=$ringesesjon, kommentar=$kommentar, modus=$modus)"
+        "PersistentSamtale(id=$id, " +
+            "ringt=$ringt, " +
+            "ringer=$ringer, " +
+            "resultat=$resultat, " +
+            "ringesesjon=$ringesesjon, " +
+            "kommentar=$kommentar, " +
+            "modus=$modus)"
 }
 
 @ApplicationScoped

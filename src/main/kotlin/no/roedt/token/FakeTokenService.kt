@@ -29,12 +29,13 @@ class FakeTokenService(
             .upn("FakeRingesentralen")
             .issuedAt(System.currentTimeMillis())
             .expiresAt(System.currentTimeMillis() + tokenExpiryPeriod.toSeconds())
-            .groups(setOf(GenerellRolle.bruker, ForumRolle.debattant))
+            .groups(setOf(GenerellRolle.BRUKER, ForumRolle.DEBATTANT))
             .claim("hypersys.user_id", "15424") // Donald
             .sign(privateKeyFactory.readPrivateKey())
     }
 
     override fun trengerMFA(mfaRequest: MFARequest) = false
+
     override fun sendMFA(mfaRequest: MFARequest) {}
 
     override fun hentRoller(userId: UserId): Set<String> = setOf()

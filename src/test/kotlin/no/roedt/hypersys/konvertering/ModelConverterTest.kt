@@ -9,18 +9,18 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 internal class ModelConverterTest {
-
     private val lokallagConverter: LokallagConverter = LokallagConverter(mock())
     private val personService: PersonService = mock()
     private val fylkeService: FylkeService = mock()
     private val postnummerService: PostnummerService = mock()
 
-    private val modelConverter: ModelConverterBean = ModelConverterBean(
-        lokallagConverter = lokallagConverter,
-        personService = personService,
-        fylkeService = fylkeService,
-        postnummerService = postnummerService
-    )
+    private val modelConverter: ModelConverterBean =
+        ModelConverterBean(
+            lokallagConverter = lokallagConverter,
+            personService = personService,
+            fylkeService = fylkeService,
+            postnummerService = postnummerService
+        )
 
     @Test
     fun `taklar manglande telefonnummer`() {

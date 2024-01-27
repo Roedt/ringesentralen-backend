@@ -24,6 +24,7 @@ data class Oppslag(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
+
     override fun toString(): String = "Oppslag(id=$id, ringt=$ringt, ringerHypersysId=$ringerHypersysId)"
 }
 

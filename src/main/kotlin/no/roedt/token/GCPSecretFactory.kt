@@ -49,8 +49,7 @@ class GCPSecretFactory(
 
     override fun getFrontendSystembruker() = getSecretFromSecretManager(GCPSecretManagerKey.frontendSystembruker)
 
-    override fun getFrontendSystembrukerPassord() =
-        getSecretFromSecretManager(GCPSecretManagerKey.frontendSystembrukerPassord)
+    override fun getFrontendSystembrukerPassord() = getSecretFromSecretManager(GCPSecretManagerKey.frontendSystembrukerPassord)
 
     override fun getEncryptionKey() = getSecretFromSecretManager(GCPSecretManagerKey.encryptionKey)
 

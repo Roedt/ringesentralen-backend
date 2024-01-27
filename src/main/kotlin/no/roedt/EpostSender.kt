@@ -12,7 +12,6 @@ class EpostSender(
     @ConfigProperty(name = "quarkus.mailer.mock")
     private val mock: Boolean
 ) {
-
     fun sendEpost(
         epost: Epost,
         mottaker: String?

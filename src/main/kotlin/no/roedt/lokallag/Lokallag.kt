@@ -31,16 +31,24 @@ data class Lokallag(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
-    override fun toString(): String =
-        "Lokallag(id=$id, navn='$navn', hypersysID=$hypersysID, fylke=$fylke, sistOppdatert=$sistOppdatert)"
+
+    override fun toString(): String = "Lokallag(id=$id, navn='$navn', hypersysID=$hypersysID, fylke=$fylke, sistOppdatert=$sistOppdatert)"
 }
 
 @ApplicationScoped
 class LokallagRepository : PanacheRepositoryBase<Lokallag, Int> {
-
     fun fromPostnummer(postnummer: Postnummer): Int =
-        toLokallagId("select lokallag from postnummerIKommunerMedFleireLag where postnummerFra <= ${postnummer.Postnummer.toInt()} and postnummerTil >= ${postnummer.Postnummer.toInt()}")
-            ?: toLokallagId("select l.id from lokallag l inner join kommune k on k.lokallag_id = l.id inner join postnummer p on p.kommunekode = k.nummer where p.postnummer = '${postnummer.Postnummer.toInt()}'")
+        toLokallagId(
+            "select lokallag from postnummerIKommunerMedFleireLag " +
+                "where postnummerFra <= ${postnummer.Postnummer.toInt()} " +
+                "and postnummerTil >= ${postnummer.Postnummer.toInt()}"
+        )
+            ?: toLokallagId(
+                "select l.id from lokallag l " +
+                    "inner join kommune k on k.lokallag_id = l.id " +
+                    "inner join postnummer p on p.kommunekode = k.nummer " +
+                    "where p.postnummer = '${postnummer.Postnummer.toInt()}'"
+            )
             ?: -1
 
     private fun toLokallagId(query: String) = entityManager.list(query).map { it as Int }.firstOrNull()

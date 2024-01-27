@@ -24,26 +24,29 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @SecurityRequirement(name = "jwt")
 @ApplicationScoped
 class SMSController(val smsService: SMSService, val jwt: JsonWebToken) {
-
-    @RolesAllowed(GenerellRolle.admin)
+    @RolesAllowed(GenerellRolle.ADMIN)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/lagreSMS")
-    @Operation(summary = "Registrer ny SMS som skal sendast ut", description = GenerellRolle.admin)
+    @Operation(summary = "Registrer ny SMS som skal sendast ut", description = GenerellRolle.ADMIN)
     @Retry
     @Transactional
-    fun registrerSMSForUtsending(@Context ctx: SecurityContext, request: LagreSMSRequest) =
-        smsService.registrerSMSForUtsending(AutentisertLagreSMSRequest(userId = ctx.userId(), request = request))
+    fun registrerSMSForUtsending(
+        @Context ctx: SecurityContext,
+        request: LagreSMSRequest
+    ) = smsService.registrerSMSForUtsending(AutentisertLagreSMSRequest(userId = ctx.userId(), request = request))
 
-    @RolesAllowed(GenerellRolle.admin)
+    @RolesAllowed(GenerellRolle.ADMIN)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/oppdater")
-    @Operation(summary = "Oppdater utsendingsstatus", description = GenerellRolle.admin)
+    @Operation(summary = "Oppdater utsendingsstatus", description = GenerellRolle.ADMIN)
     @Retry
     @Transactional
-    fun oppdaterUtsendingsstatus(@Context ctx: SecurityContext, request: OppdaterSMSRequest) =
-        smsService.oppdaterUtsendingsstatus(AutentisertOppdaterSMSRequest(userId = ctx.userId(), request = request))
+    fun oppdaterUtsendingsstatus(
+        @Context ctx: SecurityContext,
+        request: OppdaterSMSRequest
+    ) = smsService.oppdaterUtsendingsstatus(AutentisertOppdaterSMSRequest(userId = ctx.userId(), request = request))
 }

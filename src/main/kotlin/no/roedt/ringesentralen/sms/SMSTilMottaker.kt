@@ -29,8 +29,8 @@ data class SMSTilMottaker(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
-    override fun toString(): String =
-        "SMSTilMottaker(id=$id, sms_id=$sms_id, mottaker_id=$mottaker_id, utsendingsstatus=$utsendingsstatus)"
+
+    override fun toString(): String = "SMSTilMottaker(id=$id, sms_id=$sms_id, mottaker_id=$mottaker_id, utsendingsstatus=$utsendingsstatus)"
 }
 
 @ApplicationScoped

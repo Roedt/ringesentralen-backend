@@ -28,6 +28,7 @@ data class FrivilligOpptattAv(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
+
     override fun toString(): String = "FrivilligOpptattAv(id=$id, frivillig_id=$frivillig_id, opptattAv=$opptattAv)"
 }
 

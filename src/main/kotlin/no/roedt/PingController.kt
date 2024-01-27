@@ -10,7 +10,6 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @Path("/ping")
 @Tag(name = "Ping")
 class PingController {
-
     @PermitAll
     @GET
     @Operation(summary = "Ping")

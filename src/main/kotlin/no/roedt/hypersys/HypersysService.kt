@@ -22,35 +22,35 @@ class HypersysService(
     val modelConverter: ModelConverter,
     val lokallagService: LokallagService
 ) {
-
-    private fun getMedlemmer(hypersysLokallagId: Int?): List<Membership> = if (hypersysLokallagId == null) {
-        listOf()
-    } else {
-        hypersysProxy.get(
-            "/membership/api/membership/$hypersysLokallagId/${LocalDate.now().year}/",
-            hypersysSystemTokenVerifier.assertGyldigSystemToken(),
-            ListMembershipTypeReference()
-        )
-    }
+    private fun getMedlemmer(hypersysLokallagId: Int?): List<Membership> =
+        if (hypersysLokallagId == null) {
+            listOf()
+        } else {
+            hypersysProxy.get(
+                "/membership/api/membership/$hypersysLokallagId/${LocalDate.now().year}/",
+                hypersysSystemTokenVerifier.assertGyldigSystemToken(),
+                ListMembershipTypeReference()
+            )
+        }
 
     private fun convertToHypersysLokallagId(lokallag: Int): Int? {
         if (lokallag == -1) return null
-        val hypersysId = lokallagService.findById(lokallag)
-            ?.let { mittLag ->
-                if (mittLag.hypersysID != null) {
-                    mittLag.hypersysID!!
-                } else {
-                    getLokallagIdFromHypersys(
-                        mittLag
-                    )
+        val hypersysId =
+            lokallagService.findById(lokallag)
+                ?.let { mittLag ->
+                    if (mittLag.hypersysID != null) {
+                        mittLag.hypersysID!!
+                    } else {
+                        getLokallagIdFromHypersys(
+                            mittLag
+                        )
+                    }
                 }
-            }
         if (hypersysId == null) println("Fann ikkje lokallag i hypersys for $lokallag")
         return hypersysId
     }
 
-    private fun getLokallag(userId: UserId) =
-        personService.finnFraHypersysId(userId.userId).firstResult<Person>().lokallag
+    private fun getLokallag(userId: UserId) = personService.finnFraHypersysId(userId.userId).firstResult<Person>().lokallag
 
     private fun getLokallagIdFromHypersys(mittLag: Lokallag) =
         getAlleLokallag().first { mittLag.navn == it.name }
@@ -65,14 +65,15 @@ class HypersysService(
             } else if (lokallagService.exists("navn", lag.name)) {
                 lokallagService.oppdaterHypersysID(lag.id, lag.name)
             } else {
-                lokallagAaLeggeTil = lokallagAaLeggeTil.plus(
-                    Lokallag(
-                        navn = lag.name,
-                        hypersysID = lag.id,
-                        fylke = -1, // TODO: har ikkje funne nokon god måte for å finne koplinga til fylke automatisk
-                        sistOppdatert = Instant.now()
+                lokallagAaLeggeTil =
+                    lokallagAaLeggeTil.plus(
+                        Lokallag(
+                            navn = lag.name,
+                            hypersysID = lag.id,
+                            fylke = -1, // TODO: har ikkje funne nokon god måte for å finne koplinga til fylke automatisk
+                            sistOppdatert = Instant.now()
+                        )
                     )
-                )
             }
         }
         lokallagAaLeggeTil.forEach { lokallagService.persist(it) }
@@ -98,8 +99,11 @@ class HypersysService(
 
     fun convertMembershipToPerson(membership: Membership) = modelConverter.convertMembershipToPerson(membership)
 
-    fun konverterTilOppdatering(medlemskap: Membership, lokallag: Lokallag, person: Person) =
-        modelConverter.konverterTilOppdatering(medlemskap, lokallag, person)
+    fun konverterTilOppdatering(
+        medlemskap: Membership,
+        lokallag: Lokallag,
+        person: Person
+    ) = modelConverter.konverterTilOppdatering(medlemskap, lokallag, person)
 
     fun hentPerson(it: Person) =
         try {
@@ -110,11 +114,12 @@ class HypersysService(
             )
         } catch (e: Exception) {
             try {
-                val somString = hypersysProxy.post(
-                    "/membership/api/is_member/${it.hypersysID}/",
-                    hypersysSystemTokenVerifier.assertGyldigSystemToken(),
-                    Object::class.java
-                )
+                val somString =
+                    hypersysProxy.post(
+                        "/membership/api/is_member/${it.hypersysID}/",
+                        hypersysSystemTokenVerifier.assertGyldigSystemToken(),
+                        Object::class.java
+                    )
                 if (somString.toString().contains("Ikke funnet")) {
                     println("Fant ikke person med personid ${it.id} i Hypersys")
                     IsMember(user_id = it.hypersysID ?: -1, name = "Ikke funnet", paid = false, is_member = false)

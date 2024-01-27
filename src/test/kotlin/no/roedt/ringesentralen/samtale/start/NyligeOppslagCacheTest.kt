@@ -5,7 +5,6 @@ import java.util.stream.IntStream
 import kotlin.concurrent.thread
 
 internal class NyligeOppslagCacheTest {
-
     @Test
     fun run() {
         val cache = NyligeOppslagCache()

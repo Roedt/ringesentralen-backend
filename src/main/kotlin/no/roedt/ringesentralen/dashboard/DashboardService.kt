@@ -18,8 +18,10 @@ class DashboardService(
     val fylkeService: FylkeService,
     val repository: DashboardRepository
 ) {
-
-    fun getDashboard(ringerID: UserId, modus: Modus): DashboardResponse {
+    fun getDashboard(
+        ringerID: UserId,
+        modus: Modus
+    ): DashboardResponse {
         val mineLokallag = getMineLokallag(hypersysIdTilPerson(ringerID))
         val lokallagIDar = mineLokallag.map { it.id.toInt() }
 
@@ -27,43 +29,47 @@ class DashboardService(
         val personerSomKanRingesPerLokallag = repository.hentPersonerSomKanRingesPerLokallag(lokallagIDar, modus)
         val totaltInklRingtePerLokallag = repository.hentTotaltInklRingtePerLokallag(lokallagIDar, modus)
 
-        val statusliste: List<Lokallagsstatus> = mineLokallag
-            .map { lokallag ->
-                Lokallagsstatus(
-                    lokallag = lokallag,
-                    igjenAaRinge = (
-                        igjenAaRingePerLokallag.getOrDefault(
-                            lokallag.id.toInt(),
-                            listOf()
-                        ) as List<*>
-                        ).size,
-                    personerSomKanRinges = (
-                        personerSomKanRingesPerLokallag.getOrDefault(
-                            lokallag.id.toInt(),
-                            listOf()
-                        ) as List<*>
-                        ).size,
-                    totaltInklRingte = (
-                        totaltInklRingtePerLokallag.getOrDefault(
-                            lokallag.id.toInt(),
-                            listOf()
-                        ) as List<*>
-                        ).size,
-                    fylke = fylkeService.findById(lokallag.fylke)
-                )
-            }
-            .sortedBy { it.lokallag.navn }
-            .toList()
+        val statusliste: List<Lokallagsstatus> =
+            mineLokallag
+                .map { lokallag ->
+                    Lokallagsstatus(
+                        lokallag = lokallag,
+                        igjenAaRinge =
+                            (
+                                igjenAaRingePerLokallag.getOrDefault(
+                                    lokallag.id.toInt(),
+                                    listOf()
+                                ) as List<*>
+                            ).size,
+                        personerSomKanRinges =
+                            (
+                                personerSomKanRingesPerLokallag.getOrDefault(
+                                    lokallag.id.toInt(),
+                                    listOf()
+                                ) as List<*>
+                            ).size,
+                        totaltInklRingte =
+                            (
+                                totaltInklRingtePerLokallag.getOrDefault(
+                                    lokallag.id.toInt(),
+                                    listOf()
+                                ) as List<*>
+                            ).size,
+                        fylke = fylkeService.findById(lokallag.fylke)
+                    )
+                }
+                .sortedBy { it.lokallag.navn }
+                .toList()
         return DashboardResponse(statusliste = statusliste)
     }
 
-    private fun getMineLokallag(ringer: Person): List<Lokallag> = when {
-        RingesentralenGroupID.Admin.references(ringer.groupID()) -> lokallagService.findAll(Sort.ascending("navn"))
+    private fun getMineLokallag(ringer: Person): List<Lokallag> =
+        when {
+            RingesentralenGroupID.Admin.references(ringer.groupID()) -> lokallagService.findAll(Sort.ascending("navn"))
 
-        RingesentralenGroupID.LokalGodkjenner.references(ringer.groupID()) -> lokallagService.fromFylke(ringer.fylke)
-        else -> lokallagService.list(ringer.lokallag)
-    }
+            RingesentralenGroupID.LokalGodkjenner.references(ringer.groupID()) -> lokallagService.fromFylke(ringer.fylke)
+            else -> lokallagService.list(ringer.lokallag)
+        }
 
-    private fun hypersysIdTilPerson(hypersysId: UserId) =
-        personService.finnFraHypersysId(hypersysId.userId).firstResult<Person>()
+    private fun hypersysIdTilPerson(hypersysId: UserId) = personService.finnFraHypersysId(hypersysId.userId).firstResult<Person>()
 }

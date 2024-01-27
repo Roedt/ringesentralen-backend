@@ -25,8 +25,8 @@ data class Godkjenning(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
-    override fun toString(): String =
-        "Godkjenning(id=$id, godkjenner=$godkjenner, godkjentPerson=$godkjentPerson, nyGroupId=$nyGroupId)"
+
+    override fun toString(): String = "Godkjenning(id=$id, godkjenner=$godkjenner, godkjentPerson=$godkjentPerson, nyGroupId=$nyGroupId)"
 }
 
 @ApplicationScoped

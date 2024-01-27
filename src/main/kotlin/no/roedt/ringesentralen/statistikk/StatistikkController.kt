@@ -25,47 +25,51 @@ import java.time.ZonedDateTime
 @Tag(name = "Statistikk")
 @SecurityRequirement(name = "jwt")
 class StatistikkController(val service: StatistikkService, val jwt: JsonWebToken) {
-
     @jakarta.annotation.security.RolesAllowed(
-        RingespesifikkRolle.ringer,
-        RingespesifikkRolle.godkjenner,
-        GenerellRolle.admin
+        RingespesifikkRolle.RINGER,
+        RingespesifikkRolle.GODKJENNER,
+        GenerellRolle.ADMIN
     )
     @GET
     @Path("/statistikk")
-    @Operation(summary = "Hent statistikk", description = RingespesifikkRolle.ringerGodkjennerAdmin)
+    @Operation(summary = "Hent statistikk", description = RingespesifikkRolle.RINGER_GODKJENNER_ADMIN)
     @Produces(MediaType.APPLICATION_JSON)
-    fun getStatistikk(@Context ctx: SecurityContext): StatistikkResponse = service.getStatistikk(jwt.groups)
+    fun getStatistikk(
+        @Context ctx: SecurityContext
+    ): StatistikkResponse = service.getStatistikk(jwt.groups)
 
     @jakarta.annotation.security.RolesAllowed(
-        RingespesifikkRolle.ringer,
-        RingespesifikkRolle.godkjenner,
-        GenerellRolle.admin
+        RingespesifikkRolle.RINGER,
+        RingespesifikkRolle.GODKJENNER,
+        GenerellRolle.ADMIN
     )
     @GET
     @Path("/ringtFlest")
-    @Operation(summary = "Hvem har ringt mest?", description = RingespesifikkRolle.ringerGodkjennerAdmin)
+    @Operation(summary = "Hvem har ringt mest?", description = RingespesifikkRolle.RINGER_GODKJENNER_ADMIN)
     @Produces(MediaType.APPLICATION_JSON)
-    fun ringtFlestStatistikk(@Context ctx: SecurityContext): RingtFlestStatistikk =
-        service.getRingtMest(ctx.userId().userId)
+    fun ringtFlestStatistikk(
+        @Context ctx: SecurityContext
+    ): RingtFlestStatistikk = service.getRingtMest(ctx.userId().userId)
 
-    @RolesAllowed(GenerellRolle.admin)
+    @RolesAllowed(GenerellRolle.ADMIN)
     @GET
     @Path("/lodd")
-    @Operation(summary = "Hvem har ringt mest? Henter ut liste til loddtrekning", description = GenerellRolle.admin)
+    @Operation(summary = "Hvem har ringt mest? Henter ut liste til loddtrekning", description = GenerellRolle.ADMIN)
     @Produces(MediaType.APPLICATION_JSON)
     fun lodd(
         @Context ctx: SecurityContext,
         @QueryParam("fra") fra: String,
         @QueryParam("til") til: String
-    ): List<LoddStatistikk> = service.lodd(
-        toInstant(fra),
-        toInstant(til)
-    )
+    ): List<LoddStatistikk> =
+        service.lodd(
+            toInstant(fra),
+            toInstant(til)
+        )
 
-    private fun toInstant(tidspunkt: String): Instant = if (tidspunkt.contains("T")) {
-        Instant.parse(tidspunkt)
-    } else {
-        Instant.from(ZonedDateTime.of(LocalDate.parse(tidspunkt), LocalTime.MIN, tidssone()))
-    }
+    private fun toInstant(tidspunkt: String): Instant =
+        if (tidspunkt.contains("T")) {
+            Instant.parse(tidspunkt)
+        } else {
+            Instant.from(ZonedDateTime.of(LocalDate.parse(tidspunkt), LocalTime.MIN, tidssone()))
+        }
 }

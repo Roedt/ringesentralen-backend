@@ -11,29 +11,31 @@ interface FirestoreCollectionFactory {
 }
 
 class RealFirestoreCollectionFactory(private val firestore: Firestore) : FirestoreCollectionFactory {
-
-    override fun listCollections() = firestore.listCollections()
-        .map { RealFirestoreCollection(underforumnavn = it.id, collectionReference = it) }
+    override fun listCollections() =
+        firestore.listCollections()
+            .map { RealFirestoreCollection(underforumnavn = it.id, collectionReference = it) }
 }
 
 class FakeFirestoreCollectionFactory : FirestoreCollectionFactory {
-    override fun listCollections() = listOf(
-        FakeFirestoreCollection(
-            underforumnavn = "Om forumet",
-            dokumenter = listOf(
-                FakeFirestoreDocument("Godt laga!", "Om forumet").also {
-                    it.innhold = mutableMapOf(Pair("innhold", "Eg synes forumet er bra laga."))
-                },
-                FakeFirestoreDocument("Godt laga2!", "Om forumet").also {
-                    it.innhold = mutableMapOf(Pair("innhold", "Einig!"))
-                }
+    override fun listCollections() =
+        listOf(
+            FakeFirestoreCollection(
+                underforumnavn = "Om forumet",
+                dokumenter =
+                    listOf(
+                        FakeFirestoreDocument("Godt laga!", "Om forumet").also {
+                            it.innhold = mutableMapOf(Pair("innhold", "Eg synes forumet er bra laga."))
+                        },
+                        FakeFirestoreDocument("Godt laga2!", "Om forumet").also {
+                            it.innhold = mutableMapOf(Pair("innhold", "Einig!"))
+                        }
+                    )
+            ),
+            FakeFirestoreCollection(
+                underforumnavn = "Klima",
+                dokumenter = listOf()
             )
-        ),
-        FakeFirestoreCollection(
-            underforumnavn = "Klima",
-            dokumenter = listOf()
         )
-    )
 }
 
 @ApplicationScoped
@@ -42,12 +44,12 @@ class FirestoreProducer(
     private val brukHypersys: Boolean,
     private val firestore: Firestore
 ) {
-
     @Produces
     @RequestScoped
-    fun lagFirestoreCollections() = if (brukHypersys) {
-        RealFirestoreCollectionFactory(firestore)
-    } else {
-        FakeFirestoreCollectionFactory()
-    }
+    fun lagFirestoreCollections() =
+        if (brukHypersys) {
+            RealFirestoreCollectionFactory(firestore)
+        } else {
+            FakeFirestoreCollectionFactory()
+        }
 }

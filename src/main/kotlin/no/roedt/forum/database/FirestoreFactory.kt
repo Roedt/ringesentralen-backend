@@ -8,7 +8,6 @@ import jakarta.enterprise.inject.Produces
 
 @ApplicationScoped
 class FirestoreFactory {
-
     @Alternative
     @Priority(1)
     @Produces
