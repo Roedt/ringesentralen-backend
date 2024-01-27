@@ -70,7 +70,8 @@ class HypersysService(
                         Lokallag(
                             navn = lag.name,
                             hypersysID = lag.id,
-                            fylke = -1, // TODO: har ikkje funne nokon god måte for å finne koplinga til fylke automatisk
+                            fylke = -1,
+                            // TODO: har ikkje funne nokon god måte for å finne koplinga til fylke automatisk
                             sistOppdatert = Instant.now()
                         )
                     )
