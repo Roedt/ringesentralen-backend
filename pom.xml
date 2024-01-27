@@ -15,7 +15,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.version>3.2.3.Final</quarkus.version>
     <surefire-plugin.version>3.1.2</surefire-plugin.version>
-    <googleCloudServicesVersion>2.2.0</googleCloudServicesVersion>
+    <googleCloudServicesVersion>2.6.0</googleCloudServicesVersion>
   </properties>
   <dependencyManagement>
     <dependencies>
