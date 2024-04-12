@@ -1,0 +1,21 @@
+version: 2
+updates:
+  # ==============
+  # KOTLIN BACKEND
+  # ==============
+
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "sunday"
+    open-pull-requests-limit: 10
+    groups:
+      alt:
+        patterns:
+          - org*
+          - io*
+          - com*
+          - no*
+          - net*
+          - quay*
