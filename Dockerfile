@@ -29,6 +29,7 @@ WORKDIR /work/
 COPY --from=native-build /code/target/*-runner /work/application
 COPY --from=native-build /code/publickey.pem /work/publickey.pem
 RUN chmod 775 /work
+USER nonroot
 EXPOSE 8080
 ENTRYPOINT [ "/work/application" ]
 CMD ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.datasource.username=${DBUSER}","-Dquarkus.datasource.password=${DBPASSWORD}", "-Dquarkus.mailer.username=${QuarkusMailerUsername}", "-Dquarkus.mailer.password=${QuarkusMailerPassword}", "-Dmp.jwt.verify.publickey.location=/work/publickey.pem"]
