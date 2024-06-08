@@ -1,8 +1,6 @@
 # Use root/example as user/password credentials
 # this is copy-paste from https://hub.docker.com/_/mysql/
 # run this with docker-compose -f mysql.yaml
-version: '3.1'
-
 services:
 
   db:
