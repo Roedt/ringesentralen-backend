@@ -216,7 +216,7 @@
         </dependencies>
         <configuration>
           <javaParameters>true</javaParameters>
-          <jvmTarget>11</jvmTarget>
+          <jvmTarget>${maven.compiler.target}</jvmTarget>
           <compilerPlugins>
             <plugin>all-open</plugin>
             <plugin>jpa</plugin>
