@@ -257,20 +257,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>com.github.gantsign.maven</groupId>
-        <artifactId>ktlint-maven-plugin</artifactId>
-        <version>3.2.0</version>
-        <executions>
-          <execution>
-            <id>format-and-check</id>
-            <goals>
-              <goal>format</goal>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
@@ -346,6 +332,33 @@
         <quarkus.native.additional-build-args>--initialize-at-run-time=org.apache.http.impl.auth.NTLMEngineImpl</quarkus.native.additional-build-args>
         <quarkus.package.type>native</quarkus.package.type>
       </properties>
+    </profile>
+    <profile>
+      <id>ktlint</id>
+      <activation>
+        <property>
+          <name>ktlint</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>com.github.gantsign.maven</groupId>
+            <artifactId>ktlint-maven-plugin</artifactId>
+            <version>3.2.0</version>
+            <executions>
+              <execution>
+                <id>format-and-check</id>
+                <goals>
+                  <goal>format</goal>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 </project>
