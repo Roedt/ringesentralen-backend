@@ -144,9 +144,8 @@
       <version>1.4.1</version>
     </dependency>
     <dependency>
-      <groupId>com.twilio.sdk</groupId>
-      <artifactId>twilio</artifactId>
-      <version>9.16.0</version>
+      <groupId>org.apache.camel.quarkus</groupId>
+      <artifactId>camel-quarkus-twilio</artifactId>
     </dependency>
   </dependencies>
   <build>
