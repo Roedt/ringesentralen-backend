@@ -1,7 +1,7 @@
 package no.roedt
 
-import com.vdurmont.emoji.EmojiParser
 import jakarta.enterprise.context.ApplicationScoped
+import net.fellbaum.jemoji.EmojiManager
 
 @ApplicationScoped
 class Emojifjerner {
@@ -10,7 +10,7 @@ class Emojifjerner {
             if (input == null) {
                 null
             } else {
-                EmojiParser.removeAllEmojis(input)
+                EmojiManager.removeAllEmojis(input)
             }
     }
 }

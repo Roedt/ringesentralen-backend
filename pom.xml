@@ -150,20 +150,9 @@
       <artifactId>quarkus-elytron-security</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.vdurmont</groupId>
-      <artifactId>emoji-java</artifactId>
-      <version>5.1.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.json</groupId>
-          <artifactId>json</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency> <!-- trengs i emoji-java, men der bruker dei ein utdatert og sårbar versjon -->
-      <groupId>org.json</groupId>
-      <artifactId>json</artifactId>
-      <version>20231013</version>
+      <groupId>net.fellbaum</groupId>
+      <artifactId>jemoji</artifactId>
+      <version>1.4.1</version>
     </dependency>
     <dependency>
       <groupId>com.twilio.sdk</groupId>
