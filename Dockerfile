@@ -1,4 +1,4 @@
-FROM quay.io/quarkus/ubi-quarkus-mandrel-builder-image:23.0-java17 AS native-build
+FROM quay.io/quarkus/ubi-quarkus-mandrel-builder-image:23.1-java21 AS native-build
 ARG DBUSER
 ARG DBPASSWORD
 ARG QuarkusMailerUsername
