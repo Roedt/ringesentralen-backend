@@ -1,1 +1,1 @@
-INSERT INTO `aktivitet` VALUES ('VarSome2021');
+INSERT INTO aktivitet VALUES ('VarSome2021');

@@ -1,1 +1,1 @@
-INSERT INTO `ringesesjon` VALUES(3, 'Valkamp 2023')
+INSERT INTO ringesesjon (tekst) VALUES('Valkamp 2023')

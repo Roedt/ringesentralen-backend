@@ -12,13 +12,13 @@ import java.time.Instant
 class StatistikkRepository(internal val entityManager: EntityManager) {
     fun getSamtalerStatistikkResponse(): SamtalerStatistikkResponse {
         val list =
-            entityManager.list("SELECT id, displaytext FROM `resultat` ")
+            entityManager.list("SELECT id, displaytext FROM resultat ")
                 .map { it as Array<*> }
                 .map { Resultattype(id = it[0] as Int, displaytext = it[1].toString()) }
                 .map {
                     SamtaleResultat(
                         displaytext = it.displaytext,
-                        antal = entityManager.list("SELECT ringer FROM `samtale` WHERE resultat = ${it.id}").size
+                        antal = entityManager.list("SELECT ringer FROM samtale WHERE resultat = ${it.id}").size
                     )
                 }
                 .filter { it.antal > 0 }
@@ -27,7 +27,7 @@ class StatistikkRepository(internal val entityManager: EntityManager) {
             resultat = list,
             samtalerMedResultatSaaLangt =
                 entityManager.list(
-                    "SELECT ringer FROM `samtale` WHERE resultat!=${Resultat.Samtale_startet.nr}"
+                    "SELECT ringer FROM samtale WHERE resultat!=${Resultat.Samtale_startet.nr}"
                 ).size
         )
     }
@@ -35,17 +35,17 @@ class StatistikkRepository(internal val entityManager: EntityManager) {
     fun getRingereStatistikkResponse(): RingereStatistikkResponse =
         RingereStatistikkResponse(
             registrerteRingere = entityManager.list("SELECT 1 FROM ringer").size,
-            antallSomHarRingt = entityManager.list("select distinct ringer from `samtale`").size,
+            antallSomHarRingt = entityManager.list("select distinct ringer from samtale").size,
             aktiveRingereDenSisteTimen =
                 entityManager.list(
-                    "select distinct ringer from `samtale` where UNIX_TIMESTAMP(now()) - unix_timestamp(datetime) < 3600"
+                    "select distinct ringer from samtale where UNIX_TIMESTAMP(now()) - unix_timestamp(datetime) < 3600"
                 ).size,
-            aktiveRingereIDag = entityManager.list("select distinct ringer from `samtale` where CURDATE() =  DATE(datetime)").size,
+            aktiveRingereIDag = entityManager.list("select distinct ringer from samtale where CURDATE() =  DATE(datetime)").size,
             lokaleGodkjennere = entityManager.list("select 1 FROM person WHERE groupID=${RingesentralenGroupID.LokalGodkjenner.nr}").size,
             avvisteRingere = entityManager.list("select 1 FROM person WHERE groupID=${RingesentralenGroupID.AvslaattRinger.nr}").size,
             antallLokallagRingtFraTotalt =
                 entityManager.list(
-                    "select distinct ringer from `samtale` c " +
+                    "select distinct ringer from samtale c " +
                         "inner join ringer ringer on c.ringer = ringer.id " +
                         "inner join person p on ringer.personId = p.id " +
                         "inner join lokallag l on l.id = p.lokallag"

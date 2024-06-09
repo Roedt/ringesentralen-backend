@@ -1,1 +1,1 @@
-DROP TABLE `ringerIV1`;
+DROP TABLE ringerIV1;

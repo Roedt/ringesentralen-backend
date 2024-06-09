@@ -27,7 +27,7 @@ class NesteAaRingeRepository(internal val entityManager: EntityManager) {
     fun getTidlegareSamtalarMedDennePersonen(oppringtNummer: String) =
         entityManager.list(
             "SELECT resultat, ringerNavn, datetime, kommentar, ringtNavn, oppfoelgingId " +
-                "FROM `v_samtalerResultat` " +
+                "FROM v_samtalerResultat " +
                 "WHERE oppringtNummer = '$oppringtNummer'"
         )
 
