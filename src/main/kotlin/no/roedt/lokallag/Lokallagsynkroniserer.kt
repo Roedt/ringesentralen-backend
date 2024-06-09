@@ -14,7 +14,9 @@ class Lokallagsynkroniserer(val hypersysService: HypersysService, val lokallagSe
     fun onStart(
         @Observes event: StartupEvent
     ) {
+        println("Henter alle lokallag fra Hypersys")
         val alleLokallagFraHypersys = hypersysService.getAlleLokallag()
+        println("Henter alle lokallag fra systemet")
         val alleLokallagISystemet = lokallagService.listAll()
         val iHypersysMenIkkeIDatabasen =
             alleLokallagFraHypersys.filterNot { alleLokallagISystemet.map { i -> i.navn }.contains(it.name) }
