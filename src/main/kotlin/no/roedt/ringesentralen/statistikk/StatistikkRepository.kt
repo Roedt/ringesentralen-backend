@@ -38,7 +38,7 @@ class StatistikkRepository(internal val entityManager: EntityManager) {
             antallSomHarRingt = entityManager.list("select distinct ringer from samtale").size,
             aktiveRingereDenSisteTimen =
                 entityManager.list(
-                    "select distinct ringer from samtale where UNIX_TIMESTAMP(now()) - unix_timestamp(datetime) < 3600"
+                    "select distinct ringer from samtale where (now()::timestamp - TO_TIMESTAMP(datetime, 'YYYY/MM/DD/HH24:MI:ss') < 3600"
                 ).size,
             aktiveRingereIDag = entityManager.list("select distinct ringer from samtale where CURDATE() =  DATE(datetime)").size,
             lokaleGodkjennere = entityManager.list("select 1 FROM person WHERE groupID=${RingesentralenGroupID.LokalGodkjenner.nr}").size,
