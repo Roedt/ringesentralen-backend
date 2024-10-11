@@ -1,0 +1,17 @@
+INSERT INTO lokallag(id, navn, hypersysID, fylke) VALUES
+ (57065, 'Raudt Ytre Søre', 100706, 15),
+ (57066, 'Rødt Bergen Fana', 100477, 12),
+ (57067, 'Rødt Bergen Laksevåg og Loddefjord', 100594, 12),
+ (57068, 'Rødt Dalane og Hå', 100648, 11),
+ (57069, 'Rødt Halden og Aremark', 100028, 1),
+ (57070, 'Rødt Karmøy', 100766, 11),
+ (57071, 'Rødt Oslo Klima- og miljølaget', 100764, 3),
+ (57072, 'Rødt Porsanger', 100577, 20),
+ (57073, 'Rødt Sarpsborg og Rakkestad', 100027, 1),
+(57074, 'Rødt Stavanger Busse', 100709, 11),
+(57075, 'Rødt Sør-Odal', 100693, 4),
+(57076, 'Rødt Trondheim By og omegn', 100105, 50),
+ (57077, 'Rødt Trondheim Ila - Vestbyen', 100708, 50),
+(57078, 'Rødt Tvedestrand og Vegårshei', 100634, 42),
+(57079, 'Rødt Tønsberg', 100043, 38),
+(57080, 'Rødt Ås og Frogn', 100021, 2);
