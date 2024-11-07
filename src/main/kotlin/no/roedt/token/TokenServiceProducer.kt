@@ -39,7 +39,6 @@ class TokenServiceProducer(
             FakeTokenService(
                 secretFactory = secretFactory,
                 privateKeyFactory = privateKeyFactory,
-                aesUtil = aesUtil,
                 tokenExpiryPeriod = tokenExpiryPeriod
             )
         }
