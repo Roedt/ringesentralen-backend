@@ -15,10 +15,12 @@ import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.ringesentralen.ringer.Ringer
 import no.roedt.ringesentralen.ringer.RingerService
 import no.roedt.token.SecretFactory
+import org.eclipse.microprofile.rest.client.inject.RestClient
 import java.time.Instant
 
 @Dependent
 class RingesentralenLoginBean(
+    @RestClient
     hypersysRestClient: HypersysRestClient,
     modelConverter: ModelConverter,
     secretFactory: SecretFactory,

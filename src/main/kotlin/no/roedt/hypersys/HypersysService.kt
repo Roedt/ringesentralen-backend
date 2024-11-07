@@ -11,10 +11,12 @@ import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonService
 import no.roedt.person.UserId
+import org.eclipse.microprofile.rest.client.inject.RestClient
 import java.time.Instant
 
 @ApplicationScoped
 class HypersysService(
+    @RestClient
     val hypersysRestClient: HypersysRestClient,
     val hypersysSystemTokenVerifier: HypersysSystemTokenVerifier,
     val personService: PersonService,

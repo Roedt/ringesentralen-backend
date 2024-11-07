@@ -6,10 +6,12 @@ import no.roedt.hypersys.restClient.HypersysRestClient
 import no.roedt.token.SecretFactory
 import org.eclipse.microprofile.faulttolerance.Fallback
 import org.eclipse.microprofile.faulttolerance.Timeout
+import org.eclipse.microprofile.rest.client.inject.RestClient
 import java.util.Base64
 
 @ApplicationScoped
 class HypersysSystemTokenVerifier(
+    @RestClient
     val hypersysRestClient: HypersysRestClient,
     val secretFactory: SecretFactory
 ) {

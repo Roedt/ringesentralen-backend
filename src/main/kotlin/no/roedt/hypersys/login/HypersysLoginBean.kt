@@ -10,9 +10,11 @@ import no.roedt.person.Oppdateringskilde
 import no.roedt.person.Person
 import no.roedt.person.PersonService
 import no.roedt.token.SecretFactory
+import org.eclipse.microprofile.rest.client.inject.RestClient
 import java.util.Base64
 
 abstract class HypersysLoginBean(
+    @RestClient
     private val hypersysRestClient: HypersysRestClient,
     private val modelConverter: ModelConverter,
     private val secretFactory: SecretFactory,
