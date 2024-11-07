@@ -34,7 +34,7 @@ abstract class HypersysLoginBean(
         val brukerSecret = secretFactory.getHypersysBrukerSecret()
         val brukarnamn = aesUtil.decrypt(loginRequest.brukarnamn).also { EpostValidator.validate(it) }
         val passord = aesUtil.decrypt(loginRequest.passord)
-        return hypersysProxy.post(
+        return hypersysProxy.loggInn(
             brukerId,
             brukerSecret,
             "grant_type=password&username=$brukarnamn&password=$passord",

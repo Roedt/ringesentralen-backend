@@ -22,7 +22,7 @@ class HypersysSystemTokenVerifier(
     @Fallback(fallbackMethod = "settTokenUgyldig")
     fun getTokenFromHypersys(): Token {
         val response =
-            hypersysProxy.post(
+            hypersysProxy.loggInn(
                 secretFactory.getHypersysClientId(),
                 secretFactory.getHypersysClientSecret(),
                 "grant_type=client_credentials",

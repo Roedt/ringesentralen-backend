@@ -23,7 +23,7 @@ class HypersysProxy(
         ObjectMapper().registerModule(KotlinModule.Builder().build())
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-    fun post(
+    fun loggInn(
         id: String,
         secret: String,
         entity: String,
