@@ -15,7 +15,7 @@ object HttpClientz {
     ): HttpResponse<String> =
         HttpRequest.newBuilder()
             .GET()
-            .header("Authorization", "Bearer ${token.accessToken()}")
+            .medToken(token)
             .uri(URI.create(uri).also { println("URI: $uri, tekst: GET") })
             .build()
             .let {
@@ -39,7 +39,7 @@ object HttpClientz {
         }
 }
 
-fun HttpRequest.Builder.medToken(token: GyldigToken?) = token?.accessToken()?.let { this.header("Authorization", "Bearer ${it}") } ?: this
+fun HttpRequest.Builder.medToken(token: GyldigToken?) = token?.accessToken()?.let { this.header("Authorization", "Bearer $it") } ?: this
 
 fun HttpRequest.Builder.medHeaders(headers: List<Pair<String, String>>): HttpRequest.Builder {
     var builder = this

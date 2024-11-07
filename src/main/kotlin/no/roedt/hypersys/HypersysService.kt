@@ -109,5 +109,5 @@ class HypersysService(
     fun hentPerson(it: Person) = hypersysClient.gjennomfoerPostkall(
         "/membership/api/is_member/${it.hypersysID}/",
         hypersysSystemTokenVerifier.assertGyldigSystemToken(),
-    ).let { kMapper.readValue(it.body(), IsMember::class.java) }
+    ).let { kMapper.readValue(it!!.body(), IsMember::class.java) }
 }
