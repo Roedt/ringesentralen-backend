@@ -107,25 +107,9 @@ class HypersysService(
         person: Person
     ) = modelConverter.konverterTilOppdatering(medlemskap, lokallag, person)
 
-    fun hentPerson(it: Person) =
-        try {
-            hypersysClient.post(
-                "/membership/api/is_member/${it.hypersysID}/",
-                hypersysSystemTokenVerifier.assertGyldigSystemToken(),
-                IsMember::class.java
-            )
-        } catch (e: Exception) {
-            val somString =
-                hypersysClient.post(
-                    "/membership/api/is_member/${it.hypersysID}/",
-                    hypersysSystemTokenVerifier.assertGyldigSystemToken(),
-                    Object::class.java
-                )
-            if (somString.toString().contains("Ikke funnet")) {
-                println("Fant ikke person med personid ${it.id} i Hypersys")
-                IsMember(user_id = it.hypersysID ?: -1, name = "Ikke funnet", paid = false, is_member = false)
-            } else {
-                throw e
-            }
-        }
+    fun hentPerson(it: Person) = hypersysClient.post(
+        "/membership/api/is_member/${it.hypersysID}/",
+        hypersysSystemTokenVerifier.assertGyldigSystemToken(),
+        IsMember::class.java
+    )
 }
