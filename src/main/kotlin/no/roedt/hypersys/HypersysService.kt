@@ -50,7 +50,8 @@ class HypersysService(
         return hypersysId
     }
 
-    private fun getLokallag(userId: UserId) = personService.finnFraHypersysId(userId.userId).firstResult<Person>().lokallag
+    private fun getLokallag(userId: UserId) =
+        personService.finnFraHypersysId(userId.userId).firstResult<Person>().lokallag
 
     private fun getLokallagIdFromHypersys(mittLag: Lokallag) =
         getAlleLokallag().first { mittLag.navn == it.name }
@@ -114,20 +115,16 @@ class HypersysService(
                 IsMember::class.java
             )
         } catch (e: Exception) {
-            try {
-                val somString =
-                    hypersysProxy.post(
-                        "/membership/api/is_member/${it.hypersysID}/",
-                        hypersysSystemTokenVerifier.assertGyldigSystemToken(),
-                        Object::class.java
-                    )
-                if (somString.toString().contains("Ikke funnet")) {
-                    println("Fant ikke person med personid ${it.id} i Hypersys")
-                    IsMember(user_id = it.hypersysID ?: -1, name = "Ikke funnet", paid = false, is_member = false)
-                } else {
-                    throw e
-                }
-            } catch (e: Exception) {
+            val somString =
+                hypersysProxy.post(
+                    "/membership/api/is_member/${it.hypersysID}/",
+                    hypersysSystemTokenVerifier.assertGyldigSystemToken(),
+                    Object::class.java
+                )
+            if (somString.toString().contains("Ikke funnet")) {
+                println("Fant ikke person med personid ${it.id} i Hypersys")
+                IsMember(user_id = it.hypersysID ?: -1, name = "Ikke funnet", paid = false, is_member = false)
+            } else {
                 throw e
             }
         }
