@@ -16,7 +16,7 @@ import java.time.LocalDate
 
 @ApplicationScoped
 class HypersysService(
-    val hypersysProxy: HypersysProxy,
+    val hypersysClient: HypersysClient,
     val hypersysSystemTokenVerifier: HypersysSystemTokenVerifier,
     val personService: PersonService,
     val modelConverter: ModelConverter,
@@ -26,7 +26,7 @@ class HypersysService(
         if (hypersysLokallagId == null) {
             listOf()
         } else {
-            hypersysProxy.get(
+            hypersysClient.get(
                 "/membership/api/membership/$hypersysLokallagId/${LocalDate.now().year}/",
                 hypersysSystemTokenVerifier.assertGyldigSystemToken(),
                 ListMembershipTypeReference()
@@ -82,7 +82,7 @@ class HypersysService(
     }
 
     fun getAlleLokallag(): List<Organisasjonsledd> =
-        hypersysProxy.get(
+        hypersysClient.get(
             "/org/api/",
             hypersysSystemTokenVerifier.assertGyldigSystemToken(),
             ListOrganisasjonsleddTypeReference()
@@ -109,14 +109,14 @@ class HypersysService(
 
     fun hentPerson(it: Person) =
         try {
-            hypersysProxy.post(
+            hypersysClient.post(
                 "/membership/api/is_member/${it.hypersysID}/",
                 hypersysSystemTokenVerifier.assertGyldigSystemToken(),
                 IsMember::class.java
             )
         } catch (e: Exception) {
             val somString =
-                hypersysProxy.post(
+                hypersysClient.post(
                     "/membership/api/is_member/${it.hypersysID}/",
                     hypersysSystemTokenVerifier.assertGyldigSystemToken(),
                     Object::class.java

@@ -2,7 +2,7 @@ package no.roedt.ringesentralen
 
 import jakarta.enterprise.context.Dependent
 import no.roedt.hypersys.GyldigPersonToken
-import no.roedt.hypersys.HypersysProxy
+import no.roedt.hypersys.HypersysClient
 import no.roedt.hypersys.Token
 import no.roedt.hypersys.UgyldigToken
 import no.roedt.hypersys.externalModel.Profile
@@ -21,7 +21,7 @@ import java.time.Instant
 
 @Dependent
 class RingesentralenLoginBean(
-    hypersysProxy: HypersysProxy,
+    hypersysClient: HypersysClient,
     modelConverter: ModelConverter,
     secretFactory: SecretFactory,
     loginService: LoginService,
@@ -29,7 +29,7 @@ class RingesentralenLoginBean(
     private val ringerService: RingerService,
     aesUtil: AESUtil
 ) : HypersysLoginBean(
-        hypersysProxy,
+        hypersysClient,
         modelConverter,
         secretFactory,
         loginService,

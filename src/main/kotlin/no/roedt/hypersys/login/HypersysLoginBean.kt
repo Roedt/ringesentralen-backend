@@ -1,7 +1,7 @@
 package no.roedt.hypersys.login
 
 import no.roedt.hypersys.GyldigPersonToken
-import no.roedt.hypersys.HypersysProxy
+import no.roedt.hypersys.HypersysClient
 import no.roedt.hypersys.Token
 import no.roedt.hypersys.UgyldigToken
 import no.roedt.hypersys.externalModel.Profile
@@ -14,7 +14,7 @@ import no.roedt.token.SecretFactory
 import java.net.http.HttpResponse
 
 abstract class HypersysLoginBean(
-    private val hypersysProxy: HypersysProxy,
+    private val hypersysClient: HypersysClient,
     private val modelConverter: ModelConverter,
     private val secretFactory: SecretFactory,
     private val loginService: LoginService,
@@ -25,8 +25,8 @@ abstract class HypersysLoginBean(
 
     protected fun loginInternal(loginRequest: LoginRequest): Token {
         val response = postLogin(loginRequest)
-        if (response.statusCode() != 200) return hypersysProxy.readResponse(response, UgyldigToken::class.java)
-        return hypersysProxy.readResponse(response, GyldigPersonToken::class.java)
+        if (response.statusCode() != 200) return hypersysClient.readResponse(response, UgyldigToken::class.java)
+        return hypersysClient.readResponse(response, GyldigPersonToken::class.java)
     }
 
     private fun postLogin(loginRequest: LoginRequest): HttpResponse<String> {
@@ -34,16 +34,17 @@ abstract class HypersysLoginBean(
         val brukerSecret = secretFactory.getHypersysBrukerSecret()
         val brukarnamn = aesUtil.decrypt(loginRequest.brukarnamn).also { EpostValidator.validate(it) }
         val passord = aesUtil.decrypt(loginRequest.passord)
-        return hypersysProxy.loggInn(
-            brukerId,
-            brukerSecret,
-            "grant_type=password&username=$brukarnamn&password=$passord",
-            loggingtekst = "brukarinnlogging"
+        return hypersysClient.post(
+            id = brukerId,
+            secret = brukerSecret,
+            entity = "grant_type=password&username=$brukarnamn&password=$passord",
+            loggingtekst = "brukarinnlogging",
+            url = "api/o/token/"
         )
     }
 
     protected fun oppdaterPersoninformasjon(token: GyldigPersonToken): Pair<Long, Person> {
-        val profile: Profile = hypersysProxy.get("actor/api/profile/", token, Profile::class.java)
+        val profile: Profile = hypersysClient.get("actor/api/profile/", token, Profile::class.java)
         val convertedPerson = modelConverter.convert(profile.user, getRolle(profile))
         return Pair(lagrePerson(convertedPerson), convertedPerson)
             .also { loginService.persist(LoginAttempt(hypersysID = profile.user.id)) }

@@ -15,7 +15,7 @@ import java.net.http.HttpResponse.BodyHandlers
 import java.util.Base64
 
 @Dependent
-class HypersysProxy(
+class HypersysClient(
     @ConfigProperty(name = "hypersysBaseUrl", defaultValue = "")
     private val baseURL: String
 ) {
@@ -23,16 +23,17 @@ class HypersysProxy(
         ObjectMapper().registerModule(KotlinModule.Builder().build())
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-    fun loggInn(
+    fun post(
         id: String,
         secret: String,
         entity: String,
-        loggingtekst: String
-    ): HttpResponse<String> =
-        httpCall(
+        loggingtekst: String,
+        url: String
+    ): HttpResponse<String> {
+        return httpCall(
             HttpRequest.newBuilder()
                 .POST(BodyPublishers.ofString(entity))
-                .uri(URI.create("$baseURL/api/o/token/").also { log(it, loggingtekst) })
+                .uri(URI.create("$baseURL/$url").also { log(it, loggingtekst) })
                 .headers(
                     "Authorization",
                     "Basic ${getBase64Credentials(id, secret)}",
@@ -41,6 +42,7 @@ class HypersysProxy(
                 )
                 .build()
         )
+    }
 
     private fun getBase64Credentials(
         id: String,

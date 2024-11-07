@@ -8,7 +8,7 @@ import org.eclipse.microprofile.faulttolerance.Timeout
 
 @ApplicationScoped
 class HypersysSystemTokenVerifier(
-    val hypersysProxy: HypersysProxy,
+    val hypersysClient: HypersysClient,
     val secretFactory: SecretFactory
 ) {
     private lateinit var token: Token
@@ -22,16 +22,17 @@ class HypersysSystemTokenVerifier(
     @Fallback(fallbackMethod = "settTokenUgyldig")
     fun getTokenFromHypersys(): Token {
         val response =
-            hypersysProxy.loggInn(
-                secretFactory.getHypersysClientId(),
-                secretFactory.getHypersysClientSecret(),
-                "grant_type=client_credentials",
-                loggingtekst = "systeminnlogging"
+            hypersysClient.post(
+                id = secretFactory.getHypersysClientId(),
+                secret = secretFactory.getHypersysClientSecret(),
+                entity = "grant_type=client_credentials",
+                loggingtekst = "systeminnlogging",
+                url = "api/o/token/"
             )
         return if (response.statusCode() != 200) {
-            hypersysProxy.readResponse(response, UgyldigToken::class.java)
+            hypersysClient.readResponse(response, UgyldigToken::class.java)
         } else {
-            hypersysProxy.readResponse(response, GyldigSystemToken::class.java)
+            hypersysClient.readResponse(response, GyldigSystemToken::class.java)
         }
     }
 
