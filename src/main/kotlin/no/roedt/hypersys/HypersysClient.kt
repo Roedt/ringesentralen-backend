@@ -66,12 +66,6 @@ class HypersysClient(
     inline fun <reified T> get(
         url: String,
         token: GyldigToken,
-        type: Class<T>
-    ) = readResponse(gjennomfoerGetkall(url, token), type)
-
-    inline fun <reified T> get(
-        url: String,
-        token: GyldigToken,
         typeReference: TypeReference<T>
     ): T = kMapper.readValue(gjennomfoerGetkall(url, token).body(), typeReference)
 
