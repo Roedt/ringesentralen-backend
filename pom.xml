@@ -98,6 +98,7 @@
     <dependency>
       <groupId>com.nhaarman.mockitokotlin2</groupId>
       <artifactId>mockito-kotlin</artifactId>
+      <scope>test</scope>
       <version>2.2.0</version>
     </dependency>
     <dependency>
