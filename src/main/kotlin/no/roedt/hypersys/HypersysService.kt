@@ -1,23 +1,21 @@
 package no.roedt.hypersys
 
 import jakarta.enterprise.context.ApplicationScoped
-import no.roedt.hypersys.ObjectMapper.kMapper
 import no.roedt.hypersys.externalModel.IsMember
 import no.roedt.hypersys.externalModel.Organisasjonsledd
-import no.roedt.hypersys.externalModel.membership.ListMembershipTypeReference
 import no.roedt.hypersys.externalModel.membership.Membership
 import no.roedt.hypersys.konvertering.ModelConverter
+import no.roedt.hypersys.restClient.HypersysRestClient
 import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonService
 import no.roedt.person.UserId
 import java.time.Instant
-import java.time.LocalDate
 
 @ApplicationScoped
 class HypersysService(
-    val hypersysClient: HypersysClient,
+    val hypersysRestClient: HypersysRestClient,
     val hypersysSystemTokenVerifier: HypersysSystemTokenVerifier,
     val personService: PersonService,
     val modelConverter: ModelConverter,
@@ -27,10 +25,10 @@ class HypersysService(
         if (hypersysLokallagId == null) {
             listOf()
         } else {
-            hypersysClient.gjennomfoerGetkall(
-                "/membership/api/membership/$hypersysLokallagId/${LocalDate.now().year}/",
-                hypersysSystemTokenVerifier.assertGyldigSystemToken()
-            ).let { kMapper.readValue(it.body(), ListMembershipTypeReference()) }
+            hypersysRestClient.hentMedlemmerILag(
+                hypersysLokallagId = hypersysLokallagId,
+                token = hypersysSystemTokenVerifier.assertGyldigSystemToken().access_token
+            )
         }
 
     private fun convertToHypersysLokallagId(lokallag: Int): Int? {
@@ -81,11 +79,7 @@ class HypersysService(
         lokallagAaLeggeTil.forEach { lokallagService.persist(it) }
     }
 
-    fun getAlleLokallag(): List<Organisasjonsledd> =
-        hypersysClient.gjennomfoerGetkall(
-            "/org/api/",
-            hypersysSystemTokenVerifier.assertGyldigSystemToken(),
-        ).let { kMapper.readValue(it.body(), ListOrganisasjonsleddTypeReference()) }
+    fun getAlleLokallag(): List<Organisasjonsledd> = hypersysRestClient.hentAlleLokallag(hypersysSystemTokenVerifier.assertGyldigSystemToken().access_token)
 
     fun hentFraMedlemslista(hypersysID: Int?): Membership? =
         hypersysID
@@ -106,8 +100,7 @@ class HypersysService(
         person: Person
     ) = modelConverter.konverterTilOppdatering(medlemskap, lokallag, person)
 
-    fun hentPerson(it: Person) = hypersysClient.gjennomfoerPostkall(
-        "/membership/api/is_member/${it.hypersysID}/",
-        hypersysSystemTokenVerifier.assertGyldigSystemToken(),
-    ).let { kMapper.readValue(it!!.body(), IsMember::class.java) }
+    fun hentPerson(it: Person): IsMember = hypersysRestClient.hentPerson(
+        it.hypersysID ?: throw IllegalArgumentException("Person ${it.id} mangler hypersys-ID"),
+        hypersysSystemTokenVerifier.assertGyldigSystemToken().access_token)
 }

@@ -2,14 +2,15 @@ package no.roedt.hypersys
 
 import jakarta.annotation.PostConstruct
 import jakarta.enterprise.context.ApplicationScoped
-import no.roedt.hypersys.ObjectMapper.kMapper
+import no.roedt.hypersys.restClient.HypersysRestClient
 import no.roedt.token.SecretFactory
 import org.eclipse.microprofile.faulttolerance.Fallback
 import org.eclipse.microprofile.faulttolerance.Timeout
+import java.util.Base64
 
 @ApplicationScoped
 class HypersysSystemTokenVerifier(
-    val hypersysClient: HypersysClient,
+    val hypersysRestClient: HypersysRestClient,
     val secretFactory: SecretFactory
 ) {
     private lateinit var token: Token
@@ -22,19 +23,11 @@ class HypersysSystemTokenVerifier(
     @Timeout(value = 10000L)
     @Fallback(fallbackMethod = "settTokenUgyldig")
     fun getTokenFromHypersys(): Token {
-        val response =
-            hypersysClient.post(
-                id = secretFactory.getHypersysClientId(),
-                secret = secretFactory.getHypersysClientSecret(),
-                entity = "grant_type=client_credentials",
-                loggingtekst = "systeminnlogging",
-                url = "api/o/token/"
-            )
-        return if (response.statusCode() != 200) {
-            kMapper.readValue(response.body(), UgyldigToken::class.java)
-        } else {
-            kMapper.readValue(response.body(), GyldigSystemToken::class.java)
-        }
+        val id = secretFactory.getHypersysClientId()
+        val secret = secretFactory.getHypersysClientSecret()
+        return hypersysRestClient.tokenSystem(
+            base64Credentials = Base64.getEncoder().encodeToString(("$id:$secret").toByteArray())
+        )
     }
 
     private fun settTokenUgyldig(): Token = UgyldigToken(error = "Kunne ikke hente token fra Hypersys")
