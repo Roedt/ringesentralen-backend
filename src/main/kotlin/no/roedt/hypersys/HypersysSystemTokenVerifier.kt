@@ -2,6 +2,7 @@ package no.roedt.hypersys
 
 import jakarta.annotation.PostConstruct
 import jakarta.enterprise.context.ApplicationScoped
+import no.roedt.hypersys.ObjectMapper.kMapper
 import no.roedt.token.SecretFactory
 import org.eclipse.microprofile.faulttolerance.Fallback
 import org.eclipse.microprofile.faulttolerance.Timeout
@@ -30,9 +31,9 @@ class HypersysSystemTokenVerifier(
                 url = "api/o/token/"
             )
         return if (response.statusCode() != 200) {
-            hypersysClient.readResponse(response, UgyldigToken::class.java)
+            kMapper.readValue(response.body(), UgyldigToken::class.java)
         } else {
-            hypersysClient.readResponse(response, GyldigSystemToken::class.java)
+            kMapper.readValue(response.body(), GyldigSystemToken::class.java)
         }
     }
 

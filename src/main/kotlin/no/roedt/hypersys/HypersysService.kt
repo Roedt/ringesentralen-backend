@@ -1,6 +1,7 @@
 package no.roedt.hypersys
 
 import jakarta.enterprise.context.ApplicationScoped
+import no.roedt.hypersys.ObjectMapper.kMapper
 import no.roedt.hypersys.externalModel.IsMember
 import no.roedt.hypersys.externalModel.Organisasjonsledd
 import no.roedt.hypersys.externalModel.membership.ListMembershipTypeReference
@@ -26,11 +27,10 @@ class HypersysService(
         if (hypersysLokallagId == null) {
             listOf()
         } else {
-            hypersysClient.get(
+            hypersysClient.gjennomfoerGetkall(
                 "/membership/api/membership/$hypersysLokallagId/${LocalDate.now().year}/",
-                hypersysSystemTokenVerifier.assertGyldigSystemToken(),
-                ListMembershipTypeReference()
-            )
+                hypersysSystemTokenVerifier.assertGyldigSystemToken()
+            ).let { kMapper.readValue(it.body(), ListMembershipTypeReference()) }
         }
 
     private fun convertToHypersysLokallagId(lokallag: Int): Int? {
@@ -82,11 +82,10 @@ class HypersysService(
     }
 
     fun getAlleLokallag(): List<Organisasjonsledd> =
-        hypersysClient.get(
+        hypersysClient.gjennomfoerGetkall(
             "/org/api/",
             hypersysSystemTokenVerifier.assertGyldigSystemToken(),
-            ListOrganisasjonsleddTypeReference()
-        )
+        ).let { kMapper.readValue(it.body(), ListOrganisasjonsleddTypeReference()) }
 
     fun hentFraMedlemslista(hypersysID: Int?): Membership? =
         hypersysID
@@ -107,9 +106,8 @@ class HypersysService(
         person: Person
     ) = modelConverter.konverterTilOppdatering(medlemskap, lokallag, person)
 
-    fun hentPerson(it: Person) = hypersysClient.post(
+    fun hentPerson(it: Person) = hypersysClient.gjennomfoerPostkall(
         "/membership/api/is_member/${it.hypersysID}/",
         hypersysSystemTokenVerifier.assertGyldigSystemToken(),
-        IsMember::class.java
-    )
+    ).let { kMapper.readValue(it.body(), IsMember::class.java) }
 }

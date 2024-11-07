@@ -2,6 +2,7 @@ package no.roedt.hypersys.login
 
 import no.roedt.hypersys.GyldigPersonToken
 import no.roedt.hypersys.HypersysClient
+import no.roedt.hypersys.ObjectMapper.kMapper
 import no.roedt.hypersys.Token
 import no.roedt.hypersys.UgyldigToken
 import no.roedt.hypersys.externalModel.Profile
@@ -25,8 +26,8 @@ abstract class HypersysLoginBean(
 
     protected fun loginInternal(loginRequest: LoginRequest): Token {
         val response = postLogin(loginRequest)
-        if (response.statusCode() != 200) return hypersysClient.readResponse(response, UgyldigToken::class.java)
-        return hypersysClient.readResponse(response, GyldigPersonToken::class.java)
+        if (response.statusCode() != 200) return kMapper.readValue(response.body(), UgyldigToken::class.java)
+        return kMapper.readValue(response.body(), GyldigPersonToken::class.java)
     }
 
     private fun postLogin(loginRequest: LoginRequest): HttpResponse<String> {
@@ -44,7 +45,7 @@ abstract class HypersysLoginBean(
     }
 
     protected fun oppdaterPersoninformasjon(token: GyldigPersonToken): Pair<Long, Person> {
-        val profile = hypersysClient.readResponse(hypersysClient.gjennomfoerGetkall("actor/api/profile/", token), Profile::class.java)
+        val profile = kMapper.readValue(hypersysClient.gjennomfoerGetkall("actor/api/profile/", token).body(), Profile::class.java)
         val convertedPerson = modelConverter.convert(profile.user, getRolle(profile))
         return Pair(lagrePerson(convertedPerson), convertedPerson)
             .also { loginService.persist(LoginAttempt(hypersysID = profile.user.id)) }
