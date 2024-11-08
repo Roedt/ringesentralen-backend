@@ -1,6 +1,5 @@
 package no.roedt.token
 
-import io.quarkus.arc.Unremovable
 import jakarta.annotation.security.PermitAll
 import jakarta.enterprise.context.RequestScoped
 import jakarta.transaction.Transactional
@@ -19,7 +18,6 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @Tag(name = "Token")
 @RequestScoped
 @SecurityRequirement(name = "jwt")
-@Unremovable
 class TokenController(private val tokenService: TokenService, val jwt: JsonWebToken) {
     @PermitAll
     @POST
