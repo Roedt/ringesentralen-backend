@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.samtale.telefonsvarer
 
 import jakarta.annotation.security.RolesAllowed
+import jakarta.enterprise.context.RequestScoped
 import jakarta.transaction.Transactional
 import jakarta.ws.rs.POST
 import jakarta.ws.rs.Path
@@ -20,6 +21,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @Path("/telefonsvar")
 @Tag(name = "Telefonsvar")
 @SecurityRequirement(name = "jwt")
+@RequestScoped
 class TelefonsvarerController(val telefonsvarerService: TelefonsvarerService, val jwt: JsonWebToken) {
     @RolesAllowed(GenerellRolle.SYSTEMBRUKER_FRONTEND)
     @POST

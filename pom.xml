@@ -7,14 +7,14 @@
   <version>1.0.0-SNAPSHOT</version>
   <properties>
     <compiler-plugin.version>3.13.0</compiler-plugin.version>
-    <kotlin.version>2.0.0</kotlin.version>
+    <kotlin.version>2.0.21</kotlin.version>
     <maven.compiler.parameters>true</maven.compiler.parameters>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus.version>3.11.1</quarkus.version>
-    <surefire-plugin.version>3.2.5</surefire-plugin.version>
+    <quarkus.version>3.16.2</quarkus.version>
+    <surefire-plugin.version>3.5.2</surefire-plugin.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -35,11 +35,11 @@
   <dependencies>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy</artifactId>
+      <artifactId>quarkus-rest</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-jackson</artifactId>
+      <artifactId>quarkus-rest-jackson</artifactId>
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
@@ -54,10 +54,6 @@
       <groupId>io.rest-assured</groupId>
       <artifactId>kotlin-extensions</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-hibernate-orm-rest-data-panache</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -93,10 +89,6 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-container-image-jib</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
       <artifactId>quarkus-jdbc-postgresql</artifactId>
     </dependency>
     <dependency>
@@ -108,8 +100,13 @@
       <artifactId>quarkus-mailer</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-rest-client-jackson</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.nhaarman.mockitokotlin2</groupId>
       <artifactId>mockito-kotlin</artifactId>
+      <scope>test</scope>
       <version>2.2.0</version>
     </dependency>
     <dependency>
@@ -125,6 +122,10 @@
     <dependency>
       <groupId>io.quarkiverse.googlecloudservices</groupId>
       <artifactId>quarkus-google-cloud-secret-manager</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-hibernate-orm-panache</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkiverse.googlecloudservices</groupId>
@@ -219,11 +220,15 @@
           <pluginOptions>
             <option>all-open:annotation=jakarta.ws.rs.Path</option>
             <option>all-open:annotation=jakarta.enterprise.context.ApplicationScoped</option>
+            <option>all-open:annotation=jakarta.enterprise.context.RequestScoped</option>
             <option>all-open:annotation=io.quarkus.test.junit.QuarkusTest</option>
             <option>all-open:annotation=jakarta.persistence.Entity</option>
             <option>all-open:annotation=jakarta.persistence.MappedSuperclass</option>
             <option>all-open:annotation=jakarta.persistence.Embeddable</option>
           </pluginOptions>
+          <args>
+            <arg>-Xjvm-default=all</arg>
+          </args>
         </configuration>
       </plugin>
       <plugin>

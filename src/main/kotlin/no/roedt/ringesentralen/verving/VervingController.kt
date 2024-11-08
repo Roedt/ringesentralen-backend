@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.verving
 
 import jakarta.annotation.security.RolesAllowed
+import jakarta.enterprise.context.RequestScoped
 import jakarta.transaction.Transactional
 import jakarta.ws.rs.POST
 import jakarta.ws.rs.Path
@@ -22,8 +23,9 @@ import java.net.URI
 @Path("/verving")
 @Tag(name = "Verving")
 @SecurityRequirement(name = "jwt")
+@RequestScoped
 class VervingController(val service: VervingService, val jwt: JsonWebToken) {
-    @jakarta.annotation.security.RolesAllowed(GenerellRolle.SYSTEMBRUKER_FRONTEND)
+    @RolesAllowed(GenerellRolle.SYSTEMBRUKER_FRONTEND)
     @POST
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)

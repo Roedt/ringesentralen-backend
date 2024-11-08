@@ -1,6 +1,7 @@
 package no.roedt.token
 
 import jakarta.annotation.security.PermitAll
+import jakarta.enterprise.context.RequestScoped
 import jakarta.transaction.Transactional
 import jakarta.ws.rs.POST
 import jakarta.ws.rs.Path
@@ -15,6 +16,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 
 @Path("/token")
 @Tag(name = "Token")
+@RequestScoped
 @SecurityRequirement(name = "jwt")
 class TokenController(private val tokenService: TokenService, val jwt: JsonWebToken) {
     @PermitAll

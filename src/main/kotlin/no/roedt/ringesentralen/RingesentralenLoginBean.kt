@@ -1,27 +1,27 @@
 package no.roedt.ringesentralen
 
 import jakarta.enterprise.context.Dependent
-import no.roedt.hypersys.GyldigPersonToken
-import no.roedt.hypersys.HypersysProxy
 import no.roedt.hypersys.Token
-import no.roedt.hypersys.UgyldigToken
 import no.roedt.hypersys.externalModel.Profile
 import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.hypersys.login.AESUtil
 import no.roedt.hypersys.login.HypersysLoginBean
 import no.roedt.hypersys.login.LoginRequest
 import no.roedt.hypersys.login.LoginService
+import no.roedt.hypersys.restClient.HypersysRestClient
 import no.roedt.person.Person
 import no.roedt.person.PersonService
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import no.roedt.ringesentralen.ringer.Ringer
 import no.roedt.ringesentralen.ringer.RingerService
 import no.roedt.token.SecretFactory
+import org.eclipse.microprofile.rest.client.inject.RestClient
 import java.time.Instant
 
 @Dependent
 class RingesentralenLoginBean(
-    hypersysProxy: HypersysProxy,
+    @RestClient
+    hypersysRestClient: HypersysRestClient,
     modelConverter: ModelConverter,
     secretFactory: SecretFactory,
     loginService: LoginService,
@@ -29,18 +29,16 @@ class RingesentralenLoginBean(
     private val ringerService: RingerService,
     aesUtil: AESUtil
 ) : HypersysLoginBean(
-        hypersysProxy,
-        modelConverter,
-        secretFactory,
-        loginService,
-        personService,
-        aesUtil
-    ) {
+    hypersysRestClient,
+    modelConverter,
+    secretFactory,
+    loginService,
+    personService,
+    aesUtil
+) {
     override fun login(loginRequest: LoginRequest): Pair<Token, Person?> {
         val token = loginInternal(loginRequest)
-        if (token is UgyldigToken) return Pair(token, null)
-
-        val oppdatertPerson = oppdaterPersoninformasjon(token as GyldigPersonToken)
+        val oppdatertPerson = oppdaterPersoninformasjon(token)
         lagreSomRinger(oppdatertPerson.first)
         return Pair(token, oppdatertPerson.second)
     }

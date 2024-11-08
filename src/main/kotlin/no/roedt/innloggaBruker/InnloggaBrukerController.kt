@@ -1,5 +1,7 @@
 package no.roedt.innloggaBruker
 
+import jakarta.annotation.security.RolesAllowed
+import jakarta.enterprise.context.RequestScoped
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.Produces
@@ -17,9 +19,10 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 
 @Path("/profil")
 @Tag(name = "Profil")
+@RequestScoped
 @SecurityRequirement(name = "jwt")
 class InnloggaBrukerController(val innloggaBrukerService: InnloggaBrukerService, val jwt: JsonWebToken) {
-    @jakarta.annotation.security.RolesAllowed(GenerellRolle.BRUKER, GenerellRolle.VENTER_PAA_GODKJENNING)
+    @RolesAllowed(GenerellRolle.BRUKER, GenerellRolle.VENTER_PAA_GODKJENNING)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/")
@@ -30,7 +33,7 @@ class InnloggaBrukerController(val innloggaBrukerService: InnloggaBrukerService,
         @Context ctx: SecurityContext
     ) = innloggaBrukerService.getProfil(ctx.userId())
 
-    @jakarta.annotation.security.RolesAllowed(GenerellRolle.BRUKER)
+    @RolesAllowed(GenerellRolle.BRUKER)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/lokallag")
@@ -41,7 +44,7 @@ class InnloggaBrukerController(val innloggaBrukerService: InnloggaBrukerService,
         @Context ctx: SecurityContext
     ) = innloggaBrukerService.getLokallag(ctx.userId(), jwt.groups)
 
-    @jakarta.annotation.security.RolesAllowed(GenerellRolle.VENTER_PAA_GODKJENNING, GenerellRolle.BRUKER)
+    @RolesAllowed(GenerellRolle.VENTER_PAA_GODKJENNING, GenerellRolle.BRUKER)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/roller")

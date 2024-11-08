@@ -1,6 +1,7 @@
 package no.roedt.frivilligsystem
 
 import jakarta.annotation.security.RolesAllowed
+import jakarta.enterprise.context.RequestScoped
 import jakarta.transaction.Transactional
 import jakarta.ws.rs.Consumes
 import jakarta.ws.rs.GET
@@ -34,6 +35,7 @@ import java.net.URI
 @Path("/frivillig")
 @Tag(name = "Frivilligsystem")
 @SecurityRequirement(name = "jwt")
+@RequestScoped
 class FrivilligController(
     val frivilligService: FrivilligService,
     val kontaktService: KontaktService,

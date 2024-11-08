@@ -1,7 +1,7 @@
 package no.roedt.token
 
 class FakeSecretFactory : SecretFactory {
-    override fun getPrivateKey() = "A"
+    override fun getPrivateKey() = "AAAAABBBBBBBSDSDFD"
 
     override fun getFrontendTokenKey() = "AOC2024"
 

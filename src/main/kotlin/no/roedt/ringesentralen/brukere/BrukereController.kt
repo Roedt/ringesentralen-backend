@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.brukere
 
 import jakarta.annotation.security.RolesAllowed
+import jakarta.enterprise.context.ApplicationScoped
 import jakarta.transaction.Transactional
 import jakarta.ws.rs.Consumes
 import jakarta.ws.rs.GET
@@ -28,6 +29,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @Path("/brukere")
 @Tag(name = "Brukere")
 @SecurityRequirement(name = "jwt")
+@ApplicationScoped
 class BrukereController(
     val brukereService: BrukereService,
     val tilgangsendringService: TilgangsendringService,

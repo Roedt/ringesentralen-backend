@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.historikk
 
+import jakarta.enterprise.context.RequestScoped
 import jakarta.ws.rs.DefaultValue
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.Path
@@ -22,6 +23,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @Path("/historikk")
 @Tag(name = "Historikk")
 @SecurityRequirement(name = "jwt")
+@RequestScoped
 class HistorikkController(private val historikkService: HistorikkService, val jwt: JsonWebToken) {
     @jakarta.annotation.security.RolesAllowed(GenerellRolle.BRUKER)
     @GET
