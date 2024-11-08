@@ -24,9 +24,7 @@ abstract class HypersysLoginBean(
 ) {
     abstract fun login(loginRequest: LoginRequest): Pair<Token, Person?>
 
-    protected fun loginInternal(loginRequest: LoginRequest) = postLogin(loginRequest)
-
-    private fun postLogin(loginRequest: LoginRequest): GyldigPersonToken {
+    protected fun loginInternal(loginRequest: LoginRequest): GyldigPersonToken {
         val brukerId = secretFactory.getHypersysBrukerId()
         val brukerSecret = secretFactory.getHypersysBrukerSecret()
         val brukarnamn = aesUtil.decrypt(loginRequest.brukarnamn).also { EpostValidator.validate(it) }
@@ -35,7 +33,7 @@ abstract class HypersysLoginBean(
         return hypersysRestClient.tokenPerson(
             base64Credentials = Base64.getEncoder().encodeToString(("$brukerId:$brukerSecret").toByteArray()),
             brukernavn = brukarnamn,
-            passord = passord
+            password = passord
         )
     }
 
