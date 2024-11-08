@@ -1,6 +1,7 @@
 package no.roedt.ringesentralen.samtale
 
 import jakarta.annotation.security.RolesAllowed
+import jakarta.enterprise.context.ApplicationScoped
 import jakarta.transaction.Transactional
 import jakarta.ws.rs.Consumes
 import jakarta.ws.rs.DefaultValue
@@ -32,8 +33,9 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @Path("/samtale")
 @Tag(name = "Ring")
 @SecurityRequirement(name = "jwt")
+@ApplicationScoped
 class RingController(val ringService: RingService, val jwt: JsonWebToken) {
-    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.RINGER)
+    @RolesAllowed(RingespesifikkRolle.RINGER)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -59,7 +61,7 @@ class RingController(val ringService: RingService, val jwt: JsonWebToken) {
             )
         )
 
-    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.RINGER)
+    @RolesAllowed(RingespesifikkRolle.RINGER)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -73,7 +75,7 @@ class RingController(val ringService: RingService, val jwt: JsonWebToken) {
         @QueryParam("modus") modus: Modus
     ) = ringService.startSamtale(AutentisertStartSamtaleRequest(ctx.userId(), startSamtaleRequest, modus))
 
-    @jakarta.annotation.security.RolesAllowed(RingespesifikkRolle.RINGER)
+    @RolesAllowed(RingespesifikkRolle.RINGER)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

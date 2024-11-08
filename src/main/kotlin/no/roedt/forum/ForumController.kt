@@ -1,6 +1,7 @@
 package no.roedt.forum
 
 import jakarta.annotation.security.RolesAllowed
+import jakarta.enterprise.context.RequestScoped
 import jakarta.ws.rs.Consumes
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.POST
@@ -21,6 +22,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @Path("/forum")
 @Tag(name = "Forum")
 @SecurityRequirement(name = "jwt")
+@RequestScoped
 class ForumController(
     val forumService: ForumService,
     val jwt: JsonWebToken

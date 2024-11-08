@@ -1,6 +1,6 @@
 package no.roedt.frivilligsystem
 
-import jakarta.enterprise.context.ApplicationScoped
+import jakarta.enterprise.context.Dependent
 import no.roedt.Emojifjerner
 import no.roedt.Kilde
 import no.roedt.brukere.GenerellRolle
@@ -25,7 +25,7 @@ import no.roedt.ringesentralen.brukere.RingesentralenGroupID
 import java.time.Instant
 import java.util.Optional
 
-@ApplicationScoped
+@Dependent
 class FrivilligService(
     val frivilligRepository: FrivilligRepository,
     val personService: PersonService,

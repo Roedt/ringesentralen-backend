@@ -1,6 +1,8 @@
 package no.roedt.ringesentralen.statistikk
 
+import io.quarkus.arc.Unremovable
 import jakarta.annotation.security.RolesAllowed
+import jakarta.enterprise.context.RequestScoped
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.Produces
@@ -24,8 +26,10 @@ import java.time.ZonedDateTime
 @Path("/statistikk")
 @Tag(name = "Statistikk")
 @SecurityRequirement(name = "jwt")
+@RequestScoped
+@Unremovable
 class StatistikkController(val service: StatistikkService, val jwt: JsonWebToken) {
-    @jakarta.annotation.security.RolesAllowed(
+    @RolesAllowed(
         RingespesifikkRolle.RINGER,
         RingespesifikkRolle.GODKJENNER,
         GenerellRolle.ADMIN
@@ -38,7 +42,7 @@ class StatistikkController(val service: StatistikkService, val jwt: JsonWebToken
         @Context ctx: SecurityContext
     ): StatistikkResponse = service.getStatistikk(jwt.groups)
 
-    @jakarta.annotation.security.RolesAllowed(
+    @RolesAllowed(
         RingespesifikkRolle.RINGER,
         RingespesifikkRolle.GODKJENNER,
         GenerellRolle.ADMIN

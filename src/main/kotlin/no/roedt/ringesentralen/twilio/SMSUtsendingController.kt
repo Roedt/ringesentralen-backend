@@ -1,5 +1,6 @@
 package no.roedt.ringesentralen.twilio
 
+import io.quarkus.arc.Unremovable
 import jakarta.annotation.security.RolesAllowed
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.transaction.Transactional
@@ -22,6 +23,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag
 @Tag(name = "SMSUtsending")
 @SecurityRequirement(name = "jwt")
 @ApplicationScoped
+@Unremovable
 class SMSUtsendingController(val smsSender: SMSSender) {
     @RolesAllowed(GenerellRolle.ADMIN)
     @POST
