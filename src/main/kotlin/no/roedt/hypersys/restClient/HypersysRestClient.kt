@@ -1,14 +1,13 @@
 package no.roedt.hypersys.restClient
 
-import io.quarkus.rest.client.reactive.ClientQueryParam
 import io.quarkus.rest.client.reactive.NotBody
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.ws.rs.Consumes
+import jakarta.ws.rs.FormParam
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.POST
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.PathParam
-import jakarta.ws.rs.QueryParam
 import jakarta.ws.rs.core.MediaType
 import no.roedt.hypersys.GyldigPersonToken
 import no.roedt.hypersys.GyldigSystemToken
@@ -27,21 +26,21 @@ interface HypersysRestClient {
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("api/o/token/")
-    @ClientHeaderParam(name = "Authorization", value = ["Bearer {base64Credentials}"])
-    @ClientQueryParam(name = "grant_type", value = ["password"])
+    @ClientHeaderParam(name = "Authorization", value = ["Basic {base64Credentials}"])
     fun tokenPerson(
         @NotBody base64Credentials: String,
-        @QueryParam("username") brukernavn: String,
-        @QueryParam("password") password: String
+        @FormParam("username") brukernavn: String,
+        @FormParam("password") password: String,
+        @FormParam("grant_type") grantType: String = "password"
     ): GyldigPersonToken
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("api/o/token/")
-    @ClientHeaderParam(name = "Authorization", value = ["Bearer {base64Credentials}"])
-    @ClientQueryParam(name = "grant_type", value = ["client_credentials"])
+    @ClientHeaderParam(name = "Authorization", value = ["Basic {base64Credentials}"])
     fun tokenSystem(
-        @NotBody base64Credentials: String
+        @NotBody base64Credentials: String,
+        @FormParam("grant_type") grantType: String = "client_credentials"
     ): GyldigSystemToken
 
     @GET
