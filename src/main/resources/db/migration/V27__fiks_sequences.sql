@@ -1,0 +1,17 @@
+alter sequence aktivitetForFrivillig_SEQ restart with 1000000 increment by 50;
+alter sequence frivillig_SEQ restart with 1000000 increment by 50;
+alter sequence frivilligKorona_SEQ restart with 1000000 increment by 50;
+alter sequence frivilligOpptattAv_SEQ restart with 1000000 increment by 50;
+alter sequence godkjenning_SEQ restart with 1000000 increment by 50;
+alter sequence kontakt_SEQ restart with 1000000 increment by 50;
+alter sequence login_attempts_SEQ restart with 1000000 increment by 50;
+alter sequence lokallag_SEQ restart with 1000000 increment by 50;
+alter sequence mfa_SEQ restart with 1000000 increment by 50;
+alter sequence oppfoelgingValg21_SEQ restart with 1000000 increment by 50;
+alter sequence oppslag_SEQ restart with 1000000 increment by 50;
+alter sequence person_SEQ restart with 1000000 increment by 50;
+alter sequence ringer_SEQ restart with 1000000 increment by 50;
+alter sequence samtale_SEQ restart with 1000000 increment by 50;
+alter sequence sms_SEQ restart with 1000000 increment by 50;
+alter sequence smsTilMottaker_SEQ restart with 1000000 increment by 50;
+alter sequence verving_SEQ restart with 1000000 increment by 50;
