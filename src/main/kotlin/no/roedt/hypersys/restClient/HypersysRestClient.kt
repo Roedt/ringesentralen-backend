@@ -8,6 +8,7 @@ import jakarta.ws.rs.GET
 import jakarta.ws.rs.POST
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.PathParam
+import jakarta.ws.rs.Produces
 import jakarta.ws.rs.core.MediaType
 import no.roedt.hypersys.GyldigPersonToken
 import no.roedt.hypersys.GyldigSystemToken
@@ -54,7 +55,8 @@ interface HypersysRestClient {
 
     @GET
     @ClientHeaderParam(name = "Authorization", value = ["Bearer {token}"])
-    @Path("/org/api")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/org/api/")
     fun hentAlleLokallag(
         @NotBody token: String
     ) : List<Organisasjonsledd>
