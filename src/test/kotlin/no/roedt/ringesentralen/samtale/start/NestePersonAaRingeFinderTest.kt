@@ -1,13 +1,14 @@
 package no.roedt.ringesentralen.samtale.start
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.called
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
+import io.mockk.verify
 import no.roedt.Kilde
 import no.roedt.kommune.Kommune
+import no.roedt.lokallag.Lokallag
 import no.roedt.lokallag.LokallagService
 import no.roedt.person.Person
 import no.roedt.person.PersonService
@@ -20,12 +21,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class NestePersonAaRingeFinderTest {
-    private val personService: PersonService = mock()
-    private val nesteAaRingeRepository: NesteAaRingeRepository = mock()
-    private val oppfoelgingValg21Service: OppfoelgingValg21Service = mock()
-    private val lokallagService: LokallagService = mock()
-    private val oppslagService: OppslagService = mock()
-    private val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder = mock()
+    private val personService: PersonService = mockk()
+    private val nesteAaRingeRepository: NesteAaRingeRepository = mockk()
+    private val oppfoelgingValg21Service: OppfoelgingValg21Service = mockk()
+    private val lokallagService: LokallagService = mockk()
+    private val oppslagService: OppslagService = mockk()
+    private val nesteMedlemAaRingeFinder: NesteMedlemAaRingeFinder = mockk()
 
     private val nestePersonAaRingeFinder =
         NestePersonAaRingeFinder(
@@ -40,12 +41,16 @@ internal class NestePersonAaRingeFinderTest {
 
     @BeforeEach
     fun setup() {
-        doReturn(lagPerson("Peder", "Ås", "123")).whenever(personService).getPerson(any())
+        every { personService.getPerson(any()) } returns lagPerson("Peder", "Ås", "123")
     }
 
     @Test
     fun `hentar neste person aa ringe`() {
-        doReturn(listOf(1234)).whenever(nesteAaRingeRepository).hentNesteIkkemedlem(any(), any())
+        every { nesteAaRingeRepository.hentNesteIkkemedlem(any(), any()) } returns listOf(1234)
+        every { personService.findById(any()) } returns lagPerson("Peder", "Ås", "123")
+        every { lokallagService.findById(any()) } returns Lokallag(navn = "Lokallag 1", hypersysID = null, fylke = 1, sistOppdatert = null)
+        every { nesteAaRingeRepository.getTidlegareSamtalarMedDennePersonen(any()) } returns listOf<Array<*>>()
+        every { oppslagService.persist(any()) } just runs
 
         nestePersonAaRingeFinder.hentNestePersonAaRinge(
             AutentisertNestePersonAaRingeRequest(
@@ -56,15 +61,16 @@ internal class NestePersonAaRingeFinderTest {
             )
         )
 
-        verify(nesteAaRingeRepository).hentNesteIkkemedlem(any(), any())
-        verify(personService).findById(1234)
+        verify { nesteAaRingeRepository.hentNesteIkkemedlem(any(), any()) }
+        verify { personService.findById(1234) }
     }
 
     @Test
     fun `returnerer utan svar viss ingen fleire aa ringe no`() {
         val emptyList: List<Long> = listOf()
-        doReturn(emptyList).whenever(nesteAaRingeRepository).hentNesteIkkemedlem(any(), any())
-        verifyNoMoreInteractions(personService)
+        every { nesteAaRingeRepository.hentNesteIkkemedlem(any(), any()) } returns emptyList
+
+        verify { personService wasNot called }
 
         nestePersonAaRingeFinder.hentNestePersonAaRinge(
             AutentisertNestePersonAaRingeRequest(
@@ -74,7 +80,7 @@ internal class NestePersonAaRingeFinderTest {
                 roller = setOf()
             )
         )
-        verify(nesteAaRingeRepository).hentNesteIkkemedlem(any(), any())
+        verify { nesteAaRingeRepository.hentNesteIkkemedlem(any(), any()) }
     }
 
     private fun lagPerson(
@@ -92,6 +98,6 @@ internal class NestePersonAaRingeFinderTest {
         lokallag = 1,
         groupID = 0,
         kilde = Kilde.Hypersys,
-        sistOppdatert = null
-    )
+        sistOppdatert = null,
+    ).also { it.id = 10 }
 }

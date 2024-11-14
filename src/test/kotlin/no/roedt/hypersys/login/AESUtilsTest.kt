@@ -1,8 +1,7 @@
 package no.roedt.hypersys.login
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.every
+import io.mockk.mockk
 import no.roedt.token.SecretFactory
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -14,12 +13,12 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 internal class AESUtilsTest {
-    private val secretFactory: SecretFactory = mock()
+    private val secretFactory: SecretFactory = mockk()
 
     @Test
     fun `kan kryptere og saa dekryptere og faa den teksten vi starta med`() {
         val encryptionKey = "FfZdV0Cu13lscPPVjYjJGRZmp0afpY3h"
-        doReturn(encryptionKey).whenever(secretFactory).getEncryptionKey()
+        every { secretFactory.getEncryptionKey() } returns encryptionKey
 
         val input = "her er min veldig kryptiske tekst"
 

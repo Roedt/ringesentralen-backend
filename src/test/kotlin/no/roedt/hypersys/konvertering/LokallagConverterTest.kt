@@ -1,16 +1,17 @@
 package no.roedt.hypersys.konvertering
 
-import com.nhaarman.mockitokotlin2.mock
+import io.mockk.mockk
 import no.roedt.lokallag.LokallagService
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 internal class LokallagConverterTest {
-    private val lokallagService: LokallagService = mock()
+    private val lokallagService: LokallagService = mockk()
 
     private val lokallagConverter = LokallagConverter(lokallagService)
 
     @Test
     fun `taklar manglande lokallag`() {
-        kotlin.test.assertEquals(actual = -1, expected = lokallagConverter.tilLokallag(listOf()))
+        assertEquals(actual = -1, expected = lokallagConverter.tilLokallag(listOf()))
     }
 }

@@ -1,6 +1,6 @@
 package no.roedt.hypersys.konvertering
 
-import com.nhaarman.mockitokotlin2.mock
+import io.mockk.mockk
 import no.roedt.fylke.FylkeService
 import no.roedt.person.PersonService
 import no.roedt.postnummer.PostnummerService
@@ -9,10 +9,10 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 internal class ModelConverterTest {
-    private val lokallagConverter: LokallagConverter = LokallagConverter(mock())
-    private val personService: PersonService = mock()
-    private val fylkeService: FylkeService = mock()
-    private val postnummerService: PostnummerService = mock()
+    private val lokallagConverter: LokallagConverter = LokallagConverter(mockk())
+    private val personService: PersonService = mockk()
+    private val fylkeService: FylkeService = mockk()
+    private val postnummerService: PostnummerService = mockk()
 
     private val modelConverter: ModelConverterBean =
         ModelConverterBean(

@@ -1,10 +1,8 @@
 package no.roedt.ringesentralen.samtale
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.spy
-import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.spyk
 import io.quarkus.hibernate.orm.panache.PanacheQuery
 import no.roedt.Kilde
 import no.roedt.kommune.Kommune
@@ -26,12 +24,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class RingServiceBeanTest {
-    private val personService: PersonService = mock()
-    private val samtaleService: SamtaleService = mock()
-    private val oppfoelgingValg21Service: OppfoelgingValg21Service = mock()
-    private val lokallagService: LokallagService = mock()
-    private val ringerService: RingerService = mock()
-    private val nestePersonAaRingeFinder: NestePersonAaRingeFinder = mock()
+    private val personService: PersonService = mockk()
+    private val samtaleService: SamtaleService = mockk()
+    private val oppfoelgingValg21Service: OppfoelgingValg21Service = mockk()
+    private val lokallagService: LokallagService = mockk()
+    private val ringerService: RingerService = mockk()
+    private val nestePersonAaRingeFinder: NestePersonAaRingeFinder = mockk()
 
     private var ringService =
         RingServiceBean(
@@ -51,9 +49,9 @@ internal class RingServiceBeanTest {
 
     // TODO Mads: følg opp denne
     fun `samtale blir registrert`() {
-        ringService = spy(ringService)
-        doReturn(1).whenever(ringService).hypersysIDTilRingerId(any())
-        doReturn(false).whenever(ringService).isBrukerEllerVenterPaaGodkjenning(any())
+        ringService = spyk(ringService)
+        every { ringService.hypersysIDTilRingerId(any()) } returns 1
+        every { ringService.isBrukerEllerVenterPaaGodkjenning(any()) } returns false
 
         val request =
             AutentisertResultatFraSamtaleRequest(
@@ -130,9 +128,9 @@ internal class RingServiceBeanTest {
                 kilde = Kilde.Hypersys,
                 sistOppdatert = null
             )
-        doReturn(person).whenever(personService).findById(id)
-        val query: PanacheQuery<Person> = mock()
-        doReturn(person).whenever(query).firstResult<Person>()
-        doReturn(query).whenever(personService).finnFraHypersysId(hypersysID)
+        every { personService.findById(id) } returns person
+        val query: PanacheQuery<Person> = mockk()
+        every { query.firstResult<Person>() } returns person
+        every { personService.finnFraHypersysId(hypersysID) } returns query
     }
 }
