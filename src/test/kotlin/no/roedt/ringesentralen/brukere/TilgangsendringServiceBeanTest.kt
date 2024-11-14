@@ -1,9 +1,10 @@
 package no.roedt.ringesentralen.brukere
 
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
+import io.mockk.verify
 import io.quarkus.hibernate.orm.panache.PanacheQuery
 import jakarta.ws.rs.ForbiddenException
 import no.roedt.Kilde
@@ -11,6 +12,7 @@ import no.roedt.brukere.AutentisertTilgangsendringRequest
 import no.roedt.brukere.GodkjenningService
 import no.roedt.brukere.TilgangsendringsRequest
 import no.roedt.hypersys.HypersysService
+import no.roedt.hypersys.externalModel.membership.Membership
 import no.roedt.hypersys.konvertering.ModelConverter
 import no.roedt.kommune.Kommune
 import no.roedt.person.Person
@@ -19,25 +21,23 @@ import no.roedt.person.UserId
 import no.roedt.postnummer.Postnummer
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito.doReturn
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 internal class TilgangsendringServiceBeanTest {
-    private val personService: PersonService = mock()
-    private val epostSender: RingesentralenEpostformulerer = mock()
-    private val hypersysService: HypersysService = mock()
-    private val godkjenningService: GodkjenningService = mock()
-    private val modelConverter: ModelConverter = mock()
+    private val personService: PersonService = mockk()
+    private val epostSender: RingesentralenEpostformulerer = mockk()
+    private val hypersysService: HypersysService = mockk()
+    private val godkjenningService: GodkjenningService = mockk()
+    private val modelConverter: ModelConverter = mockk()
 
-    private val tilgangsendringService =
-        TilgangsendringServiceBean(
-            personService = personService,
-            epostSender = epostSender,
-            hypersysService = hypersysService,
-            godkjenningService = godkjenningService,
-            modelConverter = modelConverter
-        )
+    private fun lagTilgangsendringservice() = TilgangsendringServiceBean(
+        personService = personService,
+        epostSender = epostSender,
+        hypersysService = hypersysService,
+        godkjenningService = godkjenningService,
+        modelConverter = modelConverter
+    )
 
     @Test
     fun `godkjenner kan godkjenne brukar`() {
@@ -45,25 +45,34 @@ internal class TilgangsendringServiceBeanTest {
 
         val ringt = lagPerson("Lars", "Holm", "+4792345678")
         ringt.hypersysID = 3
-        doReturn(ringt).whenever(personService).findById(2)
+        every { personService.hypersysIDTilRingerId(any()) } returns 2
+        every { personService.findById(2) } returns ringt
+        every { godkjenningService.persist(any()) } just runs
+        every { personService.oppdaterRolle(any(), any()) } returns 1
+        every { hypersysService.hentFraMedlemslista(3) } returns mockk<Membership>().also {
+            every { it.first_name } returns "Peder"
+            every { it.last_name } returns "Aas"
+        }
+        every { personService.oppdaterNavnFraHypersys(any(), any(), any(), any()) } returns 1
+        every { modelConverter.finnPostnummer(any()) } returns Postnummer(Postnummer = "0001", Poststed = "Oslo", KommuneKode = mockk())
+        every { epostSender.sendEpostOmEndraStatus(any(), any()) } just runs
+        val tilgangsendringService = lagTilgangsendringservice()
 
         val brukerendring =
             tilgangsendringService.aktiverRinger(
                 AutentisertTilgangsendringRequest(
                     userId = userId,
                     tilgangsendringRequest = TilgangsendringsRequest(personMedEndraTilgang = 2),
-                    jwt = mock()
+                    jwt = mockk()
                 )
             )
         assertEquals(2, brukerendring.personID)
         assertEquals(RingesentralenGroupID.GodkjentRinger, brukerendring.nyGroupId)
         assertTrue { brukerendring.epostSendt }
-        verify(personService).oppdaterRolle(eq(RingesentralenGroupID.GodkjentRinger.nr), eq(2))
-        verify(hypersysService).hentFraMedlemslista(3)
-        verify(epostSender).sendEpostOmEndraStatus(
-            person = eq(ringt),
-            nyTilgang = eq(RingesentralenGroupID.GodkjentRinger)
-        )
+
+        verify { personService.oppdaterRolle(RingesentralenGroupID.GodkjentRinger.nr, 2) }
+        verify { hypersysService.hentFraMedlemslista(3) }
+        verify { epostSender.sendEpostOmEndraStatus(person = ringt, nyTilgang = RingesentralenGroupID.GodkjentRinger) }
     }
 
     @Test
@@ -73,14 +82,16 @@ internal class TilgangsendringServiceBeanTest {
         val ringt = lagPerson("Lars", "Holm", "+4792345678")
         ringt.hypersysID = 3
         ringt.setGroupID(RingesentralenGroupID.Admin)
-        doReturn(ringt).whenever(personService).findById(2)
+        every { personService.findById(2) } returns ringt
+        val tilgangsendringService = lagTilgangsendringservice()
+
 
         assertThrows<ForbiddenException> {
             tilgangsendringService.aktiverRinger(
                 AutentisertTilgangsendringRequest(
                     userId = userId,
                     tilgangsendringRequest = TilgangsendringsRequest(personMedEndraTilgang = 2),
-                    jwt = mock()
+                    jwt = mockk()
                 )
             )
         }
@@ -90,9 +101,9 @@ internal class TilgangsendringServiceBeanTest {
         val ringerPerson = lagPerson("Peder", "Ås", "+4712345678")
         ringerPerson.setGroupID(RingesentralenGroupID.LokalGodkjenner)
         val userId = UserId(userId = 1)
-        val panacheQuery: PanacheQuery<Person> = mock()
-        doReturn(ringerPerson).whenever(panacheQuery).firstResult<Person>()
-        doReturn(panacheQuery).whenever(personService).finnFraHypersysId(1)
+        val panacheQuery: PanacheQuery<Person> = mockk()
+        every { panacheQuery.firstResult<Person>() } returns ringerPerson
+        every { personService.finnFraHypersysId(1) } returns panacheQuery
         return userId
     }
 
