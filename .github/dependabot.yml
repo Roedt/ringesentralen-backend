@@ -15,6 +15,10 @@ updates:
         patterns:
           - "io.quarkus*"
           - "io.quarkiverse*"
+      backend:
+        patterns:
+          - "org.apache.maven*"
+          - "io.mockk*"
 
   # ==============
   # Docker backend
