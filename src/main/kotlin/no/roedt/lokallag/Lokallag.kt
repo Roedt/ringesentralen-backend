@@ -74,4 +74,23 @@ class LokallagRepository : PanacheRepositoryBase<Lokallag, Int> {
             ?.map { it.toInt() }
 
     fun fromFylke(fylkeId: Int): List<Lokallag> = list("fylke=?1", fylkeId)
+
+
+    internal fun oppdaterNavnOgHypersysID(
+        hypersysId: Int,
+        navn: String,
+        id: Int?
+    ) = update("hypersysID=?1, navn=?2 where id=?3", hypersysId, navn, id)
+
+    internal fun oppdaterNavn(
+        hypersysId: Int,
+        navn: String
+    ) = update("navn=?1 where hypersysID=?2", navn, hypersysId)
+
+    internal fun oppdaterHypersysID(
+        hypersysId: Int,
+        navn: String
+    ) = update("hypersysID=?1 where navn=?2", hypersysId, navn)
+
+    internal fun exists(field: String, value: Any) = find(field, value).count() > 0
 }

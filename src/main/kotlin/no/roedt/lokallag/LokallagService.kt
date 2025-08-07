@@ -18,26 +18,13 @@ class LokallagService(val repository: LokallagRepository) {
 
     fun fromPostnummer(postnr: Postnummer): Int = repository.fromPostnummer(postnr)
 
-    fun oppdater(
-        hypersysId: Int,
-        navn: String,
-        id: Int?
-    ) = repository.update("hypersysID=?1, navn=?2 where id=?3", hypersysId, navn, id)
+    fun oppdater(hypersysId: Int, navn: String, id: Int?) = repository.oppdaterNavnOgHypersysID(hypersysId, navn, id)
 
-    fun oppdaterNavn(
-        hypersysId: Int,
-        navn: String
-    ) = repository.update("navn=?1 where hypersysID=?2", navn, hypersysId)
+    fun oppdaterNavn(hypersysId: Int, navn: String) = repository.oppdaterNavn(hypersysId, navn)
 
-    fun oppdaterHypersysID(
-        hypersysId: Int,
-        navn: String
-    ) = repository.update("hypersysID=?1 where navn=?2", hypersysId, navn)
+    fun oppdaterHypersysID(hypersysId: Int, navn: String) = repository.oppdaterHypersysID(hypersysId, navn)
 
-    fun exists(
-        field: String,
-        value: Any
-    ) = repository.find(field, value).count() > 0
+    fun exists(field: String, value: Any) = repository.exists(field, value)
 
     fun persist(it: Lokallag) = repository.persist(it)
 
