@@ -17,15 +17,6 @@ updates:
           - "io.quarkiverse*"
 
   # ==============
-  # GITHUB ACTIONS
-  # ==============
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "monthly"
-      day: "sunday"
-
-  # ==============
   # Docker backend
   # ==============
   - package-ecosystem: "docker"
