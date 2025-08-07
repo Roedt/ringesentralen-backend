@@ -26,7 +26,7 @@ import java.time.LocalDate
 @IfBuildProfile(value = "dev")
 @ApplicationScoped
 @Path("hypersys")
-class HypersysEndpoint(private val privateKeyFactory: PrivateKeyFactory) {
+class FakeHypersysEndpoint(private val privateKeyFactory: PrivateKeyFactory) {
 
     val innloggaBrukerHypersysId = "15424"
 
