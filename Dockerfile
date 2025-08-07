@@ -17,7 +17,7 @@ RUN ./mvnw package -B -e -Dnative
 COPY --chown=quarkus:quarkus src/main/resources/META-INF/resources/publickey.pem /code/publickey.pem
 
 # Create the docker final image
-FROM quay.io/quarkus/quarkus-micro-image:2.0
+FROM quay.io/quarkus/quarkus-micro-image:3.0
 ARG DBUSER
 ENV DBUSER=${DBUSER}
 ARG DBPASSWORD
