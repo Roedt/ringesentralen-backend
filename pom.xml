@@ -15,7 +15,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.version>3.16.2</quarkus.version>
     <surefire-plugin.version>3.5.2</surefire-plugin.version>
-    <mockkVersion>1.13.13</mockkVersion>
+    <mockkVersion>1.14.5</mockkVersion>
   </properties>
   <dependencyManagement>
     <dependencies>
