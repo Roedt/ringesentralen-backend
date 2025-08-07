@@ -6,6 +6,8 @@ import no.roedt.brukere.mfa.MFAService
 import no.roedt.hypersys.login.AESUtil
 import no.roedt.hypersys.login.HypersysLoginBean
 import no.roedt.person.PersonService
+import no.roedt.token.fake.FakeTokenService
+import no.roedt.token.real.RealTokenService
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.Duration
 

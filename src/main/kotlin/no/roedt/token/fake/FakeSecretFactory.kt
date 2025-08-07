@@ -1,4 +1,6 @@
-package no.roedt.token
+package no.roedt.token.fake
+
+import no.roedt.token.SecretFactory
 
 class FakeSecretFactory : SecretFactory {
     override fun getPrivateKey() = "AAAAABBBBBBBSDSDFD"

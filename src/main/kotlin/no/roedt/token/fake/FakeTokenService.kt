@@ -1,4 +1,4 @@
-package no.roedt.token
+package no.roedt.token.fake
 
 import io.smallrye.jwt.build.Jwt
 import no.roedt.brukere.GenerellRolle
@@ -7,6 +7,9 @@ import no.roedt.forum.ForumRolle
 import no.roedt.hypersys.login.LoginRequest
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.RingespesifikkRolle
+import no.roedt.token.PrivateKeyFactory
+import no.roedt.token.SecretFactory
+import no.roedt.token.TokenService
 import java.time.Duration
 
 class FakeTokenService(

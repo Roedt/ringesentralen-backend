@@ -2,6 +2,8 @@ package no.roedt.token
 
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.ws.rs.Produces
+import no.roedt.token.fake.FakeSecretFactory
+import no.roedt.token.real.GCPSecretFactory
 import org.eclipse.microprofile.config.inject.ConfigProperty
 
 @ApplicationScoped

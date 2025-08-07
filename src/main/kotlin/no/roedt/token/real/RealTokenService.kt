@@ -1,4 +1,4 @@
-package no.roedt.token
+package no.roedt.token.real
 
 import io.smallrye.jwt.build.Jwt
 import jakarta.ws.rs.ForbiddenException
@@ -18,6 +18,9 @@ import no.roedt.person.Person
 import no.roedt.person.PersonService
 import no.roedt.person.UserId
 import no.roedt.ringesentralen.brukere.RingesentralenGroupID
+import no.roedt.token.PrivateKeyFactory
+import no.roedt.token.SecretFactory
+import no.roedt.token.TokenService
 import java.time.Duration
 import java.util.function.Supplier
 
@@ -53,7 +56,7 @@ class RealTokenService(
             throw IllegalArgumentException("Ugyldig brukernavn eller passord")
         }
         return generateBaseToken()
-            .groups(GenerellRolle.SYSTEMBRUKER_FRONTEND)
+            .groups(GenerellRolle.GenerellRolle.SYSTEMBRUKER_FRONTEND)
             .claim(
                 "hypersys.user_id",
                 personService.systembruker().hypersysID
@@ -110,11 +113,11 @@ class RealTokenService(
         fallbackSupplier: Supplier<Int>,
         userId: String
     ): GroupID {
-        var groupID = RingesentralenGroupID.from(getPersonFromHypersysID(userId).groupID())
-        if (RingesentralenGroupID.isIkkeRegistrertRinger(groupID.nr)) {
-            groupID = RingesentralenGroupID.from(fallbackSupplier.get())
+        var groupID = RingesentralenGroupID.Companion.from(getPersonFromHypersysID(userId).groupID())
+        if (RingesentralenGroupID.Companion.isIkkeRegistrertRinger(groupID.nr)) {
+            groupID = RingesentralenGroupID.Companion.from(fallbackSupplier.get())
         }
-        if (RingesentralenGroupID.erUgyldigRolleForAaBrukeSystemet(groupID)) {
+        if (RingesentralenGroupID.Companion.erUgyldigRolleForAaBrukeSystemet(groupID)) {
             throw NotAuthorizedException("$userId har ikkje gyldig rolle for å bruke systemet.", "")
         }
         return groupID
