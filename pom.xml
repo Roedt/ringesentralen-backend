@@ -140,7 +140,7 @@
     <dependency>
       <groupId>net.fellbaum</groupId>
       <artifactId>jemoji</artifactId>
-      <version>1.4.1</version>
+      <version>1.7.6</version>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.quarkus</groupId>
